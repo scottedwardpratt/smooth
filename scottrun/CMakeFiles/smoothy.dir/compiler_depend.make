@@ -635,8 +635,12 @@ CMakeFiles/smoothy.dir/smoothmain.cc.o: smoothmain.cc \
   /Users/scottpratt/git/commonutils/software/include/constants.h \
   /Users/scottpratt/git/smooth/software/include/smooth.h \
   /Users/scottpratt/git/commonutils/software/include/misc.h \
-  /Users/scottpratt/git/commonutils/software/include/randy.h
+  /Users/scottpratt/git/smooth/software/include/emulator.h \
+  /Users/scottpratt/git/commonutils/software/include/randy.h \
+  /Users/scottpratt/git/commonutils/software/include/gslmatrix.h
 
+
+/Users/scottpratt/git/smooth/software/include/emulator.h:
 
 /Users/scottpratt/git/commonutils/software/include/misc.h:
 
@@ -1137,6 +1141,8 @@ CMakeFiles/smoothy.dir/smoothmain.cc.o: smoothmain.cc \
 /usr/local/Cellar/gsl/2.7/include/gsl/gsl_inline.h:
 
 /usr/local/Cellar/gsl/2.7/include/gsl/gsl_mode.h:
+
+/Users/scottpratt/git/commonutils/software/include/gslmatrix.h:
 
 /usr/local/Cellar/gsl/2.7/include/gsl/gsl_vector_uchar.h:
 

@@ -1,79 +1,75 @@
 #include "parametermap.h"
 #include "constants.h"
 #include "smooth.h"
+#include "emulator.h"
+#include "gslmatrix.h"
 
 using namespace std;
 int main(int argc,char *argv[]){
-	double F,Fbar=0.0;
-	double LAMBDA=5.0;
-	vector<double> theta;
-	unsigned int maxrank=5,NPars=20,ntries=1,itry,ipar;
-	CRandy *randy=new CRandy(-time(NULL));
-	theta.resize(NPars);
-	
-	CSmooth smooth(maxrank,NPars);
-	smooth.randy=randy;
-	smooth.SetLambda(LAMBDA);
-	smooth.SetA_Constant(1.0);
-	
-	Fbar=0.0;
-	for(itry=0;itry<ntries;itry++){
-		for(ipar=0;ipar<NPars;ipar++){
-			theta[ipar]=1.0;
-			//theta[ipar]=randy->ran_gauss();
-		}
-		F=smooth.CalcY(theta);
-		Fbar+=F;
-		//printf("F=%g\n",F);
-	}
-	Fbar=F/double(ntries);
-	printf("<F>=%g\n",F);
-	
+	double LAMBDA=10.0,AMAG=1.5;
+	vector<double> realA,A;
+	vector<vector<double>> ASample;
+	unsigned int nsample=10,NMC=10000,isample,ipar,itest;
 
-	unsigned int iTrain;
-	unsigned int NTrainingPts;
-	printf("How many TrainingPts?    NPars=%u, For all quadratic, NTrain=%u\n",NPars,NPars+1+NPars*(NPars+1)/2);
-	scanf("%u",&NTrainingPts);
-	
-	CSmooth realsmooth(maxrank,NPars);
-	realsmooth.randy=randy;
-	realsmooth.SetLambda(LAMBDA);
-	realsmooth.SetA_RanGauss(1.0);
-	
-	vector<vector<double>> thetatheta;
+	unsigned int NPars,NTrainingPts,iTrain;
+	printf("Enter NPars: ");
+	scanf("%u",&NPars);
+	vector<double> Theta,Lambda;
 	vector<double> YTrain;
+	vector<vector<double>> ThetaTrain;
+	Theta.resize(NPars);
+	CEmulator emulator(NPars);
+	emulator.SetSize(A,Lambda);
+	emulator.SetLambda_Constant(LAMBDA,Lambda);
+	emulator.SetThetaRank1(NTrainingPts,ThetaTrain);
+	printf("NTrainingPts=%u\n",NTrainingPts);
+
 	YTrain.resize(NTrainingPts);
-	thetatheta.resize(NTrainingPts);
+	realA=A;
+
+	emulator.SetA_RanGauss(AMAG,realA);
 	for(iTrain=0;iTrain<NTrainingPts;iTrain++){
-		thetatheta[iTrain].resize(NPars);
-		for(ipar=0;ipar<NPars;ipar++){
-			thetatheta[iTrain][ipar]=1.0-2.0*randy->ran();
-		}
-		YTrain[iTrain]=realsmooth.CalcY(thetatheta[iTrain]);
+		YTrain[iTrain]=emulator.smooth->CalcY(realA,Lambda,ThetaTrain[iTrain]);
 	}
-	
-	double Yfit,Yreal;
-	CSmooth smooth_fit;
-	smooth_fit.Copy(&smooth);
-	for(itry=0;itry<10;itry++){
-		printf("---------------------------------\n");
-		printf("-- Check traininig pts\n");
-		smooth_fit.SetA_RanGauss(0.1);
-		smooth_fit.CalcAFromTraining(thetatheta,YTrain);
+
+	//emulator.CalcAFromTraining(ThetaTrain,YTrain,A,Lambda);
+	emulator.TuneA(ThetaTrain,YTrain,AMAG,NMC,A,Lambda);
+	printf("Test at training points\n");
+	for(iTrain=0;iTrain<NTrainingPts;iTrain++){
+		printf("%g =? %g\n",emulator.smooth->CalcY(A,Lambda,ThetaTrain[iTrain]),
+			YTrain[iTrain]);
+	}
+
+	ASample.resize(nsample);
+	double yreal,y,accuracy=0.0;
+	unsigned int ntest=10;
+	for(isample=0;isample<nsample;isample++){
+		//emulator.SetA_RanGauss(AMAG,realA);
+		//for(iTrain=0;iTrain<NTrainingPts;iTrain++){
+			//YTrain[iTrain]=emulator.smooth->CalcY(realA,Lambda,ThetaTrain[iTrain]);
+		//}
+		emulator.TuneA(ThetaTrain,YTrain,AMAG,NMC,A,Lambda);
+		/*
+		printf("Test at training points\n");
 		for(iTrain=0;iTrain<NTrainingPts;iTrain++){
-			Yfit=smooth_fit.CalcY(thetatheta[iTrain]);
-			printf("%g =? %g\n",Yfit,YTrain[iTrain]);
+			printf("%g =? %g\n",emulator.smooth->CalcY(A,Lambda,ThetaTrain[iTrain]),
+				YTrain[iTrain]);
 		}
-		printf("-- Test predictions\n");
-		for(unsigned int itheta=0;itheta<10;itheta++){
-			for(ipar=0;ipar<NPars;ipar++)
-				theta[ipar]=1.0-2.0*randy->ran();
-			Yfit=smooth_fit.CalcY(theta);
-			Yreal=realsmooth.CalcY(theta);
-			printf("%g =? %g\n",Yfit,Yreal);
+		*/
+		printf("Now test away from training points\n");
+		for(itest=0;itest<ntest;itest++){
+			for(ipar=0;ipar<NPars;ipar++){
+				Theta[ipar]=1.0-2.0*emulator.randy->ran();
+			}
+			y=emulator.smooth->CalcY(A,Lambda,Theta);
+			yreal=emulator.smooth->CalcY(realA,Lambda,Theta);
+			accuracy+=(y-yreal)*(y-yreal);
+			//printf("%g =? %g\n",y,yreal);
 		}
-		
-		
+		ASample[isample]=A;
 	}
+	accuracy=accuracy/double(nsample*ntest);
+	printf("accuracy=%g\n",sqrt(accuracy));
+	
 	return 0;
 }

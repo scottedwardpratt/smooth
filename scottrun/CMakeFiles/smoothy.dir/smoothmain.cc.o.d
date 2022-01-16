@@ -633,4 +633,6 @@ CMakeFiles/smoothy.dir/smoothmain.cc.o: \
   /Users/scottpratt/git/commonutils/software/include/constants.h \
   /Users/scottpratt/git/smooth/software/include/smooth.h \
   /Users/scottpratt/git/commonutils/software/include/misc.h \
-  /Users/scottpratt/git/commonutils/software/include/randy.h
+  /Users/scottpratt/git/smooth/software/include/emulator.h \
+  /Users/scottpratt/git/commonutils/software/include/randy.h \
+  /Users/scottpratt/git/commonutils/software/include/gslmatrix.h
