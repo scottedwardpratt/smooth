@@ -23,8 +23,6 @@ public:
 	CRandy *randy;
 	CSmooth *smooth;
 	Eigen::MatrixXd M;
-	//CGSLMatrix_Real *gslmatrix;
-	//vector<vector<double>> M;
 
 	double Amag,MCstepsize,LAMBDA,RTrain;
 	vector<double> Lambda;
@@ -56,7 +54,6 @@ public:
 	void CalcYTrainFromRealA();
 	double CalcRealYFromRealA(vector<double> &theta); // This also sets up a random RealA
 	vector<double> RealA;
-	//
 
 	void GenerateASamples();
 
