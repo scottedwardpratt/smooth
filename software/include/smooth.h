@@ -9,10 +9,10 @@
 #include "parametermap.h"
 #include "misc.h"
 #include "constants.h"
+#include "randy.h"
 #include <list>
 
 using namespace std;
-class CSmooth_old;
 
 class CSmooth{
 public:
@@ -23,8 +23,7 @@ public:
 	vector<unsigned int> rank;
 	
 	CSmooth();
-	CSmooth(unsigned int MaxRank_set,unsigned int NPars_set);
-	
+	CSmooth(unsigned int NPars_set);	
 	
 	double CalcY(vector<double> &A,vector<double> &Lambda,vector<double> &theta);
 	void Copy(CSmooth *smooth);

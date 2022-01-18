@@ -6,70 +6,53 @@
 
 using namespace std;
 int main(int argc,char *argv[]){
-	double LAMBDA=10.0,AMAG=1.5;
-	vector<double> realA,A;
-	vector<vector<double>> ASample;
-	unsigned int nsample=10,NMC=10000,isample,ipar,itest;
+	CparameterMap *parmap=new CparameterMap();
+	double y,yreal,accuracy;
+	unsigned int nsample=10,isample,itest,ntest=40,ipar,ireal,nreal=10;
+	vector<double> Theta;
 
-	unsigned int NPars,NTrainingPts,iTrain;
-	printf("Enter NPars: ");
-	scanf("%u",&NPars);
-	vector<double> Theta,Lambda;
-	vector<double> YTrain;
-	vector<vector<double>> ThetaTrain;
-	Theta.resize(NPars);
-	CEmulator emulator(NPars);
-	emulator.SetSize(A,Lambda);
-	emulator.SetLambda_Constant(LAMBDA,Lambda);
-	emulator.SetThetaRank1(NTrainingPts,ThetaTrain);
-	printf("NTrainingPts=%u\n",NTrainingPts);
+	parmap->ReadParsFromFile("parameters.txt");
+	CSmoothEmulator emulator(parmap);
 
-	YTrain.resize(NTrainingPts);
-	realA=A;
+	Theta.resize(emulator.NPars);
+	emulator.randy->reset(-time(NULL));
 
-	emulator.SetA_RanGauss(AMAG,realA);
-	for(iTrain=0;iTrain<NTrainingPts;iTrain++){
-		YTrain[iTrain]=emulator.smooth->CalcY(realA,Lambda,ThetaTrain[iTrain]);
-	}
+	emulator.SetThetaSimplex();
+	printf("NTrainingPts=%u\n",emulator.NTrainingPts);
 
-	//emulator.CalcAFromTraining(ThetaTrain,YTrain,A,Lambda);
-	emulator.TuneA(ThetaTrain,YTrain,AMAG,NMC,A,Lambda);
-	printf("Test at training points\n");
-	for(iTrain=0;iTrain<NTrainingPts;iTrain++){
-		printf("%g =? %g\n",emulator.smooth->CalcY(A,Lambda,ThetaTrain[iTrain]),
-			YTrain[iTrain]);
-	}
-
-	ASample.resize(nsample);
-	double yreal,y,accuracy=0.0;
-	unsigned int ntest=10;
-	for(isample=0;isample<nsample;isample++){
-		//emulator.SetA_RanGauss(AMAG,realA);
-		//for(iTrain=0;iTrain<NTrainingPts;iTrain++){
-			//YTrain[iTrain]=emulator.smooth->CalcY(realA,Lambda,ThetaTrain[iTrain]);
-		//}
-		emulator.TuneA(ThetaTrain,YTrain,AMAG,NMC,A,Lambda);
-		/*
-		printf("Test at training points\n");
-		for(iTrain=0;iTrain<NTrainingPts;iTrain++){
-			printf("%g =? %g\n",emulator.smooth->CalcY(A,Lambda,ThetaTrain[iTrain]),
-				YTrain[iTrain]);
+	FILE *fptr;
+	char filename[150];
+	accuracy=0.0;
+	for(ireal=0;ireal<nreal;ireal++){
+		sprintf(filename,"testresults/real%u.txt",ireal);
+		fptr=fopen(filename,"w");
+		emulator.CalcYTrainFromRealA();	
+		//emulator.CalcAFromTraining(emulator.A);
+		emulator.GenerateASamples();
+		for(itest=0;itest<emulator.NTrainingPts;itest++){
+			yreal=emulator.CalcRealYFromRealA(emulator.ThetaTrain[itest]);
+			y=emulator.smooth->CalcY(emulator.ASample[1],emulator.Lambda,emulator.ThetaTrain[itest]);
+			printf("%u, %8.4f: %g =? %g\n",itest,emulator.ThetaTrain[itest][0],y,yreal);
 		}
-		*/
-		printf("Now test away from training points\n");
+
 		for(itest=0;itest<ntest;itest++){
-			for(ipar=0;ipar<NPars;ipar++){
-				Theta[ipar]=1.0-2.0*emulator.randy->ran();
+			for(ipar=0;ipar<emulator.NPars;ipar++){
+				//Theta[ipar]=1.0-2.0*emulator.randy->ran();
+				Theta[ipar]=-1.0+(2.0/double(ntest))*(0.5+itest);
 			}
-			y=emulator.smooth->CalcY(A,Lambda,Theta);
-			yreal=emulator.smooth->CalcY(realA,Lambda,Theta);
-			accuracy+=(y-yreal)*(y-yreal);
-			//printf("%g =? %g\n",y,yreal);
+			yreal=emulator.CalcRealYFromRealA(Theta);
+			fprintf(fptr,"%7.5f %10.7f ",Theta[0],yreal);
+			for(isample=0;isample<emulator.NASample;isample++){
+				y=emulator.smooth->CalcY(emulator.ASample[isample],emulator.Lambda,Theta);
+				accuracy+=(y-yreal)*(y-yreal);
+				fprintf(fptr," %10.7f",y);
+			}
+			fprintf(fptr,"\n");
 		}
-		ASample[isample]=A;
+		fclose(fptr);
 	}
-	accuracy=accuracy/double(nsample*ntest);
-	printf("accuracy=%g\n",sqrt(accuracy));
+	accuracy=accuracy/double(nsample*ntest*nreal);
+	printf("accuracy=%10.3e\n",sqrt(accuracy));
 	
 	return 0;
 }

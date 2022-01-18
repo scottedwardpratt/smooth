@@ -8,13 +8,13 @@ CSmooth::CSmooth(){
 	//
 }
 
-CSmooth::CSmooth(unsigned int MaxRank_set,unsigned int NPars_set){
+CSmooth::CSmooth(unsigned int NPars_set){
 	unsigned int ic,j,isame,ir;
 	vector<unsigned int> countsame;
 	vector<unsigned int> dummy;
 	vector<unsigned int> i;
 	NPars=NPars_set;
-	 MaxRank=MaxRank_set;
+	MaxRank=5;
 	factorial.resize(MaxRank+1);
 	factorial[0]=factorial[1]=1;
 	for(j=2;j<=MaxRank;j++)
@@ -178,6 +178,7 @@ CSmooth::CSmooth(unsigned int MaxRank_set,unsigned int NPars_set){
 		printf("size mismatch\n");
 		exit(1);
 	}
+	printf("NCoefficients=%u\n",NCoefficients);
 }
 
 double CSmooth::CalcY(vector<double> &A,vector<double> &Lambda,vector<double> &theta){
