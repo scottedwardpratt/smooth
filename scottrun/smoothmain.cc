@@ -8,7 +8,7 @@ using namespace std;
 int main(int argc,char *argv[]){
 	CparameterMap *parmap=new CparameterMap();
 	double y,yreal,accuracy;
-	unsigned int isample,itest,ntest=1000,ipar,ireal,nreal=10;
+	unsigned int isample,itest,ntest=40,ipar,ireal,nreal=10;
 	vector<double> Theta;
 
 	parmap->ReadParsFromFile("parameters.txt");
@@ -18,13 +18,13 @@ int main(int argc,char *argv[]){
 	emulator.randy->reset(-time(NULL));
 
 	emulator.SetThetaSimplex();
-	printf("NTrainingPts=%u\n",emulator.NTrainingPts);
 
 	FILE *fptr;
 	char filename[150];
 	for(ireal=0;ireal<nreal;ireal++){
 		accuracy=0.0;
-		sprintf(filename,"testresults_multiD/real%u.txt",ireal);
+		sprintf(filename,"testresults/NPars%d_Lambda%g_TrainRank%d_real%u.txt",
+			emulator.NPars,emulator.LAMBDA,emulator.TrainRank,ireal);
 		fptr=fopen(filename,"w");
 		emulator.CalcYTrainFromRealA();	
 		//emulator.CalcAFromTraining(emulator.A);
@@ -40,8 +40,12 @@ int main(int argc,char *argv[]){
 
 		for(itest=0;itest<ntest;itest++){
 			for(ipar=0;ipar<emulator.NPars;ipar++){
-				Theta[ipar]=1.0-2.0*emulator.randy->ran();
-				//Theta[ipar]=-1.0+(2.0/double(ntest))*(0.5+itest);
+				if(emulator.NPars==1){
+					Theta[ipar]=-1.0+(2.0/double(ntest))*(0.5+itest);
+					fprintf(fptr,"%10.7f ",Theta[ipar]);
+				}
+				else
+					Theta[ipar]=1.0-2.0*emulator.randy->ran();
 			}
 			yreal=emulator.CalcRealYFromRealA(Theta);
 			fprintf(fptr,"%10.7f ",yreal);
