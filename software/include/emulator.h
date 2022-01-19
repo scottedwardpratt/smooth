@@ -24,29 +24,30 @@ public:
 	CSmooth *smooth;
 	Eigen::MatrixXd M;
 
-	double Amag,MCstepsize,LAMBDA,RTrain;
+	double Amag,AmagTrial,MCstepsize,LAMBDA,RTrain;
 	vector<double> Lambda;
 	unsigned int NMC;   // NMC is for generating independent samplings of A in TuneA
 	unsigned int NASample,TrainRank;
 	vector<vector<double>> ASample;
+	vector<double> AmagSample;
 	vector<double> A,ATrial;
 	vector<double> YTrain;
 	vector<vector<double>> ThetaTrain;
 	CSimplexSampler *simplex;
 	
 	CSmoothEmulator(CparameterMap *parmap);
-	void CalcAFromTraining(vector<double> &Aptr);
+	void CalcAFromTraining(vector<double> &AA);
 	void PrintA(vector<double> &Aprint);
 	
 	void SetNTrainingPts(unsigned int NTrainingPts_set);
 	void SetThetaSimplex();
 	void TuneA();
-	double GetLog_AProb(vector<double> &A,double Amag);
+	double GetLog_AProb(vector<double> &AA,double Amag);
 
 	void SetA_Zero(vector<double> &A);
-	void SetA_RanGauss(double Amag,vector<double> &A);
-	void SetA_Constant(double Amag,vector<double> &A);
-	void SetA_RanSech(double Amag,vector<double> &A);
+	void SetA_RanGauss(double AAmag,vector<double> &AA);
+	void SetA_Constant(double AAmag,vector<double> &AA);
+	void SetA_RanSech(double AAmag,vector<double> &AA);
 
 	void SetLambda_Constant(double LAMBDA_set);
 

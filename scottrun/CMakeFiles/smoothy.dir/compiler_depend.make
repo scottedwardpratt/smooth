@@ -637,6 +637,7 @@ CMakeFiles/smoothy.dir/smoothmain.cc.o: smoothmain.cc \
   /Users/scottpratt/git/commonutils/software/include/misc.h \
   /Users/scottpratt/git/commonutils/software/include/randy.h \
   /Users/scottpratt/git/smooth/software/include/emulator.h \
+  /Users/scottpratt/git/smooth/software/include/simplex.h \
   /Users/scottpratt/git/commonutils/software/include/gslmatrix.h
 
 
@@ -741,6 +742,8 @@ CMakeFiles/smoothy.dir/smoothmain.cc.o: smoothmain.cc \
 /usr/local/include/eigen3/Eigen/src/Core/products/GeneralMatrixMatrix.h:
 
 /usr/local/include/eigen3/Eigen/src/Core/products/GeneralMatrixVector.h:
+
+/Users/scottpratt/git/smooth/software/include/simplex.h:
 
 /usr/local/include/eigen3/Eigen/src/Core/ProductEvaluators.h:
 
