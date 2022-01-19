@@ -24,7 +24,7 @@ public:
 	CSmooth *smooth;
 	Eigen::MatrixXd M;
 
-	double Amag,AmagTrial,MCstepsize,LAMBDA,RTrain;
+	double Amag0,Amag,AmagTrial,MCStepSize,MCAmagStepSize,LAMBDA,RTrain;
 	vector<double> Lambda;
 	unsigned int NMC;   // NMC is for generating independent samplings of A in TuneA
 	unsigned int NASample,TrainRank;

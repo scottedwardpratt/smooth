@@ -58,4 +58,5 @@ set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/extern_b3d2.dir/DependInfo.cmake"
   "CMakeFiles/extern_smooth.dir/DependInfo.cmake"
   "CMakeFiles/smoothy.dir/DependInfo.cmake"
+  "CMakeFiles/smoothy_onepar.dir/DependInfo.cmake"
   )

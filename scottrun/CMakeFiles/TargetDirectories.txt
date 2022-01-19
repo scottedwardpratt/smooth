@@ -3,5 +3,6 @@
 /Users/scottpratt/git/smooth/scottrun/CMakeFiles/extern_b3d2.dir
 /Users/scottpratt/git/smooth/scottrun/CMakeFiles/extern_smooth.dir
 /Users/scottpratt/git/smooth/scottrun/CMakeFiles/smoothy.dir
+/Users/scottpratt/git/smooth/scottrun/CMakeFiles/smoothy_onepar.dir
 /Users/scottpratt/git/smooth/scottrun/CMakeFiles/edit_cache.dir
 /Users/scottpratt/git/smooth/scottrun/CMakeFiles/rebuild_cache.dir
