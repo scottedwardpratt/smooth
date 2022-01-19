@@ -1,0 +1,10 @@
+Smooth_NPars 1
+Smooth_NTrainingPts 0
+Smooth_LAMBDA 1.5
+Smooth_Amag 1.5
+Smooth_NMC 10000
+Smooth_NASample 10
+Smooth_RTrain 0.825 // Must be between 0 and 1
+Smooth_TrainRank 1 // Must be 1 or 2
+Smooth_MCStepSize 0.3
+Smooth_MCAmagStepSize 0.01
