@@ -57,8 +57,9 @@ int main(int argc,char *argv[]){
 			fprintf(fptr,"\n");
 		}
 		fclose(fptr);
-		printf("accuracy=%10.3e\n",sqrt(accuracy/double(emulator.NASample*ntest)));
+		printf("accuracy=%7.3f\n",sqrt(accuracy/double(emulator.NASample*ntest)));
 	}
+	printf("<Amag>=%g\n",emulator.Amagbar/double(emulator.NAmag));
 	
 	return 0;
 }

@@ -24,7 +24,7 @@ public:
 	CSmooth *smooth;
 	Eigen::MatrixXd M;
 
-	double Amag0,Amag,AmagTrial,MCStepSize,MCAmagStepSize,LAMBDA,RTrain;
+	double Amag0,Amag,AmagTrial,MCStepSize,MCAmagStepSize,LAMBDA;
 	vector<double> Lambda;
 	unsigned int NMC;   // NMC is for generating independent samplings of A in TuneA
 	unsigned int NASample,TrainRank;
@@ -55,6 +55,9 @@ public:
 	void CalcYTrainFromRealA();
 	double CalcRealYFromRealA(vector<double> &theta); // This also sets up a random RealA
 	vector<double> RealA;
+
+	double Amagbar;
+	int NAmag;
 
 	void GenerateASamples();
 

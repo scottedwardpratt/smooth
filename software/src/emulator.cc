@@ -8,15 +8,20 @@ CSmoothEmulator::CSmoothEmulator(CparameterMap *parmap){
 	smooth=new CSmooth(NPars);
 	randy=new CRandy(-time(NULL));
 	MCStepSize=parmap->getD("Smooth_MCStepSize",0.5);
-	MCStepSize=MCStepSize/double(NPars);
 	MCAmagStepSize=parmap->getD("Smooth_MCAmagStepSize",0.1);
-	MCAmagStepSize=MCAmagStepSize/double(NPars);
+	
 	Amag0=parmap->getD("Smooth_Amag",1.0);
 	Amag=Amag0;
+	NAmag=0;
+	Amagbar=0.0;
+
+	MCStepSize=MCStepSize/double(NPars*NPars);
+	MCAmagStepSize=MCAmagStepSize/double(NPars*NPars);
+
+
 	NMC=parmap->getI("Smooth_NMC",10000);
 	NASample=parmap->getI("Smooth_NASample",10);
 	TrainRank=parmap->getI("Smooth_TrainRank",1);
-	RTrain=parmap->getD("Smooth_RTrain",0.9);  
 	ASample.resize(NASample);
 	Lambda.resize(NPars);
 	simplex=new CSimplexSampler(parmap);
@@ -47,14 +52,7 @@ void CSmoothEmulator::SetNTrainingPts(unsigned int NTrainingPts_set){
 
 void CSmoothEmulator::SetThetaSimplex(){
 	unsigned int NTrain;
-	if(TrainRank==1)
-		simplex->SetThetaRank1(ThetaTrain,NTrain);
-	else if(TrainRank==2)
-		simplex->SetThetaRank2(ThetaTrain,NTrain);
-	else{
-		printf("Smooth_ThetaRank in parmap must be 0 or 1\n");
-		exit(1);
-	}
+	simplex->SetThetaSimplex(ThetaTrain,NTrain);
 	SetNTrainingPts(NTrain);
 }
 
@@ -75,10 +73,12 @@ void CSmoothEmulator::TuneA(){
 	BestLogP=logP;
 	for(imc=0;imc<NMC;imc++){
 		for(ic=NTrainingPts;ic<smooth->NCoefficients;ic++){
-			(*ATrialptr)[ic]=(*Aptr)[ic]+MCStepSize*randy->ran_gauss();
+			(*ATrialptr)[ic]=(*Aptr)[ic]+Amag*MCStepSize*randy->ran_gauss();
 		}
-		//AmagTrial=sqrt(fabs(Amag*Amag+MCStepSize*randy->ran_gauss()));
 		AmagTrial=fabs(Amag+Amag0*MCAmagStepSize*randy->ran_gauss());
+		for(ic=NTrainingPts;ic<smooth->NCoefficients;ic++){
+			(*ATrialptr)[ic]*=(AmagTrial/Amag);
+		}
 		CalcAFromTraining(*ATrialptr);
 		logPTrial=GetLog_AProb(*ATrialptr,AmagTrial);
 		dlp=logPTrial-logP;
@@ -153,15 +153,15 @@ void CSmoothEmulator::CalcAFromTraining(vector<double> &AA){
 		AA[itrain]=Ashort(itrain);
 }
 
-double CSmoothEmulator::GetLog_AProb(vector<double> &A,double Amag){
+double CSmoothEmulator::GetLog_AProb(vector<double> &AA,double AAmag){
 	double answer=0.0;
 	// Don't prefer small A[0], so start at ic=1
 	for(unsigned int ic=1;ic<smooth->NCoefficients;ic++){
 		//answer-=log(1.0+A[ic]*A[ic]/(Amag*Amag));
-		answer-=0.5*A[ic]*A[ic]/(Amag*Amag);
+		answer-=0.5*AA[ic]*AA[ic]/(AAmag*AAmag);
 	}
-	answer-=(smooth->NCoefficients-1)*log(Amag);
-	answer-=Amag/Amag0;
+	answer-=(NTrainingPts-1)*log(AAmag);
+	answer-=log(1.0+0.25*(AAmag*AAmag)/(Amag0*Amag0));
 	return answer;
 }
 
@@ -199,6 +199,8 @@ void CSmoothEmulator::GenerateASamples(){
 			ASample[isample][ic]=A[ic];
 		}
 	}
+	Amagbar+=Amag;
+	NAmag+=1;
 }
 
 void CSmoothEmulator::PrintA(vector<double> &Aprint){

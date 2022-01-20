@@ -64,7 +64,6 @@ CMAKE_BINARY_DIR = /Users/scottpratt/git/smooth/scottrun
 
 # The main recursive "all" target.
 all: CMakeFiles/smoothy.dir/all
-all: CMakeFiles/smoothy_onepar.dir/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
@@ -77,7 +76,6 @@ clean: CMakeFiles/extern_coral.dir/clean
 clean: CMakeFiles/extern_b3d2.dir/clean
 clean: CMakeFiles/extern_smooth.dir/clean
 clean: CMakeFiles/smoothy.dir/clean
-clean: CMakeFiles/smoothy_onepar.dir/clean
 .PHONY : clean
 
 #=============================================================================
@@ -162,9 +160,9 @@ CMakeFiles/extern_b3d2.dir/clean:
 # Target rules for target CMakeFiles/extern_smooth.dir
 
 # All Build rule for target.
+CMakeFiles/extern_smooth.dir/all: CMakeFiles/extern_commonutils.dir/all
 CMakeFiles/extern_smooth.dir/all: CMakeFiles/extern_coral.dir/all
 CMakeFiles/extern_smooth.dir/all: CMakeFiles/extern_b3d2.dir/all
-CMakeFiles/extern_smooth.dir/all: CMakeFiles/extern_commonutils.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/extern_smooth.dir/build.make CMakeFiles/extern_smooth.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/extern_smooth.dir/build.make CMakeFiles/extern_smooth.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/scottpratt/git/smooth/scottrun/CMakeFiles --progress-num= "Built target extern_smooth"
@@ -190,10 +188,10 @@ CMakeFiles/extern_smooth.dir/clean:
 # Target rules for target CMakeFiles/smoothy.dir
 
 # All Build rule for target.
+CMakeFiles/smoothy.dir/all: CMakeFiles/extern_commonutils.dir/all
 CMakeFiles/smoothy.dir/all: CMakeFiles/extern_coral.dir/all
 CMakeFiles/smoothy.dir/all: CMakeFiles/extern_b3d2.dir/all
 CMakeFiles/smoothy.dir/all: CMakeFiles/extern_smooth.dir/all
-CMakeFiles/smoothy.dir/all: CMakeFiles/extern_commonutils.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy.dir/build.make CMakeFiles/smoothy.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy.dir/build.make CMakeFiles/smoothy.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/scottpratt/git/smooth/scottrun/CMakeFiles --progress-num=1,2 "Built target smoothy"
@@ -214,35 +212,6 @@ smoothy: CMakeFiles/smoothy.dir/rule
 CMakeFiles/smoothy.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy.dir/build.make CMakeFiles/smoothy.dir/clean
 .PHONY : CMakeFiles/smoothy.dir/clean
-
-#=============================================================================
-# Target rules for target CMakeFiles/smoothy_onepar.dir
-
-# All Build rule for target.
-CMakeFiles/smoothy_onepar.dir/all: CMakeFiles/extern_coral.dir/all
-CMakeFiles/smoothy_onepar.dir/all: CMakeFiles/extern_b3d2.dir/all
-CMakeFiles/smoothy_onepar.dir/all: CMakeFiles/extern_smooth.dir/all
-CMakeFiles/smoothy_onepar.dir/all: CMakeFiles/extern_commonutils.dir/all
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy_onepar.dir/build.make CMakeFiles/smoothy_onepar.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy_onepar.dir/build.make CMakeFiles/smoothy_onepar.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/scottpratt/git/smooth/scottrun/CMakeFiles --progress-num=3,4 "Built target smoothy_onepar"
-.PHONY : CMakeFiles/smoothy_onepar.dir/all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/smoothy_onepar.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/scottpratt/git/smooth/scottrun/CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/smoothy_onepar.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/scottpratt/git/smooth/scottrun/CMakeFiles 0
-.PHONY : CMakeFiles/smoothy_onepar.dir/rule
-
-# Convenience name for target.
-smoothy_onepar: CMakeFiles/smoothy_onepar.dir/rule
-.PHONY : smoothy_onepar
-
-# clean rule for target.
-CMakeFiles/smoothy_onepar.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy_onepar.dir/build.make CMakeFiles/smoothy_onepar.dir/clean
-.PHONY : CMakeFiles/smoothy_onepar.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

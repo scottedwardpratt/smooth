@@ -17,7 +17,8 @@ void CSimplexSampler::SetThetaSimplex(vector<vector<double>> &ThetaTrain,unsigne
 
 void CSimplexSampler::SetThetaRank1(vector<vector<double>> &ThetaTrain,unsigned int &NTrain){
 	unsigned int ipar,itrain,jtrain;
-	double R,z;
+	double R,z,RTrain;
+	RTrain=1.0-1.0/double(NPars+1);
 	NTrain=NPars+1;
 	ThetaTrain.resize(NTrain);
 	for(itrain=0;itrain<NTrain;itrain++){
@@ -46,7 +47,8 @@ void CSimplexSampler::SetThetaRank1(vector<vector<double>> &ThetaTrain,unsigned 
 
 void CSimplexSampler::SetThetaRank2(vector<vector<double>> &ThetaTrain, unsigned int &NTrain){
 	unsigned int ipar,itrain,jtrain,N1,n;
-	double R,z;
+	double R,z,RTrain;
+	RTrain=1.0-1.0/double(NPars+1);
 	NTrain=NPars+1;
 	ThetaTrain.resize(NTrain);
 	for(itrain=0;itrain<NTrain;itrain++){

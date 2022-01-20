@@ -181,19 +181,6 @@ smoothy/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy.dir/build.make CMakeFiles/smoothy.dir/build
 .PHONY : smoothy/fast
 
-#=============================================================================
-# Target rules for targets named smoothy_onepar
-
-# Build rule for target.
-smoothy_onepar: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 smoothy_onepar
-.PHONY : smoothy_onepar
-
-# fast build rule for target.
-smoothy_onepar/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy_onepar.dir/build.make CMakeFiles/smoothy_onepar.dir/build
-.PHONY : smoothy_onepar/fast
-
 smoothmain.o: smoothmain.cc.o
 .PHONY : smoothmain.o
 
@@ -218,30 +205,6 @@ smoothmain.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy.dir/build.make CMakeFiles/smoothy.dir/smoothmain.cc.s
 .PHONY : smoothmain.cc.s
 
-smoothmain_onepar.o: smoothmain_onepar.cc.o
-.PHONY : smoothmain_onepar.o
-
-# target to build an object file
-smoothmain_onepar.cc.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy_onepar.dir/build.make CMakeFiles/smoothy_onepar.dir/smoothmain_onepar.cc.o
-.PHONY : smoothmain_onepar.cc.o
-
-smoothmain_onepar.i: smoothmain_onepar.cc.i
-.PHONY : smoothmain_onepar.i
-
-# target to preprocess a source file
-smoothmain_onepar.cc.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy_onepar.dir/build.make CMakeFiles/smoothy_onepar.dir/smoothmain_onepar.cc.i
-.PHONY : smoothmain_onepar.cc.i
-
-smoothmain_onepar.s: smoothmain_onepar.cc.s
-.PHONY : smoothmain_onepar.s
-
-# target to generate assembly for a file
-smoothmain_onepar.cc.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy_onepar.dir/build.make CMakeFiles/smoothy_onepar.dir/smoothmain_onepar.cc.s
-.PHONY : smoothmain_onepar.cc.s
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -255,13 +218,9 @@ help:
 	@echo "... extern_coral"
 	@echo "... extern_smooth"
 	@echo "... smoothy"
-	@echo "... smoothy_onepar"
 	@echo "... smoothmain.o"
 	@echo "... smoothmain.i"
 	@echo "... smoothmain.s"
-	@echo "... smoothmain_onepar.o"
-	@echo "... smoothmain_onepar.i"
-	@echo "... smoothmain_onepar.s"
 .PHONY : help
 
 
