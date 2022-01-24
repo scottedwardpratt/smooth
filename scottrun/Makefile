@@ -181,6 +181,19 @@ smoothy/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy.dir/build.make CMakeFiles/smoothy.dir/build
 .PHONY : smoothy/fast
 
+#=============================================================================
+# Target rules for targets named smoothtest
+
+# Build rule for target.
+smoothtest: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 smoothtest
+.PHONY : smoothtest
+
+# fast build rule for target.
+smoothtest/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothtest.dir/build.make CMakeFiles/smoothtest.dir/build
+.PHONY : smoothtest/fast
+
 smoothmain.o: smoothmain.cc.o
 .PHONY : smoothmain.o
 
@@ -205,6 +218,30 @@ smoothmain.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy.dir/build.make CMakeFiles/smoothy.dir/smoothmain.cc.s
 .PHONY : smoothmain.cc.s
 
+smoothtest.o: smoothtest.cc.o
+.PHONY : smoothtest.o
+
+# target to build an object file
+smoothtest.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothtest.dir/build.make CMakeFiles/smoothtest.dir/smoothtest.cc.o
+.PHONY : smoothtest.cc.o
+
+smoothtest.i: smoothtest.cc.i
+.PHONY : smoothtest.i
+
+# target to preprocess a source file
+smoothtest.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothtest.dir/build.make CMakeFiles/smoothtest.dir/smoothtest.cc.i
+.PHONY : smoothtest.cc.i
+
+smoothtest.s: smoothtest.cc.s
+.PHONY : smoothtest.s
+
+# target to generate assembly for a file
+smoothtest.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothtest.dir/build.make CMakeFiles/smoothtest.dir/smoothtest.cc.s
+.PHONY : smoothtest.cc.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -217,10 +254,14 @@ help:
 	@echo "... extern_commonutils"
 	@echo "... extern_coral"
 	@echo "... extern_smooth"
+	@echo "... smoothtest"
 	@echo "... smoothy"
 	@echo "... smoothmain.o"
 	@echo "... smoothmain.i"
 	@echo "... smoothmain.s"
+	@echo "... smoothtest.o"
+	@echo "... smoothtest.i"
+	@echo "... smoothtest.s"
 .PHONY : help
 
 

@@ -8,15 +8,15 @@ CSmoothEmulator::CSmoothEmulator(CparameterMap *parmap){
 	smooth=new CSmooth(NPars);
 	randy=new CRandy(-time(NULL));
 	MCStepSize=parmap->getD("Smooth_MCStepSize",0.5);
-	MCAmagStepSize=parmap->getD("Smooth_MCAmagStepSize",0.1);
+	MCSigmaYStepSize=parmap->getD("Smooth_MCSigmaYStepSize",0.1);
 	
-	Amag0=parmap->getD("Smooth_Amag",1.0);
-	Amag=Amag0;
-	NAmag=0;
-	Amagbar=0.0;
+	SigmaY0=parmap->getD("Smooth_SigmaY",1.0);
+	SigmaY=SigmaY0;
+	NSigmaY=0;
+	SigmaYbar=0.0;
 
 	MCStepSize=MCStepSize/double(NPars*NPars);
-	MCAmagStepSize=MCAmagStepSize/double(NPars*NPars);
+	MCSigmaYStepSize=MCSigmaYStepSize/double(NPars*NPars);
 
 
 	NMC=parmap->getI("Smooth_NMC",10000);
@@ -28,11 +28,11 @@ CSmoothEmulator::CSmoothEmulator(CparameterMap *parmap){
 	SetLambda_Constant(LAMBDA);
 	for(unsigned int isample=0;isample<NASample;isample++){
 		ASample[isample].resize(smooth->NCoefficients);
-		//SetA_RanGauss(Amag,ASample[isample]);
+		//SetA_RanGauss(SigmaY,ASample[isample]);
 		SetA_Zero(ASample[isample]);
 	}
 	A.resize(smooth->NCoefficients);
-	//SetA_RanGauss(Amag,A);
+	//SetA_RanGauss(SigmaY,A);
 	SetA_Zero(A);
 	ATrial.resize(smooth->NCoefficients);
 	SetA_Zero(ATrial);
@@ -58,7 +58,7 @@ void CSmoothEmulator::SetThetaSimplex(){
 
 void CSmoothEmulator::TuneA(){
 	vector<double> *Aswitch,*Aptr,*ATrialptr;
-	double dlp,r,Amagswitch;
+	double dlp,r,SigmaYswitch;
 	unsigned int success=0,ic,imc;
 	double BestLogP;
 	CalcAFromTraining(A);
@@ -67,28 +67,28 @@ void CSmoothEmulator::TuneA(){
 	}
 	Aptr=&A;
 	ATrialptr=&ATrial;
-	AmagTrial=Amag;
+	SigmaYTrial=SigmaY;
 	double logP,logPTrial;
-	logP=GetLog_AProb(*Aptr,Amag);
+	logP=GetLog_AProb(*Aptr,SigmaY);
 	BestLogP=logP;
 	for(imc=0;imc<NMC;imc++){
 		for(ic=NTrainingPts;ic<smooth->NCoefficients;ic++){
-			(*ATrialptr)[ic]=(*Aptr)[ic]+Amag*MCStepSize*randy->ran_gauss();
+			(*ATrialptr)[ic]=(*Aptr)[ic]+SigmaY*MCStepSize*randy->ran_gauss();
 		}
-		AmagTrial=fabs(Amag+Amag0*MCAmagStepSize*randy->ran_gauss());
+		SigmaYTrial=fabs(SigmaY+SigmaY0*MCSigmaYStepSize*randy->ran_gauss());
 		for(ic=NTrainingPts;ic<smooth->NCoefficients;ic++){
-			(*ATrialptr)[ic]*=(AmagTrial/Amag);
+			(*ATrialptr)[ic]*=(SigmaYTrial/SigmaY);
 		}
 		CalcAFromTraining(*ATrialptr);
-		logPTrial=GetLog_AProb(*ATrialptr,AmagTrial);
+		logPTrial=GetLog_AProb(*ATrialptr,SigmaYTrial);
 		dlp=logPTrial-logP;
 		if(dlp>0.0){
 			Aswitch=Aptr;
 			Aptr=ATrialptr;
 			ATrialptr=Aswitch;
-			Amagswitch=Amag;
-			Amag=AmagTrial;
-			AmagTrial=Amagswitch;
+			SigmaYswitch=SigmaY;
+			SigmaY=SigmaYTrial;
+			SigmaYTrial=SigmaYswitch;
 			logP=logPTrial;
 			success+=1;
 		}
@@ -100,9 +100,9 @@ void CSmoothEmulator::TuneA(){
 					Aswitch=Aptr;
 					Aptr=ATrialptr;
 					ATrialptr=Aswitch;
-					Amagswitch=Amag;
-					Amag=AmagTrial;
-					AmagTrial=Amagswitch;
+					SigmaYswitch=SigmaY;
+					SigmaY=SigmaYTrial;
+					SigmaYTrial=SigmaYswitch;
 					logP=logPTrial;
 					success+=1;
 				}
@@ -118,7 +118,7 @@ void CSmoothEmulator::TuneA(){
 		}
 	}
 	
-	printf("success percentage=%g, Amag=%g, logP=%g\n",double(success)*100.0/double(NMC),Amag,logP);
+	printf("success percentage=%g, SigmaY=%g, logP=%g\n",double(success)*100.0/double(NMC),SigmaY,logP);
 }
 
 // This adjust first NTrainingPts coefficients to reproduce Y training values
@@ -153,15 +153,15 @@ void CSmoothEmulator::CalcAFromTraining(vector<double> &AA){
 		AA[itrain]=Ashort(itrain);
 }
 
-double CSmoothEmulator::GetLog_AProb(vector<double> &AA,double AAmag){
+double CSmoothEmulator::GetLog_AProb(vector<double> &AA,double ASigmaY){
 	double answer=0.0;
 	// Don't prefer small A[0], so start at ic=1
 	for(unsigned int ic=1;ic<smooth->NCoefficients;ic++){
-		//answer-=log(1.0+A[ic]*A[ic]/(Amag*Amag));
-		answer-=0.5*AA[ic]*AA[ic]/(AAmag*AAmag);
+		//answer-=log(1.0+A[ic]*A[ic]/(SigmaY*SigmaY));
+		answer-=0.5*AA[ic]*AA[ic]/(ASigmaY*ASigmaY);
 	}
-	answer-=(NTrainingPts-1)*log(AAmag);
-	answer-=log(1.0+0.25*(AAmag*AAmag)/(Amag0*Amag0));
+	answer-=(NTrainingPts-1)*log(ASigmaY);
+	answer-=log(1.0+0.25*(ASigmaY*ASigmaY)/(SigmaY0*SigmaY0));
 	return answer;
 }
 
@@ -175,20 +175,20 @@ void CSmoothEmulator::SetA_Zero(vector<double> &A){
 		A[ic]=0.0;
 }
 
-void CSmoothEmulator::SetA_RanGauss(double Amag,vector<double> &A){
+void CSmoothEmulator::SetA_RanGauss(double SigmaY,vector<double> &A){
 	for(unsigned int ic=0;ic<A.size();ic++)
-		A[ic]=Amag*randy->ran_gauss();
+		A[ic]=SigmaY*randy->ran_gauss();
 }
 
-void CSmoothEmulator::SetA_Constant(double Amag,vector<double> &A){
+void CSmoothEmulator::SetA_Constant(double SigmaY,vector<double> &A){
 	for(unsigned int ic=0;ic<A.size();ic++)
-		A[ic]=Amag;
+		A[ic]=SigmaY;
 }
 
-void CSmoothEmulator::SetA_RanSech(double Amag,vector<double> &A){
+void CSmoothEmulator::SetA_RanSech(double SigmaY,vector<double> &A){
 	double r=1.0-2.0*randy->ran();
 	for(unsigned int ic=0;ic<A.size();ic++)
-		A[ic]=Amag*2.0*atanh(tan(0.5*PI*(r-0.5)));
+		A[ic]=SigmaY*2.0*atanh(tan(0.5*PI*(r-0.5)));
 }
 
 void CSmoothEmulator::GenerateASamples(){
@@ -199,8 +199,8 @@ void CSmoothEmulator::GenerateASamples(){
 			ASample[isample][ic]=A[ic];
 		}
 	}
-	Amagbar+=Amag;
-	NAmag+=1;
+	SigmaYbar+=SigmaY;
+	NSigmaY+=1;
 }
 
 void CSmoothEmulator::PrintA(vector<double> &Aprint){

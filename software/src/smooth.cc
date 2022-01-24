@@ -181,30 +181,59 @@ CSmooth::CSmooth(unsigned int NPars_set){
 	printf("NCoefficients=%u\n",NCoefficients);
 }
 
-double CSmooth::CalcY(vector<double> &A,vector<double> &Lambda,vector<double> &theta){
+double CSmooth::CalcY(vector<double> &A,double LAMBDA,vector<double> &theta){
 	unsigned int ic,ir;
-	double answer=0.0,term;
+	double answer=0.0,term,rfactor;
+	rfactor=GetRFactor(LAMBDA,theta);
 	answer=0.0;
 	for(ic=0;ic<NCoefficients;ic++){
-		term=A[ic]*dupfactor[ic]/factorial[rank[ic]];
+		term=A[ic]*sqrt(double(dupfactor[ic])/double(factorial[rank[ic]]));
 		for(ir=0;ir<rank[ic];ir++){
-			term*=theta[IPar[ic][ir]]/Lambda[IPar[ic][ir]];
+			term*=theta[IPar[ic][ir]]/LAMBDA;
 		}
+		//printf("ic=%3u, A=%10.7f, term=%10.7f dupfactor=%10.7u\n",ic,A[ic],term,dupfactor[ic]);
 		answer+=term;
 	}
+	answer*=rfactor;
 	return answer;
 }
 
-double CSmooth::CalcY_Remainder(vector<double> &A,vector<double> &Lambda,vector<double> &theta,unsigned int NTrainingPts){
+double CSmooth::CalcY_Remainder(vector<double> &A,double LAMBDA,vector<double> &theta,unsigned int NTrainingPts){
 	unsigned int ic,ir;
-	double answer=0.0,term;
+	double answer=0.0,term,rfactor;
+	rfactor=GetRFactor(LAMBDA,theta);
 	answer=0.0;
 	for(ic=NTrainingPts;ic<NCoefficients;ic++){
-		term=A[ic]*dupfactor[ic]/factorial[rank[ic]];
+		term=A[ic]*sqrt(double(dupfactor[ic])/double(factorial[rank[ic]]));
 		for(ir=0;ir<rank[ic];ir++){
-			term*=theta[IPar[ic][ir]]/Lambda[IPar[ic][ir]];
+			term*=theta[IPar[ic][ir]]/LAMBDA;
 		}
 		answer+=term;
+	}
+	answer*=rfactor;
+	return answer;
+}
+
+double CSmooth::GetRFactor(double LAMBDA,vector<double> &theta){
+	unsigned int ir,ipar,NPars=theta.size();
+	double r2=0.0,answer;
+	for(ipar=0;ipar<NPars;ipar++)
+		r2+=theta[ipar]*theta[ipar];
+	answer=1.0;
+	for(ir=1;ir<=MaxRank;ir++){
+		answer+=pow(r2/(LAMBDA*LAMBDA),ir)/double(factorial[ir]);
+	}
+	answer=1.0/sqrt(answer);
+	return answer;
+}
+
+double CSmooth::GetM(int ic,double LAMBDA,vector<double> &theta){
+	unsigned int ir;
+	double answer,rfactor=1.0;
+	rfactor=GetRFactor(LAMBDA,theta);
+	answer=rfactor*sqrt(double(dupfactor[ic])/double(factorial[rank[ic]]));
+	for(ir=0;ir<rank[ic];ir++){
+		answer*=theta[IPar[ic][ir]]/LAMBDA;
 	}
 	return answer;
 }

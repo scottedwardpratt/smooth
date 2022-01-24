@@ -28,3 +28,9 @@ set(SOURCE_FILES ./smoothmain.cc)
 add_executable(smoothy ${CMAKE_CURRENT_SOURCE_DIR}/smoothmain.cc)
 add_dependencies(smoothy extern_smooth extern_b3d2 extern_coral extern_commonutils)
 target_link_libraries(smoothy ${GITHOME_MSU}/smooth/software/lib/libsmooth.a ${GITHOME_MSU}/hp/alice/software/b3d2/lib/libb3d_alice.a ${GITHOME_MSU}/coral/software/lib/libcoral.a ${GITHOME_MSU}/commonutils/software/lib/libcommonutils.a ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY} ${EIGEN3_LIBRARY})
+
+#################################################
+set(SOURCE_FILES ./smoothtest.cc)
+add_executable(smoothtest ${CMAKE_CURRENT_SOURCE_DIR}/smoothtest.cc)
+add_dependencies(smoothtest extern_smooth extern_b3d2 extern_coral extern_commonutils)
+target_link_libraries(smoothtest ${GITHOME_MSU}/smooth/software/lib/libsmooth.a ${GITHOME_MSU}/hp/alice/software/b3d2/lib/libb3d_alice.a ${GITHOME_MSU}/coral/software/lib/libcoral.a ${GITHOME_MSU}/commonutils/software/lib/libcommonutils.a ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY} ${EIGEN3_LIBRARY})

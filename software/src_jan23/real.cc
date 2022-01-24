@@ -10,7 +10,7 @@ void CSmoothEmulator::CalcYTrainFromRealA(){
 	unsigned int iTrain;
 	if(RealA.size()!=smooth->NCoefficients)
 		RealA.resize(smooth->NCoefficients);
-	SetA_RanGauss(Amag0,RealA);
+	SetA_RanGauss(SigmaY0,RealA);
 	for(iTrain=0;iTrain<NTrainingPts;iTrain++){
 		YTrain[iTrain]=CalcRealYFromRealA(ThetaTrain[iTrain]);
 	}

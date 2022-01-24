@@ -18,15 +18,16 @@
 
 class CSimplexSampler{
 public:
-	unsigned int NPars,NTrainingPts,TrainRank;
+	unsigned int NPars,NTrainingPts,TrainType;
 	double RTrain;
 	CSimplexSampler(CparameterMap *parmap){
 		NPars=parmap->getD("Smooth_NPars",0);
-		TrainRank=parmap->getI("Smooth_TrainRank",1);
+		TrainType=parmap->getI("Smooth_TrainType",1);
 		RTrain=parmap->getD("Smooth_RTrain",0.9); 
 	}
-	void SetThetaRank1(vector<vector<double>> &ThetaTrain,unsigned int &NTrain);
-	void SetThetaRank2(vector<vector<double>> &ThetaTrain,unsigned int &NTrain);
+	void SetThetaType1(vector<vector<double>> &ThetaTrain,unsigned int &NTrain);
+	void SetThetaType2(vector<vector<double>> &ThetaTrain,unsigned int &NTrain);
+	void SetThetaType3(vector<vector<double>> &ThetaTrain,unsigned int &NTrain);
 	void SetThetaSimplex(vector<vector<double>> &ThetaTrain,unsigned int &NTrain);
 
 };

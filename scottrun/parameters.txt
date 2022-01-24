@@ -1,9 +1,9 @@
-Smooth_NPars 5
-Smooth_NTrainingPts 0
-Smooth_LAMBDA 3
-Smooth_Amag 10.0
+Smooth_NPars 6
+#Smooth_NTrainingPts 0
+Smooth_LAMBDA 2
+Smooth_SigmaY 100.0
 Smooth_NMC 10000
 Smooth_NASample 10
-Smooth_TrainRank 1 // Must be 1 or 2
+Smooth_TrainType 2 // Must be 1 or 2
 Smooth_MCStepSize 1.0
-Smooth_MCAmagStepSize 4.0
+Smooth_MCSigmaYStepSize 1.0

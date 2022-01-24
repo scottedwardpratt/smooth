@@ -25,9 +25,11 @@ public:
 	CSmooth();
 	CSmooth(unsigned int NPars_set);	
 	
-	double CalcY(vector<double> &A,vector<double> &Lambda,vector<double> &theta);
+	double CalcY(vector<double> &A,double LAMBDA,vector<double> &theta);
 	void Copy(CSmooth *smooth);
-	double CalcY_Remainder(vector<double> &A,vector<double> &Lambda,vector<double> &theta,unsigned int NTrainingPts);
+	double CalcY_Remainder(vector<double> &A,double LAMBDA,vector<double> &theta,unsigned int NTrainingPts);
+	double GetRFactor(double LAMBDA,vector<double> &theta);
+	double GetM(int ic,double LAMBDA,vector<double> &theta);
 	static vector<unsigned int> factorial;
 };
 
