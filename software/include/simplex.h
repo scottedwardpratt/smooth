@@ -28,6 +28,7 @@ public:
 	void SetThetaType1(vector<vector<double>> &ThetaTrain,unsigned int &NTrain);
 	void SetThetaType2(vector<vector<double>> &ThetaTrain,unsigned int &NTrain);
 	void SetThetaType3(vector<vector<double>> &ThetaTrain,unsigned int &NTrain);
+	void SetThetaType4(vector<vector<double>> &ThetaTrain,unsigned int &NTrain);
 	void SetThetaSimplex(vector<vector<double>> &ThetaTrain,unsigned int &NTrain);
 
 };
