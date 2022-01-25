@@ -1,0 +1,52 @@
+\input{header.tex}
+
+\begin{document}
+
+\centerline{\bf\Large Smooth Emulator and Simplex Sampling}
+\centerline{Scott Pratt}
+\centerline{Michigan State University}
+
+\section{Smooth Emulator}
+
+The choice of model emulators, $E(\theta)$, depends on the prior understanding of the model being emulated, $M(\theta)$. If one knows that  a function is linear, then a linear fit is clearly the best fit. Whereas to reproduce lumpy features, where the lumps have a characteristic length scale, Gaussian process emulators are often an excellent choice. The quality of an emulator can be assessed through the following criteria:
+\begin{itemize}
+  \item $E(\theta_t)=M(\theta_t)$ at the training points, $\theta_t$. 
+  \item The emulator should reasonably reproduce the model away from the training points. This should hold true for either interpolation or extrapolation.
+  \item The emulator should accurately represent its uncertainty
+  \item A minimal number of training points should be needed
+  \item The method should easily adjust to larger numbers of parameters, $\theta_i,~i=1\cdots N_{\rm par}$.
+  \item The emulator should be able to account for noisy models
+  \item Training and running the emulator should not be numerically intensive
+\end{itemize}
+
+Here the goal is to focus on a particular class of functions. Those functions are {\it smooth}. Smoothness is a prior knowledge of the function. It is an expectation that the linear terms of the function are likely to provide more variance than the quadratic contributions, which are in turn likely to be more important than the cubic corrections, and so on. 
+
+To that end the following form for $E(\theta)$ is proposed,
+\begin{align*}\eqnumber\label{eq:emudef}
+E(\vec{\theta})&=f(|\vec{\theta}|^2)\sum_{\langle n_i\rangle} d_{\langle n_i\rangle}A_{\langle n_i\rangle}
+\left(\frac{\theta_1}{\Lambda}\right)^{n_1}\left(\frac{\theta_2}{\Lambda}\right)^{n_2}\cdots 
+\left(\frac{\theta_{N_{\rm par}}}{\Lambda}\right)^{n_{N_{\rm par}}}
+\end{align*}
+Here, the coefficients $A$ are stochastically distributed. For each combination $c=\langle n_i\rangle$, the probability is weighted by 
+\begin{align*}\eqnumber
+p(A_c)\sim e^{-A_c^2/2\sigma_E^2}.
+\end{align*}
+The parameter $\Lambda$ will be referred to as the smoothness parameter. Here, we assume that all parameters have a similar range, or order unity, e.g. $-1<\theta_i<1$. Thus, the relative importance of each term Eq. (\ref{eq:emudef}) falls with increasing rank, $K=\sum_in_i$, as $(1/\Lambda)^K$. 
+
+The parameters $d_c$ and the function $f(|\vec{\theta}|^2)$ will be chosen to constrain the variance of $E$, as the $A$ coefficients are varied to be independent of the position in paramter space. Clearly, at $|\vec{\theta}|=0$ the only term in Eq. (\ref{eq:emudef}) that contributes is the one $K=0$ term. Averaging over $A$ coefficients, which can be either positive or negative with equal probability,
+\begin{align*}\eqnumber
+\langle E(\vec{\theta})\rangle=0,
+\end{align*}
+where the averaging refers to an average over the $A$ coefficients. At the origin, $|\vec{\theta}|=0$, the variance of $E$ is
+\begin{align*}\eqnumber
+\langle E(\theta_1=\theta_2=\cdots\theta_N=0)^2\rangle=f^2(\vec{\theta}=0)d^2_{n_i=0}\sigma_E^2.
+\end{align*}
+Choosing $f(0)=1$ and $d_{n_i=0}=1$, the variance of $E$ is indeed $\sigma_E^2$. The functions $d_c$ and $f(|\vec{\theta}|^2)$ are further constrained by the requirement that the variance is independent of $\vec{theta}$. 
+\begin{align*}\eqnumber
+\langle E^2(\vec{\theta})\rangle &=
+f(|\vec{\theta}|^2)\sigma_E^2\sum_c d_c^2\theta_1^{2n_{c1}}\theta_2^{2n_{c2}}\cdots \theta_N^{2n_{cN}}.
+\end{align*}
+
+
+
+\end{document}
