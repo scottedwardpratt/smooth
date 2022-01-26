@@ -28,13 +28,13 @@ A_{\vec{n}}
 \left(\frac{\theta_1}{\Lambda}\right)^{n_1}\left(\frac{\theta_2}{\Lambda}\right)^{n_2}\cdots 
 \left(\frac{\theta_N}{\Lambda}\right)^{n_N}.
 \end{align*}
-Here, the coefficients $A$ are stochastically distributed. For each combination $c=\vec{n}$, the probability is weighted by 
+Each term has a rank $K_{\vec{n}}=n_1+n_2+\cdots n_N$. All terms are included up to a given rank. The coefficients $A$ are stochastically distributed. For each combination $\vec{n}$, the probability is weighted by 
 \begin{align*}\eqnumber
-p(A_c)\sim e^{-A_c^2/2\sigma_E^2}, 
+p(A_{\vec{n}})\sim e^{-A_{\vec{n}}^2/2\sigma_E^2}, 
 \end{align*}
 where both the $A$ coefficients and $\sigma_E$ will also be allowed to vary. The parameter $\Lambda$ will be referred to as the smoothness parameter. Here, we assume that all parameters have a similar range, or order unity, e.g. $-1<\theta_i<1$. Thus, the relative importance of each term Eq. (\ref{eq:emudef}) falls with increasing rank, $K=\sum_in_i$, as $(1/\Lambda)^K$. The smoothness parameter is fixed by prior knowledge, i.e. one chooses higher values of $\Lambda$ if one believes the function to be basically linear.
 
-The parameters $d_c$ and the function $f(|\vec{\theta}|^2)$ will be chosen to constrain the variance of $E$, as the $A$ coefficients are varied to be independent of the position in parameter space. Clearly, at $|\vec{\theta}|=0$ the only term in Eq. (\ref{eq:emudef}) that contributes is the one $K=0$ term. Averaging over $A$ coefficients, which can be either positive or negative with equal probability,
+The parameters $d_{\vec{n}}$ and the function $f(|\vec{\theta}|^2)$ will be chosen to constrain the variance of $E$, as the $A$ coefficients are varied to be independent of the position in parameter space. Clearly, at $|\vec{\theta}|=0$ the only term in Eq. (\ref{eq:emudef}) that contributes is the one $K=0$ term. Averaging over $A$ coefficients, which can be either positive or negative with equal probability,
 \begin{align*}\eqnumber
 \langle E(\vec{\theta})\rangle=0,
 \end{align*}
@@ -45,8 +45,9 @@ where the averaging refers to an average over the $A$ coefficients. At the origi
 Choosing $f(0)=1$ and $d_{n_i=0}=1$, the variance of $E$ is indeed $\sigma_E^2$. The functions $d_c$ and $f(|\vec{\theta}|^2)$ are further constrained by the requirement that the variance is independent of $\vec{\theta}$. 
 \begin{align*}\eqnumber
 \langle E^2(\vec{\theta})\rangle &=
-f^2(|\vec{\theta}|)\sigma_E^2\sum_c \frac{1}{\Lambda^{2K_c}}d_c^2
-\theta_1^{2n_{c1}}\theta_2^{2n_{c2}}\cdots \theta_N^{2n_{cN}}.
+f^2(|\vec{\theta}|)\sigma_E^2\sum_{\vec{n}} \frac{1}{\Lambda^{2K_{\vec{n}}}}d_{\vec{n}}^2
+\left(\frac{\theta_1^{2n_1}}{\Lambda^2}\right)\left(\frac{\theta_2^{2n_2}}{\Lambda^2}\right)\cdots 
+\left(\frac{\theta_N^{2n_N}}{\Lambda^2}\right).
 \end{align*}
 If $\langle E^2\rangle$ is to be independent of the direction of $\vec{\theta}$, the sum above must be a function of $|\vec{\theta}|^2$ only. This requires the net contribution from each rank, $K$ to be proportional to  $|\vec{\theta}|^{2K}$ multiplied by some function of $K_c$. Using the fact that
 \begin{align*}\eqnumber
@@ -54,7 +55,7 @@ If $\langle E^2\rangle$ is to be independent of the direction of $\vec{\theta}$,
 \end{align*}
 one can see that if the sum is to depend only on the norm of $\vec{\theta}$,
 \begin{align*}\eqnumber
-d_c^2&=\beta(K_c)\frac{K_c!}{n_{c1}!n_{c2}!\cdots n_{cN}!},
+d_{\vec{n}}^2&=\beta(K_{\vec{n}})\frac{K_{\vec{n}}!}{n_1!n_2!\cdots n_N!},
 \end{align*}
 where $\beta(K)$ is any function of the rank. One can perform the sums for all terms of a given rank, and obtain
 \begin{align*}\eqnumber
@@ -65,7 +66,7 @@ If the sum is to equal $\sigma_E^2$ and be independent of $|\vec{\theta}|$,
 \begin{align*}\eqnumber\label{eq:fform}
 f^2(|\vec{\theta}|)&=\left[\sum_{K=0}^{K_{\rm max}}\beta(K)\left(\frac{|\vec{\theta}|^2}{\Lambda^2}\right)^{K}\right]^{-1}.
 \end{align*}
-The function $\beta$ could be anything, but one would like the sum to be finite for any $|\vec{\theta}|$, even when $|\vec{\theta}|>\Lambda$. An obvious choice is 
+The function $\beta$ could be any function of the rank $K$, but one would like the sum to be finite for any $|\vec{\theta}|$, even when $|\vec{\theta}|>\Lambda$. An obvious choice is 
 \begin{align*}\eqnumber
 \beta(K)&=\frac{1}{K!}.
 \end{align*}
@@ -74,13 +75,26 @@ This form will be assumed hereafter. In practice, a finite number of coefficient
 f(|\vec{\theta}|)|_{K_{\rm max}\rightarrow\infty}=\exp\left(-\frac{|\vec{\theta}|^2}{2\Lambda^2}\right).
 \end{align*}
 This gives us our final form for the emulator,
-\begin{align*}\eqnumber
-E(\vec{\theta})&=f(|\vec{\theta}|^2)\sum_{c~{\rm s.t.}K_c\le K_{\rm max}} \left[n_{c1}!n_{c2}!\cdots n_{cN}!\right]^{-1/2}A_c
-\left(\frac{\theta_1}{\Lambda}\right)^{n_{c1}}\left(\frac{\theta_2}{\Lambda}\right)^{n_{c2}}
-\cdots \left(\frac{\theta_N}{\Lambda}\right)^{n_{cN}},
+\begin{align*}\eqnumber\label{eq:smooth}
+E(\vec{\theta})&=f(|\vec{\theta}|^2)\sum_{\vec{n}~{\rm s.t.}K_{\vec{n}}\le K_{\rm max}} \left[n_1!n_1!\cdots n_N!\right]^{-1/2}A_{\vec{n}}
+\left(\frac{\theta_1}{\Lambda}\right)^{n_1}
+\cdots \left(\frac{\theta_N}{\Lambda}\right)^{n_N},
 \end{align*}
 where the sum over $c$ is the sum overall possible combinations of $n_{1c}\cdots n_{Nc}$ that sum to $K_{\rm max}$ or less, and where the function $f(|\vec{\theta}|)$ is given by Eq. (\ref{eq:fform}).
 
+\subsection{Correlations}
+
+The form for the emulator in Eq. (\ref{eq:smooth}) results in correlations that fall with relative distance. The correlations have a particularly simple form in the $K_{\rm max}\rightarrow \infty$ limit. In that limit
+\begin{align*}\eqnumber
+\langle E(\vec{\theta})E(\vec{\theta}')\rangle&=e^{-|\vec{\theta}'|^2/2\Lambda^2}e^{-|\vec{\theta}|^2/2\Lambda^2}
+\sum_{\vec{n}}\frac{1}{n_1!\cdots n_N!}\langle A_{\vec{n}}^2 
+\left(\frac{\theta_1\theta'_1}{\Lambda^2}\right)^{n_1}\cdots
+\left(\frac{\theta_N\theta'_N}{\Lambda^2}\right)^{n_N}\\
+&=\sigma_E^2e^{-|\vec{\theta}'|^2/2\Lambda^2}e^{-|\vec{\theta}|^2/2\Lambda^2}
+\sum_K\frac{1}{K!}\left(\frac{\vec{\theta}\cdot\vec{\theta}'}{\Lambda^2}\right)^K\\
+&=\sigma_E^2e^{-|\vec{\theta}-\vec{\theta}'|^2/2\Lambda^2}.
+\end{align*}
+The smoothness parameter also sets the correlation length.
 
 
 \end{document}
