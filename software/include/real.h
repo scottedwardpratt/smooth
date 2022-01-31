@@ -1,5 +1,5 @@
-//#ifndef __SMOOTH_H__
-#define __SMOOTH_H__
+#ifndef __REAL_H__
+#define __REAL_H__
 #include <cstdlib>
 #include <cmath>
 #include <cstdio>
@@ -11,6 +11,7 @@
 #include "constants.h"
 #include "randy.h"
 #include <list>
+
 
 using namespace std;
 
@@ -30,6 +31,8 @@ public:
 */
 class CReal_Taylor : public CReal{
 	unsigned int NPars;
-	CReal_Taylor(NPars);
+	CReal_Taylor(unsigned int NPars_Set);
 	void CalcRealY(vector<double> &y, vector<double> &theta);
 };
+
+#endif

@@ -9,7 +9,8 @@ CReal::CReal(){
 //	CSmooth *smooth;
 }
 
-CReal_Taylor::CRealTaylor(NPars){
+CReal_Taylor::CReal_Taylor(unsigned int NPars_Set){
+	NPars=NPars_Set;
 	CSmooth *smooth = new CSmooth(NPars);
 	
 }
