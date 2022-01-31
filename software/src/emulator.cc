@@ -11,6 +11,8 @@ CSmoothEmulator::CSmoothEmulator(CparameterMap *parmap){
 	MCStepSize=parmap->getD("SmoothEmulator_MCStepSize",0.5);
 	MCSigmaYStepSize=parmap->getD("SmoothEmulator_MCSigmaYStepSize",0.1);
 	SigmaY0=parmap->getD("SmoothEmulator_SigmaY",1.0);
+	TuneAChooseMCMC=parmap->getB("SmoothEmulator_TuneAChooseMCMC",true);
+	ConstrainA0=parmap->getB("SmoothEmulator_ConstrainA0",false);
 
 	smooth=new CSmooth(parmap);
 	randy=new CRandy(-time(NULL));
@@ -53,6 +55,15 @@ void CSmoothEmulator::SetThetaSimplex(){
 }
 
 void CSmoothEmulator::TuneA(){
+	if(TuneAChooseMCMC==true){
+		TuneAMCMC();
+	}
+	else{
+		TuneAPerfect();
+	}
+}
+
+void CSmoothEmulator::TuneAMCMC(){
 	vector<double> *Aswitch,*Aptr,*ATrialptr;
 	double dlp,r,SigmaYswitch;
 	unsigned int success=0,ic,imc;
@@ -115,6 +126,50 @@ void CSmoothEmulator::TuneA(){
 	}
 	
 	printf("success percentage=%g, SigmaY=%g, logP=%g\n",double(success)*100.0/double(NMC),SigmaY,logP);
+}
+
+void CSmoothEmulator::TuneAPerfect(){
+	unsigned int ic,ic0,ntry=0,ntrymax=1000000;
+	bool success=false;
+	double weight,warg;//sigmafact=1.0;
+	if(ConstrainA0){
+		ic0=0;
+	}
+	else
+		ic0=1;
+	while(ntry<ntrymax && success==false){
+		SigmaY=0.5*SigmaY0*(1.0+2.0*randy->ran());
+		for(ic=NTrainingPts;ic<smooth->NCoefficients;ic++){
+			//SigmaY=0.5*SigmaY0*tan((PI/2.0)*(1.0-2.0*randy->ran()));
+			ATrial[ic]=SigmaY*randy->ran_gauss();
+		}
+		warg=0.0;
+		CalcAFromTraining(ATrial);
+		for(ic=ic0;ic<NTrainingPts;ic++){
+			warg-=0.5*ATrial[ic]*ATrial[ic]/(SigmaY*SigmaY);
+		}
+		warg-=(NTrainingPts-1)*log(SigmaY/(0.5*SigmaY0));
+		if(warg>0.0){
+			printf("Disaster, warg=%g\n",warg);
+		}
+		if(warg>-100){
+			weight=exp(warg);
+			if(weight>randy->ran()){
+				success=true;
+			}
+		}
+		ntry+=1;
+	}
+	if(ntry>=ntrymax){
+		printf("TuneAPerfect Failed, SigmaY0=%g\n",SigmaY0);
+		exit(1);
+	}
+	else{
+		printf("TuneAPerfect succeeded, ntry=%u, SigmaY=%g, warg=%g\n",ntry,SigmaY,warg);
+		for(ic=0;ic<smooth->NCoefficients;ic++){
+			A[ic]=ATrial[ic];
+		}
+	}
 }
 
 // This adjust first NTrainingPts coefficients to reproduce Y training values

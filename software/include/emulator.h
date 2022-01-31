@@ -27,6 +27,7 @@ public:
 	double SigmaY0,SigmaY,SigmaYTrial,MCStepSize,MCSigmaYStepSize,LAMBDA;
 	unsigned int NMC;   // NMC is for generating independent samplings of A in TuneA
 	unsigned int NASample;
+	bool TuneAChooseMCMC,ConstrainA0;
 	vector<vector<double>> ASample;
 	vector<double> SigmaYSample;
 	vector<double> A,ATrial;
@@ -41,6 +42,8 @@ public:
 	void SetNTrainingPts(unsigned int NTrainingPts_set);
 	void SetThetaSimplex();
 	void TuneA();
+	void TuneAMCMC();
+	void TuneAPerfect();
 	double GetLog_AProb(vector<double> &AA,double SigmaY);
 
 	void SetA_Zero(vector<double> &A);
