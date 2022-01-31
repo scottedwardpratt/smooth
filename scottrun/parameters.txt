@@ -1,13 +1,13 @@
-SmoothEmulator_NPars 6
-#Smooth_NPars 6
+SmoothEmulator_NPars 3
 #SmoothEmulator_NTrainingPts 0
 SmoothEmulator_SigmaY 100.0
 SmoothEmulator_NMC 10000
 SmoothEmulator_NASample 10
 SmoothEmulator_MCStepSize 1.0
 SmoothEmulator_MCSigmaYStepSize 1.0
-SmoothEmulator_TuneAChooseMCMC false
+SmoothEmulator_TuneAChooseMCMC true
 SmoothEmulator_ConstrainA0 false
+SmoothEmulator_LAMBDA 3.0
+#Smooth_NPars 6
 Smooth_UseRFactor false
-Smooth_LAMBDA 3
-Simplex_TrainType 4 // Must be 1 or 2 or 3 or 4
+Simplex_TrainType 1 // Must be 1 or 2 or 3 or 4

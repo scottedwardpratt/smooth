@@ -5,7 +5,7 @@ using namespace std;
 CSmoothEmulator::CSmoothEmulator(CparameterMap *parmap){
 	NPars=parmap->getD("SmoothEmulator_NPars",0);
 	parmap->set("Smooth_NPars",NPars);
-	LAMBDA=parmap->getD("Smooth_LAMBDA",1.0);
+	LAMBDA=parmap->getD("SmoothEmulator_LAMBDA",1.0);
 	NMC=parmap->getI("SmoothEmulator_NMC",10000);
 	NASample=parmap->getI("SmoothEmulator_NASample",10);
 	MCStepSize=parmap->getD("SmoothEmulator_MCStepSize",0.5);

@@ -2,15 +2,24 @@
 #include "smooth.h"
 #include "gslmatrix.h"
 using namespace std;
-vector<unsigned int> CSmooth::factorial={};
 
 CSmooth::CSmooth(){
 	//
 }
 
+CSmooth::CSmooth(unsigned int NPars_Set){
+	NPars=NPars_Set;
+	UseRFactor=false;
+	InitArrays();
+}
+
 CSmooth::CSmooth(CparameterMap *parmap){
 	NPars=parmap->getI("Smooth_NPars",0);
 	UseRFactor=parmap->getB("Smooth_UseRFactor",false);
+	InitArrays();
+}
+
+void CSmooth::InitArrays(){
 	unsigned int ic,j,isame,ir;
 	vector<unsigned int> countsame;
 	vector<unsigned int> dummy;
@@ -192,7 +201,6 @@ double CSmooth::CalcY(vector<double> &A,double LAMBDA,vector<double> &theta){
 		for(ir=0;ir<rank[ic];ir++){
 			term*=theta[IPar[ic][ir]]/LAMBDA;
 		}
-		//printf("ic=%3u, A=%10.7f, term=%10.7f dupfactor=%10.7u\n",ic,A[ic],term,dupfactor[ic]);
 		answer+=term;
 	}
 	answer*=rfactor;
