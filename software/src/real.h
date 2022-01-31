@@ -29,6 +29,7 @@ public:
 };
 */
 class CReal_Taylor : public CReal{
-	CReal_Taylor();
+	unsigned int NPars;
+	CReal_Taylor(NPars);
 	void CalcRealY(vector<double> &y, vector<double> &theta);
 };
