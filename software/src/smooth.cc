@@ -8,12 +8,13 @@ CSmooth::CSmooth(){
 	//
 }
 
-CSmooth::CSmooth(unsigned int NPars_set){
+CSmooth::CSmooth(CparameterMap *parmap){
+	NPars=parmap->getI("Smooth_NPars",0);
+	UseRFactor=parmap->getB("Smooth_UseRFactor",false);
 	unsigned int ic,j,isame,ir;
 	vector<unsigned int> countsame;
 	vector<unsigned int> dummy;
 	vector<unsigned int> i;
-	NPars=NPars_set;
 	MaxRank=5;
 	factorial.resize(MaxRank+1);
 	factorial[0]=factorial[1]=1;
@@ -217,14 +218,20 @@ double CSmooth::CalcY_Remainder(vector<double> &A,double LAMBDA,vector<double> &
 double CSmooth::GetRFactor(double LAMBDA,vector<double> &theta){
 	unsigned int ir,ipar,NPars=theta.size();
 	double r2=0.0,answer;
-	for(ipar=0;ipar<NPars;ipar++)
-		r2+=theta[ipar]*theta[ipar];
-	answer=1.0;
-	for(ir=1;ir<=MaxRank;ir++){
-		answer+=pow(r2/(LAMBDA*LAMBDA),ir)/double(factorial[ir]);
+	if(UseRFactor){
+		for(ipar=0;ipar<NPars;ipar++)
+			r2+=theta[ipar]*theta[ipar];
+		answer=1.0;
+		for(ir=1;ir<=MaxRank;ir++){
+			answer+=pow(r2/(LAMBDA*LAMBDA),ir)/double(factorial[ir]);
+		}
+		answer=1.0/sqrt(answer);
 	}
-	answer=1.0/sqrt(answer);
+	else{
+		answer=1.0;
+	}
 	return answer;
+
 }
 
 double CSmooth::GetM(int ic,double LAMBDA,vector<double> &theta){

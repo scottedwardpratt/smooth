@@ -21,9 +21,10 @@ public:
 	vector<vector<unsigned int>> IPar;
 	vector<unsigned int> dupfactor;
 	vector<unsigned int> rank;
+	bool UseRFactor;
 	
 	CSmooth();
-	CSmooth(unsigned int NPars_set);	
+	CSmooth(CparameterMap *parmap);
 	
 	double CalcY(vector<double> &A,double LAMBDA,vector<double> &theta);
 	void Copy(CSmooth *smooth);

@@ -49,6 +49,7 @@ public:
 	void SetA_RanSech(double ASigmaY,vector<double> &AA);
 
 	// These are functions for generating fake real models
+	void RandomizeRealA();
 	void CalcYTrainFromRealA();
 	double CalcRealYFromRealA(vector<double> &theta); // This also sets up a random RealA
 	vector<double> RealA;

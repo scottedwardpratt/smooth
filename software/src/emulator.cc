@@ -3,24 +3,23 @@
 using namespace std;
 
 CSmoothEmulator::CSmoothEmulator(CparameterMap *parmap){
-	NPars=parmap->getD("Smooth_NPars",0);
+	NPars=parmap->getD("SmoothEmulator_NPars",0);
+	parmap->set("Smooth_NPars",NPars);
 	LAMBDA=parmap->getD("Smooth_LAMBDA",1.0);
-	smooth=new CSmooth(NPars);
+	NMC=parmap->getI("SmoothEmulator_NMC",10000);
+	NASample=parmap->getI("SmoothEmulator_NASample",10);
+	MCStepSize=parmap->getD("SmoothEmulator_MCStepSize",0.5);
+	MCSigmaYStepSize=parmap->getD("SmoothEmulator_MCSigmaYStepSize",0.1);
+	SigmaY0=parmap->getD("SmoothEmulator_SigmaY",1.0);
+
+	smooth=new CSmooth(parmap);
 	randy=new CRandy(-time(NULL));
-	MCStepSize=parmap->getD("Smooth_MCStepSize",0.5);
-	MCSigmaYStepSize=parmap->getD("Smooth_MCSigmaYStepSize",0.1);
-	
-	SigmaY0=parmap->getD("Smooth_SigmaY",1.0);
 	SigmaY=SigmaY0;
 	NSigmaY=0;
 	SigmaYbar=0.0;
-
 	MCStepSize=MCStepSize/double(NPars*NPars);
 	MCSigmaYStepSize=MCSigmaYStepSize/double(NPars*NPars);
 
-
-	NMC=parmap->getI("Smooth_NMC",10000);
-	NASample=parmap->getI("Smooth_NASample",10);
 	ASample.resize(NASample);
 	simplex=new CSimplexSampler(parmap);
 	for(unsigned int isample=0;isample<NASample;isample++){

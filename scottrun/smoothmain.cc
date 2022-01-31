@@ -7,8 +7,9 @@
 using namespace std;
 int main(int argc,char *argv[]){
 	CparameterMap *parmap=new CparameterMap();
-	double y,yreal,accuracy,r2;
-	unsigned int isample,itest,ntest=40,ipar,ireal,nreal=10;
+	double y,yreal,accuracy,r2,average_accuracy=0.0,sigmay,ybar,y2bar,sigmaybar=0.0;
+	long long unsigned int nsigmay=0;
+	unsigned int isample,itest,ntest=1000,ipar,ireal,nreal=10;
 	vector<double> Theta;
 
 	parmap->ReadParsFromFile("parameters.txt");
@@ -19,13 +20,14 @@ int main(int argc,char *argv[]){
 
 	emulator.SetThetaSimplex();
 
-	FILE *fptr;
-	char filename[150];
+	//FILE *fptr;
+	//char filename[150];
 	for(ireal=0;ireal<nreal;ireal++){
 		accuracy=0.0;
-		sprintf(filename,"testresults/NPars%d_Lambda%g_TrainType%d_real%u.txt",
-			emulator.NPars,emulator.LAMBDA,emulator.simplex->TrainType,ireal);
-		fptr=fopen(filename,"w");
+		//sprintf(filename,"testresults/NPars%d_Lambda%g_TrainType%d_real%u.txt",
+		//	emulator.NPars,emulator.LAMBDA,emulator.simplex->TrainType,ireal);
+		//fptr=fopen(filename,"w");
+		emulator.RandomizeRealA();
 		emulator.CalcYTrainFromRealA();	
 		//emulator.CalcAFromTraining(emulator.A);
 		emulator.GenerateASamples();
@@ -42,7 +44,7 @@ int main(int argc,char *argv[]){
 			for(ipar=0;ipar<emulator.NPars;ipar++){
 				if(emulator.NPars==1){
 					Theta[ipar]=-1.0+(2.0/double(ntest))*(0.5+itest);
-					fprintf(fptr,"%10.7f ",Theta[ipar]);
+					//fprintf(fptr,"%10.7f ",Theta[ipar]);
 				}
 				else{
 					do{
@@ -53,18 +55,34 @@ int main(int argc,char *argv[]){
 				}
 			}
 			yreal=emulator.CalcRealYFromRealA(Theta);
-			fprintf(fptr,"%10.7f ",yreal);
+			//fprintf(fptr,"%10.7f ",yreal);
+			ybar=y2bar=0.0;
 			for(isample=0;isample<emulator.NASample;isample++){
 				y=emulator.smooth->CalcY(emulator.ASample[isample],emulator.LAMBDA,Theta);
+				y2bar+=y*y;
+				ybar+=y;
 				accuracy+=(y-yreal)*(y-yreal);
-				fprintf(fptr," %10.7f",y);
+				//fprintf(fptr," %10.7f",y);
 			}
-			fprintf(fptr,"\n");
+			y2bar=y2bar/double(emulator.NASample);
+			ybar=ybar/double(emulator.NASample);
+			sigmay=sqrt(y2bar-ybar*ybar);
+			sigmaybar+=sigmay;
+			nsigmay+=1;
+
+			//fprintf(fptr,"\n");
 		}
-		fclose(fptr);
-		printf("accuracy=%7.3f%%\n",sqrt(accuracy*100.0/double(emulator.SigmaY0*emulator.NASample*ntest)));
+		//fclose(fptr);
+		accuracy=sqrt(accuracy/double(emulator.SigmaY0*emulator.SigmaY0*emulator.NASample*ntest));
+		accuracy*=100.0;
+		printf("accuracy=%7.3f%%\n",accuracy);
+		average_accuracy+=accuracy;
+
 	}
-	printf("<SigmaY>=%g\n",emulator.SigmaYbar/double(emulator.NSigmaY));
+	sigmaybar=sigmaybar/double(nsigmay);
+	printf("<sigma_y>=%g, <SigmaY>printf=%g\n",sigmaybar,emulator.SigmaYbar/double(emulator.NSigmaY));
+	average_accuracy=average_accuracy/double(nreal);
+	printf("<accuracy>=%g%%\n",average_accuracy/sqrt(2.0));
 	
 	return 0;
 }

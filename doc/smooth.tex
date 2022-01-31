@@ -14,7 +14,8 @@ The choice of model emulators, $E(\theta)$, depends on the prior understanding o
   \item The emulator should reasonably reproduce the model away from the training points. This should hold true for either interpolation or extrapolation.
   \item The emulator should accurately represent its uncertainty
   \item A minimal number of training points should be needed
-  \item The method should easily adjust to larger numbers of parameters, $\theta_i,~i=1\cdots N$.
+  \item The method should easily adjust to larger numbers of parameters, $\theta_i,~i=1\cdots N$
+  \item The emulator should not be affected by unitary transformations of the parameter space
   \item The emulator should be able to account for noisy models
   \item Training and running the emulator should not be numerically intensive
 \end{itemize}
@@ -23,78 +24,190 @@ Here the goal is to focus on a particular class of functions. Those functions ar
 
 To that end the following form for $E(\theta)$ is proposed,
 \begin{align*}\eqnumber\label{eq:emudef}
-E(\vec{\theta})&=f(|\vec{\theta}|)\sum_{\vec{n}, {\rm s.t.}\sum_in_i\le K_{\rm max}} d_{\langle n_i\rangle}
+E(\vec{\theta})&=\sum_{\vec{n}, {\rm s.t.}\sum_in_i\le K_{\rm max}} d_{\vec{n}}
+f_{K_{\vec{n}}}(|\vec{\theta}|)
 A_{\vec{n}}
 \left(\frac{\theta_1}{\Lambda}\right)^{n_1}\left(\frac{\theta_2}{\Lambda}\right)^{n_2}\cdots 
 \left(\frac{\theta_N}{\Lambda}\right)^{n_N}.
 \end{align*}
-Each term has a rank $K_{\vec{n}}=n_1+n_2+\cdots n_N$. All terms are included up to a given rank. The coefficients $A$ are stochastically distributed. For each combination $\vec{n}$, the probability is weighted by 
+Each term has a rank $K_{\vec{n}}=n_1+n_2+\cdots n_N$. If $f$ is constant, the rank corresponds to the power of $|\vec{\theta}|/\Lambda$. All terms are included up to a given rank, $K_{\rm max}$. The coefficients $A$ are stochastically distributed. For each combination $\vec{n}$, the probability is weighted by 
 \begin{align*}\eqnumber
-p(A_{\vec{n}})\sim e^{-A_{\vec{n}}^2/2\sigma_E^2}, 
+p(A_{\vec{n}})\sim e^{-A_{\vec{n}}^2/2\sigma_{K_{\vec{n}}}^2}, 
 \end{align*}
-where both the $A$ coefficients and $\sigma_E$ will also be allowed to vary. The parameter $\Lambda$ will be referred to as the smoothness parameter. Here, we assume that all parameters have a similar range, or order unity, e.g. $-1<\theta_i<1$. Thus, the relative importance of each term Eq. (\ref{eq:emudef}) falls with increasing rank, $K=\sum_in_i$, as $(1/\Lambda)^K$. The smoothness parameter is fixed by prior knowledge, i.e. one chooses higher values of $\Lambda$ if one believes the function to be basically linear.
+where both the $A$ coefficients and $\sigma_K$ will also be allowed to vary as a function of $K$.
 
-The parameters $d_{\vec{n}}$ and the function $f(|\vec{\theta}|^2)$ will be chosen to constrain the variance of $E$, as the $A$ coefficients are varied to be independent of the position in parameter space. Clearly, at $|\vec{\theta}|=0$ the only term in Eq. (\ref{eq:emudef}) that contributes is the one $K=0$ term. Averaging over $A$ coefficients, which can be either positive or negative with equal probability,
+The parameter $\Lambda$ will be referred to as the {\it smoothness parameter}. Here, we assume that all parameters have a similar range, of order unity, e.g. $-1<\theta_i<1$. Thus, the relative importance of each term Eq. (\ref{eq:emudef}) falls with increasing rank, $K=\sum_in_i$, as $(1/\Lambda)^K$. For now, the smoothness parameter is fixed by prior knowledge, i.e. one chooses higher values of $\Lambda$ if one believes the function to be close to linear.
+
+The parameters $d_{\vec{n}}$ will be chosen to constrain the variance of possible functions to be invariant to unitary transformation of the parameter space. For example, transforming $\theta_1$ and $\theta_2$ to parameters $(\theta_1\pm\theta_2)/\sqrt{2}$ should not affect the uncertainty of the emulator. Additionally, changing the $|\vec{\theta}$ dependence of $d_{\vec{n}}$ will alter the how the uncertainty depends away from $\theta=0$. At $|\vec{\theta}|=0$ the only term in Eq. (\ref{eq:emudef}) that contributes is the one $K=0$ term.
+
+Averaging over $A$ coefficients, which can be either positive or negative with equal probability,
 \begin{align*}\eqnumber
 \langle E(\vec{\theta})\rangle=0,
 \end{align*}
 where the averaging refers to an average over the $A$ coefficients. At the origin, $|\vec{\theta}|=0$, the variance of $E$ is
 \begin{align*}\eqnumber
-\langle E(\theta_1=\theta_2=\cdots\theta_N=0)^2\rangle=f^2(\vec{\theta}=0)d^2_{n_i=0}\sigma_E^2.
+\langle E(\theta_1=\theta_2=\cdots\theta_N=0)^2\rangle=d^2_{n_i=0}\sigma_{K=0}^2f_0^2(\vec{\theta}=0).
 \end{align*}
-Choosing $f(0)=1$ and $d_{n_i=0}=1$, the variance of $E$ is indeed $\sigma_E^2$. The functions $d_c$ and $f(|\vec{\theta}|^2)$ are further constrained by the requirement that the variance is independent of $\vec{\theta}$. 
+Choosing $f_{K=0}(0)=1$ and $d_{n_i=0}=1$, the variance of $E$ is indeed $\sigma_0^2$. 
+The variance at some point $\vec{\theta}\ne 0$ is 
 \begin{align*}\eqnumber
 \langle E^2(\vec{\theta})\rangle &=
-f^2(|\vec{\theta}|)\sigma_E^2\sum_{\vec{n}} \frac{1}{\Lambda^{2K_{\vec{n}}}}d_{\vec{n}}^2
+\sum_{\vec{n}} 
+f_K^2(|\vec{\theta}|)\sigma_K^2 d_{\vec{n}}^2
 \left(\frac{\theta_1^{2n_1}}{\Lambda^2}\right)\left(\frac{\theta_2^{2n_2}}{\Lambda^2}\right)\cdots 
 \left(\frac{\theta_N^{2n_N}}{\Lambda^2}\right).
 \end{align*}
 If $\langle E^2\rangle$ is to be independent of the direction of $\vec{\theta}$, the sum above must be a function of $|\vec{\theta}|^2$ only. This requires the net contribution from each rank, $K$ to be proportional to  $|\vec{\theta}|^{2K}$ multiplied by some function of $K_c$. Using the fact that
 \begin{align*}\eqnumber
-(\sum_{i=1}^N \theta_i^2)^K&=\sum_{n_1\cdots n_N,s.t. \sum_i n_i=K}\frac{K!}{n_1!\cdots n_N!}\theta_1^{2n_1}\cdots\theta_N^{2n_N},
+(\vec{\theta}_a\cdot \vec{\theta}_b)^K&=\sum_{n_1\cdots n_N,s.t. \sum_i n_i=K}\frac{K!}{n_1!\cdots n_N!}(\theta_{a1}\theta_{b1})^{n_1}\cdots(\theta_{aN}\theta_{bN})^{n_N},
 \end{align*}
 one can see that if the sum is to depend only on the norm of $\vec{\theta}$,
 \begin{align*}\eqnumber
-d_{\vec{n}}^2&=\beta(K_{\vec{n}})\frac{K_{\vec{n}}!}{n_1!n_2!\cdots n_N!},
+d_{\vec{n}}^2&=\frac{K_{\vec{n}}!}{n_1!n_2!\cdots n_N!},
 \end{align*}
-where $\beta(K)$ is any function of the rank. One can perform the sums for all terms of a given rank, and obtain
-\begin{align*}\eqnumber
-\langle E^2(\vec{\theta})\rangle &=\sigma_E^2
-f(|\vec{\theta}|)\sum_K\beta(K)\left(\frac{|\vec{\theta}|^2}{\Lambda^2}\right)^{K}.
-\end{align*}
-If the sum is to equal $\sigma_E^2$ and be independent of $|\vec{\theta}|$,
-\begin{align*}\eqnumber\label{eq:fform}
-f^2(|\vec{\theta}|)&=\left[\sum_{K=0}^{K_{\rm max}}\beta(K)\left(\frac{|\vec{\theta}|^2}{\Lambda^2}\right)^{K}\right]^{-1}.
-\end{align*}
-The function $\beta$ could be any function of the rank $K$, but one would like the sum to be finite for any $|\vec{\theta}|$, even when $|\vec{\theta}|>\Lambda$. An obvious choice is 
-\begin{align*}\eqnumber
-\beta(K)&=\frac{1}{K!}.
-\end{align*}
-This form will be assumed hereafter. In practice, a finite number of coefficients are included, all those of rank $K_{\rm max}$ or less. If one were to take the limit $K_{\rm max}\rightarrow\infty$ the prefactor $f(|\vec{\theta}|)$ would simply be an exponential,
-\begin{align*}\eqnumber
-f(|\vec{\theta}|)|_{K_{\rm max}\rightarrow\infty}=\exp\left(-\frac{|\vec{\theta}|^2}{2\Lambda^2}\right).
-\end{align*}
-This gives us our final form for the emulator,
-\begin{align*}\eqnumber\label{eq:smooth}
-E(\vec{\theta})&=f(|\vec{\theta}|^2)\sum_{\vec{n}~{\rm s.t.}K_{\vec{n}}\le K_{\rm max}} \left[n_1!n_1!\cdots n_N!\right]^{-1/2}A_{\vec{n}}
-\left(\frac{\theta_1}{\Lambda}\right)^{n_1}
-\cdots \left(\frac{\theta_N}{\Lambda}\right)^{n_N},
-\end{align*}
-where the sum over $c$ is the sum overall possible combinations of $n_{1c}\cdots n_{Nc}$ that sum to $K_{\rm max}$ or less, and where the function $f(|\vec{\theta}|)$ is given by Eq. (\ref{eq:fform}).
+where $\beta(K)$ is any function of the rank. Because any $K$ dependence of $d_{\vec{n}}$ can be absorbed in $f_K$ or $\sigma_K$, this form is completely general.
 
-\subsection{Correlations}
-
-The form for the emulator in Eq. (\ref{eq:smooth}) results in correlations that fall with relative distance. The correlations have a particularly simple form in the $K_{\rm max}\rightarrow \infty$ limit. In that limit
+One can now calculate the correlation between the emulator at two different points, averaged over all possible values of $A$,
 \begin{align*}\eqnumber
-\langle E(\vec{\theta})E(\vec{\theta}')\rangle&=e^{-|\vec{\theta}'|^2/2\Lambda^2}e^{-|\vec{\theta}|^2/2\Lambda^2}
-\sum_{\vec{n}}\frac{1}{n_1!\cdots n_N!}\langle A_{\vec{n}}^2 
-\left(\frac{\theta_1\theta'_1}{\Lambda^2}\right)^{n_1}\cdots
-\left(\frac{\theta_N\theta'_N}{\Lambda^2}\right)^{n_N}\\
-&=\sigma_E^2e^{-|\vec{\theta}'|^2/2\Lambda^2}e^{-|\vec{\theta}|^2/2\Lambda^2}
-\sum_K\frac{1}{K!}\left(\frac{\vec{\theta}\cdot\vec{\theta}'}{\Lambda^2}\right)^K\\
-&=\sigma_E^2e^{-|\vec{\theta}-\vec{\theta}'|^2/2\Lambda^2}.
+\langle E(\vec{\theta}_a)E(\vec{\theta}_b)\rangle &=
+\sum_{K=0}^{K_{\rm max}}\sigma_K^2f_K^2(|\vec{\theta}|)
+\left(\frac{\vec{\theta}_a\cdot\vec{\theta}_b}{\Lambda^2}\right)^{K}.
 \end{align*}
-The smoothness parameter also sets the correlation length.
+Requiring $f(|\theta|=0)=1$ gives
+\begin{align*}\eqnumber
+\langle E^2(\vec{\theta}=0))\rangle &=\sigma_0^2,
+\end{align*}
+and for $\vec{\theta}_a=\vec{\theta}_b$,
+\begin{eqnarray}
+\langle E^2(\vec{\theta}=0))\rangle &=\sum_{K=0}^{K_{\rm max}}
+\sigma_K^2f_K^2(|\vec{\theta}|)\left(\frac{|\vec{\theta}|^2}{\Lambda^2}\right)^K.
+\end{eqnarray}
 
+To this point, the form is completely general once one requires that the variance above is independent of the direction of $\vec{\theta}$. I.e. the functions $f(\vec{\theta})$ and $\beta(K)$ could be any functions (aside from requiring $f(0)=1$. Below, we illustrate how different choices for $f$ or for $\sigma_K$ affect the emulator by comparing several variations. First, we define the default form.
+
+\noindent{\bf Default Form}\\
+Here, we assume $f_k(|\vec{\theta}|$ is independent of $|\vec{\theta}|$, and that $\sigma_K$ is independent of $K$. Further, the $K-$dependence of $f^2$ is assumed to be $1/K!$. With this choice
+\begin{align*}\eqnumber
+E(\vec{\theta})&=\sum_{\vec{n},\sum_in_i\le K_{\rm max}}\frac{A_{\vec{n}}}{\sqrt{n_1!n_2!\cdots n_N!}}
+\theta_1^{n_1}\cdots\theta_N^{n_N},\\
+P(A_{\vec{n}})&\sim e^{-A^2_{\vec{n}}/2\sigma^2}.
+\end{align*}
+With this form the variance increases with $|\vec{\theta}|$,
+\begin{eqnarray}
+\langle E^2(\vec{\theta})\rangle&=\sigma^2e^{|\vec{\theta}|^2/\sigma^2}.
+\end{eqnarray}
+If the function is trained in a region where the function is linear, the emulator's extrapolation outside the region will continue to be follow the linear behavior, albeit with variation from the higher order coefficients.
+
+The choice of $f^2_K=1/K!$ ensures that $E(\vec{\theta})$ converges as a function of $K$ as long as $K_{\rm max}$ is rather larger compared to $|\vec{\theta}|/\Lambda$. 
+
+\noindent{\bf Variant A: Letting $\sigma_K$ have a $K$ dependence}\\
+One reasonable alteration to the default choice might be to allow the $K=0$ term to take any value, i.e. $\sigma_{K=0}=\infty$. This would make sense if our prior expectation of smoothness meant that we expect the $K=2$ terms to be less important the the $K=1$ terms, by some factor $|\vec{\theta}|/\Lambda$, but that the variation of the $K=1$ term is unrelated to the size of the $K=0$ term. This would make the emulator independent of simple translation of the emulated function. This may well be a reasonable choice for many circumstances.
+
+\noindent{\bf Variant B: Suppressing  correlations for large $\Delta\vec{\theta}$}\\
+This form for $f$ causes correlations to fall for points far removed from one another. 
+\begin{align*}\label{eq:fform}
+f_K(|\vec{\theta}|)&=\frac{1}{\sqrt{K!}}\left\{
+\sum_{K=0}^{K_{\rm max}}\frac{1}{\sqrt{K!}}\left(\frac{|\vec{\theta}|^2}{2\Lambda^2}\right)^K\right\}^{-1/2}.
+\end{align*}
+In the limit that $K_{\rm max}$ the form is a simple exponential,
+\begin{align*}\eqnumber
+\left.f_K(|\vec{\theta}|)\right|_{K_{\rm max}\rightarrow\infty}&=
+\frac{1}{\sqrt{K!}}e^{-|\vec{\theta}|^2/2\Lambda^2}.
+\end{align*}
+With this form the same-point correlations remain constant over all $\vec{\theta}$,
+\begin{align*}\eqnumber
+\langle E(\vec{\theta})E(\vec{\theta})\rangle&=\sigma_E^2,
+\end{align*}
+while the correlation between separate positions fall with increasing separation. This is especially transparent for the $K\rightarrow\infty$ limit,
+\begin{align*}
+\langle E(\vec{\theta}_a)E(\vec{\theta}_b)\rangle_{K_{\rm max}\rightarrow\infty}
+&=\sigma_E^2 e^{-|\vec{\theta}_a-\vec{\theta}_b|^2/2\Lambda^2}.
+\end{align*}
+In this limit one can also see that
+\begin{align*}\eqnumber
+\langle[E(\vec{\theta})-E(\vec{\theta}')]^2\rangle_{K_{\rm max}\rightarrow\infty}&=
+2\sigma_E^2\left(1-e^{|\vec{\theta}-\vec{\theta}'|^2/2\Lambda^2}\right).
+\end{align*}
+If one trains such an emulator in one region, then extrapolates to a region separated by $|\vec{\theta}-\vec{\theta}'|>>\Lambda$, the average predictions will return to zero. This behavior is similar to a Gaussian-process emulator.
+
+
+\noindent{\bf Variant C: Eliminating the $1/K!$ weight}\\
+Clearly, eliminating the $1/K!$ weights in $f_K$ would more emphasize the contributions from larger $K$. But, for and $|\vec{\theta}|>\Lambda$ the contribution to the variance would increase as $K$ increases and the sum would not converge if $K$ were allowed to approach infinity. An example of a function that expands without factorial suppression is $1/(1-x)=1+x+x^2+x^3\cdots$, which diverges as $x\rightarrow 1$. If such behavior is not expected, then this choice would be unreasonable.
+
+\section{Tuning the Emulator}
+
+Here, we illustrate how a emulator of the form above can be built given training points. We consider $M$ full model runs at positions $\vec{\theta}_{m=1,M}$, with values $F_{m=1,M}$. The functional form has a large number of coefficients, $A_{\vec{n}}$, which is much larger than the number of training points, $M$. However, the dependence of $A$ is purely linear. One can enumerate the coefficients as $A_c$ with $c=1\cdots C$, where $C>M$. One can randomly set the coefficients $A_m$ through $A_C$, then solve for the first $M$ coefficients by solving a linear equation. One can then apply a weight based on the values of $A$ consistent with the prior likelihood of $A$ and the constraints. One can then generate a representative set of $A$, perhaps a dozen samples. Each sample function will go through all the training points, but will vary further from the training points. Averaging over the $N_{\rm sample}$ sets of coefficients can be used to make a prediction for the emulator at some point $\vec{\theta}$, and the variance of those $N_{\rm sample}$ points would represent the uncertainty of the emulator.
+
+Here, we present two different methods for generating samples of points that are consistent with the training constraints and with the prior range of parameters. We do this for the default method, but this can be easily extended to the other model variants listed in the previous section. In addition to varying the coefficients, we will additionally vary the width parameters, $\sigma$.
+
+First, we need to describe how the weights are generated. The probability of a set of coefficients is initially 
+\begin{align*}\eqnumber
+P(A_c)&=\frac{1}{\sqrt{2\pi \sigma^2}}e^{-A_c^2/2\sigma^2}.
+\end{align*}
+If we also vary $\sigma$, we can state that 
+\begin{align*}\eqnumber
+Q(\sigma)&=\frac{1}{\pi}\frac{\Gamma/2}{\sigma^2+(\Gamma/2)^2}.
+\end{align*}
+Here, the half width of the distribution should be set to some large value to encompass the degree to which the emulated function might vary. The Lorentzian form accommodates a large uncertainty. The result should not depend strongly on $\Gamma$. The joint probability is $Q(\sigma)\prod_c P(A_c)$. 
+
+The constrained probability is
+\begin{align*}\eqnumber
+dP&=d\sigma Q(\sigma)\prod_c[dA_c~P(A_c)]\prod_{m=1}^M \delta(E(A,\sigma,\vec{\theta}_m)-F(\vec{\theta}_m))\\
+&=d\sigma Q(\sigma) \prod_{c=1}{^M}P(A_c) \prod_{c=M}^C [dA_c~P(A_c)]\frac{1}{|J|}.
+\end{align*}
+Here, $|J|$ is the Jacobian, i.e. it is the determinant of the $M\times M$ matrix
+\begin{align*}\eqnumber
+J_{mc}&=\frac{\partial E(\vec{\theta}_m)}{\partial A_c},
+\end{align*}
+For the default form in the previous section,
+\begin{eqnarray}
+J_{mc}&=\frac{1}{\sqrt{n_{c1}!\cdots n_{cN}!}}(\theta_{m1})^{n_{c1}}\cdots(\theta_{mN})^{n_{cN}}.
+\end{eqnarray}
+Because the Jacobian depends only on the position of the training points, it can be treated as a constant. 
+
+One can now sample $A$ and $\sigma$ according to the weights above. Here, we list two methods.
+
+\begin{itemize}\itemsep=0pt
+\item [a)] {\bf Keep and Reject Method}\\
+One can generate the coefficients $A_{c=M}\cdots A_{C}$ according to the Gaussian distribution with width $\sigma$, and generate $\sigma$ according to the Lorentzian. The residual weight is then
+\begin{align*}\eqnumber
+w&=\prod_{c=1}{^M}P(A_c).
+\end{align*}
+For each attempt, one could keep or reject the attempt with probability $w$. This generates perfectly independent samples, but with the caveat that in a high dimensional space the rejection level might be quite high.
+\item [b)] {\bf Metropolis Exploration of $A$ and $\sigma$}\\
+Beginning with any configuration $A$ and width $\sigma$, one can take a random step $\delta A$ and $\delta\sigma$. In the absence of any weight this would consider all $A$ or $\sigma$ with values from $-\infty$ to $\infty$. The residual weight would then be
+\begin{align*}\eqnumber
+w&=Q(\sigma)\prod_{c=1}^C P(A_c).
+\end{align*}
+One then keeps the step if the new weight exceeds the previous one, or if the ratio of the new weight to the old weight is greater than a random number between zero and unity. After some number of steps, $N_{\rm steps}$, one saves the configuration as a representative sample for the emulator. The disadvantage of this approach is that many steps may be needed to ensure that the samples are independent, and thus faithfully represent the variation in the emulator.
+\end{itemize}
+
+
+
+\section{Simplex Sampler}
+
+\section{The Scourge of High-Dimensionality and Step-Function Priors}
+
+For purely Gaussian priors, one can scale the prior parameter space to be spherically symmetric. Unfortunately, that is not true for step function priors (uniform within some range). In that case the best one can do (if the priors for each parameter are independent) is to scale the parameter space such that each parameter has the constraint, $-1<\theta_i<1$. If the number of parameters is $N$, the hyper-cube has $2N$ faces and $2^N$ corners, a face being defined as one parameter being $\pm 1$ while the others are zero, while a corner has each parameter either $\pm 1$. For 10 parameters, there are 1024 corners, and for 15 parameters there are 32678 corners. Thus, it may likely be untenable to place a training point in each corner. 
+
+One can also see the problem with placing the training points in a spherically symmetric fashion as is done with the Simplex Sampler. The hyper-volume of the parameter-space hyper-cube is $2^N$, whereas the volume of an $N-$dimensional hyper-sphere of radius $R=1$ is 
+\begin{align*}\eqnumber
+V_{\rm sphere}=\Omega_N\int_0^R dr~r^{N-1}=\Omega_N\frac{R^N}{N}.
+\end{align*}
+The solid angle, $\Omega_N$ in $N$ dimensions is
+\begin{align*}\eqnumber
+\Omega_N&=\frac{(2\pi)^{N/2}}{\Gamma(N/2)},
+\end{align*}
+so fraction of the hyper-cube's volume that is within the hyper-sphere is
+\begin{align*}\eqnumber
+\frac{V_{\rm sphere}}{V_{\rm cube}}&=\left\{\begin{array}{rl}
+\frac{\pi^{N/2}}{2d!!},&N=2,4,6,8\cdots\\
+\frac{\pi^{(N-1)/2}}{2d!!},&N=3,5,7,\cdots\end{array}\right.
+\end{align*}
+In two dimensions, the ratio is $\pi/4$, and in three dimensions it is $\pi/6$. In 10 dimensions it is $7.45\times 10^{-4}$. For high dimensions only a small fraction of the parameter space can ever lie inside inside a sphere used to place points. And, if the model is expensive, it may not be tenable to run the full model inside every corner. 
+
+One can also appreciate the scope of the problem by considering the radius of the corners vs. the radius of  the sphere. The maximum value of $|\vec{\theta}|$ is $\sqrt{N}$. So, for 9 parameters, if the  training points were all for $|\vec{\theta}|<1$, one would have to extrapolate all the way to $|\vec{\theta}|=3$. Thus, unless the model is exceptionally smooth, one needs to devise a strategy to isolate the portion of likely parameter space using some original set of full-model runs, then augment those runs in the likely region. 
+
+Of course, this would be largely avoided if the number of parameters was a half dozen or fewer, or if one was confident that the function was extremely smooth. In the first two sections of this paper, the smoothness parameter, $\Lambda$, was set to a constant. There might be prior knowledge that certain parameters affect the observables only weakly. In that case, the response to these parameters can be considered as linear. This could be done by scaling those parameters so that they vary over a smaller range. If a parameter varies only between $-0.1$ and $0.1$, that effectively applies a smoothness parameter in those directions that is ten times higher. Unfortunately, the choice of which parameters to rescale in this fashion would likely vary depending on which observable is being emulated. Because all the observables might be calculated in a full model run, one needs to identify parameters that would likely have weak response on all observables. 
 
 \end{document}
