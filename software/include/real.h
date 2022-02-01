@@ -11,7 +11,6 @@
 #include "constants.h"
 #include "randy.h"
 #include <list>
-#include "emulator.h"
 #include "smooth.h"
 
 using namespace std;
@@ -19,22 +18,19 @@ using namespace std;
 class CReal{
 public:
 	CReal();
-	virtual double CalcRealY(vector<double> &y, vector<double> &theta);
-
+	virtual double CalcY(vector<double> &theta);
 };
 
-/*class CSmoothEmulator : public CReal{
-	void CalcRealY(vector<double> &y, vector<double> &theta);
-	double CalcRealYFromRealA(vector<double> &theta);
-	void CalcYTrainFromRealA();
-	void RandomizeRealA();
-};
-*/
 class CReal_Taylor : public CReal{
+	CRandy *randy;
 	unsigned int NPars;
-	CReal_Taylor(unsigned int NPars_Set);
+	vector<double> RealA;
+	double LAMBDA;
+	CReal_Taylor(unsigned int NPars_Set,CRandy *randy);
 	CSmooth *smooth;
-	double CalcRealY(vector<double> &y, vector<double> &theta);
+	double CalcY(vector<double> &theta);
+	// These are functions for generating fake real models
+	void RandomizeRealA(double SigmaReal);
 };
 
 #endif

@@ -16,12 +16,14 @@
 //#include "gslmatrix.h"
 #include <iostream>
 #include <Eigen/Dense>
+#include "real.h"
 
 class CSmoothEmulator{
 public:
 	unsigned int NPars,NTrainingPts;
 	CRandy *randy;
 	CSmooth *smooth;
+	CReal *real;
 	Eigen::MatrixXd M;
 
 	double SigmaY0,SigmaY,SigmaYTrial,MCStepSize,MCSigmaYStepSize,LAMBDA;
@@ -36,6 +38,7 @@ public:
 	CSimplexSampler *simplex;
 	
 	CSmoothEmulator(CparameterMap *parmap);
+	void CalcYTrainFromThetaTrain();
 	void CalcAFromTraining(vector<double> &AA);
 	void PrintA(vector<double> &Aprint);
 	
@@ -50,12 +53,6 @@ public:
 	void SetA_RanGauss(double ASigmaY,vector<double> &AA);
 	void SetA_Constant(double ASigmaY,vector<double> &AA);
 	void SetA_RanSech(double ASigmaY,vector<double> &AA);
-
-	// These are functions for generating fake real models
-	void RandomizeRealA();
-	void CalcYTrainFromRealA();
-	double CalcRealYFromRealA(vector<double> &theta); // This also sets up a random RealA
-	vector<double> RealA;
 
 	double SigmaYbar;
 	int NSigmaY;

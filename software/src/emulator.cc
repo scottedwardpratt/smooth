@@ -1,5 +1,5 @@
 #include "emulator.h"
-#include "smooth.h"
+
 using namespace std;
 
 CSmoothEmulator::CSmoothEmulator(CparameterMap *parmap){
@@ -34,6 +34,7 @@ CSmoothEmulator::CSmoothEmulator(CparameterMap *parmap){
 	SetA_Zero(A);
 	ATrial.resize(smooth->NCoefficients);
 	SetA_Zero(ATrial);
+	real=NULL;
 }
 
 void CSmoothEmulator::SetNTrainingPts(unsigned int NTrainingPts_set){
@@ -246,5 +247,16 @@ void CSmoothEmulator::GenerateASamples(){
 void CSmoothEmulator::PrintA(vector<double> &Aprint){
 	for(unsigned int ic=0;ic<smooth->NCoefficients;ic++){
 		printf("%3u %g\n",ic,Aprint[ic]);
+	}
+}
+
+void CSmoothEmulator::CalcYTrainFromThetaTrain(){
+	unsigned int itrain,ipar;
+	if(real==NULL){
+		printf("Reality does not exist\n");
+		exit(1);
+	}
+	for(itrain=0;itrain<NTrainingPts;itrain++){
+		YTrain[itrain]=real->CalcY(ThetaTrain[itrain]);
 	}
 }

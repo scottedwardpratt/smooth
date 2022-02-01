@@ -1,5 +1,4 @@
 #include "real.h"
-#include "emulator.h"
 #include "smooth.h"
 
 using namespace std;
@@ -9,35 +8,20 @@ CReal::CReal(){
 //	CSmooth *smooth;
 }
 
-CReal_Taylor::CReal_Taylor(unsigned int NPars_Set){
+CReal_Taylor::CReal_Taylor(unsigned int NPars_Set,CRandy *randyset){
 	NPars=NPars_Set;
+	randy=randyset;
 	smooth = new CSmooth(NPars);
-	
+	RealA.resize(smooth->NCoefficients);
 }
 
-double CReal_Taylor::CalcRealY(vector<double> &A, vector<double> &theta){
-	double LAMBDA=3.0;
-	return smooth->CalcY(A,LAMBDA,theta);
-}
-
-
-
-/*
-double CSmoothEmulator::CalcRealYFromRealA(vector<double> &theta){
+double CReal_Taylor::CalcY(vector<double> &theta){
 	return smooth->CalcY(RealA,LAMBDA,theta);
 }
 
-
-void CSmoothEmulator::CalcYTrainFromRealA(){
-	unsigned int iTrain;
-	for(iTrain=0;iTrain<NTrainingPts;iTrain++){
-		YTrain[iTrain]=CalcRealYFromRealA(ThetaTrain[iTrain]);
-	}
-}
-
-void CSmoothEmulator::RandomizeRealA(){
-if(RealA.size()!=smooth->NCoefficients)
+void CReal_Taylor::RandomizeRealA(double SigmaReal){
+	if(RealA.size()!=smooth->NCoefficients)
 		RealA.resize(smooth->NCoefficients);
-	SetA_RanGauss(SigmaY0,RealA);
+	for(unsigned int ic=0;ic<RealA.size();ic++)
+		RealA[ic]=SigmaReal*randy->ran_gauss();
 }
-*/ 
