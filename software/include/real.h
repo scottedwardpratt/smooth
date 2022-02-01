@@ -11,14 +11,15 @@
 #include "constants.h"
 #include "randy.h"
 #include <list>
-
+#include "emulator.h"
+#include "smooth.h"
 
 using namespace std;
 
 class CReal{
 public:
 	CReal();
-	virtual void CalcRealY(vector<double> &y, vector<double> &theta);
+	virtual double CalcRealY(vector<double> &y, vector<double> &theta);
 
 };
 
@@ -32,7 +33,8 @@ public:
 class CReal_Taylor : public CReal{
 	unsigned int NPars;
 	CReal_Taylor(unsigned int NPars_Set);
-	void CalcRealY(vector<double> &y, vector<double> &theta);
+	CSmooth *smooth;
+	double CalcRealY(vector<double> &y, vector<double> &theta);
 };
 
 #endif
