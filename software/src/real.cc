@@ -5,7 +5,10 @@ using namespace std;
 
 CReal::CReal(){
 	cout << "object created" << endl;
-//	CSmooth *smooth;
+}
+
+double CReal::CalcY(vector<double> &theta){
+	return 0.0;
 }
 
 CReal_Taylor::CReal_Taylor(unsigned int NPars_Set,CRandy *randyset){
@@ -14,6 +17,7 @@ CReal_Taylor::CReal_Taylor(unsigned int NPars_Set,CRandy *randyset){
 	smooth = new CSmooth(NPars);
 	RealA.resize(smooth->NCoefficients);
 }
+
 
 double CReal_Taylor::CalcY(vector<double> &theta){
 	return smooth->CalcY(RealA,LAMBDA,theta);

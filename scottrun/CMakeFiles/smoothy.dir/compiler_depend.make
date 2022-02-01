@@ -638,6 +638,7 @@ CMakeFiles/smoothy.dir/smoothmain.cc.o: smoothmain.cc \
   /Users/scottpratt/git/commonutils/software/include/randy.h \
   /Users/scottpratt/git/smooth/software/include/emulator.h \
   /Users/scottpratt/git/smooth/software/include/simplex.h \
+  /Users/scottpratt/git/smooth/software/include/real.h \
   /Users/scottpratt/git/commonutils/software/include/gslmatrix.h
 
 
@@ -1386,6 +1387,8 @@ CMakeFiles/smoothy.dir/smoothmain.cc.o: smoothmain.cc \
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/math.h:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk/usr/include/sys/_pthread/_pthread_key_t.h:
+
+/Users/scottpratt/git/smooth/software/include/real.h:
 
 /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0/include/avx512ifmaintrin.h:
 

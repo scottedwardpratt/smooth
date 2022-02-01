@@ -11,12 +11,15 @@ int main(int argc,char *argv[]){
 	long long unsigned int nsigmay=0;
 	unsigned int isample,itest,ntest=1000,ipar,ireal,nreal=10;
 	vector<double> Theta;
+	CReal_Taylor *real;
 
 	parmap->ReadParsFromFile("parameters.txt");
 	CSmoothEmulator emulator(parmap);
 
 	Theta.resize(emulator.NPars);
 	emulator.randy->reset(-time(NULL));
+	real=new CReal_Taylor(emulator.NPars,emulator.randy);
+	emulator.real=real;
 
 	emulator.SetThetaSimplex();
 
@@ -27,19 +30,19 @@ int main(int argc,char *argv[]){
 		//sprintf(filename,"testresults/NPars%d_Lambda%g_TrainType%d_real%u.txt",
 		//	emulator.NPars,emulator.LAMBDA,emulator.simplex->TrainType,ireal);
 		//fptr=fopen(filename,"w");
-		emulator.RandomizeRealA();
-		emulator.CalcYTrainFromRealA();	
+		real->RandomizeRealA(100.0);
+		emulator.CalcYTrainFromThetaTrain();	
 		//emulator.CalcAFromTraining(emulator.A);
 		emulator.GenerateASamples();
 		for(itest=0;itest<emulator.NTrainingPts;itest++){
-			yreal=emulator.CalcRealYFromRealA(emulator.ThetaTrain[itest]);
+			yreal=emulator.YTrain[itest];
 			y=emulator.smooth->CalcY(emulator.ASample[1],emulator.LAMBDA,emulator.ThetaTrain[itest]);
 			if(fabs(yreal-y)>0.001){
 				printf("Emulator fails!\n");
 				printf("%u, %8.4f: %g =? %g\n",itest,emulator.ThetaTrain[itest][0],y,yreal);
 			}
 		}
-
+/*
 		for(itest=0;itest<ntest;itest++){
 			for(ipar=0;ipar<emulator.NPars;ipar++){
 				if(emulator.NPars==1){
@@ -77,12 +80,15 @@ int main(int argc,char *argv[]){
 		accuracy*=100.0;
 		printf("accuracy=%7.3f%%\n",accuracy);
 		average_accuracy+=accuracy;
+		*/
 
 	}
+	/*
 	sigmaybar=sigmaybar/double(nsigmay);
 	printf("<sigma_y>=%g, <SigmaY>printf=%g\n",sigmaybar,emulator.SigmaYbar/double(emulator.NSigmaY));
 	average_accuracy=average_accuracy/double(nreal);
 	printf("<accuracy>=%g%%\n",average_accuracy/sqrt(2.0));
+	*/
 	
 	return 0;
 }

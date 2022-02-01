@@ -251,7 +251,7 @@ void CSmoothEmulator::PrintA(vector<double> &Aprint){
 }
 
 void CSmoothEmulator::CalcYTrainFromThetaTrain(){
-	unsigned int itrain,ipar;
+	unsigned int itrain;
 	if(real==NULL){
 		printf("Reality does not exist\n");
 		exit(1);

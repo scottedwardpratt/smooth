@@ -22,6 +22,7 @@ public:
 };
 
 class CReal_Taylor : public CReal{
+public:
 	CRandy *randy;
 	unsigned int NPars;
 	vector<double> RealA;
