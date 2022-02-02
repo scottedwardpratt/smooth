@@ -26,7 +26,7 @@ public:
 	CReal *real;
 	Eigen::MatrixXd M;
 
-	double SigmaY0,SigmaY,SigmaYTrial,MCStepSize,MCSigmaYStepSize,LAMBDA;
+	double SigmaY0,SigmaYMin,SigmaY,SigmaYTrial,MCStepSize,MCSigmaYStepSize,LAMBDA;
 	unsigned int NMC;   // NMC is for generating independent samplings of A in TuneA
 	unsigned int NASample;
 	bool TuneAChooseMCMC,ConstrainA0;

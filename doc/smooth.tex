@@ -182,7 +182,7 @@ w&=Q(\sigma)\prod_{c=1}^C P(A_c).
 One then keeps the step if the new weight exceeds the previous one, or if the ratio of the new weight to the old weight is greater than a random number between zero and unity. After some number of steps, $N_{\rm steps}$, one saves the configuration as a representative sample for the emulator. The disadvantage of this approach is that many steps may be needed to ensure that the samples are independent, and thus faithfully represent the variation in the emulator.
 \end{itemize}
 
-\section{Simplex Sampler}
+\section{Simplex Sampler}\label{sec:simplex}
 
 Here, we imagine a spherically symmetric prior, e.g. one that is purely Gaussian, and where the parameters are scaled so that the prior distribution is invariant to rotations. If one believe the function were close to linear, a strategy would be to find $M=N+1$ points in parameter space placed far apart from another. One choice is the $N-$dimensional simplex. Examples are an equilateral triangle in two-dimensions or a tetrahedron in three dimensions. For a simplex, one places the $M=N+1$ training points at a uniform distance from the origin, $r$, with equal separation between each point. One can generate an $N-$dimensional simplex from an $N-1$ dimensional arrangement. In the $N-1$ dimensional arrangement, the points are arranged equidistant from one another using the coordinates $x_1\cdots x_{N}$. The points would all be placed at a radius $r_{N}$ from the origin in this system, and the separation would be $d$. In the $N-$dimensional system all these $N-1$ points had coordinate $x_N=-a$. The $(N+1)^{\rm th}$ point is then placed at position $x_1\cdots x_{N}=0$ and $x_{N+1}=Na$. This keeps the center of mass at zero. One then chooses $a$ such that the new point is equally separated from all the other points by the same distance $d$, 
 \begin{align*}\eqnumber
@@ -231,8 +231,31 @@ The ratio of the radii is then
 \begin{align*}\eqnumber
 \frac{R_{\rm r.m.s.}^{\rm(sphere)}}{R_{\rm r.m.s.}^{\rm(cube)}}&=\sqrt{\frac{3}{N+2}}.
 \end{align*}
-Thus, in 10 dimensions, if the training points are placed at a distance $a$ from the origin, the r.m.s. radii of the interior space would be half that of the exterior space. Further, the r.m.s. radii of the points in the cube, $a\sqrt{N/3}$, would be about 83\% higher than the radius of the training points. 
+Thus, in 10 dimensions, if the training points are placed at a distance $a$ from the origin, the r.m.s. radii of the interior space would be half that of the entire space. Further, the r.m.s. radii of the points in the cube, $a\sqrt{N/3}$, would be about 83\% higher than the radius of the training points. 
 
 Of course, these problems would be largely avoided if the number of parameters was a half dozen or fewer, or if one was confident that the function was extremely smooth. In the first two sections of this paper, the smoothness parameter, $\Lambda$, was set to a constant. There might be prior knowledge that certain parameters affect the observables only weakly. In that case, the response to these parameters can be considered as linear. This could be done by scaling those parameters so that they vary over a smaller range. If a parameter varies only between $-0.1$ and $0.1$, that effectively applies a smoothness parameter in those directions that is ten times higher. Unfortunately, the choice of which parameters to rescale in this fashion would likely vary depending on which observable is being emulated. Because all the observables might be calculated in a full model run, one needs to identify parameters that would likely have weak response on all observables. 
+
+\section{Tests}
+
+First, we show some results of one-parameter emulators. For a linear fit, two parameters (slope and intercept) would suffice. But because higher-rank contributions exist, there is a spread of functions is that narrows with increasing smoothness parameter as shown in Fig. \ref{fig:onedim}. Figure \ref{fig:onedim} also shows how increasing the number of training points, from two to three, also narrows the range of possible values. 
+\begin{figure}
+\includegraphics[width=0.32\textwidth]{onepar2points/onepartest_Lambda2}\hspace*{0.02\textwidth}
+\includegraphics[width=0.32\textwidth]{onepar2points/onepartest_Lambda4}\hspace*{0.02\textwidth}
+\includegraphics[width=0.32\textwidth]{onepar3points/onepartest_Lambda2}
+\caption{\label{fig:onedim}
+Real functions (black lines) are emulated with the Smooth Emulator (default settings). Ten different functions are emulated. Each emulation is sampled ten times (red lines), with the spread of the lines representing the uncertainty.}
+\end{figure}
+
+Next, we repeat the same test with six parameters. The prior distribution of parameters was uniform in the region $-1<\theta_i<1$. In this case, the Simplex Sampler was used to choose the training points. The ``real'' model, $F$, was constructed from sample smooth functions, with the coefficients generated randomly and a smoothness parameter set to three or six. The $A_{\vec{n}=0}$ coefficient for the real model was set to zero to better accommodate viewing results. The emulator was not given that information. Twenty instances of real models were emulated. For each real model five random point in parameter space were chosen. The emulator value and its uncertainty are plotted alongside the real-model values in Fig. \ref{fig:sixpars}. The 100 comparisons show that the emulator accurately predicts the uncertainty. This is not surprising, because the emulator used the same smoothness parameter as was used to construct the real models. The width parameters, $\sigma$, were explored stochastically, and remarkably they seem to fluctuate around the same value used to construct the real model, albeit with fluctuations of the order of 30\%. 
+
+Figure \ref{fig:sixpars} first shows the 100 comparisons for the case with the smoothness parameter, $\Lambda=3$. The simplest simplex form was applied, which has seven parameters, the same number one would use for a linear fit. Uncertainties were provided by finding 16 independent samplings of $A$ coefficients and of $\sigma$, then using the variance of the 16 samples to define the uncertainty. In the other two panels of Fig. \ref{fig:sixpars}, the procedure was repeated but once with a higher smoothness parameter, and once with a the 28 training points, placed according to the procedure mentioned in Sec. \ref{sec:simplex}, where an additional set of points in parameter space was generated by choosing points that bisect all the lines connecting points in the original simplex, then doubling their radius. As expected, smoother functions are more easily emulated with a given number of training points, and using more training points also improves the accuracy. 
+\begin{figure}
+\includegraphics[width=0.32\textwidth]{sixpars/NPars6_Lambda3_NTrain7}\hspace*{0.02\textwidth}
+\includegraphics[width=0.32\textwidth]{sixpars/NPars6_Lambda6_NTrain7}\hspace*{0.02\textwidth}
+\includegraphics[width=0.32\textwidth]{sixpars/NPars6_Lambda3_NTrain28}
+\caption{\label{fig:sixpars}
+Using 20 instances of real models, choosing 5 random points in parameter space for each model, the emulator (circles) and its uncertainty were compared to the real values (squares). Neighboring points of the same color emulated the same real model. The accuracy improves if a smoother function is considered (middle panel), or if more training points are used (right panel). Estimates of the uncertainty seem reasonable given that the uncertainties illustrated in the figure represent one standard deviation. It should be emphasized that this consistency depends critically on the fact that the emulator chose the same smoothness parameter as was used to generate the real models.
+}
+\end{figure}
 
 \end{document}

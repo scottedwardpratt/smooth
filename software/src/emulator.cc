@@ -13,6 +13,7 @@ CSmoothEmulator::CSmoothEmulator(CparameterMap *parmap){
 	SigmaY0=parmap->getD("SmoothEmulator_SigmaY",1.0);
 	TuneAChooseMCMC=parmap->getB("SmoothEmulator_TuneAChooseMCMC",true);
 	ConstrainA0=parmap->getB("SmoothEmulator_ConstrainA0",false);
+	SigmaYMin=parmap->getD("SmootEmulator_SigmaYMin",0.1*SigmaY0);
 
 	smooth=new CSmooth(parmap);
 	randy=new CRandy(-time(NULL));
@@ -130,7 +131,7 @@ void CSmoothEmulator::TuneAMCMC(){
 }
 
 void CSmoothEmulator::TuneAPerfect(){
-	unsigned int ic,ic0,ntry=0,ntrymax=1000000;
+	unsigned int ic,ic0,Ns,ntry=0,ntrymax=1000000;
 	bool success=false;
 	double weight,warg;//sigmafact=1.0;
 	if(ConstrainA0){
@@ -138,8 +139,15 @@ void CSmoothEmulator::TuneAPerfect(){
 	}
 	else
 		ic0=1;
+	Ns=NTrainingPts-1-ic0;
+
 	while(ntry<ntrymax && success==false){
-		SigmaY=0.5*SigmaY0*(1.0+2.0*randy->ran());
+		if(Ns==0)
+			SigmaY=SigmaY0;
+		else
+			SigmaY=SigmaYMin*pow(randy->ran(),-1.0/double(Ns));
+		//SigmaY=0.5*SigmaY0*(1.0+2.0*randy->ran());
+
 		for(ic=NTrainingPts;ic<smooth->NCoefficients;ic++){
 			//SigmaY=0.5*SigmaY0*tan((PI/2.0)*(1.0-2.0*randy->ran()));
 			ATrial[ic]=SigmaY*randy->ran_gauss();
@@ -149,7 +157,7 @@ void CSmoothEmulator::TuneAPerfect(){
 		for(ic=ic0;ic<NTrainingPts;ic++){
 			warg-=0.5*ATrial[ic]*ATrial[ic]/(SigmaY*SigmaY);
 		}
-		warg-=(NTrainingPts-1)*log(SigmaY/(0.5*SigmaY0));
+		//warg-=(NTrainingPts-1)*log(SigmaY/(0.5*SigmaY0));
 		if(warg>0.0){
 			printf("Disaster, warg=%g\n",warg);
 		}

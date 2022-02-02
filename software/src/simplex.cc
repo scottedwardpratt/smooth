@@ -14,7 +14,7 @@ void CSimplexSampler::SetThetaSimplex(vector<vector<double>> &ThetaTrain,unsigne
 	else if(TrainType==4)
 		SetThetaType4(ThetaTrain,NTrain);
 	else{
-		printf("Smooth_ThetaRank in parmap must be 0 or 1\n");
+		printf("Simplex_ThetaRank in parmap must be 0 or 1\n");
 		exit(1);
 	}
 }
