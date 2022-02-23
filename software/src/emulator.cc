@@ -13,6 +13,7 @@ CSmoothEmulator::CSmoothEmulator(CparameterMap *parmap){
 	SigmaY0=parmap->getD("SmoothEmulator_SigmaY",1.0);
 	TuneAChooseMCMC=parmap->getB("SmoothEmulator_TuneAChooseMCMC",true);
 	ConstrainA0=parmap->getB("SmoothEmulator_ConstrainA0",false);
+	CutOffA=parmap->getB("SmoothEmulator_CutoffA",false);
 	SigmaYMin=parmap->getD("SmootEmulator_SigmaYMin",0.1*SigmaY0);
 
 	smooth=new CSmooth(parmap);
@@ -215,7 +216,9 @@ double CSmoothEmulator::GetLog_AProb(vector<double> &AA,double ASigmaY){
 		answer-=0.5*AA[ic]*AA[ic]/(ASigmaY*ASigmaY);
 	}
 	answer-=(NTrainingPts-1)*log(ASigmaY);
-	answer-=log(1.0+0.25*(ASigmaY*ASigmaY)/(SigmaY0*SigmaY0));
+	// next line keeps A from drifting out to infinity
+	if(CutOffA)
+		answer-=log(1.0+0.25*(ASigmaY*ASigmaY)/(SigmaY0*SigmaY0));
 	return answer;
 }
 
