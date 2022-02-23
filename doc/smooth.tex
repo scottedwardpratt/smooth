@@ -3,14 +3,14 @@
 \begin{document}
 
 \centerline{\bf\Large Smooth Emulator and Simplex Sampling}
-\centerline{Scott Pratt}
+\centerline{Scott Pratt and Karina Martirosova}
 \centerline{Michigan State University}
 
 \section{Smooth Emulator}
 
 The choice of model emulators, $E(\vec{theta})$, depends on the prior understanding of the model being emulated, $F(\vec{\theta})$. If one knows that  a function is linear, then a linear fit is clearly the best choice. Whereas to reproduce lumpy features, where the lumps have a characteristic length scale, Gaussian process emulators are highly effective. The quality of an emulator can be assessed through the following criteria:
 \begin{itemize}
-  \item $E(\vec{theta}_t)=M(\vec{\theta}_t)$ at the training points, $\vec{\theta}_t$. 
+  \item $E(\vec{\theta}_t)=M(\vec{\theta}_t)$ at the training points, $\vec{\theta}_t$. 
   \item The emulator should reasonably reproduce the model away from the training points. This should hold true for either interpolation or extrapolation.
   \item The emulator should accurately represent its uncertainty
   \item A minimal number of training points should be needed
@@ -119,7 +119,7 @@ With this form the same-point correlations remain constant over all $\vec{\theta
 \begin{align*}\eqnumber
 \langle E(\vec{\theta})E(\vec{\theta})\rangle&=\sigma^2,
 \end{align*}
-while the correlation between separate positions fall with increasing separation. This is especially transparent for the $K\rightarrow\infty$ limit,
+while the correlation between separate positions fall with increasing separation. This is especially transparent for the $K_{\rm max}\rightarrow\infty$ limit,
 \begin{align*}
 \langle E(\vec{\theta}_a)E(\vec{\theta}_b)\rangle_{K_{\rm max}\rightarrow\infty}
 &=\sigma^2 e^{-|\vec{\theta}_a-\vec{\theta}_b|^2/2\Lambda^2}.
