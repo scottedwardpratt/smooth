@@ -13,12 +13,8 @@ CSmoothEmulator::CSmoothEmulator(CparameterMap *parmap){
 	SigmaY0=parmap->getD("SmoothEmulator_SigmaY",1.0);
 	TuneAChooseMCMC=parmap->getB("SmoothEmulator_TuneAChooseMCMC",true);
 	ConstrainA0=parmap->getB("SmoothEmulator_ConstrainA0",false);
-<<<<<<< HEAD
-	SigmaYMin=parmap->getD("SmoothEmulator_SigmaYMin",0.1*SigmaY0);
-=======
 	CutOffA=parmap->getB("SmoothEmulator_CutoffA",false);
-	SigmaYMin=parmap->getD("SmootEmulator_SigmaYMin",0.1*SigmaY0);
->>>>>>> 191af618ecb823dc334f9fb2443b899789a55a98
+	SigmaYMin=parmap->getD("SmoothEmulator_SigmaYMin",0.1*SigmaY0);
 
 	smooth=new CSmooth(parmap);
 	randy=new CRandy(-time(NULL));
