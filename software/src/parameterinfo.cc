@@ -11,12 +11,15 @@ using namespace std;
 CPriorInfo::CPriorInfo(string file, vector<double> x_min, vector<double> x_max){
 
 	filename=file;
+	char dummy1[100],dummy2[100];
 //	param_num=param;
 	FILE *fptr;
 	string interval;
 	fptr=fopen(filename.c_str(), "r");
 	for(int i=0; i<param_num; i++){
-		fscanf(fptr, "%s, %s, %lf, %lf", &name[i], &interval, &min[i], &max[i]);
+		fscanf(fptr, "%s %s %lf %lf",dummy1,dummy2, &min[i], &max[i]);
+		name[i]=dummy1;
+	interval=dummy2;
 		min[i]=x_min[i];
 		max[i]=x_max[i];
 		Print(name[i], interval, min[i], max[i]);
@@ -89,7 +92,6 @@ void CPriorInfo::Print(string &name, string &type, double &min, double &max){
 
 void CPriorInfo::Write(vector<double> &xval,vector<double> &yval, string filename){
 	unsigned int ipt,Npts=xval.size();
-	double pt;
 	FILE *fptr;
 	fptr=fopen(filename.c_str(),"w");
 	for(ipt=0;ipt<Npts;ipt++){

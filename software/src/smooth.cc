@@ -192,7 +192,6 @@ void CSmooth::InitArrays(){
 		printf("size mismatch\n");
 		exit(1);
 	}
-	printf("NCoefficients=%u\n",NCoefficients);
 }
 
 double CSmooth::CalcY(vector<double> &A,double LAMBDA,vector<double> &theta){

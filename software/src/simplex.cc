@@ -99,7 +99,6 @@ void CSimplexSampler::SetThetaType2(vector<vector<double>> &ThetaTrain, unsigned
 			ThetaTrain[itrain][ipar]*=(RTrain/R);
 		}
 	}
-	printf("NTrainingPts=%u\n",NTrain);
 }
 
 void CSimplexSampler::SetThetaType3(vector<vector<double>> &ThetaTrain,unsigned int &NTrain){
@@ -128,9 +127,7 @@ void CSimplexSampler::SetThetaType3(vector<vector<double>> &ThetaTrain,unsigned 
 	for(itrain=0;itrain<NPars+1;itrain++){
 		for(ipar=0;ipar<NPars;ipar++){
 			ThetaTrain[itrain][ipar]*=(RTrain/R);
-			printf("%8.5f ",ThetaTrain[itrain][ipar]);
 		}
-		printf("\n");
 	}
 
 
@@ -201,5 +198,4 @@ void CSimplexSampler::SetThetaType4(vector<vector<double>> &ThetaTrain, unsigned
 			ThetaTrain[itrain][ipar]*=(RTrain/Rprime);
 		}
 	}
-	printf("NTrainingPts=%u\n",NTrain);
 }

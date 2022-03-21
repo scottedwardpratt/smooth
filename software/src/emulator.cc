@@ -18,7 +18,6 @@ CSmoothEmulator::CSmoothEmulator(CparameterMap *parmap){
 
 	smooth=new CSmooth(parmap);
 	randy=new CRandy(-time(NULL));
-	real_taylor=new CReal_Taylor(NPars, randy);
 	SigmaY=SigmaY0;
 	NSigmaY=0;
 	SigmaYbar=0.0;
@@ -40,7 +39,6 @@ CSmoothEmulator::CSmoothEmulator(CparameterMap *parmap){
 	SetA_Zero(A);
 	ATrial.resize(smooth->NCoefficients);
 	SetA_Zero(ATrial);
-	real=NULL;
 }
 
 void CSmoothEmulator::Init(CSmooth *smooth){
@@ -119,13 +117,6 @@ void CSmoothEmulator::TuneAMCMC(){
 		CalcAFromTraining(*ATrialptr);
 		logPTrial=GetLog_AProb(*ATrialptr,SigmaYTrial);
 		dlp=logPTrial-logP;	
-//		cout << "lopPTrial is:" << logPTrial << endl;
-//		cout << "logP is:" << logP << endl;
-//		cout << "dlp is:" << dlp << endl;
-//		cout << "SigmaYTrial is:" << SigmaYTrial << endl;
-//		cout << "SigmaY is:" << SigmaY << endl;
-		
-		
 			
 		if(dlp>0.0){
 			Aswitch=Aptr;
@@ -214,7 +205,6 @@ void CSmoothEmulator::TuneAPerfect(){
 		exit(1);
 	}
 	else{
-		printf("TuneAPerfect succeeded, ntry=%u, SigmaY=%g, warg=%g\n",ntry,SigmaY,warg);
 		for(ic=0;ic<smooth->NCoefficients;ic++){
 			A[ic]=ATrial[ic];
 		}
@@ -235,7 +225,7 @@ void CSmoothEmulator::CalcAFromTraining(vector<double> &AA){
 		exit(1);
 	}
 	YTarget.resize(NTrainingPts);
-	
+
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		YTarget(itrain)=YTrain[itrain]-smooth->CalcY_Remainder(AA,LAMBDA,ThetaTrain[itrain],NTrainingPts);
 		for(ic=0;ic<NTrainingPts;ic++){
@@ -309,6 +299,6 @@ void CSmoothEmulator::CalcYTrainFromThetaTrain(){
 		exit(1);
 	}
 	for(itrain=0;itrain<NTrainingPts;itrain++){
-		YTrain[itrain]=real->CalcYReal(ThetaTrain[itrain]);
+		YTrain[itrain]=real->CalcY(ThetaTrain[itrain]);
 	}
 }

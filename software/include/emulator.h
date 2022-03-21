@@ -23,10 +23,8 @@ public:
 	unsigned int NPars,NTrainingPts;
 	CRandy *randy;
 	CSmooth *smooth;
-//	CReal *real;
+	CReal *real;
 	Eigen::MatrixXd M;
-	CReal_Taylor *real_taylor;
-
 
 	double SigmaY0,SigmaYMin,SigmaY,SigmaYTrial,MCStepSize,MCSigmaYStepSize,LAMBDA;
 	unsigned int NMC;   // NMC is for generating independent samplings of A in TuneA
@@ -60,7 +58,6 @@ public:
 	double SigmaYbar;
 	int NSigmaY;
 	
-	CReal *real;
 	vector<double> RealA;
 
 	void GenerateASamples();
