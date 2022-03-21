@@ -1,5 +1,5 @@
-#ifndef __PARAMETER_H__
-#define __PARAMETER_H__
+#ifndef __PRIOR_H__
+#define __PRIOR_H__
 #include <cstdlib>
 #include <cmath>
 #include <cstdio>
@@ -19,9 +19,9 @@
 #include "real.h"
 
 
-class CParameterInfo{
+class CPriorInfo{
 public:
-	string name;
+	vector<string> name;
 	string filename;
 	
 	vector<double> min, max;
@@ -29,10 +29,28 @@ public:
 	double theta;
 	int param_num;
 	
-	CParameterInfo(string file);
-	CParameterTranslateTheta_to_x(min, max, width, center);
-	CParameterTranslateX_to_Theta();
-	Print(name, theta);
+	CPriorInfo(string file, vector<double> x_min, vector<double> x_max);
+	CPriorInfo(vector<double> x_min, vector<double> x_max);
+	double CParameterTranslateTheta_to_x(vector<double> min, vector<double> max,double theta, string interval);
+	double CParameterTranslateX_to_Theta(vector<double> x_min, vector<double> x_max, double x, string interval);
+	void Print(string &name, string &type, double &min, double &max);
+	void Write(vector<double> &xval, vector<double> &yval,string filename);
+//	ReadInfo();
 };
 
+
+
+class CModelParameter{
+public:
+//has actual values of the parameter
+//each object tells you the point if you run 100 points will have 100 objects
+	CModelParameter(vector<double> x_val, vector<double> theta_val, CPriorInfo *info_val);
+	vector<double> x;
+	vector<double> theta;
+	CPriorInfo *info;
+
+
+
+
+};
 #endif
