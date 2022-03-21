@@ -13,35 +13,20 @@ int main(int argc,char *argv[]){
 	vector<double> Theta;
 	double SigmaReal = 5.0;
 
-	parmap->ReadParsFromFile("parameters.txt");
-//	parmap->PrintPars();
+	parmap->ReadParsFromFile("parameters.txt");	
 	
-	
-	CRandy *randy=new CRandy(-time(NULL));
-//	cout << "check a: " << randy->ran_gauss() << endl;
-	
+	CRandy *randy=new CRandy(-time(NULL));	
 	CSmoothEmulator emulator(parmap);
-	
-	
-	
-//	cout << "check aa:" << endl;
-//	parmap->PrintPars();
-//	CReal_Taylor *real_taylor= new CReal_Taylor(emulator.NPars, randy);
-//	cout << "check b:" << emulator.NPars << endl;
+	//	CReal_Taylor *real_taylor= new CReal_Taylor(emulator.NPars, randy);
 	
 	CSmooth *smooth=new CSmooth(parmap);
-//	cout << "check c:" << endl;
-//	CSmoothEmulator emulator2(smooth);
+	//	CSmoothEmulator emulator2(smooth);
 	
 	Theta.resize(emulator.NPars);
 	emulator.randy->reset(-time(NULL));
-//	cout << "check d:" << endl;
-//	cout << emulator.randy << endl;
 
 	emulator.SetThetaSimplex();
 //	cout << "NTrainingPts is:" << emulator.NTrainingPts << endl;
-	
-
 	
 	//FILE *fptr;
 	//char filename[150];
