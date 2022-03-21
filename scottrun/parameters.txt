@@ -8,6 +8,7 @@ SmoothEmulator_MCStepSize 1.0
 SmoothEmulator_MCSigmaYStepSize 1.0
 SmoothEmulator_TuneAChooseMCMC true
 SmoothEmulator_ConstrainA0 false
+SmoothEmulator_CutoffA false
 SmoothEmulator_LAMBDA 3.0
 #Smooth_NPars 6
 Smooth_UseRFactor false

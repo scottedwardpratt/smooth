@@ -31,7 +31,7 @@ public:
 	double SigmaY0,SigmaYMin,SigmaY,SigmaYTrial,MCStepSize,MCSigmaYStepSize,LAMBDA;
 	unsigned int NMC;   // NMC is for generating independent samplings of A in TuneA
 	unsigned int NASample;
-	bool TuneAChooseMCMC,ConstrainA0;
+	bool TuneAChooseMCMC,ConstrainA0,CutOffA;
 	vector<vector<double>> ASample;
 	vector<double> SigmaYSample;
 	vector<double> A,ATrial;
