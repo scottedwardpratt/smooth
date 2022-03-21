@@ -44,10 +44,10 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /usr/local/Cellar/cmake/3.22.1/bin/cmake
+CMAKE_COMMAND = /usr/local/Cellar/cmake/3.22.3/bin/cmake
 
 # The command to remove a file.
-RM = /usr/local/Cellar/cmake/3.22.1/bin/cmake -E rm -f
+RM = /usr/local/Cellar/cmake/3.22.3/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
@@ -96,8 +96,8 @@ smoothy: /Users/scottpratt/git/smooth/software/lib/libsmooth.a
 smoothy: /Users/scottpratt/git/hp/alice/software/b3d2/lib/libb3d_alice.a
 smoothy: /Users/scottpratt/git/coral/software/lib/libcoral.a
 smoothy: /Users/scottpratt/git/commonutils/software/lib/libcommonutils.a
-smoothy: /usr/local/Cellar/gsl/2.7/lib/libgsl.dylib
-smoothy: /usr/local/Cellar/gsl/2.7/lib/libgslcblas.dylib
+smoothy: /usr/local/Cellar/gsl/2.7.1/lib/libgsl.dylib
+smoothy: /usr/local/Cellar/gsl/2.7.1/lib/libgslcblas.dylib
 smoothy: CMakeFiles/smoothy.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/scottpratt/git/smooth/scottrun/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable smoothy"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/smoothy.dir/link.txt --verbose=$(VERBOSE)

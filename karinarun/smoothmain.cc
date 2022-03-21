@@ -2,7 +2,6 @@
 #include "constants.h"
 #include "smooth.h"
 #include "emulator.h"
-#include "gslmatrix.h"
 
 using namespace std;
 int main(int argc,char *argv[]){
