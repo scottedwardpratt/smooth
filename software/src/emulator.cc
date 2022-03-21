@@ -1,5 +1,5 @@
 #include "emulator.h"
-
+#include "smooth.h"
 using namespace std;
 
 CSmoothEmulator::CSmoothEmulator(CparameterMap *parmap){
@@ -13,9 +13,36 @@ CSmoothEmulator::CSmoothEmulator(CparameterMap *parmap){
 	SigmaY0=parmap->getD("SmoothEmulator_SigmaY",1.0);
 	TuneAChooseMCMC=parmap->getB("SmoothEmulator_TuneAChooseMCMC",true);
 	ConstrainA0=parmap->getB("SmoothEmulator_ConstrainA0",false);
-	SigmaYMin=parmap->getD("SmootEmulator_SigmaYMin",0.1*SigmaY0);
+	SigmaYMin=parmap->getD("SmoothEmulator_SigmaYMin",0.1*SigmaY0);
 
 	smooth=new CSmooth(parmap);
+	randy=new CRandy(-time(NULL));
+	real_taylor=new CReal_Taylor(NPars, randy);
+	SigmaY=SigmaY0;
+	NSigmaY=0;
+	SigmaYbar=0.0;
+	MCStepSize=MCStepSize/double(NPars*NPars);
+	MCSigmaYStepSize=MCSigmaYStepSize/double(NPars*NPars);
+//	cout << "sigmaY: " << SigmaY << endl;
+
+	ASample.resize(NASample);
+	simplex=new CSimplexSampler(parmap);
+	
+	for(unsigned int isample=0;isample<NASample;isample++){		
+		ASample[isample].resize(smooth->NCoefficients);
+		//SetA_RanGauss(SigmaY,ASample[isample]);
+		SetA_Zero(ASample[isample]);		
+	}
+	
+	A.resize(smooth->NCoefficients);
+	//SetA_RanGauss(SigmaY,A);
+	SetA_Zero(A);
+	ATrial.resize(smooth->NCoefficients);
+	SetA_Zero(ATrial);
+	real=NULL;
+}
+
+void CSmoothEmulator::Init(CSmooth *smooth){
 	randy=new CRandy(-time(NULL));
 	SigmaY=SigmaY0;
 	NSigmaY=0;
@@ -24,7 +51,7 @@ CSmoothEmulator::CSmoothEmulator(CparameterMap *parmap){
 	MCSigmaYStepSize=MCSigmaYStepSize/double(NPars*NPars);
 
 	ASample.resize(NASample);
-	simplex=new CSimplexSampler(parmap);
+//	simplex=new CSimplexSampler(parmap);
 	for(unsigned int isample=0;isample<NASample;isample++){
 		ASample[isample].resize(smooth->NCoefficients);
 		//SetA_RanGauss(SigmaY,ASample[isample]);
@@ -90,7 +117,15 @@ void CSmoothEmulator::TuneAMCMC(){
 		}
 		CalcAFromTraining(*ATrialptr);
 		logPTrial=GetLog_AProb(*ATrialptr,SigmaYTrial);
-		dlp=logPTrial-logP;
+		dlp=logPTrial-logP;	
+//		cout << "lopPTrial is:" << logPTrial << endl;
+//		cout << "logP is:" << logP << endl;
+//		cout << "dlp is:" << dlp << endl;
+//		cout << "SigmaYTrial is:" << SigmaYTrial << endl;
+//		cout << "SigmaY is:" << SigmaY << endl;
+		
+		
+			
 		if(dlp>0.0){
 			Aswitch=Aptr;
 			Aptr=ATrialptr;
@@ -100,11 +135,14 @@ void CSmoothEmulator::TuneAMCMC(){
 			SigmaYTrial=SigmaYswitch;
 			logP=logPTrial;
 			success+=1;
+//			cout << "dlp is:" << dlp << endl;
 		}
 		else{
 			if(dlp>-100){
 				dlp=exp(dlp);
 				r=randy->ran();
+//				cout << "dlp is:" << dlp << endl;
+//				cout << "randy is: " << r <<endl;
 				if(dlp>r){
 					Aswitch=Aptr;
 					Aptr=ATrialptr;
@@ -120,6 +158,7 @@ void CSmoothEmulator::TuneAMCMC(){
 		if(logP>BestLogP)
 			BestLogP=logP;
 	}
+//	cout << "dlp is now:" << dlp << endl;
 	
 	if(Aptr!=&A){
 		for(ic=0;ic<smooth->NCoefficients;ic++){
@@ -242,6 +281,8 @@ void CSmoothEmulator::SetA_RanSech(double SigmaY,vector<double> &A){
 
 void CSmoothEmulator::GenerateASamples(){
 	unsigned int isample;
+//	cout << "NASample is:" << NASample << endl;
+	//NASample = 10
 	for(isample=0;isample<NASample;isample++){
 		TuneA();
 		for(unsigned int ic=0;ic<smooth->NCoefficients;ic++){
@@ -265,6 +306,6 @@ void CSmoothEmulator::CalcYTrainFromThetaTrain(){
 		exit(1);
 	}
 	for(itrain=0;itrain<NTrainingPts;itrain++){
-		YTrain[itrain]=real->CalcY(ThetaTrain[itrain]);
+		YTrain[itrain]=real->CalcYReal(ThetaTrain[itrain]);
 	}
 }

@@ -8,9 +8,10 @@ CSmooth::CSmooth(){
 }
 
 CSmooth::CSmooth(unsigned int NPars_Set){
+	//Npars=3
 	NPars=NPars_Set;
 	UseRFactor=false;
-	InitArrays();
+	InitArrays();	
 }
 
 CSmooth::CSmooth(CparameterMap *parmap){
@@ -19,7 +20,7 @@ CSmooth::CSmooth(CparameterMap *parmap){
 	InitArrays();
 }
 
-void CSmooth::InitArrays(){
+void CSmooth::InitArrays(){	
 	unsigned int ic,j,isame,ir;
 	vector<unsigned int> countsame;
 	vector<unsigned int> dummy;
@@ -44,6 +45,7 @@ void CSmooth::InitArrays(){
 	IPar[0].resize(rank[ic]);
 	
 	ic+=1;
+//	cout << NPars << endl;
 	for(i[0]=0;i[0]<NPars;i[0]++){
 		dupfactor.push_back(0);
 		IPar.resize(ic+1);
@@ -63,10 +65,12 @@ void CSmooth::InitArrays(){
 			countsame[isame]+=1;
 		}
 		dupfactor[ic]=factorial[rank[ic]];
+		
 		for(j=0;j<rank[ic];j++)
 			dupfactor[ic]/=factorial[countsame[j]];
 		ic+=1;
 	}
+	
 	
 	for(i[0]=0;i[0]<NPars;i[0]++){
 		for(i[1]=0;i[1]<=i[0];i[1]++){
@@ -200,10 +204,13 @@ double CSmooth::CalcY(vector<double> &A,double LAMBDA,vector<double> &theta){
 		term=A[ic]*sqrt(double(dupfactor[ic])/double(factorial[rank[ic]]));
 		for(ir=0;ir<rank[ic];ir++){
 			term*=theta[IPar[ic][ir]]/LAMBDA;
+//			cout << "theta is:" << theta[IPar[ic][ir]] << endl;
 		}
 		answer+=term;
 	}
 	answer*=rfactor;
+
+	
 	return answer;
 }
 

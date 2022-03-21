@@ -23,8 +23,10 @@ public:
 	unsigned int NPars,NTrainingPts;
 	CRandy *randy;
 	CSmooth *smooth;
-	CReal *real;
+//	CReal *real;
 	Eigen::MatrixXd M;
+	CReal_Taylor *real_taylor;
+
 
 	double SigmaY0,SigmaYMin,SigmaY,SigmaYTrial,MCStepSize,MCSigmaYStepSize,LAMBDA;
 	unsigned int NMC;   // NMC is for generating independent samplings of A in TuneA
@@ -38,6 +40,7 @@ public:
 	CSimplexSampler *simplex;
 	
 	CSmoothEmulator(CparameterMap *parmap);
+	CSmoothEmulator(CSmooth *smooth);
 	void CalcYTrainFromThetaTrain();
 	void CalcAFromTraining(vector<double> &AA);
 	void PrintA(vector<double> &Aprint);
@@ -56,8 +59,13 @@ public:
 
 	double SigmaYbar;
 	int NSigmaY;
+	
+	CReal *real;
+	vector<double> RealA;
 
 	void GenerateASamples();
+	
+	void Init(CSmooth *smooth);
 
 };
 
