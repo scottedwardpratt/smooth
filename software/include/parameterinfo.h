@@ -6,10 +6,10 @@
 #include <vector>
 #include <array>
 #include <fstream>
-#include "parametermap.h"
-#include "misc.h"
-#include "randy.h"
-#include "constants.h"
+#include "msu_commonutils/parametermap.h"
+#include "msu_commonutils/misc.h"
+#include "msu_commonutils/randy.h"
+#include "msu_commonutils/constants.h"
 #include <list>
 #include "smooth.h"
 #include "simplex.h"

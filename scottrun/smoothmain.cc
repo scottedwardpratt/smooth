@@ -1,15 +1,15 @@
-#include "parametermap.h"
-#include "constants.h"
+#include "msu_commonutils/parametermap.h"
+#include "msu_commonutils/constants.h"
 #include "smooth.h"
 #include "emulator.h"
-#include "gslmatrix.h"
+#include "msu_commonutils/gslmatrix.h"
 
 using namespace std;
 int main(int argc,char *argv[]){
 	CparameterMap *parmap=new CparameterMap();
 	double y,yreal,accuracy,r2,average_accuracy=0.0,sigmay,ybar,y2bar,sigmaybar=0.0;
 	long long unsigned int nsigmay=0;
-	unsigned int isample,itest,ntest=5,ipar,ireal,nreal=20;
+	unsigned int isample,itest,ntest=5,ipar,ireal,nreal=10;
 	vector<double> Theta;
 	CReal_Taylor *real;
 
@@ -26,14 +26,15 @@ int main(int argc,char *argv[]){
 
 	FILE *fptr;
 	char filename[150];
-	sprintf(filename,"testresults/NPars%u_Lambda%g_NTrain%u.txt",
+	snprintf(filename,sizeof(filename),"testresults/NPars%u_Lambda%g_NTrain%u.txt",
 		emulator.NPars,emulator.LAMBDA,emulator.NTrainingPts);
 	fptr=fopen(filename,"w");
 
 	for(ireal=0;ireal<nreal;ireal++){
+		printf("------ ireal=%d -----\n",ireal);
 		accuracy=0.0;
-		real->RandomizeRealA(100.0);
-		real->RealA[0]=0.0;
+		real->RandomizeA(100.0);
+		real->A[0]=0.0;
 		emulator.CalcYTrainFromThetaTrain();	
 		emulator.GenerateASamples();
 		for(itest=0;itest<emulator.NTrainingPts;itest++){

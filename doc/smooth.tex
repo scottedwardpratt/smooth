@@ -1,11 +1,87 @@
-\input{header.tex}
+\documentclass[12pt]{article}
+\usepackage{subfiles}
+\usepackage{graphicx}
+\usepackage[
+        pdfencoding=auto,%
+        pdfauthor={Scott Pratt},%
+        pdfstartview=FitV,%
+        colorlinks=true,%
+        linkcolor=blue,%
+        citecolor=blue, %
+        urlcolor=blue,
+        breaklinks=true]{hyperref}
+%\usepackage[anythingbreaks,hyphenbreaks]{breakurl}
+\usepackage[anythingbreaks,hyphenbreaks]{xurl}
+%\usepackage{pdfsync}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{bm}
+\numberwithin{equation}{section} 
+\numberwithin{figure}{section} 
+\usepackage[small,bf]{caption}
+%\usepackage{fontspec}
+%\usepackage{textcomp}
+%\usepackage{color}
+\usepackage{fancyhdr}
+\setlength{\headheight}{16pt}
+%\usepackage[headheight=110pt]{geometry}
+\usepackage{bm}
+
+\usepackage[most]{tcolorbox}
+\tcbset{
+frame code={}
+center title,
+left=0pt,
+right=0pt,
+top=0pt,
+bottom=0pt,
+colback=gray!25,
+colframe=white,
+width=\dimexpr\textwidth\relax,
+enlarge left by=0mm,
+boxsep=5pt,
+arc=0pt,outer arc=0pt,
+}
+\newcounter{examplecounter}
+\counterwithin{examplecounter}{section}
+\setcounter{examplecounter}{0}
+\newcommand{\example}[2]{\begin{tcolorbox}[breakable,enhanced]
+\refstepcounter{examplecounter}{
+\bf Example \arabic{section}.\arabic{examplecounter}:}~~{\bf #1}\\
+{#2}
+\end{tcolorbox}
+}
+%\newcommand{\exampleend}{
+%\begin{samepage}
+%\nopagebreak\noindent\rule{\textwidth}{1pt}
+%\end{samepage}
+%}
+
+
+%\usepackage{silence}
+%\WarningFilter{hyperref}{Token not allowed in a PDF String}
+
+\newcommand\eqnumber{\addtocounter{equation}{1}\tag{\theequation}}
+
+\newcommand{\solution}[1]{ }
+
+
+
+\usepackage{comment}
+\parskip 4pt
+\parindent 0pt
+
+%\newcommand{\bm}{\boldmath}
+\boldmath
+
+%
 
 \begin{document}
 
 \today\\
 
 \centerline{\bf\Large Smooth Emulator and Simplex Sampling}
-\centerline{Scott Pratt and Karina Martirosova}
+\centerline{Scott Pratt}
 \centerline{Michigan State University}
 
 \section{Smooth Emulator}

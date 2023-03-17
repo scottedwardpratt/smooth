@@ -17,7 +17,7 @@ CSmoothEmulator::CSmoothEmulator(CparameterMap *parmap){
 	SigmaYMin=parmap->getD("SmoothEmulator_SigmaYMin",0.1*SigmaY0);
 
 	smooth=new CSmooth(parmap);
-	randy=new CRandy(-time(NULL));
+	randy=new Crandy(-time(NULL));
 	SigmaY=SigmaY0;
 	NSigmaY=0;
 	SigmaYbar=0.0;
@@ -42,7 +42,7 @@ CSmoothEmulator::CSmoothEmulator(CparameterMap *parmap){
 }
 
 void CSmoothEmulator::Init(CSmooth *smooth){
-	randy=new CRandy(-time(NULL));
+	randy=new Crandy(-time(NULL));
 	SigmaY=SigmaY0;
 	NSigmaY=0;
 	SigmaYbar=0.0;

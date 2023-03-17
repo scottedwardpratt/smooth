@@ -1,9 +1,9 @@
 #include "real.h"
 #include "smooth.h"
-#include "randy.h"
+#include "msu_commonutils/randy.h"
 #include "emulator.h"
-#include "constants.h"
-#include "gslmatrix.h"
+#include "msu_commonutils/constants.h"
+#include "msu_commonutils/gslmatrix.h"
 
 using namespace std;
 
@@ -16,7 +16,7 @@ double CReal::CalcY(vector<double> &theta){
 	return 0.0;
 }
 
-CReal_Taylor::CReal_Taylor(unsigned int NPars_Set,CRandy *randyset){	
+CReal_Taylor::CReal_Taylor(unsigned int NPars_Set,Crandy *randyset){	
 	NPars=NPars_Set;	
 	randy=randyset;
 	smooth = new CSmooth(NPars);

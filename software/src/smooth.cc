@@ -1,6 +1,6 @@
 //#include "emulator.h"
 #include "smooth.h"
-#include "gslmatrix.h"
+#include "msu_commonutils/gslmatrix.h"
 using namespace std;
 
 CSmooth::CSmooth(){

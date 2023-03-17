@@ -20,6 +20,6 @@ add_library(smooth STATIC ${smooth_src})
 target_link_libraries(smooth ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY} ${Boost_LIBRARIES})
 message("Libraries: ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY}")
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include ${GITHOME_MSU}/commonutils/software/include ${GITHOME_MSU}/coral/software/include ${GITHOME_MSU}/hp/alice/software/b3d2/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include ${GITHOME_MSU}/commonutils/software/include ${GITHOME_MSU}/coral/software/include)
 
 

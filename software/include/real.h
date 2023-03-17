@@ -6,10 +6,10 @@
 #include <vector>
 #include <array>
 #include <fstream>
-#include "parametermap.h"
-#include "misc.h"
-#include "constants.h"
-#include "randy.h"
+#include "msu_commonutils/parametermap.h"
+#include "msu_commonutils/misc.h"
+#include "msu_commonutils/constants.h"
+#include "msu_commonutils/randy.h"
 #include <list>
 #include "smooth.h"
 #include "simplex.h"
@@ -28,11 +28,11 @@ public:
 
 class CReal_Taylor : public CReal{
 public:
-	CRandy *randy;
+	Crandy *randy;
 	unsigned int NPars;
 	vector<double> A;
 	double LAMBDA;
-	CReal_Taylor(unsigned int NPars_Set,CRandy *randy);
+	CReal_Taylor(unsigned int NPars_Set,Crandy *randy);
 	CSmooth *smooth;
 	double CalcY(vector<double> &theta);
 	// These are functions for generating fake real models
