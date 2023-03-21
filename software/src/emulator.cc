@@ -162,9 +162,10 @@ void CSmoothEmulator::TuneAMCMC(){
 }
 
 void CSmoothEmulator::TuneAPerfect(){
-	unsigned int ic,ic0,Ns,ntry=0,ntrymax=1000000;
+	unsigned int ic,ic0,Ns,ntry=0,ntrymax=1000;
 	bool success=false;
 	double weight,warg;//sigmafact=1.0;
+	printf("howdy\n");
 	if(ConstrainA0){
 		ic0=0;
 	}
@@ -173,18 +174,26 @@ void CSmoothEmulator::TuneAPerfect(){
 	Ns=NTrainingPts-1-ic0;
 
 	while(ntry<ntrymax && success==false){
+		/*
 		if(Ns==0)
 			SigmaY=SigmaY0;
 		else
 			SigmaY=SigmaYMin*pow(randy->ran(),-1.0/double(Ns));
+		*/
 		//SigmaY=0.5*SigmaY0*(1.0+2.0*randy->ran());
+		SigmaY=SigmaY0;
 
 		for(ic=NTrainingPts;ic<smooth->NCoefficients;ic++){
 			//SigmaY=0.5*SigmaY0*tan((PI/2.0)*(1.0-2.0*randy->ran()));
 			ATrial[ic]=SigmaY*randy->ran_gauss();
 		}
 		warg=0.0;
+		printf("check in\n");
 		CalcAFromTraining(ATrial);
+		for(int ia=0;ia<NTrainingPts;ia++){
+			printf("%2d: %g\n",ia,ATrial[ia]);
+		}
+		printf("check a\n");
 		for(ic=ic0;ic<NTrainingPts;ic++){
 			warg-=0.5*ATrial[ic]*ATrial[ic]/(SigmaY*SigmaY);
 		}
@@ -192,6 +201,7 @@ void CSmoothEmulator::TuneAPerfect(){
 		if(warg>0.0){
 			printf("Disaster, warg=%g\n",warg);
 		}
+		printf("warg=%g, SigmaY=%g, SigmaY0=%g\n",warg,SigmaY,SigmaY0);
 		if(warg>-100){
 			weight=exp(warg);
 			if(weight>randy->ran()){
@@ -209,6 +219,7 @@ void CSmoothEmulator::TuneAPerfect(){
 			A[ic]=ATrial[ic];
 		}
 	}
+	printf("adios\n");
 }
 
 // This adjust first NTrainingPts coefficients to reproduce Y training values

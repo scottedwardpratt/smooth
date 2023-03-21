@@ -11,6 +11,7 @@ int main(int argc,char *argv[]){
 	long long unsigned int nsigmay=0;
 	unsigned int isample,itest,ntest=5,ipar,ireal,nreal=10;
 	vector<double> Theta;
+	// This plays the role of the "real" model
 	CReal_Taylor *real;
 
 	parmap->ReadParsFromFile("parameters.txt");
@@ -23,6 +24,7 @@ int main(int argc,char *argv[]){
 	emulator.real=real;
 
 	emulator.SetThetaSimplex();
+	printf("Set %d Training Points\n",emulator.NTrainingPts);
 
 	FILE *fptr;
 	char filename[150];
@@ -35,7 +37,11 @@ int main(int argc,char *argv[]){
 		accuracy=0.0;
 		real->RandomizeA(100.0);
 		real->A[0]=0.0;
-		emulator.CalcYTrainFromThetaTrain();	
+		for(int ia=0;ia<100;ia++)
+			printf("Areal[%d]=%g\n",ia,real->A[0]);
+		Misc::Pause();
+		// 
+		emulator.CalcYTrainFromThetaTrain();
 		emulator.GenerateASamples();
 		for(itest=0;itest<emulator.NTrainingPts;itest++){
 			yreal=emulator.YTrain[itest];

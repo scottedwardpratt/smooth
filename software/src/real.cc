@@ -34,6 +34,7 @@ void CReal_Taylor::RandomizeA(double SigmaReal){
 	}
 	for(unsigned int ic=0;ic<A.size();ic++){
 		A[ic]=SigmaReal*randy->ran_gauss();
+		printf("A[%d]=%g\n",ic,A[ic]);
 	}
 }
 

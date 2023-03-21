@@ -21,6 +21,7 @@ using namespace std;
 
 class CReal{
 public:
+	unsigned int NPars;
 	CReal();
 	virtual double CalcY(vector<double> &theta);
 	void CalcYTrain(vector<double> &YTrain,int NTrainingPts, vector<vector<double>> ThetaTrain);
@@ -29,7 +30,6 @@ public:
 class CReal_Taylor : public CReal{
 public:
 	Crandy *randy;
-	unsigned int NPars;
 	vector<double> A;
 	double LAMBDA;
 	CReal_Taylor(unsigned int NPars_Set,Crandy *randy);
