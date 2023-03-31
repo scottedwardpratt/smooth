@@ -28,7 +28,7 @@ int main(int argc,char *argv[]){
 
 	FILE *fptr;
 	char filename[150];
-	snprintf(filename,sizeof(filename),"testresults/NPars%u_Lambda%g_NTrain%u.txt",
+	snprintf(filename,150,"testresults/NPars%u_Lambda%g_NTrain%u.txt",
 		emulator.NPars,emulator.LAMBDA,emulator.NTrainingPts);
 	fptr=fopen(filename,"w");
 
