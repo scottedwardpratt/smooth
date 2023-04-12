@@ -158,29 +158,20 @@ void CSmoothEmulator::TuneAMCMC(){
 		}
 	}
 	
-	printf("success percentage=%g, SigmaY=%g, logP=%g\n",double(success)*100.0/double(NMC),SigmaY,logP);
+	CLog::Info("success percentage="+to_string(double(success)*100.0/double(NMC))+", SigmaY="+to_string(SigmaY)+", logP="+to_string(logP)+"\n");
 }
 
 void CSmoothEmulator::TuneAPerfect(){
-	unsigned int ic,ic0,Ns,ntry=0,ntrymax=1000;
+	unsigned int ic,ic0,ntry=0,ntrymax=1000;
 	bool success=false;
 	double weight,warg;//sigmafact=1.0;
-	printf("howdy\n");
 	if(ConstrainA0){
 		ic0=0;
 	}
 	else
 		ic0=1;
-	Ns=NTrainingPts-1-ic0;
 
 	while(ntry<ntrymax && success==false){
-		/*
-		if(Ns==0)
-			SigmaY=SigmaY0;
-		else
-			SigmaY=SigmaYMin*pow(randy->ran(),-1.0/double(Ns));
-		*/
-		//SigmaY=0.5*SigmaY0*(1.0+2.0*randy->ran());
 		SigmaY=SigmaY0;
 
 		for(ic=NTrainingPts;ic<smooth->NCoefficients;ic++){
@@ -188,20 +179,14 @@ void CSmoothEmulator::TuneAPerfect(){
 			ATrial[ic]=SigmaY*randy->ran_gauss();
 		}
 		warg=0.0;
-		printf("check in\n");
 		CalcAFromTraining(ATrial);
-		for(int ia=0;ia<NTrainingPts;ia++){
-			printf("%2d: %g\n",ia,ATrial[ia]);
-		}
-		printf("check a\n");
 		for(ic=ic0;ic<NTrainingPts;ic++){
 			warg-=0.5*ATrial[ic]*ATrial[ic]/(SigmaY*SigmaY);
 		}
 		//warg-=(NTrainingPts-1)*log(SigmaY/(0.5*SigmaY0));
 		if(warg>0.0){
-			printf("Disaster, warg=%g\n",warg);
+			CLog::Fatal("Disaster, warg="+to_string(warg)+"\n");
 		}
-		printf("warg=%g, SigmaY=%g, SigmaY0=%g\n",warg,SigmaY,SigmaY0);
 		if(warg>-100){
 			weight=exp(warg);
 			if(weight>randy->ran()){
@@ -211,15 +196,13 @@ void CSmoothEmulator::TuneAPerfect(){
 		ntry+=1;
 	}
 	if(ntry>=ntrymax){
-		printf("TuneAPerfect Failed, SigmaY0=%g\n",SigmaY0);
-		exit(1);
+		CLog::Fatal("TuneAPerfect Failed, SigmaY0="+to_string(SigmaY0)+"\n");
 	}
 	else{
 		for(ic=0;ic<smooth->NCoefficients;ic++){
 			A[ic]=ATrial[ic];
 		}
 	}
-	printf("adios\n");
 }
 
 // This adjust first NTrainingPts coefficients to reproduce Y training values
@@ -231,8 +214,8 @@ void CSmoothEmulator::CalcAFromTraining(vector<double> &AA){
 	AA.resize(NTrainingPts);
 	YTarget.resize(NTrainingPts);
 	if(ThetaTrain.size()!=NTrainingPts){
-		printf("CSmoothEmulator:: array size mismatch!!\n");
-		printf("ThetaTrain.size=%lu, NTrainingPts=%u\n",ThetaTrain.size(),NTrainingPts);
+		CLog::Info("CSmoothEmulator:: array size mismatch!!\n");
+		CLog::Fatal("ThetaTrain.size="+to_string(ThetaTrain.size())+", NTrainingPts="+to_string(NTrainingPts)+"\n");
 		exit(1);
 	}
 	YTarget.resize(NTrainingPts);
@@ -306,8 +289,7 @@ void CSmoothEmulator::PrintA(vector<double> &Aprint){
 void CSmoothEmulator::CalcYTrainFromThetaTrain(){
 	unsigned int itrain;
 	if(real==NULL){
-		printf("Reality does not exist\n");
-		exit(1);
+		CLog::Fatal("Inside CSmoothEmulator::CalcYTrainFromThetaTrain, Reality does not exist\n");
 	}
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		YTrain[itrain]=real->CalcY(ThetaTrain[itrain]);
