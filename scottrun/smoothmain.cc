@@ -1,45 +1,53 @@
 #include "msu_commonutils/parametermap.h"
 #include "msu_commonutils/constants.h"
-#include "smooth.h"
-#include "emulator.h"
+#include "msu_smooth/smooth.h"
+#include "msu_smooth/emulator.h"
 #include "msu_commonutils/gslmatrix.h"
+#include "msu_commonutils/log.h"
 
 using namespace std;
 int main(int argc,char *argv[]){
+	if(argc!=2){
+		printf("Usage smoothy parameter filename (assumed to be found inside parameters/)");
+		exit(1);
+	}
 	CparameterMap *parmap=new CparameterMap();
-	double y,yreal,accuracy,r2,average_accuracy=0.0,sigmay,ybar,y2bar,sigmaybar=0.0;
-	long long unsigned int nsigmay=0;
-	unsigned int isample,itest,ntest=5,ipar,ireal,nreal=10;
+	double y,yreal,accuracy,r2,average_accuracy=0.0,average_expected_accuracy=0.0,sigmay2,ybar,y2bar;
+	unsigned int isample,itest,ntest=10,ipar,ireal,nreal=10;
 	vector<double> Theta;
 	// This plays the role of the "real" model
 	CReal_Taylor *real;
 
-	parmap->ReadParsFromFile("parameters.txt");
+	string parfilename="parameters/"+string(argv[1]);
+	printf("parfilename=%s\n",parfilename.c_str());
+	parmap->ReadParsFromFile(parfilename);
+	printf("check aa\n");
 	CSmoothEmulator emulator(parmap);
+		printf("check a: MaxRank=%d\n",emulator.smooth->MaxRank);
 
 	Theta.resize(emulator.NPars);
 	emulator.randy->reset(-time(NULL));
-	real=new CReal_Taylor(emulator.NPars,emulator.randy);
+	printf("check b: MaxRank=%d\n",emulator.smooth->MaxRank);
+	real=new CReal_Taylor(emulator.NPars,emulator.smooth->MaxRank,emulator.randy);
 	real->LAMBDA=emulator.LAMBDA;
 	emulator.real=real;
+	
+	printf("check c : MaxRank=%d\n",emulator.smooth->MaxRank);
 
 	emulator.SetThetaSimplex();
 	printf("Set %d Training Points\n",emulator.NTrainingPts);
 
-	FILE *fptr;
-	char filename[150];
-	snprintf(filename,150,"testresults/NPars%u_Lambda%g_NTrain%u.txt",
-		emulator.NPars,emulator.LAMBDA,emulator.NTrainingPts);
-	fptr=fopen(filename,"w");
+	//FILE *fptr;
+	//char filename[150];
+	//snprintf(filename,150,"testresults/NPars%u_Lambda%g_NTrain%u.txt",
+	//	emulator.NPars,emulator.LAMBDA,emulator.NTrainingPts);
+	//fptr=fopen(filename,"w");
 
 	for(ireal=0;ireal<nreal;ireal++){
 		printf("------ ireal=%d -----\n",ireal);
 		accuracy=0.0;
 		real->RandomizeA(100.0);
 		real->A[0]=0.0;
-		for(int ia=0;ia<100;ia++)
-			printf("Areal[%d]=%g\n",ia,real->A[0]);
-		Misc::Pause();
 		// 
 		emulator.CalcYTrainFromThetaTrain();
 		emulator.GenerateASamples();
@@ -52,11 +60,11 @@ int main(int argc,char *argv[]){
 			}
 		}
 
+		accuracy=sigmay2=0.0;
 		for(itest=0;itest<ntest;itest++){
 			for(ipar=0;ipar<emulator.NPars;ipar++){
 				if(emulator.NPars==1){
 					Theta[ipar]=-1.0+(2.0/double(ntest))*(0.5+itest);
-					//fprintf(fptr,"%10.7f ",Theta[ipar]);
 				}
 				else{
 					do{
@@ -67,34 +75,32 @@ int main(int argc,char *argv[]){
 				}
 			}
 			yreal=real->CalcY(Theta);
-			fprintf(fptr,"%3u %3u %10.7f ",ireal,itest,yreal);
 			ybar=y2bar=0.0;
 			for(isample=0;isample<emulator.NASample;isample++){
 				y=emulator.smooth->CalcY(emulator.ASample[isample],emulator.LAMBDA,Theta);
 				y2bar+=y*y;
 				ybar+=y;
-				accuracy+=(y-yreal)*(y-yreal);
-				//fprintf(fptr,"%10.7f ",y);
 			}
 			y2bar=y2bar/double(emulator.NASample);
 			ybar=ybar/double(emulator.NASample);
-			sigmay=sqrt(y2bar-ybar*ybar);
-			sigmaybar+=sigmay;
-			nsigmay+=1;
-			fprintf(fptr,"%10.7f %10.7f\n",ybar,sigmay);
+			printf("ybar=%g =? %g\n",ybar,yreal);
+			
+			accuracy+=(ybar-yreal)*(ybar-yreal);
+			sigmay2+=y2bar-ybar*ybar;
 		}
-		accuracy=sqrt(accuracy/double(emulator.SigmaY0*emulator.SigmaY0*emulator.NASample*ntest));
-		accuracy*=100.0;
-		printf("accuracy=%7.3f%%\n",accuracy);
+		accuracy=accuracy/ntest;
+		sigmay2=sigmay2/ntest;
+		accuracy=sqrt(accuracy);
+		sigmay2=sqrt(sigmay2/2.0);
+		printf("accuracy=%7.3f, expected accuracy=%7.3f\n",accuracy,sigmay2);
 		average_accuracy+=accuracy;
+		average_expected_accuracy+=sigmay2;
 		
 	}
-	
-	sigmaybar=sigmaybar/double(nsigmay);
-	printf("<sigma_y>=%g, <SigmaY>=%g\n",sigmaybar,emulator.SigmaYbar/double(emulator.NSigmaY));
 	average_accuracy=average_accuracy/double(nreal);
-	printf("<accuracy>=%g%%\n",average_accuracy/sqrt(2.0));
-	fclose(fptr);
+	average_expected_accuracy=average_expected_accuracy/double(nreal);
+	
+	printf("<accuracy>=%g, <expected accuracy>=%g\n",average_accuracy,average_expected_accuracy);
 	
 	return 0;
 }

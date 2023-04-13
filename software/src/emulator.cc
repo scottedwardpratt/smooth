@@ -1,5 +1,5 @@
-#include "emulator.h"
-#include "smooth.h"
+#include "msu_smooth/emulator.h"
+#include "msu_smooth/smooth.h"
 using namespace std;
 
 CSmoothEmulator::CSmoothEmulator(CparameterMap *parmap){
@@ -64,14 +64,14 @@ void CSmoothEmulator::Init(CSmooth *smooth){
 	real=NULL;
 }
 
-void CSmoothEmulator::SetNTrainingPts(unsigned int NTrainingPts_set){
+void CSmoothEmulator::InitTrainingPtsArrays(unsigned int NTrainingPts_set){
 	NTrainingPts=NTrainingPts_set;
 	M.resize(NTrainingPts,NTrainingPts);
 	YTrain.resize(NTrainingPts);
-	ThetaTrain.resize(NTrainingPts);
+	//if(ThetaTrain.size()!=NTrainingPts)
+		ThetaTrain.resize(NTrainingPts);
 	for(unsigned int itrain=0;itrain<NTrainingPts;itrain++){
-		ThetaTrain[itrain].resize(NPars);
-		for(unsigned int ipar=0;ipar<NPars;ipar++)
+		//if(ThetaTrain[itrain].size()!=NPars)
 			ThetaTrain[itrain].resize(NPars);
 	}
 }
@@ -79,7 +79,7 @@ void CSmoothEmulator::SetNTrainingPts(unsigned int NTrainingPts_set){
 void CSmoothEmulator::SetThetaSimplex(){
 	unsigned int NTrain;
 	simplex->SetThetaSimplex(ThetaTrain,NTrain);
-	SetNTrainingPts(NTrain);
+	InitTrainingPtsArrays(NTrain);
 }
 
 void CSmoothEmulator::TuneA(){
@@ -105,7 +105,7 @@ void CSmoothEmulator::TuneAMCMC(){
 	SigmaYTrial=SigmaY;
 	double logP,logPTrial;
 	logP=GetLog_AProb(*Aptr,SigmaY);
-	BestLogP=logP;
+	BestLogP=-1000000.0;
 	for(imc=0;imc<NMC;imc++){
 		for(ic=NTrainingPts;ic<smooth->NCoefficients;ic++){
 			(*ATrialptr)[ic]=(*Aptr)[ic]+SigmaY*MCStepSize*randy->ran_gauss();
@@ -158,7 +158,8 @@ void CSmoothEmulator::TuneAMCMC(){
 		}
 	}
 	
-	CLog::Info("success percentage="+to_string(double(success)*100.0/double(NMC))+", SigmaY="+to_string(SigmaY)+", logP="+to_string(logP)+"\n");
+	int Ndof=smooth->NCoefficients-NTrainingPts;
+	CLog::Info("success percentage="+to_string(double(success)*100.0/double(NMC))+", SigmaY="+to_string(SigmaY)+", logP/Ndof="+to_string(logP/double(Ndof))+",BestLogP/Ndof="+to_string(BestLogP/double(Ndof))+"\n");
 }
 
 void CSmoothEmulator::TuneAPerfect(){
@@ -282,7 +283,7 @@ void CSmoothEmulator::GenerateASamples(){
 
 void CSmoothEmulator::PrintA(vector<double> &Aprint){
 	for(unsigned int ic=0;ic<smooth->NCoefficients;ic++){
-		printf("%3u %g\n",ic,Aprint[ic]);
+		CLog::Info(to_string(ic)+": "+to_string(Aprint[ic])+"\n");
 	}
 }
 

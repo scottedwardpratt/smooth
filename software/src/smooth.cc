@@ -1,21 +1,28 @@
 //#include "emulator.h"
-#include "smooth.h"
+#include "msu_smooth/smooth.h"
 #include "msu_commonutils/gslmatrix.h"
+#include "msu_commonutils/log.h"
 using namespace std;
 
 CSmooth::CSmooth(){
 	//
 }
 
-CSmooth::CSmooth(unsigned int NPars_Set){
+CSmooth::CSmooth(unsigned int NPars_Set,int maxrank_set){
 	//Npars=3
 	NPars=NPars_Set;
 	UseRFactor=false;
-	InitArrays();	
+	MaxRank=maxrank_set;
+	InitArrays();
 }
 
 CSmooth::CSmooth(CparameterMap *parmap){
-	NPars=parmap->getI("Smooth_NPars",0);
+	NPars=parmap->getI("SmoothEmulator_NPars",0);
+	MaxRank=parmap->getI("Smooth_MAXRANK",5);
+	if(MaxRank>5){
+		CLog::Info("Inside CSmooth::InitArrays(), MaxRank="+to_string(MaxRank)+" is too big, being reset to 5\n");
+		MaxRank=5;
+	}
 	UseRFactor=parmap->getB("Smooth_UseRFactor",false);
 	InitArrays();
 }
@@ -25,15 +32,13 @@ void CSmooth::InitArrays(){
 	vector<unsigned int> countsame;
 	vector<unsigned int> dummy;
 	vector<unsigned int> i;
-	MaxRank=5;
 	factorial.resize(MaxRank+1);
 	factorial[0]=factorial[1]=1;
 	for(j=2;j<=MaxRank;j++)
 		factorial[j]=j*factorial[j-1];
-	if(MaxRank>5){
-		printf("MaxRank=%d is too big, being reset to 5\n",MaxRank);
-		MaxRank=5;
-	}
+	
+	printf("init: MaxRank=%d\n",MaxRank);
+
 	i.resize(MaxRank+1);
 	countsame.resize(MaxRank);
 	
@@ -98,42 +103,14 @@ void CSmooth::InitArrays(){
 		}
 	}
 	
-	for(i[0]=0;i[0]<NPars;i[0]++){
-		for(i[1]=0;i[1]<=i[0];i[1]++){
-			for(i[2]=0;i[2]<=i[1];i[2]++){
-				dupfactor.push_back(0);
-				IPar.resize(ic+1);
-				rank.resize(ic+1);
-				rank[ic]=3;
-				IPar[ic].resize(rank[ic]);
-				for(ir=0;ir<rank[ic];ir++){
-					IPar[ic][ir]=i[ir];
-				}
-				for(j=0;j<rank[ic];j++)
-					countsame[j]=0;
-				isame=0;
-				countsame[isame]=1;
-				for(j=1;j<rank[ic];j++){
-					if(i[j]!=i[j-1])
-						isame+=1;
-					countsame[isame]+=1;
-				}
-				dupfactor[ic]=factorial[rank[ic]];
-				for(j=0;j<rank[ic];j++)
-					dupfactor[ic]/=factorial[countsame[j]];
-				ic+=1;
-			}
-		}
-	}
-	
-	for(i[0]=0;i[0]<NPars;i[0]++){
-		for(i[1]=0;i[1]<=i[0];i[1]++){
-			for(i[2]=0;i[2]<=i[1];i[2]++){
-				for(i[3]=0;i[3]<=i[2];i[3]++){
+	if(MaxRank>=3){
+		for(i[0]=0;i[0]<NPars;i[0]++){
+			for(i[1]=0;i[1]<=i[0];i[1]++){
+				for(i[2]=0;i[2]<=i[1];i[2]++){
 					dupfactor.push_back(0);
 					IPar.resize(ic+1);
 					rank.resize(ic+1);
-					rank[ic]=4;
+					rank[ic]=3;
 					IPar[ic].resize(rank[ic]);
 					for(ir=0;ir<rank[ic];ir++){
 						IPar[ic][ir]=i[ir];
@@ -156,15 +133,15 @@ void CSmooth::InitArrays(){
 		}
 	}
 	
-	for(i[0]=0;i[0]<NPars;i[0]++){
-		for(i[1]=0;i[1]<=i[0];i[1]++){
-			for(i[2]=0;i[2]<=i[1];i[2]++){
-				for(i[3]=0;i[3]<=i[2];i[3]++){
-					for(i[4]=0;i[4]<=i[3];i[4]++){
+	if(MaxRank>=4){
+		for(i[0]=0;i[0]<NPars;i[0]++){
+			for(i[1]=0;i[1]<=i[0];i[1]++){
+				for(i[2]=0;i[2]<=i[1];i[2]++){
+					for(i[3]=0;i[3]<=i[2];i[3]++){
 						dupfactor.push_back(0);
 						IPar.resize(ic+1);
 						rank.resize(ic+1);
-						rank[ic]=5;
+						rank[ic]=4;
 						IPar[ic].resize(rank[ic]);
 						for(ir=0;ir<rank[ic];ir++){
 							IPar[ic][ir]=i[ir];
@@ -187,10 +164,44 @@ void CSmooth::InitArrays(){
 			}
 		}
 	}
+	
+	if(MaxRank>=5){
+		for(i[0]=0;i[0]<NPars;i[0]++){
+			for(i[1]=0;i[1]<=i[0];i[1]++){
+				for(i[2]=0;i[2]<=i[1];i[2]++){
+					for(i[3]=0;i[3]<=i[2];i[3]++){
+						for(i[4]=0;i[4]<=i[3];i[4]++){
+							dupfactor.push_back(0);
+							IPar.resize(ic+1);
+							rank.resize(ic+1);
+							rank[ic]=5;
+							IPar[ic].resize(rank[ic]);
+							for(ir=0;ir<rank[ic];ir++){
+								IPar[ic][ir]=i[ir];
+							}
+							for(j=0;j<rank[ic];j++)
+								countsame[j]=0;
+							isame=0;
+							countsame[isame]=1;
+							for(j=1;j<rank[ic];j++){
+								if(i[j]!=i[j-1])
+									isame+=1;
+								countsame[isame]+=1;
+							}
+							dupfactor[ic]=factorial[rank[ic]];
+							for(j=0;j<rank[ic];j++)
+								dupfactor[ic]/=factorial[countsame[j]];
+							ic+=1;
+						}
+					}
+				}
+			}
+		}
+	}
 	NCoefficients=ic;
+	printf("check NCoefficients=%d\n",NCoefficients);
 	if(NCoefficients!=IPar.size()){
-		printf("size mismatch\n");
-		exit(1);
+		CLog::Fatal("size mismatch in CSmooth::InitArrays()\n");
 	}
 }
 

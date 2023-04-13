@@ -1,10 +1,11 @@
-#include "parameterinfo.h"
+#include "msu_smooth/parameterinfo.h"
 #include <cstdlib>
 #include <cmath>
 #include <cstdio>
 #include <vector>
 #include <array>
 #include <fstream>
+#include "msu_commonutils/log.h"
 
 using namespace std;
 
@@ -31,7 +32,6 @@ CPriorInfo::CPriorInfo(string file, vector<double> x_min, vector<double> x_max){
 CPriorInfo::CPriorInfo(vector<double> x_min, vector<double> x_max){
 	min=x_min;
 	max=x_max;
-	
 }
 
 double CPriorInfo::CParameterTranslateX_to_Theta(vector<double> x_min, vector<double> x_max, double x, string interval){
@@ -85,7 +85,7 @@ double CPriorInfo::CParameterTranslateTheta_to_x(vector<double> x_min, vector<do
 
 void CPriorInfo::Print(string &name, string &type, double &min, double &max){
 	for(int i=0;i<param_num;i++){
-		printf("Parameter: %s with type %s and range: %lf %lf\n", name.c_str(), type.c_str(), min, max);
+		CLog::Info("Parameter: "+name+" with type %s and range: "+type+", min="+to_string(min)+", max="+to_string(max)+"\n");
 		
 	}
 }

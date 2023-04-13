@@ -1,5 +1,5 @@
-#include "emulator.h"
-#include "smooth.h"
+#include "msu_smooth/emulator.h"
+#include "msu_smooth/smooth.h"
 using namespace std;
 
 
@@ -14,8 +14,7 @@ void CSimplexSampler::SetThetaSimplex(vector<vector<double>> &ThetaTrain,unsigne
 	else if(TrainType==4)
 		SetThetaType4(ThetaTrain,NTrain);
 	else{
-		printf("Simplex_ThetaRank in parmap must be 0 or 1\n");
-		exit(1);
+		CLog::Fatal("Inside CSimplexSampler::SetThetaSimplex, Traintype must be 1,2,3, or 4\n");
 	}
 }
 

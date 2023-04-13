@@ -1,9 +1,10 @@
-#include "real.h"
-#include "smooth.h"
+#include "msu_smooth/real.h"
+#include "msu_smooth/smooth.h"
 #include "msu_commonutils/randy.h"
-#include "emulator.h"
+#include "msu_smooth/emulator.h"
 #include "msu_commonutils/constants.h"
 #include "msu_commonutils/gslmatrix.h"
+#include "msu_commonutils/log.h"
 
 using namespace std;
 
@@ -16,10 +17,10 @@ double CReal::CalcY(vector<double> &theta){
 	return 0.0;
 }
 
-CReal_Taylor::CReal_Taylor(unsigned int NPars_Set,Crandy *randyset){	
+CReal_Taylor::CReal_Taylor(unsigned int NPars_Set,int maxrank,Crandy *randyset){	
 	NPars=NPars_Set;	
 	randy=randyset;
-	smooth = new CSmooth(NPars);
+	smooth = new CSmooth(NPars,maxrank);
 	LAMBDA=2;
 }
 
@@ -34,7 +35,6 @@ void CReal_Taylor::RandomizeA(double SigmaReal){
 	}
 	for(unsigned int ic=0;ic<A.size();ic++){
 		A[ic]=SigmaReal*randy->ran_gauss();
-		printf("A[%d]=%g\n",ic,A[ic]);
 	}
 }
 
