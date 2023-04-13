@@ -57,4 +57,5 @@ set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/extern_coral.dir/DependInfo.cmake"
   "CMakeFiles/extern_smooth.dir/DependInfo.cmake"
   "CMakeFiles/smoothy.dir/DependInfo.cmake"
+  "CMakeFiles/keepscore.dir/DependInfo.cmake"
   )

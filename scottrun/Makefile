@@ -168,6 +168,43 @@ smoothy/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy.dir/build.make CMakeFiles/smoothy.dir/build
 .PHONY : smoothy/fast
 
+#=============================================================================
+# Target rules for targets named keepscore
+
+# Build rule for target.
+keepscore: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 keepscore
+.PHONY : keepscore
+
+# fast build rule for target.
+keepscore/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/keepscore.dir/build.make CMakeFiles/keepscore.dir/build
+.PHONY : keepscore/fast
+
+keepscore.o: keepscore.cc.o
+.PHONY : keepscore.o
+
+# target to build an object file
+keepscore.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/keepscore.dir/build.make CMakeFiles/keepscore.dir/keepscore.cc.o
+.PHONY : keepscore.cc.o
+
+keepscore.i: keepscore.cc.i
+.PHONY : keepscore.i
+
+# target to preprocess a source file
+keepscore.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/keepscore.dir/build.make CMakeFiles/keepscore.dir/keepscore.cc.i
+.PHONY : keepscore.cc.i
+
+keepscore.s: keepscore.cc.s
+.PHONY : keepscore.s
+
+# target to generate assembly for a file
+keepscore.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/keepscore.dir/build.make CMakeFiles/keepscore.dir/keepscore.cc.s
+.PHONY : keepscore.cc.s
+
 smoothmain.o: smoothmain.cc.o
 .PHONY : smoothmain.o
 
@@ -203,7 +240,11 @@ help:
 	@echo "... extern_commonutils"
 	@echo "... extern_coral"
 	@echo "... extern_smooth"
+	@echo "... keepscore"
 	@echo "... smoothy"
+	@echo "... keepscore.o"
+	@echo "... keepscore.i"
+	@echo "... keepscore.s"
 	@echo "... smoothmain.o"
 	@echo "... smoothmain.i"
 	@echo "... smoothmain.s"

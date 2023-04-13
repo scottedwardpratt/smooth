@@ -18,10 +18,14 @@ find_library(${GITHOME_MSU}/commonutils/software/lib msu_commonutils)
 find_library(${GITHOME_MSU}/coral/software/lib msu_coral)
 find_library(${GITHOME_MSU}/smooth/software/lib smooth)
 
-add_dependencies(extern_smooth extern_coral extern_commonutils)
-
 #################################################
 set(SOURCE_FILES ./smoothmain.cc)
 add_executable(smoothy ${CMAKE_CURRENT_SOURCE_DIR}/smoothmain.cc)
 add_dependencies(smoothy extern_smooth extern_coral extern_commonutils)
 target_link_libraries(smoothy ${GITHOME_MSU}/smooth/software/lib/libsmooth.a ${GITHOME_MSU}/coral/software/lib/libmsu_coral.a ${GITHOME_MSU}/commonutils/software/lib/libmsu_commonutils.a ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY} ${EIGEN3_LIBRARY})
+
+#################################################
+set(SOURCE_FILES ./keepscore.cc)
+add_executable(keepscore ${CMAKE_CURRENT_SOURCE_DIR}/keepscore.cc)
+add_dependencies(keepscore extern_smooth extern_coral extern_commonutils)
+target_link_libraries(keepscore ${GITHOME_MSU}/smooth/software/lib/libsmooth.a ${GITHOME_MSU}/coral/software/lib/libmsu_coral.a ${GITHOME_MSU}/commonutils/software/lib/libmsu_commonutils.a ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY} ${EIGEN3_LIBRARY})
