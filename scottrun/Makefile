@@ -181,6 +181,43 @@ keepscore/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/keepscore.dir/build.make CMakeFiles/keepscore.dir/build
 .PHONY : keepscore/fast
 
+#=============================================================================
+# Target rules for targets named coultest
+
+# Build rule for target.
+coultest: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 coultest
+.PHONY : coultest
+
+# fast build rule for target.
+coultest/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/coultest.dir/build.make CMakeFiles/coultest.dir/build
+.PHONY : coultest/fast
+
+coultest.o: coultest.cc.o
+.PHONY : coultest.o
+
+# target to build an object file
+coultest.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/coultest.dir/build.make CMakeFiles/coultest.dir/coultest.cc.o
+.PHONY : coultest.cc.o
+
+coultest.i: coultest.cc.i
+.PHONY : coultest.i
+
+# target to preprocess a source file
+coultest.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/coultest.dir/build.make CMakeFiles/coultest.dir/coultest.cc.i
+.PHONY : coultest.cc.i
+
+coultest.s: coultest.cc.s
+.PHONY : coultest.s
+
+# target to generate assembly for a file
+coultest.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/coultest.dir/build.make CMakeFiles/coultest.dir/coultest.cc.s
+.PHONY : coultest.cc.s
+
 keepscore.o: keepscore.cc.o
 .PHONY : keepscore.o
 
@@ -240,8 +277,12 @@ help:
 	@echo "... extern_commonutils"
 	@echo "... extern_coral"
 	@echo "... extern_smooth"
+	@echo "... coultest"
 	@echo "... keepscore"
 	@echo "... smoothy"
+	@echo "... coultest.o"
+	@echo "... coultest.i"
+	@echo "... coultest.s"
 	@echo "... keepscore.o"
 	@echo "... keepscore.i"
 	@echo "... keepscore.s"

@@ -29,3 +29,9 @@ set(SOURCE_FILES ./keepscore.cc)
 add_executable(keepscore ${CMAKE_CURRENT_SOURCE_DIR}/keepscore.cc)
 add_dependencies(keepscore extern_smooth extern_coral extern_commonutils)
 target_link_libraries(keepscore ${GITHOME_MSU}/smooth/software/lib/libsmooth.a ${GITHOME_MSU}/coral/software/lib/libmsu_coral.a ${GITHOME_MSU}/commonutils/software/lib/libmsu_commonutils.a ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY} ${EIGEN3_LIBRARY})
+
+#################################################
+set(SOURCE_FILES ./coultest.cc)
+add_executable(coultest ${CMAKE_CURRENT_SOURCE_DIR}/coultest.cc)
+add_dependencies(coultest extern_smooth extern_coral extern_commonutils)
+target_link_libraries(coultest ${GITHOME_MSU}/smooth/software/lib/libsmooth.a ${GITHOME_MSU}/coral/software/lib/libmsu_coral.a ${GITHOME_MSU}/commonutils/software/lib/libmsu_commonutils.a ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY} ${EIGEN3_LIBRARY})
