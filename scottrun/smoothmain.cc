@@ -13,7 +13,7 @@ int main(int argc,char *argv[]){
 	}
 	CparameterMap *parmap=new CparameterMap();
 	double y,yreal,accuracy,r2,average_accuracy=0.0,average_expected_accuracy=0.0,sigmay2,ybar,y2bar;
-	unsigned int isample,itest,ntest=10,ipar,ireal,nreal=10;
+	unsigned int isample,itest,ntest=25,ipar,ireal,nreal=10;
 	vector<double> Theta;
 	// This plays the role of the "real" model
 	CReal_Taylor *real;
