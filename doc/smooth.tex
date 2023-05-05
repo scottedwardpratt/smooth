@@ -1,5 +1,5 @@
 \documentclass[12pt]{article}
-#Scott Pratt 2022
+%#Scott Pratt 2022
 \usepackage{subfiles}
 \usepackage{graphicx}
 \usepackage[
@@ -168,7 +168,7 @@ To this point, the form is completely general once one requires that the varianc
 \noindent{\bf Default Form}\\
 Here, we assume $f_k(|\vec{\theta}|)$ is independent of $|\vec{\theta}|$, and that $\sigma_K$ is independent of $K$. Further, the $K-$dependence of $f^2$ is assumed to be $1/K!$. With this choice
 \begin{align*}\eqnumber
-E(\vec{\theta})&=\sum_{\vec{n},K(\vec{n})\le K_{\rm max}}\frac{A_{\vec{n}}}{\sqrt{n_1!n_2!\cdots n_N!}}
+E(\vec{\theta})&=\sum_{\vec{n},K(\vec{n})\le K_{\rm max}}\frac{1}{\Lambda^K}\frac{A_{\vec{n}}}{\sqrt{n_1!n_2!\cdots n_N!}}
 \theta_1^{n_1}\cdots\theta_N^{n_N},\\
 P(A_{\vec{n}})&\sim e^{-A^2_{\vec{n}}/2\sigma^2}.
 \end{align*}
