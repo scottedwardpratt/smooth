@@ -18,9 +18,6 @@
 /Users/scottpratt/git/commonutils/software/lib:FILEPATH=/Users/scottpratt/git/commonutils/software/lib-NOTFOUND
 
 //Path to a library.
-/Users/scottpratt/git/coral/software/lib:FILEPATH=/Users/scottpratt/git/coral/software/lib-NOTFOUND
-
-//Path to a library.
 /Users/scottpratt/git/smooth/software/lib:FILEPATH=/Users/scottpratt/git/smooth/software/lib-NOTFOUND
 
 //Path to a program.

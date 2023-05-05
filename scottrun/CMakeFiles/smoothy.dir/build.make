@@ -93,7 +93,6 @@ smoothy_EXTERNAL_OBJECTS =
 smoothy: CMakeFiles/smoothy.dir/smoothmain.cc.o
 smoothy: CMakeFiles/smoothy.dir/build.make
 smoothy: /Users/scottpratt/git/smooth/software/lib/libsmooth.a
-smoothy: /Users/scottpratt/git/coral/software/lib/libmsu_coral.a
 smoothy: /Users/scottpratt/git/commonutils/software/lib/libmsu_commonutils.a
 smoothy: /usr/local/Cellar/gsl/2.7.1/lib/libgsl.dylib
 smoothy: /usr/local/Cellar/gsl/2.7.1/lib/libgslcblas.dylib

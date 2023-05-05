@@ -4,7 +4,7 @@
 # compile CXX with /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -isystem /usr/local/Cellar/gsl/2.7.1/include -isystem /usr/local/include/eigen3 -isystem /Users/scottpratt/git/commonutils/software/include -isystem /Users/scottpratt/git/coral/software/include -isystem /Users/scottpratt/git/smooth/software/include
+CXX_INCLUDES = -isystem /usr/local/Cellar/gsl/2.7.1/include -isystem /usr/local/include/eigen3 -isystem /Users/scottpratt/git/commonutils/software/include -isystem /Users/scottpratt/git/smooth/software/include
 
 CXX_FLAGS =  -O3 -Wall -std=c++17 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk
 

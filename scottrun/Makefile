@@ -130,19 +130,6 @@ extern_commonutils/fast:
 .PHONY : extern_commonutils/fast
 
 #=============================================================================
-# Target rules for targets named extern_coral
-
-# Build rule for target.
-extern_coral: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 extern_coral
-.PHONY : extern_coral
-
-# fast build rule for target.
-extern_coral/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/extern_coral.dir/build.make CMakeFiles/extern_coral.dir/build
-.PHONY : extern_coral/fast
-
-#=============================================================================
 # Target rules for targets named extern_smooth
 
 # Build rule for target.
@@ -275,7 +262,6 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... extern_commonutils"
-	@echo "... extern_coral"
 	@echo "... extern_smooth"
 	@echo "... coultest"
 	@echo "... keepscore"
