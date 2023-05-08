@@ -136,8 +136,8 @@ CMakeFiles/extern_smooth.dir/clean:
 # Target rules for target CMakeFiles/smoothy.dir
 
 # All Build rule for target.
-CMakeFiles/smoothy.dir/all: CMakeFiles/extern_commonutils.dir/all
 CMakeFiles/smoothy.dir/all: CMakeFiles/extern_smooth.dir/all
+CMakeFiles/smoothy.dir/all: CMakeFiles/extern_commonutils.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy.dir/build.make CMakeFiles/smoothy.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy.dir/build.make CMakeFiles/smoothy.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/scottpratt/git/smooth/scottrun/CMakeFiles --progress-num=5,6 "Built target smoothy"
@@ -163,8 +163,8 @@ CMakeFiles/smoothy.dir/clean:
 # Target rules for target CMakeFiles/keepscore.dir
 
 # All Build rule for target.
-CMakeFiles/keepscore.dir/all: CMakeFiles/extern_commonutils.dir/all
 CMakeFiles/keepscore.dir/all: CMakeFiles/extern_smooth.dir/all
+CMakeFiles/keepscore.dir/all: CMakeFiles/extern_commonutils.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/keepscore.dir/build.make CMakeFiles/keepscore.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/keepscore.dir/build.make CMakeFiles/keepscore.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/scottpratt/git/smooth/scottrun/CMakeFiles --progress-num=3,4 "Built target keepscore"
@@ -190,8 +190,8 @@ CMakeFiles/keepscore.dir/clean:
 # Target rules for target CMakeFiles/coultest.dir
 
 # All Build rule for target.
-CMakeFiles/coultest.dir/all: CMakeFiles/extern_commonutils.dir/all
 CMakeFiles/coultest.dir/all: CMakeFiles/extern_smooth.dir/all
+CMakeFiles/coultest.dir/all: CMakeFiles/extern_commonutils.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/coultest.dir/build.make CMakeFiles/coultest.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/coultest.dir/build.make CMakeFiles/coultest.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/scottpratt/git/smooth/scottrun/CMakeFiles --progress-num=1,2 "Built target coultest"

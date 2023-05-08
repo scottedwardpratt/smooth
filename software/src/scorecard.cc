@@ -20,7 +20,7 @@ void CScoreCard::CalcScore(CSmoothEmulator *emulator,CSmooth *smooth,vector<doub
 			yi=smooth->CalcY(emulator->ASample[isample],emulator->LAMBDA,ThetaTest);
 			Pi=exp(-(yi-YExp)*(yi-YExp)/(2.0*sigmaYExp*sigmaYExp));
 			Pibar+=Pi;
-			Pi2bar+=Pi;
+			Pi2bar+=Pi*Pi;
 		}
 		Pibar=Pibar/emulator->NASample;
 		Pi2bar=Pi2bar/emulator->NASample;
