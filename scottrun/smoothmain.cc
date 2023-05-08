@@ -25,6 +25,7 @@ int main(int argc,char *argv[]){
 	Theta.resize(emulator.NPars);
 	emulator.randy->reset(-time(NULL));
 	real=new CReal_Taylor(emulator.NPars,emulator.smooth->MaxRank,emulator.randy);
+	printf("check a\n");
 	real->LAMBDA=emulator.LAMBDA;
 	emulator.real=real;
 	
@@ -41,6 +42,7 @@ int main(int argc,char *argv[]){
 		printf("------ ireal=%d -----\n",ireal);
 		accuracy=0.0;
 		real->RandomizeA(100.0);
+		printf("check b\n");
 		//real->A[0]=0.0;
 		//  This is just for testing, to make sure that the emulator exactly reproduces training points
 		emulator.CalcYTrainFromThetaTrain();

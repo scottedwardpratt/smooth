@@ -70,7 +70,6 @@ void CSimplexSampler::SetThetaType2(vector<vector<double>> &ThetaTrain, unsigned
 		ThetaTrain[itrain][itrain-1]=z;
 		R=z;
 	}
-	
 	N1=NTrain;
 	n=N1;
 	NTrain+=N1*(N1-1)/2;
@@ -86,7 +85,6 @@ void CSimplexSampler::SetThetaType2(vector<vector<double>> &ThetaTrain, unsigned
 			n+=1;
 		}
 	}
-	
 	for(itrain=0;itrain<NTrain;itrain++){
 		if(itrain==0){
 			R=0.0;
@@ -94,7 +92,7 @@ void CSimplexSampler::SetThetaType2(vector<vector<double>> &ThetaTrain, unsigned
 				R+=ThetaTrain[itrain][ipar]*ThetaTrain[itrain][ipar];
 			R=sqrt(R);
 		}
-		for(ipar=0;ipar<=NPars;ipar++){
+		for(ipar=0;ipar<NPars;ipar++){
 			ThetaTrain[itrain][ipar]*=(RTrain/R);
 		}
 	}
