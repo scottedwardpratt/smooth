@@ -13,7 +13,7 @@ int main(int argc,char *argv[]){
 		exit(1);
 	}
 	CparameterMap *parmap=new CparameterMap();
-	double y,yreal,accuracy,r2,average_accuracy=0.0,average_expected_accuracy=0.0,sigmay2,ybar,y2bar;
+	double y,yreal,accuracy,r2,average_accuracy=0.0,average_expected_accuracy=0.0,sigmay2,ybar,y2bar,SigmaYReal;
 	unsigned int isample,itest,ntest=20,ipar,ireal,nreal=10,NPars;
 	vector<vector<double>> ThetaTest;
 	vector<double> Theta;
@@ -75,7 +75,7 @@ int main(int argc,char *argv[]){
 					}while(r2>1.0);
 				}
 			}
-			yreal=real->CalcY(Theta);
+			real->CalcY(Theta,yreal,SigmaYReal);
 			ybar=y2bar=0.0;
 			for(isample=0;isample<emulator.NASample;isample++){
 				y=emulator.smooth->CalcY(emulator.ASample[isample],emulator.LAMBDA,Theta);

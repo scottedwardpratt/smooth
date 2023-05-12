@@ -27,14 +27,14 @@ public:
 	CReal *real;
 	Eigen::MatrixXd M;
 
-	double SigmaY0,SigmaYMin,SigmaY,SigmaYTrial,MCStepSize,MCSigmaYStepSize,LAMBDA;
+	double SigmaA0,SigmaAMin,SigmaA,SigmaATrial,MCStepSize,MCSigmaAStepSize,LAMBDA;
 	unsigned int NMC;   // NMC is for generating independent samplings of A in TuneA
 	unsigned int NASample;
-	bool TuneAChooseMCMC,ConstrainA0,CutOffA;
+	bool TuneAChooseMCMC,ConstrainA0,CutOffA,UseSigmaYReal,FirstTune;
 	vector<vector<double>> ASample;
-	vector<double> SigmaYSample;
+	vector<double> SigmaASample;
 	vector<double> A,ATrial;
-	vector<double> YTrain;
+	vector<double> YTrain,SigmaYTrain;
 	vector<vector<double>> ThetaTrain;
 	CSimplexSampler *simplex;
 	
@@ -48,22 +48,23 @@ public:
 	void SetThetaSimplex();
 	void TuneA();
 	void TuneAMCMC();
+	void TuneAMCMC_withSigma();
 	void TuneAPerfect();
-	double GetLog_AProb(vector<double> &AA,double SigmaY);
+	double GetLog_AProb(vector<double> &AA,double SigmaA);
 
 	void SetA_Zero(vector<double> &A);
-	void SetA_RanGauss(double ASigmaY,vector<double> &AA);
-	void SetA_Constant(double ASigmaY,vector<double> &AA);
-	void SetA_RanSech(double ASigmaY,vector<double> &AA);
+	void SetA_RanGauss(double ASigmaA,vector<double> &AA);
+	void SetA_Constant(double ASigmaA,vector<double> &AA);
+	void SetA_RanSech(double ASigmaA,vector<double> &AA);
 
-	double SigmaYbar;
-	int NSigmaY;
+	double SigmaAbar;
+	int NSigmaA;
 	
 	vector<double> RealA;
 
 	void GenerateASamples();
 	
-	void Init(CSmooth *smooth);
+	void Init(CparameterMap *parmap);
 
 };
 

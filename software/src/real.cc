@@ -12,9 +12,9 @@ CReal::CReal(){
 //	cout << "CReal object created" << endl;
 }
 
-double CReal::CalcY(vector<double> &theta){
+void CReal::CalcY(vector<double> &theta,double &Y,double &SigmaY){
 	cout << "dummy function -- should not be hear" << endl;
-	return 0.0;
+	Y=SigmaY=0.0;
 }
 
 CReal_Taylor::CReal_Taylor(unsigned int NPars_Set,int maxrank,Crandy *randyset){	
@@ -25,8 +25,9 @@ CReal_Taylor::CReal_Taylor(unsigned int NPars_Set,int maxrank,Crandy *randyset){
 }
 
 
-double CReal_Taylor::CalcY(vector<double> &theta){
-	return smooth->CalcY(A,LAMBDA,theta);
+void CReal_Taylor::CalcY(vector<double> &theta,double &Y,double &SigmaY){
+	Y=smooth->CalcY(A,LAMBDA,theta);
+	SigmaY=1.0;
 }
 
 void CReal_Taylor::RandomizeA(double SigmaReal){
@@ -38,11 +39,11 @@ void CReal_Taylor::RandomizeA(double SigmaReal){
 	}
 }
 
-void CReal::CalcYTrain(vector<double> &YTrain, int NTrainingPts, vector<vector<double>> ThetaTrain){
+void CReal::CalcYTrain(vector<double> &YTrain,vector<double> &SigmaYTrain, int NTrainingPts, vector<vector<double>> ThetaTrain){
 //	cout << "NTrainingPts" << NTrainingPts << endl;	
 	//NtrainingPts is 4
 	unsigned int itrain;
 	for(itrain=0;itrain<NTrainingPts;itrain++){
-		YTrain[itrain]=CalcY(ThetaTrain[itrain]);
+		CalcY(ThetaTrain[itrain],YTrain[itrain],SigmaYTrain[itrain]);
 	}
 }

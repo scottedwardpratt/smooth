@@ -23,8 +23,8 @@ class CReal{
 public:
 	unsigned int NPars;
 	CReal();
-	virtual double CalcY(vector<double> &theta);
-	void CalcYTrain(vector<double> &YTrain,int NTrainingPts, vector<vector<double>> ThetaTrain);
+	virtual void CalcY(vector<double> &theta,double &Y,double &SigmaY);
+	void CalcYTrain(vector<double> &YTrain,vector<double> &SigmaYTrain,int NTrainingPts, vector<vector<double>> ThetaTrain);
 };
 
 class CReal_Taylor : public CReal{
@@ -34,7 +34,7 @@ public:
 	double LAMBDA;
 	CReal_Taylor(unsigned int NPars_Set,int maxrank,Crandy *randy);
 	CSmooth *smooth;
-	double CalcY(vector<double> &theta);
+	void CalcY(vector<double> &theta,double &Y,double &SigmaY);
 	// These are functions for generating fake real models
 	void RandomizeA(double SigmaReal);
 };

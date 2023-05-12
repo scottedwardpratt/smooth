@@ -24,12 +24,12 @@ public:
 	CSmooth *smooth;
 	Eigen::MatrixXd M;
 
-	double SigmaY0,SigmaY,SigmaYTrial,MCStepSize,MCSigmaYStepSize,LAMBDA;
+	double SigmaA0,SigmaA,SigmaATrial,MCStepSize,MCSigmaAStepSize,LAMBDA;
 	vector<double> Lambda;
 	unsigned int NMC;   // NMC is for generating independent samplings of A in TuneA
 	unsigned int NASample,TrainRank;
 	vector<vector<double>> ASample;
-	vector<double> SigmaYSample;
+	vector<double> SigmaASample;
 	vector<double> A,ATrial;
 	vector<double> YTrain;
 	vector<vector<double>> ThetaTrain;
@@ -42,12 +42,12 @@ public:
 	void SetNTrainingPts(unsigned int NTrainingPts_set);
 	void SetThetaSimplex();
 	void TuneA();
-	double GetLog_AProb(vector<double> &AA,double SigmaY);
+	double GetLog_AProb(vector<double> &AA,double SigmaA);
 
 	void SetA_Zero(vector<double> &A);
-	void SetA_RanGauss(double ASigmaY,vector<double> &AA);
-	void SetA_Constant(double ASigmaY,vector<double> &AA);
-	void SetA_RanSech(double ASigmaY,vector<double> &AA);
+	void SetA_RanGauss(double ASigmaA,vector<double> &AA);
+	void SetA_Constant(double ASigmaA,vector<double> &AA);
+	void SetA_RanSech(double ASigmaA,vector<double> &AA);
 
 	void SetLambda_Constant(double LAMBDA_set);
 
@@ -56,8 +56,8 @@ public:
 	double CalcRealYFromRealA(vector<double> &theta); // This also sets up a random RealA
 	vector<double> RealA;
 
-	double SigmaYbar;
-	int NSigmaY;
+	double SigmaAbar;
+	int NSigmaA;
 
 	void GenerateASamples();
 

@@ -22,8 +22,8 @@ public:
 	vector<double> ThetaTrain;
 	vector<double> ThetaTest;
 	vector<double> ProbTest;
-	double score,YExp,sigmaYExp;
-	void CalcScore(CSmoothEmulator *emulator,CSmooth *smooth,vector<double> &ThetaTestSet,double YExpSet,double sigmaYExpSet);
+	double score,YExp,SigmaYExp;
+	void CalcScore(CSmoothEmulator *emulator,CSmooth *smooth,vector<double> &ThetaTestSet,double YExpSet,double SigmaYExpSet);
 };
 
 #endif

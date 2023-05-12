@@ -4,10 +4,10 @@
 using namespace std;
 
 
-void CScoreCard::CalcScore(CSmoothEmulator *emulator,CSmooth *smooth,vector<double> &ThetaTestSet,double YExpSet,double sigmaYExpSet){
+void CScoreCard::CalcScore(CSmoothEmulator *emulator,CSmooth *smooth,vector<double> &ThetaTestSet,double YExpSet,double SigmaYExpSet){
 	ThetaTest=ThetaTestSet;
 	YExp=YExpSet;
-	sigmaYExp=sigmaYExpSet;
+	SigmaYExp=SigmaYExpSet;
 	int itest,isample;
 	double yi,Pi,Pibar,Pi2bar;
 	score=0.0;
@@ -18,7 +18,7 @@ void CScoreCard::CalcScore(CSmoothEmulator *emulator,CSmooth *smooth,vector<doub
 		Pibar=Pi2bar=0.0;
 		for(isample=0;isample<emulator->NASample;isample++){
 			yi=smooth->CalcY(emulator->ASample[isample],emulator->LAMBDA,ThetaTest);
-			Pi=exp(-(yi-YExp)*(yi-YExp)/(2.0*sigmaYExp*sigmaYExp));
+			Pi=exp(-(yi-YExp)*(yi-YExp)/(2.0*SigmaYExp*SigmaYExp));
 			Pibar+=Pi;
 			Pi2bar+=Pi*Pi;
 		}
