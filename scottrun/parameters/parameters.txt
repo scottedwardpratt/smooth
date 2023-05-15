@@ -1,4 +1,4 @@
-SmoothEmulator_NPars 10
+SmoothEmulator_NPars 8
 #SmoothEmulator_NTrainingPts 0
 SmoothEmulator_SigmaA 100.0
 SmoothEmulator_SigmaYMin 10

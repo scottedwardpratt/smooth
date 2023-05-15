@@ -345,13 +345,17 @@ double CSmoothEmulator::GetLog_AProb(vector<double> &AA,double ASigmaA){
 	int ic0=1;
 	if(ConstrainA0)
 		ic0=0;
-	answer=0.000*smooth->NCoefficients*log(ASigmaA/SigmaA0);
+	//answer=0.000*smooth->NCoefficients*log(ASigmaA/SigmaA0);
 	// Don't prefer small A[0], so start at ic=1
 	for(unsigned int ic=ic0;ic<smooth->NCoefficients;ic++){
 		answer-=0.5*AA[ic]*AA[ic]/(ASigmaA*ASigmaA);
 	}
-	if(!UseSigmaYReal)
-		answer-=(NTrainingPts-1)*log(ASigmaA);
+	if(!UseSigmaYReal){
+		if(ConstrainA0)
+			answer-=NTrainingPts*log(ASigmaA);
+		else
+			answer-=(NTrainingPts-1)*log(ASigmaA);
+	}
 	// next line keeps A from drifting out to infinity
 	if(CutOffA)
 		answer-=log(1.0+0.25*(ASigmaA*ASigmaA)/(SigmaA0*SigmaA0));
