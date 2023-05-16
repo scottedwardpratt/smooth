@@ -31,20 +31,14 @@ int main(int argc,char *argv[]){
 	emulator.SetThetaSimplex();
 	printf("Set %d Training Points\n",emulator.NTrainingPts);
 
-	//FILE *fptr;
-	//char filename[150];
-	//snprintf(filename,150,"testresults/NPars%u_Lambda%g_NTrain%u.txt",
-	//	emulator.NPars,emulator.LAMBDA,emulator.NTrainingPts);
-	//fptr=fopen(filename,"w");
-
 	for(ireal=0;ireal<nreal;ireal++){
 		printf("------ ireal=%d -----\n",ireal);
 		accuracy=0.0;
 		real->RandomizeA(100.0);
 		//real->A[0]=0.0;
-		//  This is just for testing, to make sure that the emulator exactly reproduces training points
 		emulator.CalcYTrainFromThetaTrain();
 		emulator.GenerateASamples();
+		//  This is just for testing, to make sure that the emulator exactly reproduces training points
 		for(itest=0;itest<emulator.NTrainingPts;itest++){
 			yreal=emulator.YTrain[itest];
 			y=emulator.smooth->CalcY(emulator.ASample[1],emulator.LAMBDA,emulator.ThetaTrain[itest]);
