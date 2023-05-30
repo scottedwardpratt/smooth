@@ -18,12 +18,8 @@
 
 class CScoreCard{
 public:
-	unsigned int NTrain,NTest;
-	vector<double> ThetaTrain;
-	vector<double> ThetaTest;
-	vector<double> ProbTest;
 	double score,YExp,SigmaYExp;
-	void CalcScore(CSmoothEmulator *emulator,CSmooth *smooth,vector<double> &ThetaTestSet,double YExpSet,double SigmaYExpSet);
+	void CalcScore(CSmoothEmulator *emulator,vector<vector<double>> &ThetaTest,double YExpSet,double SigmaYExpSet);
 };
 
 #endif
