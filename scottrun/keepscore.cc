@@ -16,7 +16,7 @@ int main(int argc,char *argv[]){
 	}
 	CparameterMap *parmap=new CparameterMap();
 	double YExp,SigmaYExp,SigmaYReal;
-	unsigned int itest,ntest=20,ipar,NPars;
+	unsigned int itest,ntest=100000,ipar,NPars;
 	vector<vector<double>> ThetaTest;
 	vector<double> Theta;
 	
@@ -40,7 +40,6 @@ int main(int argc,char *argv[]){
 	real->LAMBDA=emulator.LAMBDA;
 	emulator.real=real;
 	real->RandomizeA(100.0);
-	real->A[0]=0.0;
 	
 	
 	emulator.SetThetaSimplex();
