@@ -19,7 +19,7 @@ int main(int argc,char *argv[]){
 	unsigned int itest,ntest=20,ipar,NPars;
 	vector<vector<double>> ThetaTest;
 	vector<double> Theta;
-	
+
 	// This plays the role of the "real" model
 	CReal_Taylor *real;
 
@@ -34,25 +34,25 @@ int main(int argc,char *argv[]){
 	for(itest=0;itest<ntest;itest++){
 		ThetaTest[itest].resize(NPars);
 	}
-	
+
 	// Real function
 	real=new CReal_Taylor(NPars,emulator.smooth->MaxRank,emulator.randy);
 	real->LAMBDA=emulator.LAMBDA;
 	emulator.real=real;
 	real->RandomizeA(100.0);
 	real->A[0]=0.0;
-	
-	
+
+
 	emulator.SetThetaSimplex();
 	CLog::Info("NTrainingPts="+to_string(emulator.NTrainingPts)+"\n");
 	emulator.CalcYTrainFromThetaTrain();
 	emulator.GenerateASamples();
-	
+
 	for(itest=0;itest<ntest;itest++){
 		for(ipar=0;ipar<NPars;ipar++)
 			ThetaTest[itest][ipar]=1.0-2.0*emulator.randy->ran();
 	}
-	
+
 	// Choose a value for YExp -- just some value of YReal for a random theta.
 	SigmaYExp=0.25;
 	SigmaYReal=0.0;
@@ -60,9 +60,8 @@ int main(int argc,char *argv[]){
 		Theta[ipar]=-1.0+2.0*emulator.randy->ran();
 	}
 	real->CalcY(Theta,YExp,SigmaYReal);
-	
 	scorecard.CalcScore(&emulator,ThetaTest,YExp,SigmaYExp);
 	printf("score=%g\n",scorecard.score);
-	
+
 	return 0;
 }

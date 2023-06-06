@@ -13,10 +13,9 @@ using namespace std;
 
 int main()
 {
-    string parname, min_val, max_val;
-    double min,max;
+    double exp_val, uncertainity;
     FILE *fptr;
-    fptr = fopen("mod_parametes_info.txt","w");
+    fptr = fopen("observable_info.txt","w");
 
 
     srand((unsigned)time(NULL));
@@ -24,9 +23,8 @@ int main()
     double step = 0.1;
     for(int i = 1; i < 10; i ++)
     {
-        min = i * step;
-        max = min + i;
-        fprintf(fptr,"par%d %10.3f %10.3f\n",i,min,max);
+        exp_val = (double)(rand()+ 0.5)/RAND_MAX;
+        fprintf(fptr,"obs%d %10.3f %10.3f\n",i,exp_val,0.001);
     }
     fclose(fptr);
 
