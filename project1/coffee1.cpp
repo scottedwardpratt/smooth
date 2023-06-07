@@ -11,7 +11,7 @@ using namespace std;
 
 int main()
 {
-    string dirname = "run0";
+    string dirname = "modelruns/run0";
     string shellcommand = "mkdir -p "+dirname;
     system(shellcommand.c_str());
     return 0;
