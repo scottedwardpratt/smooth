@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <sys/stat.h>
+#include "msu_smooth/parameterinfo.h"
 
 using namespace std;
 
@@ -24,6 +25,8 @@ int main()
 
   fptr = fopen("log_file.txt","w");
   fprintf(fptr,"%d",runNo + 1);
+
+
 
   return 0;
 }
