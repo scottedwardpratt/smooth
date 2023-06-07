@@ -18,9 +18,9 @@ int main()
   file.open("log_file.txt");
   file >> runNo;
 
-  string path = "run" + std::to_string(runNo);
-  const char *dirname = path.c_str();
-  mkdir(dirname, 0777);
+  string dirname = "modelruns/run" + std::to_string(runNo);
+  string shellcommand = "mkdir -p "+dirname;
+  system(shellcommand.c_str());
 
   fptr = fopen("log_file.txt","w");
   fprintf(fptr,"%d",runNo + 1);
