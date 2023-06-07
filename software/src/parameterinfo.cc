@@ -9,99 +9,84 @@
 
 using namespace std;
 
-CPriorInfo::CPriorInfo(string file, vector<double> x_min, vector<double> x_max){
-
-	filename=file;
-	char dummy1[100],dummy2[100];
-//	param_num=param;
+CPriorInfo::CPriorInfo(string parinfo_filename_set){
+	parinfo_filename=parinfo_filename_set;
+	double minval,maxval;
+	char dummy1[120],dummy2[40];
+	
 	FILE *fptr;
-	string interval;
-	fptr=fopen(filename.c_str(), "r");
-	for(int i=0; i<param_num; i++){
-		fscanf(fptr, "%s %s %lf %lf",dummy1,dummy2, &min[i], &max[i]);
-		name[i]=dummy1;
-	interval=dummy2;
-		min[i]=x_min[i];
-		max[i]=x_max[i];
-		Print(name[i], interval, min[i], max[i]);
-	}
-//	CParameterTranslateTheta_to_x(min, max, );
+	fptr=fopen(parinfo_filename.c_str(), "r");
+	NModelPars=0;
+	do{
+		fscanf(fptr, "%s %s %lf %lf",dummy1,dummy2,&minval,&maxval);
+		if(!feof(fptr)){
+			if(string(dummy2)!="linear" && string(dummy2)!="gaussian"){
+				CLog::Fatal("reading priorinfo: type="+string(dummy2)+". Must be linear or gaussian.\n");
+			}
+			parname.push_back(string(dummy1));
+			type.push_back(string(dummy2));
+			xmin.push_back(minval);  // Gaussian type xmin refers to <x> and <xmax> is sigma
+			xmax.push_back(maxval);
+			NModelPars+=1;
+		}
+	}while(!feof(fptr));
 	fclose(fptr);
 }
 
-CPriorInfo::CPriorInfo(vector<double> x_min, vector<double> x_max){
-	min=x_min;
-	max=x_max;
-}
+CModelParameters::CModelParameters(CPriorInfo *priorinfo_set){
+	priorinfo=priorinfo_set;
+	NModelPars=priorinfo->NModelPars;
+	x.resize(NModelPars);
+	theta.resize(NModelPars);
+};
 
-double CPriorInfo::CParameterTranslateX_to_Theta(vector<double> x_min, vector<double> x_max, double x, string interval){
+void CModelParameters::TranslateX_to_Theta(){
 	//for min, max range
-	double theta_min=-1.0;
-	double theta_max=1.0;
-	double center=0;
-	double width=1;
-	double theta_of_x;
-	string str="range";
+	double sigmax,xbar;
+	int ipar;
 	
-	if(interval==str){
-		for(int i=0; i<x_min.size();i++){
-			theta_of_x=((x-x_min[i])/(x_max[i]-x_min[i]))*(theta_max-theta_min)+theta_min;
+	for(ipar=0;ipar<NModelPars;ipar++){
+		if(priorinfo->type[ipar]=="linear"){
+			theta[ipar]=-1+2*((x[ipar]-priorinfo->xmin[ipar])/(priorinfo->xmax[ipar]-priorinfo->xmin[ipar]));
+		}
+		else if(priorinfo->type[ipar]=="gaussian"){
+			xbar=priorinfo->xmin[ipar];
+			sigmax=priorinfo->xmax[ipar];
+			theta[ipar]=(x[ipar]-xbar)/sigmax;
+		}
+		else{
+			CLog::Fatal("Cannot translate X to Theta because type = "+priorinfo->type[ipar]+" is not recognized\n");
+		}
+	}
+
+}
+
+void CModelParameters::TranslateTheta_to_x(){
+	double sigmax,xbar;
+	int ipar;
+	
+	for(ipar=0;ipar<NModelPars;ipar++){
+		if(priorinfo->type[ipar]=="linear"){
+			x[ipar]=priorinfo->xmin[ipar]+0.5*(1.0+theta[ipar])*(priorinfo->xmax[ipar]-priorinfo->xmin[ipar]);
+		}
+		else if(priorinfo->type[ipar]=="gaussian"){
+			xbar=priorinfo->xmin[ipar];
+			sigmax=priorinfo->xmax[ipar];
+			x[ipar]=xbar+sigmax*theta[ipar];
+		}
+		else{
+			CLog::Fatal("Cannot translate Theta to X because type = "+priorinfo->type[ipar]+" is not recognized\n");
 		}
 	}
 	
-	else{
-		for(int i=0;i<x_min.size(); i++){
-			theta_of_x=exp(-pow(width*(x_max[i]*(x+(center-x_min[i]))),2)/(2*width));
-		}
-	}
-	//for gaussian
-	
-	return theta_of_x;
 }
 
-double CPriorInfo::CParameterTranslateTheta_to_x(vector<double> x_min, vector<double> x_max, double theta, string interval){
-	double theta_min=-1.0;
-	double theta_max=1.0;
-	double center=0;
-	double width=1;
-	double x_of_theta;
-	string str="range";
-	
-	if(interval==str){
-		for(int i=0; i<x_min.size();i++){
-			x_of_theta=((theta-theta_min)/(theta_max-theta_min))*(x_max[i]-x_min[i])+x_min[i];
-		}
+void CModelParameters::Print(){
+	char message[200];
+	int ipar;
+	for(ipar=0;ipar<NModelPars;ipar++){
+		snprintf(message,200,"   %.24s (%.8s): x=%11.4e, theta=%11.4e\n",
+		priorinfo->parname[ipar].c_str(),priorinfo->type[ipar].c_str(),x[ipar],theta[ipar]);
+		CLog::Info(message);
 	}
-	
-	else{
-		for(int i=0; i<x_min.size();i++){
-			x_of_theta=exp(-pow((width*(theta+(x_min[i]-center))),2)/(2*x_max[i]));
-		}
-	}
-	
-	return x_of_theta;
-}
-
-
-void CPriorInfo::Print(string &name, string &type, double &min, double &max){
-	for(int i=0;i<param_num;i++){
-		CLog::Info("Parameter: "+name+" with type %s and range: "+type+", min="+to_string(min)+", max="+to_string(max)+"\n");
-		
-	}
-}
-
-void CPriorInfo::Write(vector<double> &xval,vector<double> &yval, string filename){
-	unsigned int ipt,Npts=xval.size();
-	FILE *fptr;
-	fptr=fopen(filename.c_str(),"w");
-	for(ipt=0;ipt<Npts;ipt++){
-		fprintf(fptr,"%4.0f %g\n",xval[ipt],yval[ipt]);
-	}
-	fclose(fptr);
-}
-
-CModelParameter::CModelParameter(vector<double> x_val, vector<double> theta_val, CPriorInfo *info_val){
-	x=x_val;
-	theta=theta_val;
-	info=info_val;
 }
