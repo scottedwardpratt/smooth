@@ -30,6 +30,7 @@ int main()
 
   CModelParameters modPar = CModelParameters(pInfo);
   modPar.TranslateX_to_Theta();
+  modPar.TranslateTheta_to_x();
 
   modPar.Print();
 
