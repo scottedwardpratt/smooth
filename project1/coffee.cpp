@@ -26,6 +26,13 @@ int main()
   fptr = fopen("log_file.txt","w");
   fprintf(fptr,"%d",runNo + 1);
 
+  CPriorInfo* pInfo = new CPriorInfo("Info/mod_parametes_info.txt");
+
+  CModelParameters modPar = CModelParameters(pInfo);
+  modPar.TranslateX_to_Theta();
+
+  modPar.Print();
+
 
 
   return 0;

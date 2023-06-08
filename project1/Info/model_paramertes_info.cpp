@@ -24,8 +24,8 @@ int main()
     double step = 0.1;
     for(int i = 1; i < 10; i ++)
     {
-        min = i * step;
-        max = min + i;
+        min = ((double)rand()) / ((double)RAND_MAX) / 2.0;
+        max = ((double)rand()) / ((double)RAND_MAX) / 2.0 + 0.5;
         fprintf(fptr,"par%d %s %10.3f %10.3f\n",i,s.c_str(),min,max);
     }
     fclose(fptr);
