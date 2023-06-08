@@ -13,7 +13,7 @@ using namespace std;
 
 int main()
 {
-    string parname, min_val, max_val;
+    string s = "linear";
     double min,max;
     FILE *fptr;
     fptr = fopen("mod_parametes_info.txt","w");
@@ -26,7 +26,7 @@ int main()
     {
         min = i * step;
         max = min + i;
-        fprintf(fptr,"par%d %10.3f %10.3f\n",i,min,max);
+        fprintf(fptr,"par%d %s %10.3f %10.3f\n",i,s.c_str(),min,max);
     }
     fclose(fptr);
 
