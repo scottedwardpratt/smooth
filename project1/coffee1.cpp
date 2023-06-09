@@ -13,7 +13,7 @@ using namespace std;
 int main()
 {
   ifstream file;
-  int iruns,Nruns=5;
+  int Npars;
   FILE *fptr;
 
   CPriorInfo* pInfo = new CPriorInfo("Info/mod_parametes_info.txt");
@@ -21,22 +21,27 @@ int main()
   modPar.TranslateX_to_Theta();
   modPar.TranslateTheta_to_x();
 
+  Npars=modPar.NModelPars;
 
-  for(int iruns = 0; iruns < Nruns; iruns++)
+
+  for(int ipars = 0; ipars < Npars; ipars++)
   {
-    file >> iruns;
-    string dirname = "modelruns/run" + std::to_string(iruns);
+    file >> ipars;
+    string dirname = "modelruns/run" + std::to_string(ipars);
     string shellcommand = "mkdir -p "+dirname;
     system(shellcommand.c_str());
 
-    string filename = "run" + to_string(iruns)+"mod_parametes.txt";
-    fptr = fopen(filename.c_str(),"w");
-
-    fprintf(fptr,"%11.4d\n",20);
-    fclose(fptr);
+    for(int i =0; i < Npars; i++)
+    {
+      string filename ="modelruns/run" + to_string(ipars)+ "/mod_parametes.txt";
+      fptr = fopen(filename.c_str(),"w");
+      fprintf(fptr,"%11.4d\n",20);
+      fclose(fptr);
+    }
 
   }
 
+    cout << modPar.NModelPars <<endl;
     modPar.Print();
 
   return 0;
