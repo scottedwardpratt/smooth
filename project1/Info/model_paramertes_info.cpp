@@ -18,10 +18,6 @@ int main()
     FILE *fptr;
     fptr = fopen("mod_parametes_info.txt","w");
 
-
-    srand((unsigned)time(NULL));
-
-    double step = 0.1;
     for(int i = 1; i < 10; i ++)
     {
         min = ((double)rand()) / ((double)RAND_MAX) / 2.0;

@@ -155,6 +155,19 @@ coffee/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/coffee.dir/build.make CMakeFiles/coffee.dir/build
 .PHONY : coffee/fast
 
+#=============================================================================
+# Target rules for targets named coffee1
+
+# Build rule for target.
+coffee1: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 coffee1
+.PHONY : coffee1
+
+# fast build rule for target.
+coffee1/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/coffee1.dir/build.make CMakeFiles/coffee1.dir/build
+.PHONY : coffee1/fast
+
 coffee.o: coffee.cpp.o
 .PHONY : coffee.o
 
@@ -179,6 +192,30 @@ coffee.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/coffee.dir/build.make CMakeFiles/coffee.dir/coffee.cpp.s
 .PHONY : coffee.cpp.s
 
+coffee1.o: coffee1.cpp.o
+.PHONY : coffee1.o
+
+# target to build an object file
+coffee1.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/coffee1.dir/build.make CMakeFiles/coffee1.dir/coffee1.cpp.o
+.PHONY : coffee1.cpp.o
+
+coffee1.i: coffee1.cpp.i
+.PHONY : coffee1.i
+
+# target to preprocess a source file
+coffee1.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/coffee1.dir/build.make CMakeFiles/coffee1.dir/coffee1.cpp.i
+.PHONY : coffee1.cpp.i
+
+coffee1.s: coffee1.cpp.s
+.PHONY : coffee1.s
+
+# target to generate assembly for a file
+coffee1.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/coffee1.dir/build.make CMakeFiles/coffee1.dir/coffee1.cpp.s
+.PHONY : coffee1.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -190,9 +227,13 @@ help:
 	@echo "... extern_commonutils"
 	@echo "... extern_smooth"
 	@echo "... coffee"
+	@echo "... coffee1"
 	@echo "... coffee.o"
 	@echo "... coffee.i"
 	@echo "... coffee.s"
+	@echo "... coffee1.o"
+	@echo "... coffee1.i"
+	@echo "... coffee1.s"
 .PHONY : help
 
 
