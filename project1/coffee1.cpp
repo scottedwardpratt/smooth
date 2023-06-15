@@ -29,12 +29,7 @@ int main()
 
   CPriorInfo* pInfo = new CPriorInfo("Info/mod_parametes_info.txt");
 
-  string parfilename="parameters/"+string(argv[1]);
-	parmap->ReadParsFromFile(parfilename);
 
-  CSmoothEmulator emulator(parmap);
-	emulator.randy->reset(-time(NULL));
-	NPars=emulator.NPars;
 
   CModelParameters modPar = CModelParameters(pInfo);
   modPar.TranslateX_to_Theta();

@@ -28,26 +28,32 @@ int main()
   int Npars;
   FILE *fptr;
 
-  CPriorInfo* pInfo = new CPriorInfo("Info/mod_parametes_info.txt");
+  CPriorInfo* pInfo = new CPriorInfo("Info/mod_parameters_info.txt");
   CModelParameters modPar = CModelParameters(pInfo);
-  Npars=modPar.NModelPars;
 
 
 
-  CparameterMap *parmap=new CparameterMap();
+  CparameterMap *parmap = new CparameterMap();
 	//double YExp,SigmaYExp,SigmaYReal;
 	unsigned int itest,ntest=1000,ipar,NPars;
 	vector<vector<double>> ThetaTest;
 	vector<double> Theta;
 
+  Npars=modPar.NModelPars;
+  cout << "NUMBER OF parameter IS " << Npars <<endl;
+
+
 	// This plays the role of the "real" model
 	CReal_Taylor *real;
 
 	//parmap->ReadParsFromFile(parfilename);
+  parmap->set("SmoothEmulator_NPars",Npars);
 
 	CSmoothEmulator emulator(parmap);
 	emulator.randy->reset(-time(NULL));
-	NPars=emulator.NPars;
+	NPars = emulator.NPars = Npars;
+
+  //cout << "NUMBER OF parameter IS " << NPars <<endl;
 
 	Theta.resize(NPars);
 	ThetaTest.resize(ntest);
@@ -68,7 +74,7 @@ int main()
 	emulator.GenerateASamples();
 
 	for(itest=0;itest<ntest;itest++){
-		for(ipar=0;ipar<NPars;ipar++)
+		for(ipar=0;ipar<Npars;ipar++)
 			ThetaTest[itest][ipar]=1.0-2.0*emulator.randy->ran();
 	}
 
@@ -91,16 +97,16 @@ int main()
 
     for(int i =0; i < Npars; i++)
     {
-      string filename ="modelruns/run" + to_string(ipars)+ "/mod_parametes.txt";
+      string filename ="modelruns/run" + to_string(ipars)+ "/mod_parameters.txt";
       fptr = fopen(filename.c_str(),"w");
-      fprintf(fptr,"%11.4d\n",20);
+      fprintf(fptr,"%11.4d\n",30);
       fclose(fptr);
     }
 
   }
 
     cout << modPar.NModelPars <<endl;
-    cout << pInfo <<endl;
+    //cout << pInfo <<endl;
     modPar.Print();
 
   return 0;

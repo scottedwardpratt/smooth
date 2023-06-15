@@ -27,7 +27,8 @@ int main(int argc,char *argv[]){
 	parmap->ReadParsFromFile(parfilename);
 	CSmoothEmulator emulator(parmap);
 	emulator.randy->reset(-time(NULL));
-	NPars=emulator.NPars;
+	NPars=emulator.NPars = 5;
+	cout << "NUMBER OF parameter IS " << NPars <<endl;
 
 	Theta.resize(NPars);
 	ThetaTest.resize(ntest);
@@ -62,8 +63,8 @@ int main(int argc,char *argv[]){
 	scorecard.CalcScore(&emulator,ThetaTest,YExp,SigmaYExp);
 	printf("score=%g\n",scorecard.score);
 
-	cout << "pointer val:" << parmap << endl;
-	cout << "Npars" << parmap->NPars << endl;
+	//cout << "pointer val:" << parmap << endl;
+	//cout << "Npars" << parmap->npa << endl;
 
 
 	//cout << "*pointer val:" << parmap << endl;

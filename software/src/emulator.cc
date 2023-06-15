@@ -31,13 +31,13 @@ CSmoothEmulator::CSmoothEmulator(CparameterMap *parmap){
 
 	ASample.resize(NASample);
 	simplex=new CSimplexSampler(parmap);
-	
-	for(unsigned int isample=0;isample<NASample;isample++){		
+
+	for(unsigned int isample=0;isample<NASample;isample++){
 		ASample[isample].resize(smooth->NCoefficients);
 		//SetA_RanGauss(SigmaA,ASample[isample]);
-		SetA_Zero(ASample[isample]);		
+		SetA_Zero(ASample[isample]);
 	}
-	
+
 	A.resize(smooth->NCoefficients);
 	//SetA_RanGauss(SigmaA,A);
 	SetA_Zero(A);
@@ -54,17 +54,22 @@ void CSmoothEmulator::Init(CparameterMap *parmap){
 	FirstTune=true;
 	MCStepSize=MCStepSize/double(NPars*NPars);
 	MCSigmaAStepSize=MCSigmaAStepSize/double(NPars*NPars);
-	//cout << "SigmaA: " << SigmaA << endl;
+	cout << "SigmaA: " << SigmaA << endl;
+	cout << "num pars: " << NPars << endl;
+
+	cout << "MCStepSize: " << MCStepSize << endl;
+	cout << "MCSigmaAStepSize: " << MCSigmaAStepSize << endl;
 
 	ASample.resize(NASample);
 	simplex=new CSimplexSampler(parmap);
-	
-	for(unsigned int isample=0;isample<NASample;isample++){		
+	//cout << "ASample: " << ASample << endl;
+
+	for(unsigned int isample=0;isample<NASample;isample++){
 		ASample[isample].resize(smooth->NCoefficients);
 		//SetA_RanGauss(SigmaA,ASample[isample]);
-		SetA_Zero(ASample[isample]);		
+		SetA_Zero(ASample[isample]);
 	}
-	
+
 	A.resize(smooth->NCoefficients);
 	//SetA_RanGauss(SigmaA,A);
 	SetA_Zero(A);
@@ -135,7 +140,7 @@ void CSmoothEmulator::TuneAMCMC(){
 		CalcAFromTraining(*ATrialptr);
 		logPTrial=GetLog_AProb(*ATrialptr,SigmaATrial);
 		dlp=logPTrial-logP;
-			
+
 		if(dlp>0.0){
 			Aswitch=Aptr;
 			Aptr=ATrialptr;
@@ -169,13 +174,13 @@ void CSmoothEmulator::TuneAMCMC(){
 			BestLogP=logP;
 	}
 //	cout << "dlp is now:" << dlp << endl;
-	
+
 	if(Aptr!=&A){
 		for(ic=0;ic<smooth->NCoefficients;ic++){
 			A[ic]=(*Aptr)[ic];
 		}
 	}
-	
+
 	int Ndof=smooth->NCoefficients-NTrainingPts;
 	CLog::Info("success percentage="+to_string(double(success)*100.0/double(NMC))+", SigmaA="+to_string(SigmaA)+", logP/Ndof="+to_string(logP/double(Ndof))+",BestLogP/Ndof="+to_string(BestLogP/double(Ndof))+"\n");
 }
@@ -198,8 +203,8 @@ void CSmoothEmulator::TuneAMCMC_withSigma(){
 		Y=smooth->CalcY(*Aptr,LAMBDA,ThetaTrain[itrain]);
 		logP-=0.5*(YTrain[itrain]-Y)*(YTrain[itrain]-Y)/(SigmaYTrain[itrain]*SigmaYTrain[itrain]);
 	}
-	
-	
+
+
 	//printf("logP_fromA=%g\n",logP);
 	BestLogP=-1000000000.0;
 	for(imc=0;imc<NMC;imc++){
@@ -212,20 +217,20 @@ void CSmoothEmulator::TuneAMCMC_withSigma(){
 			(*ATrialptr)[ic]*=(SigmaATrial/SigmaA);
 		}
 		logPTrial=GetLog_AProb(*ATrialptr,SigmaATrial);
-		
-		
+
+
 		for(itrain=0;itrain<NTrainingPts;itrain++){
 			Y=smooth->CalcY(*ATrialptr,LAMBDA,ThetaTrain[itrain]);
 			logPTrial-=0.5*(YTrain[itrain]-Y)*(YTrain[itrain]-Y)/(SigmaYTrain[itrain]*SigmaYTrain[itrain]);
 			//printf("%4d: YTrain=%10.4f, Y=%10.4f, SigmaY=%5.2f, logPTrial=%g\n",itrain,YTrain[itrain],Y,SigmaYTrain[itrain],logPTrial);
 		}
-		
+
 		dlp=logPTrial-logP;
 		//printf("dlp=%g\n",dlp);
 		//Misc::Pause();
-		
-			
-			
+
+
+
 		if(dlp>0.0){
 			Aswitch=Aptr;
 			Aptr=ATrialptr;
@@ -259,13 +264,13 @@ void CSmoothEmulator::TuneAMCMC_withSigma(){
 			BestLogP=logP;
 	}
 	//	cout << "dlp is now:" << dlp << endl;
-	
+
 	if(Aptr!=&A){
 		for(ic=0;ic<smooth->NCoefficients;ic++){
 			A[ic]=(*Aptr)[ic];
 		}
 	}
-	
+
 	int Ndof=smooth->NCoefficients-NTrainingPts;
 	CLog::Info("success percentage="+to_string(double(success)*100.0/double(NMC))+", SigmaA="+to_string(SigmaA)+", logP/Ndof="+to_string(logP/double(Ndof))+",BestLogP/Ndof="+to_string(BestLogP/double(Ndof))+"\n");
 }

@@ -16,7 +16,7 @@ int main()
     string s = "linear";
     double min,max;
     FILE *fptr;
-    fptr = fopen("mod_parametes_info.txt","w");
+    fptr = fopen("mod_parameters_info.txt","w");
 
     for(int i = 1; i < 10; i ++)
     {

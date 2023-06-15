@@ -82,7 +82,7 @@ int main(int argc,char *argv[]){
 					while(r2>1.0);
 				}
 			}
-			yreal=real->CalcY(Theta);
+			yreal=real->CalcY(Theta,yreal,SigmaYreal);
 			ybar=y2bar=0.0;
 			for(isample=0;isample<emulator.NASample;isample++){
 				y=emulator.smooth->CalcY(emulator.ASample[isample],emulator.LAMBDA,Theta);
