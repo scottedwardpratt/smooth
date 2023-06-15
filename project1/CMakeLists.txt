@@ -22,8 +22,15 @@ add_executable(coffee ${CMAKE_CURRENT_SOURCE_DIR}/coffee.cpp)
 add_dependencies(coffee extern_smooth extern_commonutils)
 target_link_libraries(coffee ${GITHOME_MSU}/smooth/software/lib/libsmooth.a  ${GITHOME_MSU}/commonutils/software/lib/libmsu_commonutils.a ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY} ${EIGEN3_LIBRARY})
 
+
 #################################################
-set(SOURCE_FILES ./coffee1.cpp)
-add_executable(coffee1 ${CMAKE_CURRENT_SOURCE_DIR}/coffee1.cpp)
-add_dependencies(coffee1 extern_smooth extern_commonutils)
-target_link_libraries(coffee1 ${GITHOME_MSU}/smooth/software/lib/libsmooth.a  ${GITHOME_MSU}/commonutils/software/lib/libmsu_commonutils.a ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY} ${EIGEN3_LIBRARY})
+set(SOURCE_FILES ./coffee2.cpp)
+add_executable(coffee2 ${CMAKE_CURRENT_SOURCE_DIR}/coffee2.cpp)
+add_dependencies(coffee2 extern_smooth extern_commonutils)
+target_link_libraries(coffee2 ${GITHOME_MSU}/smooth/software/lib/libsmooth.a  ${GITHOME_MSU}/commonutils/software/lib/libmsu_commonutils.a ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY} ${EIGEN3_LIBRARY})
+
+#################################################
+set(SOURCE_FILES ./keepscore.cc)
+add_executable(keepscore ${CMAKE_CURRENT_SOURCE_DIR}/keepscore.cc)
+add_dependencies(keepscore extern_smooth extern_commonutils)
+target_link_libraries(keepscore ${GITHOME_MSU}/smooth/software/lib/libsmooth.a ${GITHOME_MSU}/commonutils/software/lib/libmsu_commonutils.a ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY} ${EIGEN3_LIBRARY})

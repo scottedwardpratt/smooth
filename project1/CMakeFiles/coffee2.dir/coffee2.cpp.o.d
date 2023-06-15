@@ -1,5 +1,5 @@
-CMakeFiles/coffee1.dir/coffee1.cpp.o: \
-  /Users/ekakshkataria/git/smooth/project1/coffee1.cpp \
+CMakeFiles/coffee2.dir/coffee2.cpp.o: \
+  /Users/ekakshkataria/git/smooth/project1/coffee2.cpp \
   /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk/usr/include/c++/v1/iostream \
   /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk/usr/include/c++/v1/__assert \
   /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk/usr/include/c++/v1/__config \

@@ -17,6 +17,9 @@
 #include "msu_smooth/scorecard.h"
 
 
+
+
+
 using namespace std;
 
 int main()
@@ -24,33 +27,69 @@ int main()
   ifstream file;
   int Npars;
   FILE *fptr;
-  CparameterMap *parmap=new CparameterMap();
-
 
   CPriorInfo* pInfo = new CPriorInfo("Info/mod_parametes_info.txt");
-
-  string parfilename="parameters/"+string(argv[1]);
-	parmap->ReadParsFromFile(parfilename);
-
-  CSmoothEmulator emulator(parmap);
-	emulator.randy->reset(-time(NULL));
-	NPars=emulator.NPars;
-
   CModelParameters modPar = CModelParameters(pInfo);
-  modPar.TranslateX_to_Theta();
-  modPar.TranslateTheta_to_x();
-
   Npars=modPar.NModelPars;
 
 
-  for(int ipars = 0; ipars < Npars+1; ipars++)
+
+  CparameterMap *parmap=new CparameterMap();
+	//double YExp,SigmaYExp,SigmaYReal;
+	unsigned int itest,ntest=1000,ipar,NPars;
+	vector<vector<double>> ThetaTest;
+	vector<double> Theta;
+
+	// This plays the role of the "real" model
+	CReal_Taylor *real;
+
+	//parmap->ReadParsFromFile(parfilename);
+
+	CSmoothEmulator emulator(parmap);
+	emulator.randy->reset(-time(NULL));
+	NPars=emulator.NPars;
+
+	Theta.resize(NPars);
+	ThetaTest.resize(ntest);
+	for(itest=0;itest<ntest;itest++){
+		ThetaTest[itest].resize(NPars);
+	}
+
+	// Real function
+	real=new CReal_Taylor(NPars,emulator.smooth->MaxRank,emulator.randy);
+	real->LAMBDA=emulator.LAMBDA;
+	emulator.real=real;
+	real->RandomizeA(100.0);
+
+
+	emulator.SetThetaSimplex();
+	CLog::Info("NTrainingPts="+to_string(emulator.NTrainingPts)+"\n");
+	emulator.CalcYTrainFromThetaTrain();
+	emulator.GenerateASamples();
+
+	for(itest=0;itest<ntest;itest++){
+		for(ipar=0;ipar<NPars;ipar++)
+			ThetaTest[itest][ipar]=1.0-2.0*emulator.randy->ran();
+	}
+
+
+
+
+  modPar.TranslateX_to_Theta();
+  modPar.TranslateTheta_to_x();
+
+
+
+
+
+  for(int ipars = 0; ipars < Npars; ipars++)
   {
     file >> ipars;
     string dirname = "modelruns/run" + std::to_string(ipars);
     string shellcommand = "mkdir -p "+dirname;
     system(shellcommand.c_str());
 
-    for(int i =0; i < Npars+1; i++)
+    for(int i =0; i < Npars; i++)
     {
       string filename ="modelruns/run" + to_string(ipars)+ "/mod_parametes.txt";
       fptr = fopen(filename.c_str(),"w");
@@ -61,6 +100,7 @@ int main()
   }
 
     cout << modPar.NModelPars <<endl;
+    cout << pInfo <<endl;
     modPar.Print();
 
   return 0;

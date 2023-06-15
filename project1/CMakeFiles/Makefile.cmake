@@ -57,5 +57,6 @@ set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/extern_commonutils.dir/DependInfo.cmake"
   "CMakeFiles/extern_smooth.dir/DependInfo.cmake"
   "CMakeFiles/coffee.dir/DependInfo.cmake"
-  "CMakeFiles/coffee1.dir/DependInfo.cmake"
+  "CMakeFiles/coffee2.dir/DependInfo.cmake"
+  "CMakeFiles/keepscore.dir/DependInfo.cmake"
   )

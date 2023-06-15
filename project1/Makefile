@@ -156,17 +156,30 @@ coffee/fast:
 .PHONY : coffee/fast
 
 #=============================================================================
-# Target rules for targets named coffee1
+# Target rules for targets named coffee2
 
 # Build rule for target.
-coffee1: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 coffee1
-.PHONY : coffee1
+coffee2: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 coffee2
+.PHONY : coffee2
 
 # fast build rule for target.
-coffee1/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/coffee1.dir/build.make CMakeFiles/coffee1.dir/build
-.PHONY : coffee1/fast
+coffee2/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/coffee2.dir/build.make CMakeFiles/coffee2.dir/build
+.PHONY : coffee2/fast
+
+#=============================================================================
+# Target rules for targets named keepscore
+
+# Build rule for target.
+keepscore: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 keepscore
+.PHONY : keepscore
+
+# fast build rule for target.
+keepscore/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/keepscore.dir/build.make CMakeFiles/keepscore.dir/build
+.PHONY : keepscore/fast
 
 coffee.o: coffee.cpp.o
 .PHONY : coffee.o
@@ -192,29 +205,53 @@ coffee.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/coffee.dir/build.make CMakeFiles/coffee.dir/coffee.cpp.s
 .PHONY : coffee.cpp.s
 
-coffee1.o: coffee1.cpp.o
-.PHONY : coffee1.o
+coffee2.o: coffee2.cpp.o
+.PHONY : coffee2.o
 
 # target to build an object file
-coffee1.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/coffee1.dir/build.make CMakeFiles/coffee1.dir/coffee1.cpp.o
-.PHONY : coffee1.cpp.o
+coffee2.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/coffee2.dir/build.make CMakeFiles/coffee2.dir/coffee2.cpp.o
+.PHONY : coffee2.cpp.o
 
-coffee1.i: coffee1.cpp.i
-.PHONY : coffee1.i
+coffee2.i: coffee2.cpp.i
+.PHONY : coffee2.i
 
 # target to preprocess a source file
-coffee1.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/coffee1.dir/build.make CMakeFiles/coffee1.dir/coffee1.cpp.i
-.PHONY : coffee1.cpp.i
+coffee2.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/coffee2.dir/build.make CMakeFiles/coffee2.dir/coffee2.cpp.i
+.PHONY : coffee2.cpp.i
 
-coffee1.s: coffee1.cpp.s
-.PHONY : coffee1.s
+coffee2.s: coffee2.cpp.s
+.PHONY : coffee2.s
 
 # target to generate assembly for a file
-coffee1.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/coffee1.dir/build.make CMakeFiles/coffee1.dir/coffee1.cpp.s
-.PHONY : coffee1.cpp.s
+coffee2.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/coffee2.dir/build.make CMakeFiles/coffee2.dir/coffee2.cpp.s
+.PHONY : coffee2.cpp.s
+
+keepscore.o: keepscore.cc.o
+.PHONY : keepscore.o
+
+# target to build an object file
+keepscore.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/keepscore.dir/build.make CMakeFiles/keepscore.dir/keepscore.cc.o
+.PHONY : keepscore.cc.o
+
+keepscore.i: keepscore.cc.i
+.PHONY : keepscore.i
+
+# target to preprocess a source file
+keepscore.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/keepscore.dir/build.make CMakeFiles/keepscore.dir/keepscore.cc.i
+.PHONY : keepscore.cc.i
+
+keepscore.s: keepscore.cc.s
+.PHONY : keepscore.s
+
+# target to generate assembly for a file
+keepscore.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/keepscore.dir/build.make CMakeFiles/keepscore.dir/keepscore.cc.s
+.PHONY : keepscore.cc.s
 
 # Help Target
 help:
@@ -227,13 +264,17 @@ help:
 	@echo "... extern_commonutils"
 	@echo "... extern_smooth"
 	@echo "... coffee"
-	@echo "... coffee1"
+	@echo "... coffee2"
+	@echo "... keepscore"
 	@echo "... coffee.o"
 	@echo "... coffee.i"
 	@echo "... coffee.s"
-	@echo "... coffee1.o"
-	@echo "... coffee1.i"
-	@echo "... coffee1.s"
+	@echo "... coffee2.o"
+	@echo "... coffee2.i"
+	@echo "... coffee2.s"
+	@echo "... keepscore.o"
+	@echo "... keepscore.i"
+	@echo "... keepscore.s"
 .PHONY : help
 
 
