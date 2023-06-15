@@ -24,6 +24,9 @@ using namespace std;
 
 int main()
 {
+  string removecommand = "rm -r modelruns/run*";
+  system(removecommand.c_str());
+
   ifstream file;
   int Npars;
   FILE *fptr;
@@ -70,13 +73,6 @@ int main()
 
   emulator.SetThetaSimplex();
 
-  for (size_t i = 0; i < NPars; i++) {
-    modPar.theta[i] = emulator.ThetaTrain[0][i];
-  }
-
-  modPar.TranslateTheta_to_x();
-  modPar.Print();
-
 	CLog::Info("NTrainingPts="+to_string(emulator.NTrainingPts)+"\n");
 	emulator.CalcYTrainFromThetaTrain();
 	emulator.GenerateASamples();
@@ -88,6 +84,7 @@ int main()
 
 
 
+
   for(int ipars = 0; ipars < Npars; ipars++)
   {
     file >> ipars;
@@ -95,6 +92,14 @@ int main()
     string shellcommand = "mkdir -p "+dirname;
     system(shellcommand.c_str());
 
+
+
+    for (size_t i = 0; i < NPars; i++) {
+      modPar.theta[i] = emulator.ThetaTrain[ipars][i];
+    }
+
+
+    modPar.TranslateTheta_to_x();
       string filename ="modelruns/run" + to_string(ipars)+ "/mod_parameters.txt";
       for (size_t i = 0; i < NPars; i++) {
         fptr = fopen(filename.c_str(),"a");
@@ -102,11 +107,11 @@ int main()
         fclose(fptr);
 
     }
+      modPar.Print();
+      cout << "----------------" <<endl;
   }
-
-    cout << modPar.NModelPars <<endl;
     //cout << pInfo <<endl;
-    modPar.Print();
+
 
   return 0;
 }

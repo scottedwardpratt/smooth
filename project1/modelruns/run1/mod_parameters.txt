@@ -1,4 +1,4 @@
-   par1 (linear): x= 9.3158e-02, theta=-6.7082e-01
+   par1 (linear): x= 4.7284e-01, theta= 6.7082e-01
    par2 (linear): x= 4.8553e-01, theta=-3.8730e-01
    par3 (linear): x= 3.9053e-01, theta=-2.7386e-01
    par4 (linear): x= 3.4506e-01, theta=-2.1213e-01
