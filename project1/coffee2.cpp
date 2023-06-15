@@ -61,14 +61,22 @@ int main()
 		ThetaTest[itest].resize(NPars);
 	}
 
+
 	// Real function
 	real=new CReal_Taylor(NPars,emulator.smooth->MaxRank,emulator.randy);
 	real->LAMBDA=emulator.LAMBDA;
 	emulator.real=real;
 	real->RandomizeA(100.0);
 
+  emulator.SetThetaSimplex();
 
-	emulator.SetThetaSimplex();
+  for (size_t i = 0; i < NPars; i++) {
+    modPar.theta[i] = emulator.ThetaTrain[0][i];
+  }
+
+  modPar.TranslateTheta_to_x();
+  modPar.Print();
+
 	CLog::Info("NTrainingPts="+to_string(emulator.NTrainingPts)+"\n");
 	emulator.CalcYTrainFromThetaTrain();
 	emulator.GenerateASamples();
@@ -80,14 +88,6 @@ int main()
 
 
 
-
-  modPar.TranslateX_to_Theta();
-  modPar.TranslateTheta_to_x();
-
-
-
-
-
   for(int ipars = 0; ipars < Npars; ipars++)
   {
     file >> ipars;
@@ -95,14 +95,13 @@ int main()
     string shellcommand = "mkdir -p "+dirname;
     system(shellcommand.c_str());
 
-    for(int i =0; i < Npars; i++)
-    {
       string filename ="modelruns/run" + to_string(ipars)+ "/mod_parameters.txt";
-      fptr = fopen(filename.c_str(),"w");
-      fprintf(fptr,"%11.4d\n",30);
-      fclose(fptr);
-    }
+      for (size_t i = 0; i < NPars; i++) {
+        fptr = fopen(filename.c_str(),"a");
+        fprintf(fptr,"   %.24s (%.8s): x=%11.4e, theta=%11.4e\n", modPar.priorinfo->parname[i].c_str(),modPar.priorinfo->type[i].c_str(),modPar.x[i],modPar.theta[i]);
+        fclose(fptr);
 
+    }
   }
 
     cout << modPar.NModelPars <<endl;
