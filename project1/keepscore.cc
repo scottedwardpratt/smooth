@@ -25,6 +25,8 @@ int main(int argc,char *argv[]){
 
 	string parfilename="parameters/"+string(argv[1]);
 	parmap->ReadParsFromFile(parfilename);
+
+
 	CSmoothEmulator emulator(parmap);
 	emulator.randy->reset(-time(NULL));
 	NPars=emulator.NPars = 5;
