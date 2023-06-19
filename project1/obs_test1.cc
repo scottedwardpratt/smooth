@@ -25,7 +25,7 @@ int main()
 
     for(int i = 1; i < 10; i++)
     {
-      fscanf(fp,"   %s (%s): x=%lf, theta=%lf\n",&s1,&s,&val,&theta);
+      fscanf(fp,"%s %lf \n",&s1,&val);
       par_vals.push_back(val);
     }
 
