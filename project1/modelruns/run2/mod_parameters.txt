@@ -1,9 +1,9 @@
-   par1 (linear): x= 2.8300e-01, theta= 0.0000e+00
-   par2 (linear): x= 6.8944e-01, theta= 7.7460e-01
-   par3 (linear): x= 3.9053e-01, theta=-2.7386e-01
-   par4 (linear): x= 3.4506e-01, theta=-2.1213e-01
-   par5 (linear): x= 5.9920e-01, theta=-1.7321e-01
-   par6 (linear): x= 4.3443e-01, theta=-1.4639e-01
-   par7 (linear): x= 4.5953e-01, theta=-1.2677e-01
-   par8 (linear): x= 3.5474e-01, theta=-1.1180e-01
-   par9 (linear): x= 4.1160e-01, theta=-1.0000e-01
+par1 0.283000
+par2 0.689442
+par3 0.390533
+par4 0.345056
+par5 0.599200
+par6 0.434427
+par7 0.459535
+par8 0.354745
+par9 0.411600

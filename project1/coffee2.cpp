@@ -103,7 +103,7 @@ int main()
       string filename ="modelruns/run" + to_string(ipars)+ "/mod_parameters.txt";
       for (size_t i = 0; i < NPars; i++) {
         fptr = fopen(filename.c_str(),"a");
-        fprintf(fptr,"   %.24s (%.8s): x=%11.4e, theta=%11.4e\n", modPar.priorinfo->parname[i].c_str(),modPar.priorinfo->type[i].c_str(),modPar.x[i],modPar.theta[i]);
+        fprintf(fptr,"%s %f\n", modPar.priorinfo->parname[i].c_str(),modPar.x[i]);
         fclose(fptr);
 
     }

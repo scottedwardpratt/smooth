@@ -9,10 +9,10 @@ using namespace std;
 
 int main()
 {
-  char s,s1;
-  double val,theta;
-  vector<double> par_vals;
-  vector<double> obs;
+  char s;
+  float val,theta;
+  vector<float> par_vals;
+  vector<float> obs;
 
   for (size_t i = 0; i < 10; i++) {
 
@@ -25,9 +25,10 @@ int main()
 
     for(int i = 1; i < 10; i++)
     {
-      fscanf(fp,"%s %lf \n",&s1,&val);
+      fscanf(fp,"%s %f\n",&s,&val);
       par_vals.push_back(val);
     }
+
 
     for (size_t i = 0; i < 9; i++)
     {
