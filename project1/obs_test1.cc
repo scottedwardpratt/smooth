@@ -9,12 +9,16 @@ using namespace std;
 
 int main()
 {
+
   char s;
   float val,theta;
   vector<float> par_vals;
   vector<float> obs;
 
-  for (size_t i = 0; i < 10; i++) {
+  string removecommand = "rm -r modelruns/run*/obs.txt";
+  system(removecommand.c_str());
+
+  for (size_t i = 0; i < 9; i++) {
 
   FILE *fptr;
   string obs_dir = "modelruns/run" + to_string(i) + "/obs.txt";
@@ -22,6 +26,7 @@ int main()
   FILE *fp;
   string dirname = "modelruns/run" + to_string(i) + "/mod_parameters.txt";
   fp = fopen(dirname.c_str(),"r");
+
 
     for(int i = 1; i < 10; i++)
     {
@@ -32,6 +37,7 @@ int main()
 
     for (size_t i = 0; i < 9; i++)
     {
+
       obs.push_back(par_vals[i] + par_vals[i+1]);
     }
 
@@ -43,9 +49,10 @@ int main()
 
     int obs_length = obs.size();
 
+
     for (size_t i = 0; i < obs_length; i++) {
       fptr = fopen(obs_dir.c_str(),"a");
-      fprintf(fptr,"obs%ld %f",i, obs[i]);
+      fprintf(fptr,"obs%ld %f\n",i, obs[i]);
       fclose (fptr);
     }
     fclose (fp);
