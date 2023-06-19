@@ -1,5 +1,5 @@
 CMakeFiles/keepscore.dir/keepscore.cc.o: \
-  /Users/ekakshkataria/git/smooth/ekakshrun/keepscore.cc \
+  /Users/ekakshkataria/git/smooth/project1/keepscore.cc \
   /Users/ekakshkataria/git/commonutils/software/include/msu_commonutils/parametermap.h \
   /Users/ekakshkataria/git/commonutils/software/include/msu_commonutils/commondefs.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk/usr/include/c++/v1/cstdio \
