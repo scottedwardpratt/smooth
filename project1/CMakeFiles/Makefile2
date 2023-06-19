@@ -66,6 +66,7 @@ CMAKE_BINARY_DIR = /Users/ekakshkataria/git/smooth/project1
 all: CMakeFiles/coffee.dir/all
 all: CMakeFiles/coffee2.dir/all
 all: CMakeFiles/keepscore.dir/all
+all: CMakeFiles/obs_test1.dir/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
@@ -78,6 +79,7 @@ clean: CMakeFiles/extern_smooth.dir/clean
 clean: CMakeFiles/coffee.dir/clean
 clean: CMakeFiles/coffee2.dir/clean
 clean: CMakeFiles/keepscore.dir/clean
+clean: CMakeFiles/obs_test1.dir/clean
 .PHONY : clean
 
 #=============================================================================
@@ -212,6 +214,33 @@ keepscore: CMakeFiles/keepscore.dir/rule
 CMakeFiles/keepscore.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/keepscore.dir/build.make CMakeFiles/keepscore.dir/clean
 .PHONY : CMakeFiles/keepscore.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/obs_test1.dir
+
+# All Build rule for target.
+CMakeFiles/obs_test1.dir/all: CMakeFiles/extern_commonutils.dir/all
+CMakeFiles/obs_test1.dir/all: CMakeFiles/extern_smooth.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/obs_test1.dir/build.make CMakeFiles/obs_test1.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/obs_test1.dir/build.make CMakeFiles/obs_test1.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/ekakshkataria/git/smooth/project1/CMakeFiles --progress-num=7,8 "Built target obs_test1"
+.PHONY : CMakeFiles/obs_test1.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/obs_test1.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/ekakshkataria/git/smooth/project1/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/obs_test1.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/ekakshkataria/git/smooth/project1/CMakeFiles 0
+.PHONY : CMakeFiles/obs_test1.dir/rule
+
+# Convenience name for target.
+obs_test1: CMakeFiles/obs_test1.dir/rule
+.PHONY : obs_test1
+
+# clean rule for target.
+CMakeFiles/obs_test1.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/obs_test1.dir/build.make CMakeFiles/obs_test1.dir/clean
+.PHONY : CMakeFiles/obs_test1.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

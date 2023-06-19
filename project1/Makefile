@@ -181,6 +181,19 @@ keepscore/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/keepscore.dir/build.make CMakeFiles/keepscore.dir/build
 .PHONY : keepscore/fast
 
+#=============================================================================
+# Target rules for targets named obs_test1
+
+# Build rule for target.
+obs_test1: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 obs_test1
+.PHONY : obs_test1
+
+# fast build rule for target.
+obs_test1/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/obs_test1.dir/build.make CMakeFiles/obs_test1.dir/build
+.PHONY : obs_test1/fast
+
 coffee.o: coffee.cpp.o
 .PHONY : coffee.o
 
@@ -253,6 +266,30 @@ keepscore.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/keepscore.dir/build.make CMakeFiles/keepscore.dir/keepscore.cc.s
 .PHONY : keepscore.cc.s
 
+obs_test1.o: obs_test1.cc.o
+.PHONY : obs_test1.o
+
+# target to build an object file
+obs_test1.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/obs_test1.dir/build.make CMakeFiles/obs_test1.dir/obs_test1.cc.o
+.PHONY : obs_test1.cc.o
+
+obs_test1.i: obs_test1.cc.i
+.PHONY : obs_test1.i
+
+# target to preprocess a source file
+obs_test1.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/obs_test1.dir/build.make CMakeFiles/obs_test1.dir/obs_test1.cc.i
+.PHONY : obs_test1.cc.i
+
+obs_test1.s: obs_test1.cc.s
+.PHONY : obs_test1.s
+
+# target to generate assembly for a file
+obs_test1.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/obs_test1.dir/build.make CMakeFiles/obs_test1.dir/obs_test1.cc.s
+.PHONY : obs_test1.cc.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -266,6 +303,7 @@ help:
 	@echo "... coffee"
 	@echo "... coffee2"
 	@echo "... keepscore"
+	@echo "... obs_test1"
 	@echo "... coffee.o"
 	@echo "... coffee.i"
 	@echo "... coffee.s"
@@ -275,6 +313,9 @@ help:
 	@echo "... keepscore.o"
 	@echo "... keepscore.i"
 	@echo "... keepscore.s"
+	@echo "... obs_test1.o"
+	@echo "... obs_test1.i"
+	@echo "... obs_test1.s"
 .PHONY : help
 
 

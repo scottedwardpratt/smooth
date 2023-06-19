@@ -4,6 +4,17 @@
 #include <vector>
 #include <cstdlib>
 #include <fstream>
+#include <time.h>
+#include <sys/stat.h>
+#include "msu_smooth/parameterinfo.h"
+#include "msu_commonutils/parametermap.h"
+#include "msu_commonutils/constants.h"
+#include "msu_smooth/smooth.h"
+#include "msu_smooth/emulator.h"
+#include "msu_commonutils/gslmatrix.h"
+#include "msu_commonutils/log.h"
+#include "msu_smooth/simplex.h"
+#include "msu_smooth/scorecard.h"
 
 using namespace std;
 
@@ -11,16 +22,21 @@ int main()
 {
 
   char s;
-  float val,theta;
+
 
   string removecommand = "rm -r modelruns/run*/obs.txt";
   system(removecommand.c_str());
+  CPriorInfo* pInfo = new CPriorInfo("Info/mod_parameters_info.txt");
+  CModelParameters modPar = CModelParameters(pInfo);
 
-  for (size_t i = 0; i < 9; i++) {
-    
-  vector<float> par_vals;
-  vector<float> obs;
+  unsigned Npars;
+  Npars=modPar.NModelPars;
 
+
+  for (size_t i = 0; i < Npars; i++) {
+    float val,theta;
+    vector<float> par_vals;
+    vector<float> obs;
 
   FILE *fptr;
   string obs_dir = "modelruns/run" + to_string(i) + "/obs.txt";
