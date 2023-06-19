@@ -12,13 +12,15 @@ int main()
 
   char s;
   float val,theta;
-  vector<float> par_vals;
-  vector<float> obs;
 
   string removecommand = "rm -r modelruns/run*/obs.txt";
   system(removecommand.c_str());
 
   for (size_t i = 0; i < 9; i++) {
+    
+  vector<float> par_vals;
+  vector<float> obs;
+
 
   FILE *fptr;
   string obs_dir = "modelruns/run" + to_string(i) + "/obs.txt";
@@ -34,7 +36,7 @@ int main()
       par_vals.push_back(val);
     }
 
- 
+
     for (size_t i = 0; i < 9; i++)
     {
 
