@@ -194,6 +194,19 @@ obs_test1/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/obs_test1.dir/build.make CMakeFiles/obs_test1.dir/build
 .PHONY : obs_test1/fast
 
+#=============================================================================
+# Target rules for targets named tea
+
+# Build rule for target.
+tea: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tea
+.PHONY : tea
+
+# fast build rule for target.
+tea/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tea.dir/build.make CMakeFiles/tea.dir/build
+.PHONY : tea/fast
+
 coffee.o: coffee.cpp.o
 .PHONY : coffee.o
 
@@ -290,6 +303,30 @@ obs_test1.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/obs_test1.dir/build.make CMakeFiles/obs_test1.dir/obs_test1.cc.s
 .PHONY : obs_test1.cc.s
 
+tea.o: tea.cc.o
+.PHONY : tea.o
+
+# target to build an object file
+tea.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tea.dir/build.make CMakeFiles/tea.dir/tea.cc.o
+.PHONY : tea.cc.o
+
+tea.i: tea.cc.i
+.PHONY : tea.i
+
+# target to preprocess a source file
+tea.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tea.dir/build.make CMakeFiles/tea.dir/tea.cc.i
+.PHONY : tea.cc.i
+
+tea.s: tea.cc.s
+.PHONY : tea.s
+
+# target to generate assembly for a file
+tea.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tea.dir/build.make CMakeFiles/tea.dir/tea.cc.s
+.PHONY : tea.cc.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -304,6 +341,7 @@ help:
 	@echo "... coffee2"
 	@echo "... keepscore"
 	@echo "... obs_test1"
+	@echo "... tea"
 	@echo "... coffee.o"
 	@echo "... coffee.i"
 	@echo "... coffee.s"
@@ -316,6 +354,9 @@ help:
 	@echo "... obs_test1.o"
 	@echo "... obs_test1.i"
 	@echo "... obs_test1.s"
+	@echo "... tea.o"
+	@echo "... tea.i"
+	@echo "... tea.s"
 .PHONY : help
 
 

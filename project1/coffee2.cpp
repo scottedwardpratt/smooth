@@ -68,10 +68,6 @@ int main()
 
   emulator.SetThetaSimplex();
 
-	CLog::Info("NTrainingPts="+to_string(emulator.NTrainingPts)+"\n");
-	emulator.CalcYTrainFromThetaTrain();
-	emulator.GenerateASamples();
-
   for(int ipars = 0; ipars < Npars; ipars++)
   {
     file >> ipars;

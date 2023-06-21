@@ -1106,4 +1106,8 @@ CMakeFiles/coffee.dir/coffee.cpp.o: \
   /Users/ekakshkataria/git/commonutils/software/include/msu_commonutils/constants.h \
   /Users/ekakshkataria/git/smooth/software/include/msu_smooth/smooth.h \
   /Users/ekakshkataria/git/smooth/software/include/msu_smooth/simplex.h \
-  /Users/ekakshkataria/git/smooth/software/include/msu_smooth/real.h
+  /Users/ekakshkataria/git/smooth/software/include/msu_smooth/real.h \
+  /Users/ekakshkataria/git/smooth/software/include/msu_smooth/emulator.h \
+  /Users/ekakshkataria/git/commonutils/software/include/msu_commonutils/log.h \
+  /Users/ekakshkataria/git/commonutils/software/include/msu_commonutils/gslmatrix.h \
+  /Users/ekakshkataria/git/smooth/software/include/msu_smooth/scorecard.h

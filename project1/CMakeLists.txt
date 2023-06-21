@@ -40,3 +40,9 @@ set(SOURCE_FILES ./obs_test1.cc)
 add_executable(obs_test1 ${CMAKE_CURRENT_SOURCE_DIR}/obs_test1.cc)
 add_dependencies(obs_test1 extern_smooth extern_commonutils)
 target_link_libraries(obs_test1 ${GITHOME_MSU}/smooth/software/lib/libsmooth.a ${GITHOME_MSU}/commonutils/software/lib/libmsu_commonutils.a ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY} ${EIGEN3_LIBRARY})
+
+#################################################
+set(SOURCE_FILES ./tea.cc)
+add_executable(tea ${CMAKE_CURRENT_SOURCE_DIR}/tea.cc)
+add_dependencies(tea extern_smooth extern_commonutils)
+target_link_libraries(tea ${GITHOME_MSU}/smooth/software/lib/libsmooth.a ${GITHOME_MSU}/commonutils/software/lib/libmsu_commonutils.a ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY} ${EIGEN3_LIBRARY})

@@ -60,4 +60,5 @@ set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/coffee2.dir/DependInfo.cmake"
   "CMakeFiles/keepscore.dir/DependInfo.cmake"
   "CMakeFiles/obs_test1.dir/DependInfo.cmake"
+  "CMakeFiles/tea.dir/DependInfo.cmake"
   )

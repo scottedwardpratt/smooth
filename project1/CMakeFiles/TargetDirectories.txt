@@ -4,5 +4,6 @@
 /Users/ekakshkataria/git/smooth/project1/CMakeFiles/coffee2.dir
 /Users/ekakshkataria/git/smooth/project1/CMakeFiles/keepscore.dir
 /Users/ekakshkataria/git/smooth/project1/CMakeFiles/obs_test1.dir
+/Users/ekakshkataria/git/smooth/project1/CMakeFiles/tea.dir
 /Users/ekakshkataria/git/smooth/project1/CMakeFiles/edit_cache.dir
 /Users/ekakshkataria/git/smooth/project1/CMakeFiles/rebuild_cache.dir
