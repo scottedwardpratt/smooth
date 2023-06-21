@@ -17,8 +17,8 @@ void CReal::CalcY(vector<double> &theta,double &Y,double &SigmaY){
 	Y=SigmaY=0.0;
 }
 
-CReal_Taylor::CReal_Taylor(unsigned int NPars_Set,int maxrank,Crandy *randyset){	
-	NPars=NPars_Set;	
+CReal_Taylor::CReal_Taylor(unsigned int NPars_Set,int maxrank,Crandy *randyset){
+	NPars=NPars_Set;
 	randy=randyset;
 	smooth = new CSmooth(NPars,maxrank);
 	LAMBDA=2;
@@ -40,7 +40,7 @@ void CReal_Taylor::RandomizeA(double SigmaReal){
 }
 
 void CReal::CalcYTrain(vector<double> &YTrain,vector<double> &SigmaYTrain, int NTrainingPts, vector<vector<double>> ThetaTrain){
-//	cout << "NTrainingPts" << NTrainingPts << endl;	
+//	cout << "NTrainingPts" << NTrainingPts << endl;
 	//NtrainingPts is 4
 	unsigned int itrain;
 	for(itrain=0;itrain<NTrainingPts;itrain++){

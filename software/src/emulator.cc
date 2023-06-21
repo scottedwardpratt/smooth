@@ -419,3 +419,13 @@ void CSmoothEmulator::CalcYTrainFromThetaTrain(){
 		real->CalcY(ThetaTrain[itrain],YTrain[itrain],SigmaYTrain[itrain]);
 	}
 }
+
+void CSmoothEmulator::CalcYTrainFromThetaTrain_EEEK(){
+	unsigned int itrain;
+	if(real==NULL){
+		CLog::Fatal("Inside CSmoothEmulator::CalcYTrainFromThetaTrain, Reality does not exist\n");
+	}
+	for(itrain=0;itrain<NTrainingPts;itrain++){
+		eeek->CalcY(ThetaTrain[itrain],YTrain[itrain],SigmaYTrain[itrain]);
+	}
+}
