@@ -12,8 +12,8 @@ int main(int argc,char *argv[]){
 		exit(1);
 	}
 	CparameterMap *parmap=new CparameterMap();
-	double y,yreal,accuracy,r2,average_accuracy=0.0,average_expected_accuracy=0.0,sigmay2,ybar,y2bar;
-	unsigned int isample,itest,ntest=25,ipar,ireal,nreal=10;
+	double y,yreal,accuracy,average_accuracy=0.0,average_expected_accuracy=0.0,sigmay2,ybar,y2bar,SigmaYreal;
+	unsigned int isample,itest,ntest=25,ipar,ireal,nreal=10,r2;
 	vector<double> Theta;
 	// This plays the role of the "real" model
 	CReal_Taylor *real;
@@ -82,7 +82,7 @@ int main(int argc,char *argv[]){
 					while(r2>1.0);
 				}
 			}
-			yreal=real->CalcY(Theta,yreal,SigmaYreal);
+			real->CalcY(Theta,yreal,SigmaYreal);
 			ybar=y2bar=0.0;
 			for(isample=0;isample<emulator.NASample;isample++){
 				y=emulator.smooth->CalcY(emulator.ASample[isample],emulator.LAMBDA,Theta);

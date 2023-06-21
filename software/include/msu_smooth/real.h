@@ -45,7 +45,7 @@ public:
 
 	vector<double> A;
 	double LAMBDA;
-	CReal_EEEK(unsigned int NPars_Set,int maxrank,Crandy *randy);
+	CReal_EEEK(unsigned int NPars_Set)
 	CSmooth *smooth;
 	void CalcY(vector<double> &theta,double &Y,double &SigmaY);
 	// These are functions for generating fake real models
