@@ -54,11 +54,11 @@ void CSmoothEmulator::Init(CparameterMap *parmap){
 	FirstTune=true;
 	MCStepSize=MCStepSize/double(NPars*NPars);
 	MCSigmaAStepSize=MCSigmaAStepSize/double(NPars*NPars);
-	cout << "SigmaA: " << SigmaA << endl;
-	cout << "num pars: " << NPars << endl;
+	//cout << "SigmaA: " << SigmaA << endl;
+	//cout << "num pars: " << NPars << endl;
 
-	cout << "MCStepSize: " << MCStepSize << endl;
-	cout << "MCSigmaAStepSize: " << MCSigmaAStepSize << endl;
+	//cout << "MCStepSize: " << MCStepSize << endl;
+	//cout << "MCSigmaAStepSize: " << MCSigmaAStepSize << endl;
 
 	ASample.resize(NASample);
 	simplex=new CSimplexSampler(parmap);

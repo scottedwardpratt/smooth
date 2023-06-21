@@ -38,7 +38,7 @@ int main()
 
   CparameterMap *parmap = new CparameterMap();
 	//double YExp,SigmaYExp,SigmaYReal;
-	unsigned int itest,ntest=1000,ipar,NPars;
+	unsigned int NPars;
 	vector<vector<double>> ThetaTest;
 	vector<double> Theta;
 
@@ -59,11 +59,6 @@ int main()
   //cout << "NUMBER OF parameter IS " << NPars <<endl;
 
 	Theta.resize(NPars);
-	ThetaTest.resize(ntest);
-	for(itest=0;itest<ntest;itest++){
-		ThetaTest[itest].resize(NPars);
-	}
-
 
 	// Real function
 	real=new CReal_Taylor(NPars,emulator.smooth->MaxRank,emulator.randy);
@@ -76,14 +71,6 @@ int main()
 	CLog::Info("NTrainingPts="+to_string(emulator.NTrainingPts)+"\n");
 	emulator.CalcYTrainFromThetaTrain();
 	emulator.GenerateASamples();
-
-	for(itest=0;itest<ntest;itest++){
-		for(ipar=0;ipar<Npars;ipar++)
-			ThetaTest[itest][ipar]=1.0-2.0*emulator.randy->ran();
-	}
-
-
-
 
   for(int ipars = 0; ipars < Npars; ipars++)
   {

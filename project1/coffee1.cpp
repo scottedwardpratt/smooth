@@ -38,6 +38,18 @@ int main()
   Npars=modPar.NModelPars;
 
 
+  for(itest=0;itest<ntest;itest++){
+    for(ipar=0;ipar<Npars;ipar++){
+      ThetaTest[itest][ipar]=1.0-2.0*emulator.randy->ran();
+    }
+  }
+  ThetaTest.resize(ntest);
+  for(itest=0;itest<ntest;itest++){
+    ThetaTest[itest].resize(NPars);
+  }
+
+
+
   for(int ipars = 0; ipars < Npars+1; ipars++)
   {
     file >> ipars;
