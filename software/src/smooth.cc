@@ -231,7 +231,6 @@ double CSmooth::CalcY_EEEK(vector<double> &A, double LAMBDA, vector<double> &the
 	for(ic=0;ic<NPars;ic++){
 		term= A[ic]*sqrt(1+sin(2*theta[ic]/LAMBDA));
 		answer+=term;
-		cout << "y is:" << term << endl;
 	}
 	return answer;
 }

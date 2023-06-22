@@ -417,6 +417,7 @@ void CSmoothEmulator::CalcYTrainFromThetaTrain(){
 	}
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		real->CalcY(ThetaTrain[itrain],YTrain[itrain],SigmaYTrain[itrain]);
+	
 	}
 }
 /**

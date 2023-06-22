@@ -49,7 +49,7 @@ CReal_EEEK::CReal_EEEK(unsigned int NPars_Set,int maxrank,Crandy *randyset)
 
 void CReal_EEEK::CalcY(vector<double> &theta,double &Y,double &SigmaY)
 {
-  Y=smooth->CalcY(A,LAMBDA,theta);
+  Y=smooth->CalcY_EEEK(A,LAMBDA,theta);
   SigmaY=1.0;
 }
 
