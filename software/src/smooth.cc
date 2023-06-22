@@ -224,17 +224,6 @@ double CSmooth::CalcY(vector<double> &A,double LAMBDA,vector<double> &theta){
 	return answer;
 }
 
-double CSmooth::CalcY_EEEK(vector<double> &A, double LAMBDA, vector<double> &theta){
-	unsigned int ic;
-	double answer=0.0,term;
-	answer=0.0;
-	for(ic=0;ic<NPars;ic++){
-		term= A[ic]*sqrt(1+sin(2*theta[ic]/LAMBDA));
-		answer+=term;
-	}
-	return answer;
-}
-
 double CSmooth::CalcY_Remainder(vector<double> &A,double LAMBDA,vector<double> &theta,unsigned int NTrainingPts){
 	unsigned int ic,ir;
 	double answer=0.0,term,rfactor;

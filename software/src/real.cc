@@ -49,8 +49,14 @@ CReal_EEEK::CReal_EEEK(unsigned int NPars_Set,int maxrank,Crandy *randyset)
 
 void CReal_EEEK::CalcY(vector<double> &theta,double &Y,double &SigmaY)
 {
-  Y=smooth->CalcY_EEEK(A,LAMBDA,theta);
-  SigmaY=1.0;
+	unsigned int ic;
+	double answer=0.0,term;
+	answer=0.0;
+	for(ic=0;ic<NPars;ic++){
+		term= A[ic]*sqrt(1+sin(2*theta[ic]/LAMBDA));
+		answer+=term;
+	}
+	Y = answer;
 }
 
 void CReal_EEEK::RandomizeA(double SigmaReal){
