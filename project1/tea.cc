@@ -62,7 +62,7 @@ int main()
   CSmoothEmulator emulator(parmap);
   emulator.randy->reset(-time(NULL));
   emulator.NPars = No_of_obs;
-  emulator.LAMBDA = 10;
+  emulator.LAMBDA = 1;
   emulator.InitTrainingPtsArrays(NPars);
 
   //cout << "NUMBER OF parameter IS " << NPars <<endl;
@@ -95,6 +95,7 @@ int main()
     //  This is just for testing, to make sure that the emulator exactly reproduces training points
     emulator.CalcYTrainFromThetaTrain();
     emulator.GenerateASamples();
+
     for(int itest=0;itest < emulator.NTrainingPts;itest++){
       yreal=emulator.YTrain[itest];
       y=emulator.smooth->CalcY(emulator.ASample[1],emulator.LAMBDA,emulator.ThetaTrain[itest]);
@@ -104,7 +105,7 @@ int main()
       }
     }
 
-    
+
     accuracy=sigmay2=0.0;
 		for(itest=0;itest<ntest;itest++){
 			for(ipar=0;ipar<emulator.NPars;ipar++){
