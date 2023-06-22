@@ -28,8 +28,8 @@ int noObs(){
 
   while (std::getline(myfile, line))
   ++Nobs;
-  std::cout << "Number of lines in text file: " << Nobs;
-  return Nobs;
+  std::cout << "Number of lines in text file: " << Nobs<< endl;
+  return Nobs - 1;
 
 }
 
@@ -41,6 +41,9 @@ int main()
   int No_of_obs = noObs();
   FILE *fptr;
   unsigned int NPars;
+  double y,yreal,accuracy,average_accuracy=0.0,average_expected_accuracy=0.0,sigmay2,ybar,y2bar,SigmaYreal;
+	unsigned int isample,itest,ntest=10,ipar,ireal,nreal=1;
+	vector<double> Theta;
 
   CPriorInfo* pInfo = new CPriorInfo("Info/mod_parameters_info.txt");
   CModelParameters modPar = CModelParameters(pInfo);
@@ -50,37 +53,9 @@ int main()
   CparameterMap *parmap = new CparameterMap();
   //double YExp,SigmaYExp,SigmaYReal;
   vector<vector<double>> ThetaTest;
-  vector<double> Theta;
 
   Npars=modPar.NModelPars;
   cout << "NUMBER OF parameter IS " << Npars <<endl;
-
-
-
-
-  for (size_t i = 0; i < Npars; i++) {
-    float obs;
-    vector<float> obs_vals;
-
-    FILE *fptr;
-    string obs_dir = "modelruns/run" + to_string(i) + "/obs.txt";
-
-
-
-    for(int i = 1; i < No_of_obs; i++)
-    {
-      string s;
-
-      fscanf(fptr,"%s %f\n",&s,&obs);
-      obs_vals.push_back(obs);
-    }
-
-    fclose (fptr);
-
-
-  }
-
-
 
   // This plays the role of the "real" model
   CReal_EEEK *real;
@@ -91,6 +66,7 @@ int main()
   CSmoothEmulator emulator(parmap);
   emulator.randy->reset(-time(NULL));
   NPars = emulator.NPars = Npars;
+  emulator.InitTrainingPtsArrays(Npars);
 
   //cout << "NUMBER OF parameter IS " << NPars <<endl;
 
@@ -103,12 +79,39 @@ int main()
   real->RandomizeA(100.0);
 
 
+  for (size_t i_runs = 0; i_runs < Npars; i_runs++) {
+    float obs;
+    vector<float> obs_vals;
 
+    FILE *fptr;
+    string obs_dir = "modelruns/run" + to_string(i_runs) + "/obs.txt";
 
+    fptr = fopen(obs_dir.c_str(), "r");
 
+    for(int i = 0; i < No_of_obs; i++)
+    {
 
+      string s;
+      fscanf(fptr,"%s %f\n",&s,&obs);
+      cout << "hello" << endl;
+      emulator.ThetaTrain[i_runs][i] = obs;
+    }
+    fclose (fptr);
+  }
 
-
+  real->RandomizeA(100.0);
+  //real->A[0]=0.0;
+  emulator.CalcYTrainFromThetaTrain();
+  emulator.GenerateASamples();
+  //  This is just for testing, to make sure that the emulator exactly reproduces training points
+  for(int itest=0;itest<emulator.NTrainingPts;itest++){
+    yreal=emulator.YTrain[itest];
+    emulator.real->CalcY(emulator.ASample[1], emulator.ThetaTrain[itest], y, SigmaYreal);
+    if(fabs(yreal-y)>0.001){
+      printf("Emulator fails!\n");
+      printf("%u, %8.4f: %g =? %g\n",itest,emulator.ThetaTrain[itest][0],y,yreal);
+    }
+  }
   //cout << pInfo <<endl;
 
 
