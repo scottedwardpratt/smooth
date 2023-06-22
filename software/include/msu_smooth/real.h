@@ -39,4 +39,18 @@ public:
 	void RandomizeA(double SigmaReal);
 };
 
+
+class CReal_EEEK : public CReal{
+public:
+	Crandy *randy;
+	vector<double> A;
+	double LAMBDA;
+	CReal_EEEK(unsigned int NPars_Set,int maxrank,Crandy *randy);
+	CSmooth *smooth;
+	void CalcY(vector<double> &theta,double &Y,double &SigmaY);
+	//double CalcY_1(vector<double> &A,double LAMBDA,vector<double> &theta);
+	// These are functions for generating fake real models
+	void RandomizeA(double SigmaReal);
+};
+
 #endif

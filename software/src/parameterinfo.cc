@@ -13,7 +13,7 @@ CPriorInfo::CPriorInfo(string parinfo_filename_set){
 	parinfo_filename=parinfo_filename_set;
 	double minval,maxval;
 	char dummy1[120],dummy2[40];
-	
+
 	FILE *fptr;
 	fptr=fopen(parinfo_filename.c_str(), "r");
 	NModelPars=0;
@@ -44,7 +44,7 @@ void CModelParameters::TranslateX_to_Theta(){
 	//for min, max range
 	double sigmax,xbar;
 	int ipar;
-	
+
 	for(ipar=0;ipar<NModelPars;ipar++){
 		if(priorinfo->type[ipar]=="linear"){
 			theta[ipar]=-1+2*((x[ipar]-priorinfo->xmin[ipar])/(priorinfo->xmax[ipar]-priorinfo->xmin[ipar]));
@@ -64,7 +64,7 @@ void CModelParameters::TranslateX_to_Theta(){
 void CModelParameters::TranslateTheta_to_x(){
 	double sigmax,xbar;
 	int ipar;
-	
+
 	for(ipar=0;ipar<NModelPars;ipar++){
 		if(priorinfo->type[ipar]=="linear"){
 			x[ipar]=priorinfo->xmin[ipar]+0.5*(1.0+theta[ipar])*(priorinfo->xmax[ipar]-priorinfo->xmin[ipar]);
@@ -78,7 +78,7 @@ void CModelParameters::TranslateTheta_to_x(){
 			CLog::Fatal("Cannot translate Theta to X because type = "+priorinfo->type[ipar]+" is not recognized\n");
 		}
 	}
-	
+
 }
 
 void CModelParameters::Print(){

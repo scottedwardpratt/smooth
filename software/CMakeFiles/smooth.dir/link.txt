@@ -1,0 +1,2 @@
+/usr/bin/ar qc lib/libsmooth.a CMakeFiles/smooth.dir/src/emulator.cc.o CMakeFiles/smooth.dir/src/latincube.cc.o CMakeFiles/smooth.dir/src/parameterinfo.cc.o CMakeFiles/smooth.dir/src/real.cc.o CMakeFiles/smooth.dir/src/scorecard.cc.o CMakeFiles/smooth.dir/src/simplex.cc.o CMakeFiles/smooth.dir/src/smooth.cc.o
+/usr/bin/ranlib lib/libsmooth.a

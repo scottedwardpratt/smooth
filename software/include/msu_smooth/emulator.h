@@ -37,13 +37,14 @@ public:
 	vector<double> YTrain,SigmaYTrain;
 	vector<vector<double>> ThetaTrain;
 	CSimplexSampler *simplex;
-	
+
 	CSmoothEmulator(CparameterMap *parmap);
 	CSmoothEmulator(CSmooth *smooth);
 	void CalcYTrainFromThetaTrain();
+	void CalcYTrainFromThetaTrain_EEEK();
 	void CalcAFromTraining(vector<double> &AA);
 	void PrintA(vector<double> &Aprint);
-	
+
 	void InitTrainingPtsArrays(unsigned int NTrainingPts_set);
 	void SetThetaSimplex();
 	void TuneA();
@@ -59,11 +60,11 @@ public:
 
 	double SigmaAbar;
 	int NSigmaA;
-	
+
 	vector<double> RealA;
 
 	void GenerateASamples();
-	
+
 	void Init(CparameterMap *parmap);
 
 };

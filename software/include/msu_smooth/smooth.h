@@ -24,18 +24,18 @@ public:
 	vector<unsigned int> rank;
 	bool UseRFactor;
 
-	
+
 	CSmooth();
 	CSmooth(unsigned int NPars_Set,int maxrank);
 	CSmooth(CparameterMap *parmap);
 	void InitArrays();
-	
+
 	double CalcY(vector<double> &A,double LAMBDA,vector<double> &theta);
 	void Copy(CSmooth *smooth);
 	double CalcY_Remainder(vector<double> &A,double LAMBDA,vector<double> &theta,unsigned int NTrainingPts);
 	double GetRFactor(double LAMBDA,vector<double> &theta);
 	double GetM(int ic,double LAMBDA,vector<double> &theta);
-	
+
 };
 
 #endif
