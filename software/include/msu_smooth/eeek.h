@@ -1,4 +1,4 @@
-#include "msu_smooth/real.h"
+#include "msu_smooth/eeek.h"
 #include "msu_smooth/smooth.h"
 #include "msu_commonutils/randy.h"
 #include "msu_smooth/emulator.h"
@@ -38,30 +38,6 @@ void CReal_Taylor::RandomizeA(double SigmaReal){
 		A[ic]=SigmaReal*randy->ran_gauss();
 	}
 }
-
-CReal_EEEK::CReal_EEEK(unsigned int NPars_Set,int maxrank,Crandy *randyset)
-{
-  NPars=NPars_Set;
-  randy=randyset;
-	smooth = new CSmooth(NPars,maxrank);
-  LAMBDA=10;
-}
-
-void CReal_EEEK::CalcY(vector<double> &theta,double &Y,double &SigmaY)
-{
-  Y=smooth->CalcY(A,LAMBDA,theta);
-  SigmaY=1.0;
-}
-
-void CReal_EEEK::RandomizeA(double SigmaReal){
-  if(A.size()!=smooth->NCoefficients){
-    A.resize(smooth->NCoefficients);
-  }
-  for(unsigned int ic=0;ic<A.size();ic++){
-    A[ic]=SigmaReal*randy->ran_gauss();
-  }
-}
-
 
 void CReal::CalcYTrain(vector<double> &YTrain,vector<double> &SigmaYTrain, int NTrainingPts, vector<vector<double>> ThetaTrain){
 //	cout << "NTrainingPts" << NTrainingPts << endl;

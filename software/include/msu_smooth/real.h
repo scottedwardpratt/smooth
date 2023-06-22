@@ -24,7 +24,6 @@ public:
 	unsigned int NPars;
 	CReal();
 	virtual void CalcY(vector<double> &theta,double &Y,double &SigmaY);
-		virtual void CalcY(vector<double> &A, vector<double> &theta,double &Y,double &SigmaY);
 	void CalcYTrain(vector<double> &YTrain,vector<double> &SigmaYTrain,int NTrainingPts, vector<vector<double>> ThetaTrain);
 };
 
@@ -48,7 +47,7 @@ public:
 	double LAMBDA;
 	CReal_EEEK(unsigned int NPars_Set,int maxrank,Crandy *randy);
 	CSmooth *smooth;
-	void CalcY(vector<double> &A ,vector<double> &theta,double &Y,double &SigmaY);
+	void CalcY(vector<double> &theta,double &Y,double &SigmaY);
 	//double CalcY_1(vector<double> &A,double LAMBDA,vector<double> &theta);
 	// These are functions for generating fake real models
 	void RandomizeA(double SigmaReal);

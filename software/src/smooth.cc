@@ -27,7 +27,7 @@ CSmooth::CSmooth(CparameterMap *parmap){
 	InitArrays();
 }
 
-void CSmooth::InitArrays(){	
+void CSmooth::InitArrays(){
 	unsigned int ic,j,isame,ir;
 	vector<unsigned int> countsame;
 	vector<unsigned int> dummy;
@@ -36,19 +36,19 @@ void CSmooth::InitArrays(){
 	factorial[0]=factorial[1]=1;
 	for(j=2;j<=MaxRank;j++)
 		factorial[j]=j*factorial[j-1];
-	
+
 	printf("init: MaxRank=%d\n",MaxRank);
 
 	i.resize(MaxRank+1);
 	countsame.resize(MaxRank);
-	
+
 	ic=0;
 	rank.resize(ic+1);
 	rank[ic]=0;
 	dupfactor.push_back(1.0);
 	IPar.resize(ic+1);
 	IPar[0].resize(rank[ic]);
-	
+
 	ic+=1;
 //	cout << NPars << endl;
 	for(i[0]=0;i[0]<NPars;i[0]++){
@@ -70,13 +70,13 @@ void CSmooth::InitArrays(){
 			countsame[isame]+=1;
 		}
 		dupfactor[ic]=factorial[rank[ic]];
-		
+
 		for(j=0;j<rank[ic];j++)
 			dupfactor[ic]/=factorial[countsame[j]];
 		ic+=1;
 	}
-	
-	
+
+
 	for(i[0]=0;i[0]<NPars;i[0]++){
 		for(i[1]=0;i[1]<=i[0];i[1]++){
 			dupfactor.push_back(0);
@@ -102,7 +102,7 @@ void CSmooth::InitArrays(){
 			ic+=1;
 		}
 	}
-	
+
 	if(MaxRank>=3){
 		for(i[0]=0;i[0]<NPars;i[0]++){
 			for(i[1]=0;i[1]<=i[0];i[1]++){
@@ -132,7 +132,7 @@ void CSmooth::InitArrays(){
 			}
 		}
 	}
-	
+
 	if(MaxRank>=4){
 		for(i[0]=0;i[0]<NPars;i[0]++){
 			for(i[1]=0;i[1]<=i[0];i[1]++){
@@ -164,7 +164,7 @@ void CSmooth::InitArrays(){
 			}
 		}
 	}
-	
+
 	if(MaxRank>=5){
 		for(i[0]=0;i[0]<NPars;i[0]++){
 			for(i[1]=0;i[1]<=i[0];i[1]++){
@@ -220,7 +220,19 @@ double CSmooth::CalcY(vector<double> &A,double LAMBDA,vector<double> &theta){
 	}
 	answer*=rfactor;
 
-	
+
+	return answer;
+}
+
+double CSmooth::CalcY_EEEK(vector<double> &A, double LAMBDA, vector<double> &theta){
+	unsigned int ic;
+	double answer=0.0,term;
+	answer=0.0;
+	for(ic=0;ic<NPars;ic++){
+		term= A[ic]*sqrt(1+sin(2*theta[ic]/LAMBDA));
+		answer+=term;
+		cout << "y is:" << term << endl;
+	}
 	return answer;
 }
 
@@ -279,5 +291,3 @@ void CSmooth::Copy(CSmooth *smooth){
 	rank=smooth->rank;
 	factorial=smooth->factorial;
 }
-
-
