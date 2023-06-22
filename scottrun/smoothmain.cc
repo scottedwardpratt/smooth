@@ -27,7 +27,7 @@ int main(int argc,char *argv[]){
 	real=new CReal_Taylor(emulator.NPars,emulator.smooth->MaxRank,emulator.randy);
 	real->LAMBDA=emulator.LAMBDA;
 	emulator.real=real;
-	
+
 	emulator.SetThetaSimplex();
 	printf("Set %d Training Points\n",emulator.NTrainingPts);
 
@@ -71,7 +71,7 @@ int main(int argc,char *argv[]){
 			y2bar=y2bar/double(emulator.NASample);
 			ybar=ybar/double(emulator.NASample);
 			printf("ybar=%8.4f =? %8.4f\n",ybar,yreal);
-			
+
 			accuracy+=(ybar-yreal)*(ybar-yreal);
 			sigmay2+=y2bar-ybar*ybar;
 		}
@@ -82,12 +82,12 @@ int main(int argc,char *argv[]){
 		printf("accuracy=%7.3f, expected accuracy=%7.3f\n",accuracy,sigmay2);
 		average_accuracy+=accuracy;
 		average_expected_accuracy+=sigmay2;
-		
+
 	}
 	average_accuracy=average_accuracy/double(nreal);
 	average_expected_accuracy=average_expected_accuracy/double(nreal);
-	
+
 	printf("average <accuracy>=%g, average <expected accuracy>=%g\n",average_accuracy,average_expected_accuracy);
-	
+
 	return 0;
 }
