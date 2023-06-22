@@ -38,9 +38,10 @@ int main()
   ifstream file;
   int Npars;
   int No_of_obs = noObs();
-  unsigned int NPars;
-  double y,yreal,accuracy;
-  unsigned int nreal=1;
+  int NPars;
+  double y,yreal,accuracy,average_accuracy=0.0,average_expected_accuracy=0.0,sigmay2,ybar,y2bar,SigmaYreal;
+	unsigned int isample,itest,ntest=25,ipar,ireal,nreal=10;
+	vector<double> Theta;
 
   CPriorInfo* pInfo = new CPriorInfo("Info/mod_parameters_info.txt");
   CModelParameters modPar = CModelParameters(pInfo);
@@ -77,15 +78,12 @@ int main()
 
   for (size_t i_runs = 0; i_runs < Npars; i_runs++) {
     obs_dir = "modelruns/run" + to_string(i_runs) + "/obs.txt";
-
     fptr = fopen(obs_dir.c_str(), "r");
-
     for(int i = 0; i < No_of_obs; i++)
     {
       fscanf(fptr,"%s %f\n",&s,&obs);
       emulator.ThetaTrain[i_runs][i] = obs;
     }
-
     fclose (fptr);
   }
 
@@ -105,8 +103,45 @@ int main()
         printf("%u, %8.4f: %g =? %g\n",itest,emulator.ThetaTrain[itest][0],y,yreal);
       }
     }
+
+    
+    accuracy=sigmay2=0.0;
+		for(itest=0;itest<ntest;itest++){
+			for(ipar=0;ipar<emulator.NPars;ipar++){
+				if(emulator.NPars==1){
+					Theta[ipar]=-1.0+(2.0/double(ntest))*(0.5+itest);
+				}
+				else{
+					Theta[ipar]=1.0-2.0*emulator.randy->ran();
+				}
+			}
+			real->CalcY(Theta,yreal,SigmaYreal);
+			ybar=y2bar=0.0;
+			for(isample=0;isample<emulator.NASample;isample++){
+				y=emulator.smooth->CalcY(emulator.ASample[isample],emulator.LAMBDA,Theta);
+				y2bar+=y*y;
+				ybar+=y;
+			}
+			y2bar=y2bar/double(emulator.NASample);
+			ybar=ybar/double(emulator.NASample);
+			printf("ybar=%8.4f =? %8.4f\n",ybar,yreal);
+
+			accuracy+=(ybar-yreal)*(ybar-yreal);
+			sigmay2+=y2bar-ybar*ybar;
+		}
+		accuracy=accuracy/ntest;
+		sigmay2=sigmay2/double(ntest-1);
+		accuracy=sqrt(accuracy);
+		sigmay2=sqrt(sigmay2);
+		printf("accuracy=%7.3f, expected accuracy=%7.3f\n",accuracy,sigmay2);
+		average_accuracy+=accuracy;
+		average_expected_accuracy+=sigmay2;
+
+	}
+	average_accuracy=average_accuracy/double(nreal);
+	average_expected_accuracy=average_expected_accuracy/double(nreal);
+
+	printf("average <accuracy>=%g, average <expected accuracy>=%g\n",average_accuracy,average_expected_accuracy);
+
+	return 0;
   }
-
-  return 0;
-
-}
