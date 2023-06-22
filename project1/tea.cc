@@ -94,7 +94,7 @@ int main()
   for(int ireal=0;ireal<nreal;ireal++){
     printf("------ ireal=%d -----\n",ireal);
     accuracy=0.0;
-    real->RandomizeA(100.0);
+    real->RandomizeA(1.414);
     //real->A[0]=0.0;
     //  This is just for testing, to make sure that the emulator exactly reproduces training points
     emulator.CalcYTrainFromThetaTrain();
