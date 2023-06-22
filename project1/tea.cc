@@ -40,13 +40,16 @@ int main()
   int No_of_obs = noObs();
   int NPars;
   double y,yreal,accuracy,average_accuracy=0.0,average_expected_accuracy=0.0,sigmay2,ybar,y2bar,SigmaYreal;
-	unsigned int isample,itest,ntest=25,ipar,ireal,nreal=10;
+	unsigned int isample,itest,ntest=25,ipar,ireal,nreal=1;
 	vector<double> Theta;
 
   CPriorInfo* pInfo = new CPriorInfo("Info/mod_parameters_info.txt");
   CModelParameters modPar = CModelParameters(pInfo);
 
   CparameterMap *parmap = new CparameterMap();
+
+  string parfilename = "parameters.txt";
+  parmap->ReadParsFromFile(parfilename);
   //double YExp,SigmaYExp,SigmaYReal;
   vector<vector<double>> ThetaTest;
 
@@ -64,6 +67,7 @@ int main()
   emulator.NPars = No_of_obs;
   emulator.LAMBDA = 1;
   emulator.InitTrainingPtsArrays(NPars);
+  Theta.resize(emulator.NPars);
 
   //cout << "NUMBER OF parameter IS " << NPars <<endl;
 
@@ -104,7 +108,6 @@ int main()
         printf("%u, %8.4f: %g =? %g\n",itest,emulator.ThetaTrain[itest][0],y,yreal);
       }
     }
-
 
     accuracy=sigmay2=0.0;
 		for(itest=0;itest<ntest;itest++){
