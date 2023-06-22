@@ -39,6 +39,39 @@ void CReal_Taylor::RandomizeA(double SigmaReal){
 	}
 }
 
+CReal_EEEK::CReal_EEEK(unsigned int NPars_Set,int maxrank,Crandy *randyset)
+{
+  NPars=NPars_Set;
+  randy=randyset;
+	smooth = new CSmooth(NPars,maxrank);
+  LAMBDA=10;
+}
+
+void CReal_EEEK::CalcY(vector<double> &A, vector<double> &theta,double &Y,double &SigmaY)
+{
+	unsigned int ic;
+	double answer=0.0,term;
+	answer=0.0;
+	for(ic=0;ic<NPars;ic++){
+		term= A[ic]*sqrt(1+sin(2*theta[ic]/LAMBDA));
+			answer+=term;
+			cout << "y is:" << term << endl;
+	}
+
+	Y = answer;
+  SigmaY=1.0;
+}
+
+void CReal_EEEK::RandomizeA(double SigmaReal){
+  if(A.size()!=smooth->NCoefficients){
+    A.resize(smooth->NCoefficients);
+  }
+  for(unsigned int ic=0;ic<A.size();ic++){
+    A[ic]=SigmaReal*randy->ran_gauss();
+  }
+}
+
+
 void CReal::CalcYTrain(vector<double> &YTrain,vector<double> &SigmaYTrain, int NTrainingPts, vector<vector<double>> ThetaTrain){
 //	cout << "NTrainingPts" << NTrainingPts << endl;
 	//NtrainingPts is 4
