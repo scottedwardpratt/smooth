@@ -256,7 +256,6 @@ double CSmooth::GetRFactor(double LAMBDA,vector<double> &theta){
 		answer=1.0;
 	}
 	return answer;
-
 }
 
 double CSmooth::GetM(int ic,double LAMBDA,vector<double> &theta){

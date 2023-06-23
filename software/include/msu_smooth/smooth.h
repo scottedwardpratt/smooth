@@ -24,7 +24,6 @@ public:
 	vector<unsigned int> rank;
 	bool UseRFactor;
 
-
 	CSmooth();
 	CSmooth(unsigned int NPars_Set,int maxrank);
 	CSmooth(CparameterMap *parmap);

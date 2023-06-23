@@ -2,23 +2,24 @@
 #include "msu_smooth/smooth.h"
 using namespace std;
 
-CSmoothEmulator::CSmoothEmulator(CparameterMap *parmap){
-	NPars=parmap->getD("SmoothEmulator_NPars",0);
-	parmap->set("Smooth_NPars",NPars);
-	LAMBDA=parmap->getD("SmoothEmulator_LAMBDA",1.0);
+CSmoothEmulator::CSmoothEmulator(string observable_name_set){
+	observable_name=observable_name_set;
+	
+	LAMBDA=parmap->getD("SmoothEmulator_LAMBDA",3.0);
 	NMC=parmap->getI("SmoothEmulator_NMC",10000);
 	NASample=parmap->getI("SmoothEmulator_NASample",10);
 	MCStepSize=parmap->getD("SmoothEmulator_MCStepSize",0.5);
 	MCSigmaAStepSize=parmap->getD("SmoothEmulator_MCSigmaAStepSize",0.1);
-	SigmaA0=parmap->getD("SmoothEmulator_SigmaA",100.0);
 	TuneAChooseMCMC=parmap->getB("SmoothEmulator_TuneAChooseMCMC",true);
 	UseSigmaYReal=parmap->getB("SmoothEmulator_UseSigmaYRreal",false);
 	ConstrainA0=parmap->getB("SmoothEmulator_ConstrainA0",false);
 	CutOffA=parmap->getB("SmoothEmulator_CutoffA",false);
 	SigmaAMin=parmap->getD("SmoothEmulator_SigmaAMin",0.1*SigmaA0);
+	
+	int i=smoothmaster->observableinfo->GetIPosition(observable_name);
+	SigmaA0=smoothmaster->observableinfo->SigmaA0[i];
 
-	smooth=new CSmooth(parmap);
-	Init(parmap);
+	Init();
 	/*
 	randy=new Crandy(-time(NULL));
 	SigmaA=SigmaA0;
@@ -46,8 +47,7 @@ CSmoothEmulator::CSmoothEmulator(CparameterMap *parmap){
 	*/
 }
 
-void CSmoothEmulator::Init(CparameterMap *parmap){
-	randy=new Crandy(-time(NULL));
+void CSmoothEmulator::Init(){
 	SigmaA=SigmaA0;
 	NSigmaA=0;
 	SigmaAbar=0.0;
@@ -61,7 +61,7 @@ void CSmoothEmulator::Init(CparameterMap *parmap){
 	//cout << "MCSigmaAStepSize: " << MCSigmaAStepSize << endl;
 
 	ASample.resize(NASample);
-	simplex=new CSimplexSampler(parmap);
+	//simplex=new CSimplexSampler(parmap);
 	//cout << "ASample: " << ASample << endl;
 
 	for(unsigned int isample=0;isample<NASample;isample++){

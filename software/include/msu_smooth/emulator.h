@@ -2,6 +2,7 @@
 #define __EMULATOR_H__
 #include <cstdlib>
 #include <cmath>
+
 #include <cstdio>
 #include <vector>
 #include <array>
@@ -12,20 +13,42 @@
 #include "msu_commonutils/constants.h"
 #include <list>
 #include "msu_smooth/smooth.h"
-#include "msu_smooth/simplex.h"
+//#include "msu_smooth/simplex.h"
 //#include "gslmatrix.h"
 #include <iostream>
 #include <Eigen/Dense>
 #include "msu_smooth/real.h"
 #include "msu_commonutils/log.h"
+#include "msu_smooth/observableinfo.h"
+
+class CSmoothEmulator;
+
+class CTrainingInfo{
+public:
+	int NTrainingPts,NObservables;
+	vector<CModelParameters *> trainingpars;
+	vector<double> YTrain,SigmaYTrain;
+};
+
+
+class CSmoothMaster{
+public:
+	CSmoothMaster(CparameterMap *parmap_set);
+	CparameterMap *parmap;
+	unsigned int NPars;
+	vector<CSmoothEmulator *> emulator;
+	CTrainingInfo *traininginfo;
+	CObservableInfo *observableinfo;
+	Crandy *randy;
+	Csmooth *smooth;
+};
 
 class CSmoothEmulator{
 public:
-	unsigned int NPars,NTrainingPts;
-	Crandy *randy;
-	CSmooth *smooth;
+	string observable_name;
 	CReal *real;
 	Eigen::MatrixXd M;
+	
 
 	double SigmaA0,SigmaAMin,SigmaA,SigmaATrial,MCStepSize,MCSigmaAStepSize,LAMBDA;
 	unsigned int NMC;   // NMC is for generating independent samplings of A in TuneA
@@ -36,17 +59,17 @@ public:
 	vector<double> A,ATrial;
 	vector<double> YTrain,SigmaYTrain;
 	vector<vector<double>> ThetaTrain;
-	CSimplexSampler *simplex;
+	//CSimplexSampler *simplex;
 
 	CSmoothEmulator(CparameterMap *parmap);
-	CSmoothEmulator(CSmooth *smooth);
+	//CSmoothEmulator(CSmooth *smooth);
 	void CalcYTrainFromThetaTrain();
 	void CalcYTrainFromThetaTrain_EEEK();
 	void CalcAFromTraining(vector<double> &AA);
 	void PrintA(vector<double> &Aprint);
 
 	void InitTrainingPtsArrays(unsigned int NTrainingPts_set);
-	void SetThetaSimplex();
+	//void SetThetaSimplex();
 	void TuneA();
 	void TuneAMCMC();
 	void TuneAMCMC_withSigma();
@@ -61,11 +84,14 @@ public:
 	double SigmaAbar;
 	int NSigmaA;
 
-	vector<double> RealA;
-
 	void GenerateASamples();
 
-	void Init(CparameterMap *parmap);
+	void Init();
+	
+	static CSmoothMaster *smoothmaster;
+	static int NPars;
+	static CSmooth *smooth;
+	static CparameterMap *parmap;
 
 };
 
