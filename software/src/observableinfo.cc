@@ -6,6 +6,7 @@
 #include <array>
 #include <fstream>
 #include "msu_commonutils/log.h"
+#include "msu_smooth/observableinfo.h"
 
 using namespace std;
 
@@ -15,14 +16,14 @@ CObservableInfo::CObservableInfo(string obs_inf_filename_set){
 }
 
 
-int CObservableInfo::GetIposition(string obsname){
+int CObservableInfo::GetIPosition(string obsname){
 	map<string,int>::iterator iter;
 	pair<string,int> mpair;
-	iter=namemap.find(obsname);
-	if(iter==namemap.end()){
+	iter=name_map.find(obsname);
+	if(iter==name_map.end()){
 		CLog::Fatal("In CObservableInfo::GetIposition, cannot find observable"+obsname+"\n");
 	}
-	return iter.second;
+	return iter->second;
 } 
 
 string CObservableInfo::GetName(int i){

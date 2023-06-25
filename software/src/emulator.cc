@@ -2,6 +2,12 @@
 #include "msu_smooth/smooth.h"
 using namespace std;
 
+int CSmoothEmulator::NPars=0;
+CSmooth *CSmoothEmulator::smooth=NULL;
+CSmoothMaster *CSmoothEmulator::smoothmaster=NULL;
+CparameterMap *CSmoothEmulator::parmap=NULL;
+Crandy *CSmoothEmulator::randy=NULL;
+
 CSmoothEmulator::CSmoothEmulator(string observable_name_set){
 	observable_name=observable_name_set;
 	
@@ -410,6 +416,7 @@ void CSmoothEmulator::PrintA(vector<double> &Aprint){
 	}
 }
 
+/*
 void CSmoothEmulator::CalcYTrainFromThetaTrain(){
 	unsigned int itrain;
 	if(real==NULL){
@@ -420,6 +427,32 @@ void CSmoothEmulator::CalcYTrainFromThetaTrain(){
 	
 	}
 }
+*/
+
+void CTrainingInfo::ReadYTrain(string rundirname){
+	bool success;
+	int irun;
+	char filename[300],obs_charname[300];
+	double y,sigmay;
+	FILE *fptr;
+	for(irun=0;irun<NTrainingPts;irun++){
+		success=false;
+		snprintf(filename,300,"%s/run%d/obs.txt",rundirname.c_str(),irun);
+		fptr=fopen(filename,"r");
+		do{
+			fscanf(fptr,"%s %lf %lf",obs_charname,&y,&sigmay);
+			if(to_string(obs_charname)==observable_name){
+				YTrain[irun]=y;
+				SigmaYTrain=sigmay;
+				success=true;
+			}
+		}while(!feof(fptr) && success==false);
+		if(success==false){
+			CLog::Fatal("For irun="+to_string(irun)+" cannot find YTrain for observable"+observable_name.c_str());
+		}
+	}
+}
+
 /**
 void CSmoothEmulator::CalcYTrainFromThetaTrain_EEEK(){
 	unsigned int itrain;

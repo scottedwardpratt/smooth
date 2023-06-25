@@ -20,16 +20,20 @@
 #include "msu_smooth/real.h"
 #include "msu_commonutils/log.h"
 #include "msu_smooth/observableinfo.h"
+#include "msu_smooth/parameterinfo.h"
 
-class CSmoothEmulator;
+class CSmoothEmulator,CSmoothMaster;
 
 class CTrainingInfo{
 public:
+	CTrainingInfo(CObservableInfo *observableinfo,CPriorInfo *priorinfo);
 	int NTrainingPts,NObservables;
 	vector<CModelParameters *> trainingpars;
-	vector<double> YTrain,SigmaYTrain;
+	vector<vector<double>> YTrain,SigmaYTrain;
+	vector<vector<CModelParameters *>> modelpars;
+	void ReadYTrain(string rundirname);
+	static CSmoothMaster *smoothmaster;
 };
-
 
 class CSmoothMaster{
 public:
@@ -39,8 +43,9 @@ public:
 	vector<CSmoothEmulator *> emulator;
 	CTrainingInfo *traininginfo;
 	CObservableInfo *observableinfo;
+	CPriorInfo *priorinfo;
 	Crandy *randy;
-	Csmooth *smooth;
+	CSmooth *smooth;
 };
 
 class CSmoothEmulator{
@@ -48,7 +53,6 @@ public:
 	string observable_name;
 	CReal *real;
 	Eigen::MatrixXd M;
-	
 
 	double SigmaA0,SigmaAMin,SigmaA,SigmaATrial,MCStepSize,MCSigmaAStepSize,LAMBDA;
 	unsigned int NMC;   // NMC is for generating independent samplings of A in TuneA
@@ -57,14 +61,17 @@ public:
 	vector<vector<double>> ASample;
 	vector<double> SigmaASample;
 	vector<double> A,ATrial;
-	vector<double> YTrain,SigmaYTrain;
-	vector<vector<double>> ThetaTrain;
+	
 	//CSimplexSampler *simplex;
 
 	CSmoothEmulator(CparameterMap *parmap);
 	//CSmoothEmulator(CSmooth *smooth);
-	void CalcYTrainFromThetaTrain();
-	void CalcYTrainFromThetaTrain_EEEK();
+	
+	void ReadYTrain(string filename);
+	
+	//void CalcYTrainFromThetaTrain();
+	//void CalcYTrainFromThetaTrain_EEEK();
+	
 	void CalcAFromTraining(vector<double> &AA);
 	void PrintA(vector<double> &Aprint);
 
@@ -92,6 +99,7 @@ public:
 	static int NPars;
 	static CSmooth *smooth;
 	static CparameterMap *parmap;
+	static Crandy *randy;
 
 };
 
