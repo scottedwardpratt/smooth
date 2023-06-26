@@ -177,6 +177,30 @@ src/latincube.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/smooth.dir/build.make CMakeFiles/smooth.dir/src/latincube.cc.s
 .PHONY : src/latincube.cc.s
 
+src/modelparinfo.o: src/modelparinfo.cc.o
+.PHONY : src/modelparinfo.o
+
+# target to build an object file
+src/modelparinfo.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/smooth.dir/build.make CMakeFiles/smooth.dir/src/modelparinfo.cc.o
+.PHONY : src/modelparinfo.cc.o
+
+src/modelparinfo.i: src/modelparinfo.cc.i
+.PHONY : src/modelparinfo.i
+
+# target to preprocess a source file
+src/modelparinfo.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/smooth.dir/build.make CMakeFiles/smooth.dir/src/modelparinfo.cc.i
+.PHONY : src/modelparinfo.cc.i
+
+src/modelparinfo.s: src/modelparinfo.cc.s
+.PHONY : src/modelparinfo.s
+
+# target to generate assembly for a file
+src/modelparinfo.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/smooth.dir/build.make CMakeFiles/smooth.dir/src/modelparinfo.cc.s
+.PHONY : src/modelparinfo.cc.s
+
 src/observableinfo.o: src/observableinfo.cc.o
 .PHONY : src/observableinfo.o
 
@@ -200,30 +224,6 @@ src/observableinfo.s: src/observableinfo.cc.s
 src/observableinfo.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/smooth.dir/build.make CMakeFiles/smooth.dir/src/observableinfo.cc.s
 .PHONY : src/observableinfo.cc.s
-
-src/parameterinfo.o: src/parameterinfo.cc.o
-.PHONY : src/parameterinfo.o
-
-# target to build an object file
-src/parameterinfo.cc.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/smooth.dir/build.make CMakeFiles/smooth.dir/src/parameterinfo.cc.o
-.PHONY : src/parameterinfo.cc.o
-
-src/parameterinfo.i: src/parameterinfo.cc.i
-.PHONY : src/parameterinfo.i
-
-# target to preprocess a source file
-src/parameterinfo.cc.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/smooth.dir/build.make CMakeFiles/smooth.dir/src/parameterinfo.cc.i
-.PHONY : src/parameterinfo.cc.i
-
-src/parameterinfo.s: src/parameterinfo.cc.s
-.PHONY : src/parameterinfo.s
-
-# target to generate assembly for a file
-src/parameterinfo.cc.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/smooth.dir/build.make CMakeFiles/smooth.dir/src/parameterinfo.cc.s
-.PHONY : src/parameterinfo.cc.s
 
 src/real.o: src/real.cc.o
 .PHONY : src/real.o
@@ -345,6 +345,30 @@ src/smoothmaster.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/smooth.dir/build.make CMakeFiles/smooth.dir/src/smoothmaster.cc.s
 .PHONY : src/smoothmaster.cc.s
 
+src/traininginfo.o: src/traininginfo.cc.o
+.PHONY : src/traininginfo.o
+
+# target to build an object file
+src/traininginfo.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/smooth.dir/build.make CMakeFiles/smooth.dir/src/traininginfo.cc.o
+.PHONY : src/traininginfo.cc.o
+
+src/traininginfo.i: src/traininginfo.cc.i
+.PHONY : src/traininginfo.i
+
+# target to preprocess a source file
+src/traininginfo.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/smooth.dir/build.make CMakeFiles/smooth.dir/src/traininginfo.cc.i
+.PHONY : src/traininginfo.cc.i
+
+src/traininginfo.s: src/traininginfo.cc.s
+.PHONY : src/traininginfo.s
+
+# target to generate assembly for a file
+src/traininginfo.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/smooth.dir/build.make CMakeFiles/smooth.dir/src/traininginfo.cc.s
+.PHONY : src/traininginfo.cc.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -360,12 +384,12 @@ help:
 	@echo "... src/latincube.o"
 	@echo "... src/latincube.i"
 	@echo "... src/latincube.s"
+	@echo "... src/modelparinfo.o"
+	@echo "... src/modelparinfo.i"
+	@echo "... src/modelparinfo.s"
 	@echo "... src/observableinfo.o"
 	@echo "... src/observableinfo.i"
 	@echo "... src/observableinfo.s"
-	@echo "... src/parameterinfo.o"
-	@echo "... src/parameterinfo.i"
-	@echo "... src/parameterinfo.s"
 	@echo "... src/real.o"
 	@echo "... src/real.i"
 	@echo "... src/real.s"
@@ -381,6 +405,9 @@ help:
 	@echo "... src/smoothmaster.o"
 	@echo "... src/smoothmaster.i"
 	@echo "... src/smoothmaster.s"
+	@echo "... src/traininginfo.o"
+	@echo "... src/traininginfo.i"
+	@echo "... src/traininginfo.s"
 .PHONY : help
 
 

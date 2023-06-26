@@ -13,7 +13,8 @@ CSmoothMaster::CSmoothMaster(CparameterMap *parmap_set){
 	filename=parmap->getS("PRIOR_INFO_FILENAME","prior_info.txt");
 	priorinfo=new CPriorInfo(filename);
 	
-	traininginfo=new CTrainingInfo(observablinfo,priorinfo);
+	NTrainingPts=parmap->getI("EMULATOR_NTRAININGPTS",0);
+	traininginfo=new CTrainingInfo(NTrainingPts,observableinfo,priorinfo);
 	
 	emulator.resize(observableinfo->NObservables);
 	
@@ -23,6 +24,7 @@ CSmoothMaster::CSmoothMaster(CparameterMap *parmap_set){
 	CTrainingInfo::smoothmaster=this;
 	CSmoothEmulator::parmap=parmap;
 	CSmoothEmulator::randy=randy;
+	CSmoothEmulator::NTrainingPts=NTrainingPts;
 	
 	
 	for(int i=0;i<observableinfo->NObservables;i++){

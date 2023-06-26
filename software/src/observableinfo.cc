@@ -1,4 +1,4 @@
-#include "msu_smooth/parameterinfo.h"
+#include "msu_smooth/priorinfo.h"
 #include <cstdlib>
 #include <cmath>
 #include <cstdio>
@@ -27,7 +27,7 @@ int CObservableInfo::GetIPosition(string obsname){
 } 
 
 string CObservableInfo::GetName(int i){
-	return observablename[i];
+	return observable_name[i];
 }
 
 void CObservableInfo::ReadObservableInfo(string observable_info_filename){
@@ -43,7 +43,7 @@ void CObservableInfo::ReadObservableInfo(string observable_info_filename){
 		if(!feof(fptr)){
 			observable_name.push_back(string(dummy1));
 			unit.push_back(string(dummy2));
-			Sigma0.push_back(sig0);
+			SigmaA0.push_back(sig0);
 			name_map.insert(pair<string,int>(observable_name[NObservables],NObservables));
 			NObservables+=1;
 		}
