@@ -11,27 +11,28 @@
 #include "msu_commonutils/randy.h"
 #include "msu_commonutils/constants.h"
 #include <list>
-#include "msu_smooth/smooth.h"
-//#include "gslmatrix.h"
 #include <iostream>
 #include <Eigen/Dense>
+#include "msu_smooth/priorinfo.h"
 
 class CSimplexSampler{
 public:
 	unsigned int NPars,NTrainingPts,TrainType;
+	vector<vector<double>> ThetaTrain;
 	double RTrain;
-	CSimplexSampler(CparameterMap *parmap){
-		NPars=parmap->getD("SmoothEmulator_NPars",0);
-		TrainType=parmap->getI("Simplex_TrainType",1);
-		RTrain=parmap->getD("Simplex_RTrain",0.9); 
-	}
-	void SetThetaType1(vector<vector<double>> &ThetaTrain,unsigned int &NTrain);
-	void SetThetaType2(vector<vector<double>> &ThetaTrain,unsigned int &NTrain);
-	void SetThetaType3(vector<vector<double>> &ThetaTrain,unsigned int &NTrain);
-	void SetThetaType4(vector<vector<double>> &ThetaTrain,unsigned int &NTrain);
-	void SetThetaSimplex(vector<vector<double>> &ThetaTrain,unsigned int &NTrain);
+	CPriorInfo *priorinfo;
+	vector<CModelParameters *> modelparameters;
+	CSimplexSampler(CparameterMap *parmap);
+	void SetThetaType1();
+	void SetThetaType2();
+	void SetThetaType3();
+	void SetThetaType4();
+	void SetThetaSimplex();
+
+	void WriteModelPars(string model_dir);
 
 };
+
 
 namespace NAlternativeParameterSampling{
 	// Latin Hyer Cube parameters
@@ -50,5 +51,6 @@ namespace NAlternativeParameterSampling{
 	void CalcEnergyHO(vector<vector<double>> &x,vector<vector<double>> &vv,vector<vector<double>> &v,double &PE,double &KE,double &Etot);
 	void GetFextVextHO(vector<double> &x,vector<double> &Fext,double &Vext);
 };
+
 
 #endif

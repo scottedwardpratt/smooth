@@ -45,27 +45,26 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /opt/homebrew/Cellar/cmake/3.26.3/bin/cmake
+CMAKE_COMMAND = /usr/local/Cellar/cmake/3.26.3/bin/cmake
 
 # The command to remove a file.
-RM = /opt/homebrew/Cellar/cmake/3.26.3/bin/cmake -E rm -f
+RM = /usr/local/Cellar/cmake/3.26.3/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/ekakshkataria/git/smooth/scottrun
+CMAKE_SOURCE_DIR = /Users/scottpratt/git/smooth/scottrun
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/ekakshkataria/git/smooth/scottrun
+CMAKE_BINARY_DIR = /Users/scottpratt/git/smooth/scottrun
 
 #=============================================================================
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/smoothy.dir/all
-all: CMakeFiles/keepscore.dir/all
-all: CMakeFiles/coultest.dir/all
+all: CMakeFiles/simplextest.dir/all
+all: CMakeFiles/fakemodel.dir/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
@@ -75,9 +74,8 @@ preinstall:
 # The main recursive "clean" target.
 clean: CMakeFiles/extern_commonutils.dir/clean
 clean: CMakeFiles/extern_smooth.dir/clean
-clean: CMakeFiles/smoothy.dir/clean
-clean: CMakeFiles/keepscore.dir/clean
-clean: CMakeFiles/coultest.dir/clean
+clean: CMakeFiles/simplextest.dir/clean
+clean: CMakeFiles/fakemodel.dir/clean
 .PHONY : clean
 
 #=============================================================================
@@ -87,14 +85,14 @@ clean: CMakeFiles/coultest.dir/clean
 CMakeFiles/extern_commonutils.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/extern_commonutils.dir/build.make CMakeFiles/extern_commonutils.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/extern_commonutils.dir/build.make CMakeFiles/extern_commonutils.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/ekakshkataria/git/smooth/scottrun/CMakeFiles --progress-num= "Built target extern_commonutils"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/scottpratt/git/smooth/scottrun/CMakeFiles --progress-num= "Built target extern_commonutils"
 .PHONY : CMakeFiles/extern_commonutils.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/extern_commonutils.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/ekakshkataria/git/smooth/scottrun/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/scottpratt/git/smooth/scottrun/CMakeFiles 0
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/extern_commonutils.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/ekakshkataria/git/smooth/scottrun/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/scottpratt/git/smooth/scottrun/CMakeFiles 0
 .PHONY : CMakeFiles/extern_commonutils.dir/rule
 
 # Convenience name for target.
@@ -113,14 +111,14 @@ CMakeFiles/extern_commonutils.dir/clean:
 CMakeFiles/extern_smooth.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/extern_smooth.dir/build.make CMakeFiles/extern_smooth.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/extern_smooth.dir/build.make CMakeFiles/extern_smooth.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/ekakshkataria/git/smooth/scottrun/CMakeFiles --progress-num= "Built target extern_smooth"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/scottpratt/git/smooth/scottrun/CMakeFiles --progress-num= "Built target extern_smooth"
 .PHONY : CMakeFiles/extern_smooth.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/extern_smooth.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/ekakshkataria/git/smooth/scottrun/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/scottpratt/git/smooth/scottrun/CMakeFiles 0
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/extern_smooth.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/ekakshkataria/git/smooth/scottrun/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/scottpratt/git/smooth/scottrun/CMakeFiles 0
 .PHONY : CMakeFiles/extern_smooth.dir/rule
 
 # Convenience name for target.
@@ -133,85 +131,58 @@ CMakeFiles/extern_smooth.dir/clean:
 .PHONY : CMakeFiles/extern_smooth.dir/clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/smoothy.dir
+# Target rules for target CMakeFiles/simplextest.dir
 
 # All Build rule for target.
-CMakeFiles/smoothy.dir/all: CMakeFiles/extern_commonutils.dir/all
-CMakeFiles/smoothy.dir/all: CMakeFiles/extern_smooth.dir/all
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy.dir/build.make CMakeFiles/smoothy.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy.dir/build.make CMakeFiles/smoothy.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/ekakshkataria/git/smooth/scottrun/CMakeFiles --progress-num=5,6 "Built target smoothy"
-.PHONY : CMakeFiles/smoothy.dir/all
+CMakeFiles/simplextest.dir/all: CMakeFiles/extern_commonutils.dir/all
+CMakeFiles/simplextest.dir/all: CMakeFiles/extern_smooth.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simplextest.dir/build.make CMakeFiles/simplextest.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simplextest.dir/build.make CMakeFiles/simplextest.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/scottpratt/git/smooth/scottrun/CMakeFiles --progress-num=3,4 "Built target simplextest"
+.PHONY : CMakeFiles/simplextest.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/smoothy.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/ekakshkataria/git/smooth/scottrun/CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/smoothy.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/ekakshkataria/git/smooth/scottrun/CMakeFiles 0
-.PHONY : CMakeFiles/smoothy.dir/rule
+CMakeFiles/simplextest.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/scottpratt/git/smooth/scottrun/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/simplextest.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/scottpratt/git/smooth/scottrun/CMakeFiles 0
+.PHONY : CMakeFiles/simplextest.dir/rule
 
 # Convenience name for target.
-smoothy: CMakeFiles/smoothy.dir/rule
-.PHONY : smoothy
+simplextest: CMakeFiles/simplextest.dir/rule
+.PHONY : simplextest
 
 # clean rule for target.
-CMakeFiles/smoothy.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy.dir/build.make CMakeFiles/smoothy.dir/clean
-.PHONY : CMakeFiles/smoothy.dir/clean
+CMakeFiles/simplextest.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simplextest.dir/build.make CMakeFiles/simplextest.dir/clean
+.PHONY : CMakeFiles/simplextest.dir/clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/keepscore.dir
+# Target rules for target CMakeFiles/fakemodel.dir
 
 # All Build rule for target.
-CMakeFiles/keepscore.dir/all: CMakeFiles/extern_commonutils.dir/all
-CMakeFiles/keepscore.dir/all: CMakeFiles/extern_smooth.dir/all
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/keepscore.dir/build.make CMakeFiles/keepscore.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/keepscore.dir/build.make CMakeFiles/keepscore.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/ekakshkataria/git/smooth/scottrun/CMakeFiles --progress-num=3,4 "Built target keepscore"
-.PHONY : CMakeFiles/keepscore.dir/all
+CMakeFiles/fakemodel.dir/all: CMakeFiles/extern_commonutils.dir/all
+CMakeFiles/fakemodel.dir/all: CMakeFiles/extern_smooth.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/fakemodel.dir/build.make CMakeFiles/fakemodel.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/fakemodel.dir/build.make CMakeFiles/fakemodel.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/scottpratt/git/smooth/scottrun/CMakeFiles --progress-num=1,2 "Built target fakemodel"
+.PHONY : CMakeFiles/fakemodel.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/keepscore.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/ekakshkataria/git/smooth/scottrun/CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/keepscore.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/ekakshkataria/git/smooth/scottrun/CMakeFiles 0
-.PHONY : CMakeFiles/keepscore.dir/rule
+CMakeFiles/fakemodel.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/scottpratt/git/smooth/scottrun/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/fakemodel.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/scottpratt/git/smooth/scottrun/CMakeFiles 0
+.PHONY : CMakeFiles/fakemodel.dir/rule
 
 # Convenience name for target.
-keepscore: CMakeFiles/keepscore.dir/rule
-.PHONY : keepscore
+fakemodel: CMakeFiles/fakemodel.dir/rule
+.PHONY : fakemodel
 
 # clean rule for target.
-CMakeFiles/keepscore.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/keepscore.dir/build.make CMakeFiles/keepscore.dir/clean
-.PHONY : CMakeFiles/keepscore.dir/clean
-
-#=============================================================================
-# Target rules for target CMakeFiles/coultest.dir
-
-# All Build rule for target.
-CMakeFiles/coultest.dir/all: CMakeFiles/extern_commonutils.dir/all
-CMakeFiles/coultest.dir/all: CMakeFiles/extern_smooth.dir/all
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/coultest.dir/build.make CMakeFiles/coultest.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/coultest.dir/build.make CMakeFiles/coultest.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/ekakshkataria/git/smooth/scottrun/CMakeFiles --progress-num=1,2 "Built target coultest"
-.PHONY : CMakeFiles/coultest.dir/all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/coultest.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/ekakshkataria/git/smooth/scottrun/CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/coultest.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/ekakshkataria/git/smooth/scottrun/CMakeFiles 0
-.PHONY : CMakeFiles/coultest.dir/rule
-
-# Convenience name for target.
-coultest: CMakeFiles/coultest.dir/rule
-.PHONY : coultest
-
-# clean rule for target.
-CMakeFiles/coultest.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/coultest.dir/build.make CMakeFiles/coultest.dir/clean
-.PHONY : CMakeFiles/coultest.dir/clean
+CMakeFiles/fakemodel.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/fakemodel.dir/build.make CMakeFiles/fakemodel.dir/clean
+.PHONY : CMakeFiles/fakemodel.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

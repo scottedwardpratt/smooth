@@ -1,30 +1,38 @@
-#include "msu_smooth/emulator.h"
-#include "msu_smooth/smooth.h"
+#include "msu_commonutils/log.h"
+#include "msu_smooth/priorinfo.h"
+#include "msu_smooth/simplex.h"
+#include <cstdlib>
+
 using namespace std;
 
+CSimplexSampler::CSimplexSampler(CparameterMap *parmap){
+	TrainType=parmap->getI("Simplex_TrainType",1);
+	RTrain=parmap->getD("Simplex_RTrain",0.9);
+	priorinfo=new CPriorInfo("Info/prior_info.txt");
+	NPars=priorinfo->NModelPars;
+}
 
-
-void CSimplexSampler::SetThetaSimplex(vector<vector<double>> &ThetaTrain,unsigned int &NTrain){
+void CSimplexSampler::SetThetaSimplex(){
 	if(TrainType==1)
-		SetThetaType1(ThetaTrain,NTrain);
+		SetThetaType1();
 	else if(TrainType==2)
-		SetThetaType2(ThetaTrain,NTrain);
+		SetThetaType2();
 	else if(TrainType==3)
-		SetThetaType3(ThetaTrain,NTrain);
+		SetThetaType3();
 	else if(TrainType==4)
-		SetThetaType4(ThetaTrain,NTrain);
+		SetThetaType4();
 	else{
 		CLog::Fatal("Inside CSimplexSampler::SetThetaSimplex, Traintype must be 1,2,3, or 4\n");
 	}
 }
 
-void CSimplexSampler::SetThetaType1(vector<vector<double>> &ThetaTrain,unsigned int &NTrain){
+void CSimplexSampler::SetThetaType1(){
 	unsigned int ipar,itrain,jtrain;
 	double R,z,RTrain;
 	RTrain=1.0-1.0/double(NPars+1);
-	NTrain=NPars+1;
-	ThetaTrain.resize(NTrain);
-	for(itrain=0;itrain<NTrain;itrain++){
+	NTrainingPts=NPars+1;
+	ThetaTrain.resize(NTrainingPts);
+	for(itrain=0;itrain<NTrainingPts;itrain++){
 		ThetaTrain[itrain].resize(NPars);
 		for(ipar=0;ipar<NPars;ipar++)
 			ThetaTrain[itrain][ipar]=0.0;
@@ -32,7 +40,7 @@ void CSimplexSampler::SetThetaType1(vector<vector<double>> &ThetaTrain,unsigned 
 	R=1.0;
 	ThetaTrain[0][0]=-R;
 	ThetaTrain[1][0]=R;
-	for(itrain=2;itrain<NTrain;itrain++){
+	for(itrain=2;itrain<NTrainingPts;itrain++){
 		z=R*itrain/sqrt(double(itrain*itrain)-1.0);
 		for(jtrain=0;jtrain<itrain;jtrain++){
 			ThetaTrain[jtrain][itrain-1]=-z/double(itrain);
@@ -41,20 +49,20 @@ void CSimplexSampler::SetThetaType1(vector<vector<double>> &ThetaTrain,unsigned 
 		R=z;
 	}
 	
-	for(itrain=0;itrain<NTrain;itrain++){
+	for(itrain=0;itrain<NTrainingPts;itrain++){
 		for(ipar=0;ipar<NPars;ipar++){
 			ThetaTrain[itrain][ipar]*=(RTrain/R);
 		}
 	}
 }
 
-void CSimplexSampler::SetThetaType2(vector<vector<double>> &ThetaTrain, unsigned int &NTrain){
+void CSimplexSampler::SetThetaType2(){
 	unsigned int ipar,itrain,jtrain,N1,n;
 	double R,z,RTrain;
 	RTrain=1.0-1.0/double(NPars+1);
-	NTrain=NPars+1;
-	ThetaTrain.resize(NTrain);
-	for(itrain=0;itrain<NTrain;itrain++){
+	NTrainingPts=NPars+1;
+	ThetaTrain.resize(NTrainingPts);
+	for(itrain=0;itrain<NTrainingPts;itrain++){
 		ThetaTrain[itrain].resize(NPars);
 		for(ipar=0;ipar<NPars;ipar++)
 			ThetaTrain[itrain][ipar]=0.0;
@@ -62,7 +70,7 @@ void CSimplexSampler::SetThetaType2(vector<vector<double>> &ThetaTrain, unsigned
 	R=1.0;
 	ThetaTrain[0][0]=-R;
 	ThetaTrain[1][0]=R;
-	for(itrain=2;itrain<NTrain;itrain++){
+	for(itrain=2;itrain<NTrainingPts;itrain++){
 		z=R*itrain/sqrt(double(itrain*itrain)-1.0);
 		for(jtrain=0;jtrain<itrain;jtrain++){
 			ThetaTrain[jtrain][itrain-1]=-z/double(itrain);
@@ -70,11 +78,11 @@ void CSimplexSampler::SetThetaType2(vector<vector<double>> &ThetaTrain, unsigned
 		ThetaTrain[itrain][itrain-1]=z;
 		R=z;
 	}
-	N1=NTrain;
+	N1=NTrainingPts;
 	n=N1;
-	NTrain+=N1*(N1-1)/2;
-	ThetaTrain.resize(NTrain);
-	for(itrain=N1;itrain<NTrain;itrain++){
+	NTrainingPts+=N1*(N1-1)/2;
+	ThetaTrain.resize(NTrainingPts);
+	for(itrain=N1;itrain<NTrainingPts;itrain++){
 		ThetaTrain[itrain].resize(NPars);
 	}
 	for(itrain=1;itrain<N1;itrain++){
@@ -85,7 +93,7 @@ void CSimplexSampler::SetThetaType2(vector<vector<double>> &ThetaTrain, unsigned
 			n+=1;
 		}
 	}
-	for(itrain=0;itrain<NTrain;itrain++){
+	for(itrain=0;itrain<NTrainingPts;itrain++){
 		if(itrain==0){
 			R=0.0;
 			for(ipar=0;ipar<NPars;ipar++)
@@ -98,7 +106,7 @@ void CSimplexSampler::SetThetaType2(vector<vector<double>> &ThetaTrain, unsigned
 	}
 }
 
-void CSimplexSampler::SetThetaType3(vector<vector<double>> &ThetaTrain,unsigned int &NTrain){
+void CSimplexSampler::SetThetaType3(){
 	unsigned int ipar,itrain,jtrain;
 	double R,z,RTrain;
 
@@ -140,17 +148,17 @@ void CSimplexSampler::SetThetaType3(vector<vector<double>> &ThetaTrain,unsigned 
 	for(ipar=0;ipar<NPars;ipar++){
 		ThetaTrain[2*NPars+2][ipar]=0.0;
 	}
-	NTrain=2*NPars+3;
+	NTrainingPts=2*NPars+3;
 
 }
 
-void CSimplexSampler::SetThetaType4(vector<vector<double>> &ThetaTrain, unsigned int &NTrain){
+void CSimplexSampler::SetThetaType4(){
 	unsigned int ipar,itrain,jtrain,N1,n;
 	double R,Rprime,z,RTrain;
 	RTrain=0.9;
-	NTrain=NPars+1;
-	ThetaTrain.resize(NTrain);
-	for(itrain=0;itrain<NTrain;itrain++){
+	NTrainingPts=NPars+1;
+	ThetaTrain.resize(NTrainingPts);
+	for(itrain=0;itrain<NTrainingPts;itrain++){
 		ThetaTrain[itrain].resize(NPars);
 		for(ipar=0;ipar<NPars;ipar++)
 			ThetaTrain[itrain][ipar]=0.0;
@@ -158,7 +166,7 @@ void CSimplexSampler::SetThetaType4(vector<vector<double>> &ThetaTrain, unsigned
 	R=1.0;
 	ThetaTrain[0][0]=-R;
 	ThetaTrain[1][0]=R;
-	for(itrain=2;itrain<NTrain;itrain++){
+	for(itrain=2;itrain<NTrainingPts;itrain++){
 		z=R*itrain/sqrt(double(itrain*itrain)-1.0);
 		for(jtrain=0;jtrain<itrain;jtrain++){
 			ThetaTrain[jtrain][itrain-1]=-z/double(itrain);
@@ -167,11 +175,11 @@ void CSimplexSampler::SetThetaType4(vector<vector<double>> &ThetaTrain, unsigned
 		R=z;
 	}
 	
-	N1=NTrain;
+	N1=NTrainingPts;
 	n=N1;
-	NTrain+=N1*(N1-1)/2;
-	ThetaTrain.resize(NTrain);
-	for(itrain=N1;itrain<NTrain;itrain++){
+	NTrainingPts+=N1*(N1-1)/2;
+	ThetaTrain.resize(NTrainingPts);
+	for(itrain=N1;itrain<NTrainingPts;itrain++){
 		ThetaTrain[itrain].resize(NPars);
 	}
 	for(itrain=1;itrain<N1;itrain++){
@@ -195,4 +203,38 @@ void CSimplexSampler::SetThetaType4(vector<vector<double>> &ThetaTrain, unsigned
 			ThetaTrain[itrain][ipar]*=(RTrain/Rprime);
 		}
 	}
+}
+
+void CSimplexSampler::WriteModelPars(string model_dir){
+	FILE *fptr;
+	string filename,dirname;
+	int itrain,ipar;
+	vector<CModelParameters *> modelparameters(NTrainingPts);
+	
+	for(itrain=0;itrain<NTrainingPts;itrain++){
+		modelparameters[itrain]=new CModelParameters(priorinfo);
+		for(ipar=0;ipar<NPars;ipar++){
+			modelparameters[itrain]->Theta[ipar]=ThetaTrain[itrain][ipar];
+		}
+		modelparameters[itrain]->TranslateTheta_to_X();
+	}
+	
+	string command="rm -r -f modelruns/run*";
+	system(command.c_str());
+	
+	
+	for(itrain=0;itrain<NTrainingPts;itrain++){
+		dirname=model_dir+"/run"+to_string(itrain);
+		command="mkdir "+dirname;
+		system(command.c_str());
+		filename=dirname+"/mod_parameters.txt";
+		fptr=fopen(filename.c_str(),"w");
+		for(ipar=0;ipar<NPars;ipar++){
+			fprintf(fptr,"%s %g\n",
+			priorinfo->parname[ipar].c_str(),modelparameters[itrain]->X[ipar]);
+		}
+	}
+	
+	fclose(fptr);
+	
 }

@@ -44,19 +44,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /opt/homebrew/Cellar/cmake/3.26.3/bin/cmake
+CMAKE_COMMAND = /usr/local/Cellar/cmake/3.26.3/bin/cmake
 
 # The command to remove a file.
-RM = /opt/homebrew/Cellar/cmake/3.26.3/bin/cmake -E rm -f
+RM = /usr/local/Cellar/cmake/3.26.3/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/ekakshkataria/git/smooth/scottrun
+CMAKE_SOURCE_DIR = /Users/scottpratt/git/smooth/scottrun
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/ekakshkataria/git/smooth/scottrun
+CMAKE_BINARY_DIR = /Users/scottpratt/git/smooth/scottrun
 
 # Utility rule file for extern_commonutils.
 
@@ -67,7 +67,7 @@ include CMakeFiles/extern_commonutils.dir/compiler_depend.make
 include CMakeFiles/extern_commonutils.dir/progress.make
 
 CMakeFiles/extern_commonutils:
-	cd /Users/ekakshkataria/git/commonutils/software && make
+	cd /Users/scottpratt/git/commonutils/software && make
 
 extern_commonutils: CMakeFiles/extern_commonutils
 extern_commonutils: CMakeFiles/extern_commonutils.dir/build.make
@@ -82,6 +82,6 @@ CMakeFiles/extern_commonutils.dir/clean:
 .PHONY : CMakeFiles/extern_commonutils.dir/clean
 
 CMakeFiles/extern_commonutils.dir/depend:
-	cd /Users/ekakshkataria/git/smooth/scottrun && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/ekakshkataria/git/smooth/scottrun /Users/ekakshkataria/git/smooth/scottrun /Users/ekakshkataria/git/smooth/scottrun /Users/ekakshkataria/git/smooth/scottrun /Users/ekakshkataria/git/smooth/scottrun/CMakeFiles/extern_commonutils.dir/DependInfo.cmake --color=$(COLOR)
+	cd /Users/scottpratt/git/smooth/scottrun && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/scottpratt/git/smooth/scottrun /Users/scottpratt/git/smooth/scottrun /Users/scottpratt/git/smooth/scottrun /Users/scottpratt/git/smooth/scottrun /Users/scottpratt/git/smooth/scottrun/CMakeFiles/extern_commonutils.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/extern_commonutils.dir/depend
 
