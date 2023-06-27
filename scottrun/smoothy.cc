@@ -17,7 +17,7 @@ int main(int argc,char *argv[]){
 	CSmoothMaster master(parmap);
 	master.randy->reset(-time(NULL));
 	
-	master.ReadTrainingInfo("modelruns");
+	master.ReadTrainingInfo("modelruns_test");
 
 	master.TuneA(); // preliminary tuning to get a bit closer to likely region of A
 	master.GenerateASamples();
