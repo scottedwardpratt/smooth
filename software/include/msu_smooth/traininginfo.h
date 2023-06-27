@@ -27,9 +27,10 @@ class CSmoothMaster;
 
 class CTrainingInfo{
 public:
+	CObservableInfo *observableinfo;
+	CPriorInfo *priorinfo;
 	CTrainingInfo(int NTrainingPts,CObservableInfo *observableinfo,CPriorInfo *priorinfo);
 	int NTrainingPts,NObservables;
-	vector<CModelParameters *> trainingpars;
 	vector<vector<double>> YTrain,SigmaYTrain;
 	vector<CModelParameters *> modelpars;
 	void ReadTrainingInfo(string rundirname);

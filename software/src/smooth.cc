@@ -37,8 +37,6 @@ void CSmooth::InitArrays(){
 	for(j=2;j<=MaxRank;j++)
 		factorial[j]=j*factorial[j-1];
 
-	printf("init: MaxRank=%d\n",MaxRank);
-
 	i.resize(MaxRank+1);
 	countsame.resize(MaxRank);
 
@@ -199,7 +197,6 @@ void CSmooth::InitArrays(){
 		}
 	}
 	NCoefficients=ic;
-	printf("check NCoefficients=%d\n",NCoefficients);
 	if(NCoefficients!=IPar.size()){
 		CLog::Fatal("size mismatch in CSmooth::InitArrays()\n");
 	}

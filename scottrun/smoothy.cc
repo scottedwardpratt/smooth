@@ -15,13 +15,13 @@ int main(int argc,char *argv[]){
 	string parfilename="parameters/"+string(argv[1]);
 	parmap->ReadParsFromFile(parfilename);
 	CSmoothMaster master(parmap);
-
 	master.randy->reset(-time(NULL));
-
-	printf("Set %d Training Points\n",master.NTrainingPts);
+	
+	master.ReadTrainingInfo("modelruns");
 
 	master.TuneA();
 	master.GenerateASamples();
+
 
 
 	return 0;

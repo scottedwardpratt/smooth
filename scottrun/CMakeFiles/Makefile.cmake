@@ -57,4 +57,5 @@ set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/extern_smooth.dir/DependInfo.cmake"
   "CMakeFiles/simplextest.dir/DependInfo.cmake"
   "CMakeFiles/fakemodel.dir/DependInfo.cmake"
+  "CMakeFiles/smoothy.dir/DependInfo.cmake"
   )

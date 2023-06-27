@@ -41,6 +41,7 @@ public:
 	void ReadTrainingInfo(string rundir);
 	void GenerateASamples();
 	void TuneA();
+	void SetThetaTrain();
 };
 
 #endif

@@ -363,7 +363,6 @@ void NAlternativeParameterSampling::GetFRelVRelHO(vector<double> &x,vector<doubl
 			printf("%g,",x[idim]-xx[idim]);
 		}
 		printf(")\n");
-		Misc::Pause();
 	}
 	r=sqrt(r2);
 	Vrel=alpha*(1.0/r);
