@@ -377,3 +377,17 @@ void CSmoothEmulator::PrintA(vector<double> &Aprint){
 		CLog::Info(to_string(ic)+": "+to_string(Aprint[ic])+"\n");
 	}
 }
+
+
+void CSmoothEmulator::CalcY(CModelParameters *modpars,double &Y,double &SigmaY){
+	double y;
+	Y=SigmaY=0.0;
+	for(int isample=0;isample<NASample;isample++){
+		y=smooth->CalcY(A,LAMBDA,modpars->Theta);
+		Y+=y;
+		SigmaY+=y*y;
+	}
+	SigmaY=SigmaY/double(NASample);
+	Y=Y/double(NASample);
+	SigmaY=sqrt(fabs(SigmaY-Y*Y));
+}

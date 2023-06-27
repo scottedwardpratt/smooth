@@ -42,6 +42,10 @@ public:
 	void GenerateASamples();
 	void TuneA();
 	void SetThetaTrain();
+	void CalcY(int iY,CModelParameters *modelpars,double &Y,double &SigmaY);
+	void CalcY(string obsname,CModelParameters *modelpars,double &Y,double &SigmaY);
+	void CalcAllY(CModelParameters *modelpars,vector<double> &Y,vector<double> &SigmaY);
+	void TestAtTrainingPts();
 };
 
 #endif

@@ -23,6 +23,9 @@ public:
 	string parinfo_filename;
 	vector<string> parname,type; // type is gaussian or linear
 	vector<double> xmin, xmax;
+	map<string,int> name_map;
+	int GetIPosition(string par_name);  // finds position given name of observable
+	string GetName(int iposition); 
 };
 
 
@@ -36,7 +39,6 @@ public:
 	void TranslateTheta_to_X();
 	void TranslateX_to_Theta();
 	void Print();
-
 	int NModelPars;
 	CPriorInfo *priorinfo;
 	

@@ -60,6 +60,7 @@ public:
 	int NSigmaA;
 
 	void GenerateASamples();
+	void CalcY(CModelParameters *modpars,double &Y,double &SigmaY);
 
 	void Init();
 	

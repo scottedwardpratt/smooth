@@ -2,8 +2,8 @@ SmoothEmulator_NPars 4
 SmoothEmulator_NTrainingPts 5
 SmoothEmulator_SigmaA 100.0
 SmoothEmulator_SigmaYMin 10
-SmoothEmulator_NMC 10000
-SmoothEmulator_NASample 10
+SmoothEmulator_NMC 100000
+SmoothEmulator_NASample 5
 SmoothEmulator_MCStepSize .05
 SmoothEmulator_MCSigmaAStepSize .12
 SmoothEmulator_TuneAChooseMCMC true

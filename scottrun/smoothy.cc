@@ -19,10 +19,10 @@ int main(int argc,char *argv[]){
 	
 	master.ReadTrainingInfo("modelruns");
 
-	master.TuneA();
+	master.TuneA(); // preliminary tuning to get a bit closer to likely region of A
 	master.GenerateASamples();
-
-
+	
+	master.TestAtTrainingPts();
 
 	return 0;
 }

@@ -30,7 +30,7 @@ CTrainingInfo::CTrainingInfo(int NTrainingPts_set,CObservableInfo *observableinf
 }
 
 void CTrainingInfo::ReadTrainingInfo(string rundirname){
-	int itrain,iy,nsuccess=0,ipar;
+	int itrain,iy,nsuccess=0,ipar,nread;
 	char filename[300],obs_charname[300],mod_par_name[300];
 	string obs_name;
 	double y,sigmay,x;
@@ -57,14 +57,18 @@ void CTrainingInfo::ReadTrainingInfo(string rundirname){
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		snprintf(filename,300,"%s/run%d/mod_parameters.txt",rundirname.c_str(),itrain);
 		fptr=fopen(filename,"r");
-		ipar=0;
+		nread=0;
 		do{
 			fscanf(fptr,"%s %lf",mod_par_name,&x);
 			if(!feof(fptr)){
+				ipar=priorinfo->GetIPosition(mod_par_name);
 				modelpars[itrain]->X[ipar]=x;
-				ipar++;
+				nread+=1;
 			}
 		}while(!feof(fptr));
+	}
+	if(nread!=priorinfo->NModelPars){
+		CLog::Fatal("Only read in "+to_string(nread)+" parameter values from "+string(filename)+". But there are "+to_string(priorinfo->NModelPars)+" parameters needed.\n");
 	}
 	
 	for(itrain=0;itrain<NTrainingPts;itrain++){

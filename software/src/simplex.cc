@@ -140,7 +140,7 @@ void CSimplexSampler::SetThetaType3(){
 	for(itrain=NPars+1;itrain<2*NPars+2;itrain++){
 		ThetaTrain[itrain].resize(NPars);
 		for(ipar=0;ipar<NPars;ipar++){
-			ThetaTrain[itrain][ipar]*=-ThetaTrain[itrain-NPars-1][ipar];
+			ThetaTrain[itrain][ipar]=-ThetaTrain[itrain-NPars-1][ipar];
 		}
 	}
 	// Put last point at origin

@@ -62,3 +62,39 @@ void CSmoothMaster::SetThetaTrain(){
 		emulator[iY]->SetThetaTrain();
 	}
 }
+
+void CSmoothMaster::CalcY(int iY,CModelParameters *modelpars,double &Y,double &SigmaY){
+	emulator[iY]->CalcY(modelpars,Y,SigmaY);
+}
+
+void CSmoothMaster::CalcY(string obsname,CModelParameters *modelpars,double &Y,double &SigmaY){
+	int iY=observableinfo->GetIPosition(obsname);
+	emulator[iY]->CalcY(modelpars,Y,SigmaY);
+}
+
+void CSmoothMaster::CalcAllY(CModelParameters *modelpars,vector<double> &Y,vector<double> &SigmaY){
+	int NObservables=observableinfo->NObservables;
+	Y.resize(NObservables);
+	SigmaY.resize(NObservables);
+	for(int iY=0;iY<NObservables;iY++){
+		CalcY(iY,modelpars,Y[iY],SigmaY[iY]);
+	}
+}
+
+void CSmoothMaster::TestAtTrainingPts(){
+	char pchars[CLog::CHARLENGTH];
+	int itrain,iY;
+	int NObservables=observableinfo->NObservables;
+	vector<double> Y,SigmaY;
+	Y.resize(NObservables);
+	SigmaY.resize(NObservables);
+	for(itrain=0;itrain<traininginfo->NTrainingPts;itrain++){
+		CLog::Info("------ itrain="+to_string(itrain)+" --------\n");
+		for(iY=0;iY<NObservables;iY++){
+			CalcY(iY,traininginfo->modelpars[itrain],Y[iY],SigmaY[iY]);
+			snprintf(pchars,CLog::CHARLENGTH,
+			"Y[%d]=%10.3e =? %10.3e,    SigmaY=%12.5e\n",iY,Y[iY],traininginfo->YTrain[iY][itrain],SigmaY[iY]);
+			CLog::Info(pchars);
+		}
+	}
+}

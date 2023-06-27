@@ -21,7 +21,7 @@ int CObservableInfo::GetIPosition(string obsname){
 	pair<string,int> mpair;
 	iter=name_map.find(obsname);
 	if(iter==name_map.end()){
-		CLog::Fatal("In CObservableInfo::GetIposition, cannot find observable"+obsname+"\n");
+		CLog::Fatal("In CObservableInfo::GetIposition, cannot find observable "+obsname+"\n");
 	}
 	return iter->second;
 } 
