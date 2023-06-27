@@ -37,6 +37,10 @@ public:
 	CPriorInfo *priorinfo;
 	Crandy *randy;
 	CSmooth *smooth;
+	
+	void ReadTrainingInfo(string rundir);
+	void GenerateASamples();
+	void TuneA();
 };
 
 #endif

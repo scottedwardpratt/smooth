@@ -32,7 +32,7 @@ public:
 	vector<CModelParameters *> trainingpars;
 	vector<vector<double>> YTrain,SigmaYTrain;
 	vector<CModelParameters *> modelpars;
-	void ReadTrainInfo(string rundirname);
+	void ReadTrainingInfo(string rundirname);
 	static CSmoothMaster *smoothmaster;
 };
 

@@ -28,3 +28,9 @@ add_executable(fakemodel ${CMAKE_CURRENT_SOURCE_DIR}/fakemodel.cc)
 add_dependencies(fakemodel extern_smooth extern_commonutils)
 target_link_libraries(fakemodel ${GITHOME_MSU}/smooth/software/lib/libsmooth.a  ${GITHOME_MSU}/commonutils/software/lib/libmsu_commonutils.a ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY} ${EIGEN3_LIBRARY})
 
+#################################################
+set(SOURCE_FILES ./smoothy.cc)
+add_executable(smoothy ${CMAKE_CURRENT_SOURCE_DIR}/smoothy.cc)
+add_dependencies(smoothy extern_smooth extern_commonutils)
+target_link_libraries(smoothy ${GITHOME_MSU}/smooth/software/lib/libsmooth.a  ${GITHOME_MSU}/commonutils/software/lib/libmsu_commonutils.a ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY} ${EIGEN3_LIBRARY})
+

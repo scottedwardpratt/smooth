@@ -25,7 +25,7 @@ CTrainingInfo::CTrainingInfo(int NTrainingPts_set,CObservableInfo *observableinf
 
 }
 
-void CTrainingInfo::ReadTrainInfo(string rundirname){
+void CTrainingInfo::ReadTrainingInfo(string rundirname){
 	bool success;
 	int irun,iy,nsuccess=0;
 	char filename[300],obs_charname[300];
