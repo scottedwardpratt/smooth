@@ -28,20 +28,4 @@ public:
 	string GetName(int iposition); 
 };
 
-
-
-class CModelParameters{
-public:
-//has actual values of the parameter
-	vector<double> X;
-	vector<double> Theta;
-	CModelParameters(CPriorInfo *priorinfo_set);
-	void TranslateTheta_to_X();
-	void TranslateX_to_Theta();
-	void Print();
-	int NModelPars;
-	CPriorInfo *priorinfo;
-	
-};
-
 #endif
