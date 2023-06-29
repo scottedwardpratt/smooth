@@ -5,28 +5,29 @@
 
 #include <cstdio>
 #include <vector>
-#include <array>
-#include <fstream>
+#include <Eigen/Dense>
 #include "msu_commonutils/parametermap.h"
 #include "msu_commonutils/misc.h"
 #include "msu_commonutils/randy.h"
 #include "msu_commonutils/constants.h"
-#include <list>
 #include "msu_smooth/smooth.h"
-#include <iostream>
-#include <Eigen/Dense>
-#include "msu_smooth/real.h"
 #include "msu_commonutils/log.h"
 #include "msu_smooth/master.h"
+#include "msu_smooth/modelparinfo.h"
 #include "msu_smooth/observableinfo.h"
 #include "msu_smooth/priorinfo.h"
 #include "msu_smooth/traininginfo.h"
+
+class CSmoothMaster;
+class CTrainingInfo;
+class CPriorInfo;
+class CObservableInfo;
+class CModelParInfo;
 
 class CSmoothEmulator{
 public:
 	int iY; // labels observable from observable info
 	string observable_name;
-	CReal *real;
 	Eigen::MatrixXd M;
 
 	double SigmaA0,SigmaAMin,SigmaA,SigmaATrial,MCStepSize,MCSigmaAStepSize,LAMBDA;

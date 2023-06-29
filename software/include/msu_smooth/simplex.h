@@ -14,6 +14,9 @@
 #include <iostream>
 #include <Eigen/Dense>
 #include "msu_smooth/priorinfo.h"
+#include "msu_smooth/modelparinfo.h"
+#include <algorithm>
+#include <random>
 
 class CSimplexSampler{
 public:

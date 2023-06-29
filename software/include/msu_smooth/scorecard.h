@@ -4,17 +4,10 @@
 #include <cmath>
 #include <cstdio>
 #include <vector>
-#include <array>
-#include <fstream>
 #include "msu_commonutils/misc.h"
 #include "msu_commonutils/randy.h"
-#include "msu_commonutils/constants.h"
-#include <list>
 #include "msu_smooth/emulator.h"
 #include "msu_smooth/smooth.h"
-//#include "gslmatrix.h"
-#include <iostream>
-#include <Eigen/Dense>
 
 class CScoreCard{
 public:

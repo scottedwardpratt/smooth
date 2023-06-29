@@ -1,7 +1,7 @@
-/home/scott/git/smooth/scottrun/CMakeFiles/extern_commonutils.dir
-/home/scott/git/smooth/scottrun/CMakeFiles/extern_smooth.dir
-/home/scott/git/smooth/scottrun/CMakeFiles/simplextest.dir
-/home/scott/git/smooth/scottrun/CMakeFiles/fakemodel.dir
-/home/scott/git/smooth/scottrun/CMakeFiles/smoothy.dir
-/home/scott/git/smooth/scottrun/CMakeFiles/edit_cache.dir
-/home/scott/git/smooth/scottrun/CMakeFiles/rebuild_cache.dir
+/Users/scottpratt/git/smooth/scottrun/CMakeFiles/extern_commonutils.dir
+/Users/scottpratt/git/smooth/scottrun/CMakeFiles/extern_smooth.dir
+/Users/scottpratt/git/smooth/scottrun/CMakeFiles/simplextest.dir
+/Users/scottpratt/git/smooth/scottrun/CMakeFiles/fakemodel.dir
+/Users/scottpratt/git/smooth/scottrun/CMakeFiles/smoothy.dir
+/Users/scottpratt/git/smooth/scottrun/CMakeFiles/edit_cache.dir
+/Users/scottpratt/git/smooth/scottrun/CMakeFiles/rebuild_cache.dir

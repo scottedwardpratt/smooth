@@ -1,8 +1,4 @@
-#include "msu_smooth/emulator.h"
-#include "msu_smooth/smooth.h"
-#include "msu_commonutils/randy.h"
-#include <algorithm>
-#include <random>
+#include "msu_smooth/simplex.h"
 using namespace std;
 
 void NAlternativeParameterSampling::GetParsLHC(int NRuns,int NPars,Crandy *randy,vector<vector<double>> &Theta){

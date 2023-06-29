@@ -1,5 +1,3 @@
-#include "msu_commonutils/log.h"
-#include "msu_smooth/priorinfo.h"
 #include "msu_smooth/simplex.h"
 #include <cstdlib>
 

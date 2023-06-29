@@ -1,7 +1,4 @@
-//#include "emulator.h"
 #include "msu_smooth/smooth.h"
-#include "msu_commonutils/gslmatrix.h"
-#include "msu_commonutils/log.h"
 using namespace std;
 
 CSmooth::CSmooth(){

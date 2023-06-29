@@ -1,5 +1,4 @@
 #include "msu_smooth/emulator.h"
-#include "msu_smooth/smooth.h"
 using namespace std;
 
 int CSmoothEmulator::NPars=0;

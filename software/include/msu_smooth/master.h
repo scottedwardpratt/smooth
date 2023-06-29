@@ -5,25 +5,24 @@
 
 #include <cstdio>
 #include <vector>
-#include <array>
-#include <fstream>
+#include <Eigen/Dense>
 #include "msu_commonutils/parametermap.h"
 #include "msu_commonutils/misc.h"
 #include "msu_commonutils/randy.h"
 #include "msu_commonutils/constants.h"
-#include <list>
+#include "msu_smooth/emulator.h"
+#include "msu_smooth/modelparinfo.h"
 #include "msu_smooth/smooth.h"
-//#include "msu_smooth/simplex.h"
-//#include "gslmatrix.h"
-#include <iostream>
-#include <Eigen/Dense>
-#include "msu_smooth/real.h"
 #include "msu_commonutils/log.h"
 #include "msu_smooth/observableinfo.h"
 #include "msu_smooth/priorinfo.h"
 #include "msu_smooth/traininginfo.h"
 
 class CSmoothEmulator;
+class CTrainingInfo;
+class CPriorInfo;
+class CObservableInfo;
+class CModelParInfo;
 
 class CSmoothMaster{
 public:

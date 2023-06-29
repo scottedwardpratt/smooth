@@ -1,12 +1,4 @@
-#include "msu_smooth/priorinfo.h"
-#include <cstdlib>
-#include <cmath>
-#include <cstdio>
-#include <vector>
-#include <array>
-#include <fstream>
-#include "msu_commonutils/log.h"
-#include "msu_smooth/priorinfo.h"
+#include "msu_smooth/modelparinfo.h"
 
 using namespace std;
 

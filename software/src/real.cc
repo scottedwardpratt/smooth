@@ -1,11 +1,4 @@
 #include "msu_smooth/real.h"
-#include "msu_smooth/smooth.h"
-#include "msu_commonutils/randy.h"
-#include "msu_smooth/emulator.h"
-#include "msu_commonutils/constants.h"
-#include "msu_commonutils/gslmatrix.h"
-#include "msu_commonutils/log.h"
-
 using namespace std;
 
 CReal::CReal(){

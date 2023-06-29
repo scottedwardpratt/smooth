@@ -1,6 +1,3 @@
-#include "msu_smooth/emulator.h"
-#include "msu_smooth/smooth.h"
-#include "msu_smooth/priorinfo.h"
 #include "msu_smooth/traininginfo.h"
 
 CSmoothMaster* CTrainingInfo::smoothmaster=NULL;

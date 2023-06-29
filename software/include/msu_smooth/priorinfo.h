@@ -10,11 +10,10 @@
 #include "msu_commonutils/parametermap.h"
 #include "msu_commonutils/misc.h"
 #include "msu_commonutils/randy.h"
-#include "msu_commonutils/constants.h"
-#include <list>
-//#include "gslmatrix.h"
-#include <iostream>
-#include <Eigen/Dense>
+//#include "msu_commonutils/constants.h"
+//#include <list>
+//#include <iostream>
+//#include <Eigen/Dense>
 
 class CPriorInfo{
 public:

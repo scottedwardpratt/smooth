@@ -1,5 +1,3 @@
-#include "msu_smooth/emulator.h"
-#include "msu_smooth/smooth.h"
 #include "msu_smooth/scorecard.h"
 using namespace std;
 

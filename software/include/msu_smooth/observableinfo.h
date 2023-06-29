@@ -6,19 +6,9 @@
 #include <vector>
 #include <array>
 #include <fstream>
-#include "msu_commonutils/parametermap.h"
 #include "msu_commonutils/misc.h"
-#include "msu_commonutils/randy.h"
-#include "msu_commonutils/constants.h"
-#include <list>
+#include <vector>
 #include <map>
-#include "smooth.h"
-#include "simplex.h"
-//#include "gslmatrix.h"
-#include <iostream>
-#include <Eigen/Dense>
-#include "real.h"
-
 
 class CObservableInfo{
 public:

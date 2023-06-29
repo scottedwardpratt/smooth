@@ -10,6 +10,7 @@
 #include "msu_commonutils/misc.h"
 #include "msu_commonutils/constants.h"
 #include "msu_commonutils/randy.h"
+#include "msu_commonutils/log.h"
 #include <list>
 
 using namespace std;

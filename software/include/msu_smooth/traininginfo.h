@@ -13,12 +13,11 @@
 #include "msu_commonutils/constants.h"
 #include <list>
 #include "msu_smooth/smooth.h"
-//#include "msu_smooth/simplex.h"
-//#include "gslmatrix.h"
 #include <iostream>
 #include <Eigen/Dense>
-#include "msu_smooth/real.h"
 #include "msu_commonutils/log.h"
+#include "msu_smooth/master.h"
+#include "msu_smooth/modelparinfo.h"
 #include "msu_smooth/observableinfo.h"
 #include "msu_smooth/priorinfo.h"
 
