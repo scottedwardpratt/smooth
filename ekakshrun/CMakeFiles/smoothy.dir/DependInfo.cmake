@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/Users/ekakshkataria/git/smooth/ekakshrun/smoothmain.cc" "CMakeFiles/smoothy.dir/smoothmain.cc.o" "gcc" "CMakeFiles/smoothy.dir/smoothmain.cc.o.d"
+  "/Users/ekakshkataria/git/smooth/ekakshrun/smoothy.cc" "CMakeFiles/smoothy.dir/smoothy.cc.o" "gcc" "CMakeFiles/smoothy.dir/smoothy.cc.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

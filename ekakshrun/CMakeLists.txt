@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
+set(CMAKE_VERBOSE_MAKEFILE on)
 project(smooth)
 set(GITHOME_MSU $ENV{GITHOME_MSU})
 

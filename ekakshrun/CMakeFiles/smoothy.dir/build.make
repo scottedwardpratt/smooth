@@ -69,28 +69,28 @@ include CMakeFiles/smoothy.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/smoothy.dir/flags.make
 
-CMakeFiles/smoothy.dir/smoothmain.cc.o: CMakeFiles/smoothy.dir/flags.make
-CMakeFiles/smoothy.dir/smoothmain.cc.o: smoothmain.cc
-CMakeFiles/smoothy.dir/smoothmain.cc.o: CMakeFiles/smoothy.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/ekakshkataria/git/smooth/ekakshrun/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/smoothy.dir/smoothmain.cc.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/smoothy.dir/smoothmain.cc.o -MF CMakeFiles/smoothy.dir/smoothmain.cc.o.d -o CMakeFiles/smoothy.dir/smoothmain.cc.o -c /Users/ekakshkataria/git/smooth/ekakshrun/smoothmain.cc
+CMakeFiles/smoothy.dir/smoothy.cc.o: CMakeFiles/smoothy.dir/flags.make
+CMakeFiles/smoothy.dir/smoothy.cc.o: smoothy.cc
+CMakeFiles/smoothy.dir/smoothy.cc.o: CMakeFiles/smoothy.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/ekakshkataria/git/smooth/ekakshrun/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/smoothy.dir/smoothy.cc.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/smoothy.dir/smoothy.cc.o -MF CMakeFiles/smoothy.dir/smoothy.cc.o.d -o CMakeFiles/smoothy.dir/smoothy.cc.o -c /Users/ekakshkataria/git/smooth/ekakshrun/smoothy.cc
 
-CMakeFiles/smoothy.dir/smoothmain.cc.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/smoothy.dir/smoothmain.cc.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/ekakshkataria/git/smooth/ekakshrun/smoothmain.cc > CMakeFiles/smoothy.dir/smoothmain.cc.i
+CMakeFiles/smoothy.dir/smoothy.cc.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/smoothy.dir/smoothy.cc.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/ekakshkataria/git/smooth/ekakshrun/smoothy.cc > CMakeFiles/smoothy.dir/smoothy.cc.i
 
-CMakeFiles/smoothy.dir/smoothmain.cc.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/smoothy.dir/smoothmain.cc.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/ekakshkataria/git/smooth/ekakshrun/smoothmain.cc -o CMakeFiles/smoothy.dir/smoothmain.cc.s
+CMakeFiles/smoothy.dir/smoothy.cc.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/smoothy.dir/smoothy.cc.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/ekakshkataria/git/smooth/ekakshrun/smoothy.cc -o CMakeFiles/smoothy.dir/smoothy.cc.s
 
 # Object files for target smoothy
 smoothy_OBJECTS = \
-"CMakeFiles/smoothy.dir/smoothmain.cc.o"
+"CMakeFiles/smoothy.dir/smoothy.cc.o"
 
 # External object files for target smoothy
 smoothy_EXTERNAL_OBJECTS =
 
-smoothy: CMakeFiles/smoothy.dir/smoothmain.cc.o
+smoothy: CMakeFiles/smoothy.dir/smoothy.cc.o
 smoothy: CMakeFiles/smoothy.dir/build.make
 smoothy: /Users/ekakshkataria/git/smooth/software/lib/libsmooth.a
 smoothy: /Users/ekakshkataria/git/commonutils/software/lib/libmsu_commonutils.a

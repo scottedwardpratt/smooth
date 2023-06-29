@@ -143,6 +143,32 @@ extern_smooth/fast:
 .PHONY : extern_smooth/fast
 
 #=============================================================================
+# Target rules for targets named simplextest
+
+# Build rule for target.
+simplextest: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 simplextest
+.PHONY : simplextest
+
+# fast build rule for target.
+simplextest/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simplextest.dir/build.make CMakeFiles/simplextest.dir/build
+.PHONY : simplextest/fast
+
+#=============================================================================
+# Target rules for targets named fakemodel
+
+# Build rule for target.
+fakemodel: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 fakemodel
+.PHONY : fakemodel
+
+# fast build rule for target.
+fakemodel/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/fakemodel.dir/build.make CMakeFiles/fakemodel.dir/build
+.PHONY : fakemodel/fast
+
+#=============================================================================
 # Target rules for targets named smoothy
 
 # Build rule for target.
@@ -156,65 +182,113 @@ smoothy/fast:
 .PHONY : smoothy/fast
 
 #=============================================================================
-# Target rules for targets named keepscore
+# Target rules for targets named smoothy_writecoefficients
 
 # Build rule for target.
-keepscore: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 keepscore
-.PHONY : keepscore
+smoothy_writecoefficients: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 smoothy_writecoefficients
+.PHONY : smoothy_writecoefficients
 
 # fast build rule for target.
-keepscore/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/keepscore.dir/build.make CMakeFiles/keepscore.dir/build
-.PHONY : keepscore/fast
+smoothy_writecoefficients/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy_writecoefficients.dir/build.make CMakeFiles/smoothy_writecoefficients.dir/build
+.PHONY : smoothy_writecoefficients/fast
 
-keepscore.o: keepscore.cc.o
-.PHONY : keepscore.o
-
-# target to build an object file
-keepscore.cc.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/keepscore.dir/build.make CMakeFiles/keepscore.dir/keepscore.cc.o
-.PHONY : keepscore.cc.o
-
-keepscore.i: keepscore.cc.i
-.PHONY : keepscore.i
-
-# target to preprocess a source file
-keepscore.cc.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/keepscore.dir/build.make CMakeFiles/keepscore.dir/keepscore.cc.i
-.PHONY : keepscore.cc.i
-
-keepscore.s: keepscore.cc.s
-.PHONY : keepscore.s
-
-# target to generate assembly for a file
-keepscore.cc.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/keepscore.dir/build.make CMakeFiles/keepscore.dir/keepscore.cc.s
-.PHONY : keepscore.cc.s
-
-smoothmain.o: smoothmain.cc.o
-.PHONY : smoothmain.o
+fakemodel.o: fakemodel.cc.o
+.PHONY : fakemodel.o
 
 # target to build an object file
-smoothmain.cc.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy.dir/build.make CMakeFiles/smoothy.dir/smoothmain.cc.o
-.PHONY : smoothmain.cc.o
+fakemodel.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/fakemodel.dir/build.make CMakeFiles/fakemodel.dir/fakemodel.cc.o
+.PHONY : fakemodel.cc.o
 
-smoothmain.i: smoothmain.cc.i
-.PHONY : smoothmain.i
+fakemodel.i: fakemodel.cc.i
+.PHONY : fakemodel.i
 
 # target to preprocess a source file
-smoothmain.cc.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy.dir/build.make CMakeFiles/smoothy.dir/smoothmain.cc.i
-.PHONY : smoothmain.cc.i
+fakemodel.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/fakemodel.dir/build.make CMakeFiles/fakemodel.dir/fakemodel.cc.i
+.PHONY : fakemodel.cc.i
 
-smoothmain.s: smoothmain.cc.s
-.PHONY : smoothmain.s
+fakemodel.s: fakemodel.cc.s
+.PHONY : fakemodel.s
 
 # target to generate assembly for a file
-smoothmain.cc.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy.dir/build.make CMakeFiles/smoothy.dir/smoothmain.cc.s
-.PHONY : smoothmain.cc.s
+fakemodel.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/fakemodel.dir/build.make CMakeFiles/fakemodel.dir/fakemodel.cc.s
+.PHONY : fakemodel.cc.s
+
+simplextest.o: simplextest.cc.o
+.PHONY : simplextest.o
+
+# target to build an object file
+simplextest.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simplextest.dir/build.make CMakeFiles/simplextest.dir/simplextest.cc.o
+.PHONY : simplextest.cc.o
+
+simplextest.i: simplextest.cc.i
+.PHONY : simplextest.i
+
+# target to preprocess a source file
+simplextest.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simplextest.dir/build.make CMakeFiles/simplextest.dir/simplextest.cc.i
+.PHONY : simplextest.cc.i
+
+simplextest.s: simplextest.cc.s
+.PHONY : simplextest.s
+
+# target to generate assembly for a file
+simplextest.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/simplextest.dir/build.make CMakeFiles/simplextest.dir/simplextest.cc.s
+.PHONY : simplextest.cc.s
+
+smoothy.o: smoothy.cc.o
+.PHONY : smoothy.o
+
+# target to build an object file
+smoothy.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy.dir/build.make CMakeFiles/smoothy.dir/smoothy.cc.o
+.PHONY : smoothy.cc.o
+
+smoothy.i: smoothy.cc.i
+.PHONY : smoothy.i
+
+# target to preprocess a source file
+smoothy.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy.dir/build.make CMakeFiles/smoothy.dir/smoothy.cc.i
+.PHONY : smoothy.cc.i
+
+smoothy.s: smoothy.cc.s
+.PHONY : smoothy.s
+
+# target to generate assembly for a file
+smoothy.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy.dir/build.make CMakeFiles/smoothy.dir/smoothy.cc.s
+.PHONY : smoothy.cc.s
+
+smoothy_writecoefficients.o: smoothy_writecoefficients.cc.o
+.PHONY : smoothy_writecoefficients.o
+
+# target to build an object file
+smoothy_writecoefficients.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy_writecoefficients.dir/build.make CMakeFiles/smoothy_writecoefficients.dir/smoothy_writecoefficients.cc.o
+.PHONY : smoothy_writecoefficients.cc.o
+
+smoothy_writecoefficients.i: smoothy_writecoefficients.cc.i
+.PHONY : smoothy_writecoefficients.i
+
+# target to preprocess a source file
+smoothy_writecoefficients.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy_writecoefficients.dir/build.make CMakeFiles/smoothy_writecoefficients.dir/smoothy_writecoefficients.cc.i
+.PHONY : smoothy_writecoefficients.cc.i
+
+smoothy_writecoefficients.s: smoothy_writecoefficients.cc.s
+.PHONY : smoothy_writecoefficients.s
+
+# target to generate assembly for a file
+smoothy_writecoefficients.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy_writecoefficients.dir/build.make CMakeFiles/smoothy_writecoefficients.dir/smoothy_writecoefficients.cc.s
+.PHONY : smoothy_writecoefficients.cc.s
 
 # Help Target
 help:
@@ -226,14 +300,22 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... extern_commonutils"
 	@echo "... extern_smooth"
-	@echo "... keepscore"
+	@echo "... fakemodel"
+	@echo "... simplextest"
 	@echo "... smoothy"
-	@echo "... keepscore.o"
-	@echo "... keepscore.i"
-	@echo "... keepscore.s"
-	@echo "... smoothmain.o"
-	@echo "... smoothmain.i"
-	@echo "... smoothmain.s"
+	@echo "... smoothy_writecoefficients"
+	@echo "... fakemodel.o"
+	@echo "... fakemodel.i"
+	@echo "... fakemodel.s"
+	@echo "... simplextest.o"
+	@echo "... simplextest.i"
+	@echo "... simplextest.s"
+	@echo "... smoothy.o"
+	@echo "... smoothy.i"
+	@echo "... smoothy.s"
+	@echo "... smoothy_writecoefficients.o"
+	@echo "... smoothy_writecoefficients.i"
+	@echo "... smoothy_writecoefficients.s"
 .PHONY : help
 
 
