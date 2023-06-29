@@ -15,7 +15,7 @@ int main(int argc,char *argv[]){
 	
 	master.ReadTrainingInfo();
 
-	master.TuneA(); // preliminary tuning to get a bit closer to likely region of A
+	master.Tune(); // preliminary tuning to get a bit closer to likely region of A
 	master.GenerateASamples();
 	
 	master.TestAtTrainingPts();

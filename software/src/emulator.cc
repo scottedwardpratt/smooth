@@ -17,7 +17,7 @@ CSmoothEmulator::CSmoothEmulator(string observable_name_set){
 	NASample=parmap->getI("SmoothEmulator_NASample",10);
 	MCStepSize=parmap->getD("SmoothEmulator_MCStepSize",0.5);
 	MCSigmaAStepSize=parmap->getD("SmoothEmulator_MCSigmaAStepSize",0.1);
-	TuneAChooseMCMC=parmap->getB("SmoothEmulator_TuneAChooseMCMC",true);
+	TuneChooseMCMC=parmap->getB("SmoothEmulator_TuneChooseMCMC",true);
 	UseSigmaYReal=parmap->getB("SmoothEmulator_UseSigmaYRreal",false);
 	ConstrainA0=parmap->getB("SmoothEmulator_ConstrainA0",false);
 	CutOffA=parmap->getB("SmoothEmulator_CutoffA",false);
@@ -63,25 +63,25 @@ void CSmoothEmulator::Init(){
 	M.resize(NTrainingPts,NTrainingPts);
 }
 
-void CSmoothEmulator::TuneA(){
-	if(TuneAChooseMCMC==true){
+void CSmoothEmulator::Tune(){
+	if(TuneChooseMCMC==true){
 		if(UseSigmaYReal){
 			if(FirstTune){
-				TuneAMCMC();
+				TuneMCMC();
 				FirstTune=false;
 			}
-			TuneAMCMC_withSigma();
+			TuneMCMC_withSigma();
 		}
 		else{
-			TuneAMCMC();
+			TuneMCMC();
 		}
 	}
 	else{
-		TuneAPerfect();
+		TunePerfect();
 	}
 }
 
-void CSmoothEmulator::TuneAMCMC(){
+void CSmoothEmulator::TuneMCMC(){
 	vector<double> *Aswitch,*Aptr,*ATrialptr;
 	double dlp,r,SigmaAswitch;
 	unsigned int success=0,ic,imc;
@@ -149,7 +149,7 @@ void CSmoothEmulator::TuneAMCMC(){
 	CLog::Info("success percentage="+to_string(double(success)*100.0/double(NMC))+", SigmaA="+to_string(SigmaA)+", logP/Ndof="+to_string(logP/double(Ndof))+",BestLogP/Ndof="+to_string(BestLogP/double(Ndof))+"\n");
 }
 
-void CSmoothEmulator::TuneAMCMC_withSigma(){
+void CSmoothEmulator::TuneMCMC_withSigma(){
 	vector<double> *Aswitch,*Aptr,*ATrialptr;
 	double dlp,r,SigmaAswitch,Y,stepsize;
 	unsigned int success=0,ic,imc,itrain;
@@ -240,7 +240,7 @@ void CSmoothEmulator::TuneAMCMC_withSigma(){
 	CLog::Info("success percentage="+to_string(double(success)*100.0/double(NMC))+", SigmaA="+to_string(SigmaA)+", logP/Ndof="+to_string(logP/double(Ndof))+",BestLogP/Ndof="+to_string(BestLogP/double(Ndof))+"\n");
 }
 
-void CSmoothEmulator::TuneAPerfect(){
+void CSmoothEmulator::TunePerfect(){
 	unsigned int ic,ic0,ntry=0,ntrymax=100000;
 	bool success=false;
 	double weight,warg;//sigmafact=1.0;
@@ -275,7 +275,7 @@ void CSmoothEmulator::TuneAPerfect(){
 		ntry+=1;
 	}
 	if(ntry>=ntrymax){
-		CLog::Fatal("TuneAPerfect Failed, SigmaA0="+to_string(SigmaA0)+"\n");
+		CLog::Fatal("TunePerfect Failed, SigmaA0="+to_string(SigmaA0)+"\n");
 	}
 	else{
 		for(ic=0;ic<smooth->NCoefficients;ic++){
@@ -362,7 +362,7 @@ void CSmoothEmulator::GenerateASamples(){
 	//NASample = 10
 	FirstTune=true;
 	for(isample=0;isample<NASample;isample++){
-		TuneA();
+		Tune();
 		for(unsigned int ic=0;ic<smooth->NCoefficients;ic++){
 			ASample[isample][ic]=A[ic];
 		}

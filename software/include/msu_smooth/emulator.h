@@ -31,9 +31,9 @@ public:
 	Eigen::MatrixXd M;
 
 	double SigmaA0,SigmaAMin,SigmaA,SigmaATrial,MCStepSize,MCSigmaAStepSize,LAMBDA;
-	unsigned int NMC;   // NMC is for generating independent samplings of A in TuneA
+	unsigned int NMC;   // NMC is for generating independent samplings of A in Tune
 	unsigned int NASample;
-	bool TuneAChooseMCMC,ConstrainA0,CutOffA,UseSigmaYReal,FirstTune;
+	bool TuneChooseMCMC,ConstrainA0,CutOffA,UseSigmaYReal,FirstTune;
 	vector<vector<double>> ASample;
 	vector<double> SigmaASample;
 	vector<double> A,ATrial;
@@ -46,10 +46,10 @@ public:
 	void PrintA(vector<double> &Aprint);
 
 	void SetThetaTrain();
-	void TuneA();
-	void TuneAMCMC();
-	void TuneAMCMC_withSigma();
-	void TuneAPerfect();
+	void Tune();
+	void TuneMCMC();
+	void TuneMCMC_withSigma();
+	void TunePerfect();
 	double GetLog_AProb(vector<double> &AA,double SigmaA);
 
 	void SetA_Zero(vector<double> &A);

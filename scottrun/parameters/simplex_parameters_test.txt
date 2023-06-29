@@ -2,7 +2,7 @@ SmoothEmulator_NMC 10000
 SmoothEmulator_NASample 10
 SmoothEmulator_MCStepSize .05
 SmoothEmulator_MCSigmaAStepSize .12
-SmoothEmulator_TuneAChooseMCMC true
+SmoothEmulator_TuneChooseMCMC true
 SmoothEmulator_UseSigmaYRreal false
 SmoothEmulator_ConstrainA0 true
 SmoothEmulator_CutoffA false

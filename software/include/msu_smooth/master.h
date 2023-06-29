@@ -40,7 +40,9 @@ public:
 	
 	void ReadTrainingInfo();
 	void GenerateASamples();
-	void TuneA();
+	void Tune();
+	void Tune(string obsname);
+	void Tune(int iY);
 	void SetThetaTrain();
 	void CalcY(int iY,CModelParameters *modelpars,double &Y,double &SigmaY);
 	void CalcY(string obsname,CModelParameters *modelpars,double &Y,double &SigmaY);
