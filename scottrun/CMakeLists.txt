@@ -41,3 +41,8 @@ add_executable(smoothy_writecoefficients ${CMAKE_CURRENT_SOURCE_DIR}/smoothy_wri
 add_dependencies(smoothy_writecoefficients extern_smooth extern_commonutils)
 target_link_libraries(smoothy_writecoefficients ${GITHOME_MSU}/smooth/software/lib/libsmooth.a  ${GITHOME_MSU}/commonutils/software/lib/libmsu_commonutils.a ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY} ${EIGEN3_LIBRARY})
 
+#################################################
+set(SOURCE_FILES ./smoothy_readcoefficients.cc)
+add_executable(smoothy_readcoefficients ${CMAKE_CURRENT_SOURCE_DIR}/smoothy_readcoefficients.cc)
+add_dependencies(smoothy_readcoefficients extern_smooth extern_commonutils)
+target_link_libraries(smoothy_readcoefficients ${GITHOME_MSU}/smooth/software/lib/libsmooth.a  ${GITHOME_MSU}/commonutils/software/lib/libmsu_commonutils.a ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY} ${EIGEN3_LIBRARY})

@@ -64,6 +64,7 @@ void CSmoothMaster::TuneY(int iY){
 void CSmoothMaster::GenerateCoefficientSamples(){
 	int iY;
 	for(iY=0;iY<observableinfo->NObservables;iY++){
+		CLog::Info("Tuning Emulator for "+observableinfo->GetName(iY)+"\n");
 		emulator[iY]->GenerateASamples();
 	}
 }
@@ -100,6 +101,7 @@ void CSmoothMaster::TestAtTrainingPts(){
 	vector<double> Y,SigmaY;
 	Y.resize(NObservables);
 	SigmaY.resize(NObservables);
+	CLog::Info("--- TESTING AT TRAINING POINTS ----\n");
 	for(itrain=0;itrain<traininginfo->NTrainingPts;itrain++){
 		CLog::Info("------ itrain="+to_string(itrain)+" --------\n");
 		for(iY=0;iY<NObservables;iY++){
@@ -110,11 +112,11 @@ void CSmoothMaster::TestAtTrainingPts(){
 		}
 	}
 }
-
 void CSmoothMaster::TestAtTrainingPts(int iY){
 	char pchars[CLog::CHARLENGTH];
 	int itrain;
 	double Y,SigmaY;
+	CLog::Info("--- TESTING AT TRAINING POINTS ----\n");
 	for(itrain=0;itrain<traininginfo->NTrainingPts;itrain++){
 		CLog::Info("------ itrain="+to_string(itrain)+" --------\n");
 		CalcY(iY,traininginfo->modelpars[itrain],Y,SigmaY);
@@ -123,12 +125,12 @@ void CSmoothMaster::TestAtTrainingPts(int iY){
 		CLog::Info(pchars);
 	}
 }
-
 void CSmoothMaster::TestAtTrainingPts(string obsname){
 	char pchars[CLog::CHARLENGTH];
 	int itrain,iY;
 	double Y,SigmaY;
 	iY=observableinfo->GetIPosition(obsname);
+	CLog::Info("--- TESTING AT TRAINING POINTS ----\n");
 	for(itrain=0;itrain<traininginfo->NTrainingPts;itrain++){
 		CLog::Info("------ itrain="+to_string(itrain)+" --------\n");
 		CalcY(iY,traininginfo->modelpars[itrain],Y,SigmaY);

@@ -377,12 +377,11 @@ void CSmoothEmulator::PrintA(vector<double> &Aprint){
 	}
 }
 
-
 void CSmoothEmulator::CalcY(CModelParameters *modpars,double &Y,double &SigmaY){
 	double y;
 	Y=SigmaY=0.0;
 	for(int isample=0;isample<NASample;isample++){
-		y=smooth->CalcY(A,LAMBDA,modpars->Theta);
+		y=smooth->CalcY(ASample[isample],LAMBDA,modpars->Theta);
 		Y+=y;
 		SigmaY+=y*y;
 	}
@@ -431,10 +430,12 @@ void CSmoothEmulator::ReadCoefficients(){
 	fclose(fptr);
 	for(isample=0;isample<NASample;isample++){
 		filename=dirname+"/sample"+to_string(isample)+".txt";
-		fptr=fopen(filename.c_str(),"w");
+		fptr=fopen(filename.c_str(),"r");
 		for(ic=0;ic<smooth->NCoefficients;ic++){
 			fscanf(fptr,"%lf\n",&ASample[isample][ic]);
 		}
 		fclose(fptr);
 	}
+	
+	
 }
