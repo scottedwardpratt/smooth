@@ -390,3 +390,51 @@ void CSmoothEmulator::CalcY(CModelParameters *modpars,double &Y,double &SigmaY){
 	Y=Y/double(NASample);
 	SigmaY=sqrt(fabs(SigmaY-Y*Y));
 }
+
+void CSmoothEmulator::WriteCoefficients(){
+	int isample,ic;
+	FILE *fptr;
+	string filename;
+	string dirname=smoothmaster->CoefficientsDirName+"/"+observable_name;
+	string command="mkdir -p "+dirname;
+	system(command.c_str());
+	filename=dirname+"/meta.txt";
+	fptr=fopen(filename.c_str(),"w");
+	fprintf(fptr,"# NPars  MaxRank NCoefficients\n");
+	fprintf(fptr,"%d  %d  %d\n",NPars,smooth->MaxRank,smooth->NCoefficients);
+	fclose(fptr);
+	for(isample=0;isample<NASample;isample++){
+		filename=dirname+"/sample"+to_string(isample)+".txt";
+		fptr=fopen(filename.c_str(),"w");
+		for(ic=0;ic<smooth->NCoefficients;ic++){
+			fprintf(fptr,"%15.8e\n",ASample[isample][ic]);
+		}
+		fclose(fptr);
+	}
+}
+
+void CSmoothEmulator::ReadCoefficients(){
+	int isample,ic,NPars_test,MaxRank_test,NC_test;
+	FILE *fptr;
+	string filename;
+	string dirname=smoothmaster->CoefficientsDirName+"/"+observable_name;
+	string command="mkdir -p "+dirname;
+	char dummy[100];
+	system(command.c_str());
+	filename=dirname+"/meta.txt";
+	fptr=fopen(filename.c_str(),"r");
+	fgets(dummy,100,fptr);
+	fscanf(fptr,"%d  %d  %d\n",&NPars_test,&MaxRank_test,&NC_test);
+	if(NPars_test!=NPars || MaxRank_test!=smooth->MaxRank || NC_test!=smooth->NCoefficients){
+		CLog::Fatal("Mismatch in array sizes in ReadCoefficients");
+	}
+	fclose(fptr);
+	for(isample=0;isample<NASample;isample++){
+		filename=dirname+"/sample"+to_string(isample)+".txt";
+		fptr=fopen(filename.c_str(),"w");
+		for(ic=0;ic<smooth->NCoefficients;ic++){
+			fscanf(fptr,"%lf\n",&ASample[isample][ic]);
+		}
+		fclose(fptr);
+	}
+}

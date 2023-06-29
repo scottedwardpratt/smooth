@@ -36,18 +36,27 @@ public:
 	CPriorInfo *priorinfo;
 	Crandy *randy;
 	CSmooth *smooth;
-	string ModelRunDirName;
+	string ModelRunDirName,CoefficientsDirName;
 	
 	void ReadTrainingInfo();
-	void GenerateASamples();
-	void Tune();
-	void Tune(string obsname);
-	void Tune(int iY);
+	void GenerateCoefficientSamples();
+	void TuneAllY(); // tune all observables
+	void TuneY(string obsname); // tune one observable
+	void TuneY(int iY); // tune one observable
 	void SetThetaTrain();
 	void CalcY(int iY,CModelParameters *modelpars,double &Y,double &SigmaY);
 	void CalcY(string obsname,CModelParameters *modelpars,double &Y,double &SigmaY);
 	void CalcAllY(CModelParameters *modelpars,vector<double> &Y,vector<double> &SigmaY);
 	void TestAtTrainingPts();
+	void TestAtTrainingPts(string obsname);
+	void TestAtTrainingPts(int iY);
+	void WriteCoefficientsAllY();
+	void WriteCoefficients(string obsname);
+	void WriteCoefficients(int iY);
+	void ReadCoefficientsAllY();
+	void ReadCoefficients(string obsname);
+	void ReadCoefficients(int iY);
+	
 };
 
 #endif

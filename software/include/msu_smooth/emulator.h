@@ -62,6 +62,8 @@ public:
 
 	void GenerateASamples();
 	void CalcY(CModelParameters *modpars,double &Y,double &SigmaY);
+	void WriteCoefficients();
+	void ReadCoefficients();
 
 	void Init();
 	
