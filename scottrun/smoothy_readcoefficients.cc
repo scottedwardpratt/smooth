@@ -14,13 +14,14 @@ int main(int argc,char *argv[]){
 	CSmoothMaster master(parmap);
 	master.randy->reset(-time(NULL));
 	
+	master.ReadCoefficientsAllY();
+	
 	master.ReadTrainingInfo();
 
-	master.GenerateCoefficientSamples();
+	//master.TuneAllY(); // preliminary tuning to get a bit closer to likely region of A
+	//master.GenerateCoefficientSamples();
 	
 	master.TestAtTrainingPts();
-	
-	master.WriteCoefficientsAllY();
 
 	return 0;
 }
