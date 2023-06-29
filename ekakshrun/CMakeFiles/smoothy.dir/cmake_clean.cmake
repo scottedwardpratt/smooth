@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/smoothy.dir/smoothmain.cc.o"
-  "CMakeFiles/smoothy.dir/smoothmain.cc.o.d"
+  "CMakeFiles/smoothy.dir/smoothy.cc.o"
+  "CMakeFiles/smoothy.dir/smoothy.cc.o.d"
   "smoothy"
   "smoothy.pdb"
 )
