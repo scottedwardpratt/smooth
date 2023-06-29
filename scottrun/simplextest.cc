@@ -1,21 +1,16 @@
 #include "msu_commonutils/parametermap.h"
-#include "msu_commonutils/constants.h"
 #include "msu_smooth/simplex.h"
-#include "msu_smooth/priorinfo.h"
 #include "msu_commonutils/log.h"
 
 using namespace std;
 int main(int argc,char *argv[]){
-	//if(argc!=2){
-	//	printf("Usage simplextest priorinfo_filename (to be found inside Info)\n");
-	//	exit(1);
-	//}
+	if(argc!=2){
+		printf("Usage simplextest simplex_parameters_filename\n");
+		exit(1);
+	}
 	CparameterMap *parmap=new CparameterMap();
 	
-	//CPriorInfo *priorinfo=new CPriorInfo("Info/prior_info.txt");
-	//printf("check a\n");
-
-	parmap->ReadParsFromFile("parameters/simplex_parameters.txt");
+	parmap->ReadParsFromFile(string(argv[1]));
 	CSimplexSampler *simplex=new CSimplexSampler(parmap);
 	
 	simplex->SetThetaType1();

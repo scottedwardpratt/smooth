@@ -36,8 +36,9 @@ public:
 	CPriorInfo *priorinfo;
 	Crandy *randy;
 	CSmooth *smooth;
+	string ModelRunDirName;
 	
-	void ReadTrainingInfo(string rundir);
+	void ReadTrainingInfo();
 	void GenerateASamples();
 	void TuneA();
 	void SetThetaTrain();
