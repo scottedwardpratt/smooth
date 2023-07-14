@@ -13,7 +13,7 @@ int main(int argc,char *argv[]){
 	parmap->ReadParsFromFile(string(argv[1]));
 	CSimplexSampler *simplex=new CSimplexSampler(parmap);
 	
-	simplex->SetThetaType1();
-	simplex->WriteModelPars("modelruns");
+	simplex->SetThetaSimplex();
+	simplex->WriteModelPars(parmap->getS("SmoothEmulator_ModelRunDirName","modelruns"));
 	return 0;
 }
