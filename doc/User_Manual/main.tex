@@ -158,7 +158,7 @@ Then, create an environmental variable which describes the location of the direc
 It is recommended to copy this command into the user's .bashrc (or equivalent) file to avoid re-enerting it each time one needs to recompile.
 
 \begin{description}
-\item[Step 2 : Downloading] 
+\item[Step 2 : Downloading and Compiling] 
 \end{description}
 {\tt 
 \begin{verbatim}
@@ -167,16 +167,28 @@ It is recommended to copy this command into the user's .bashrc (or equivalent) f
 \end{verbatim}
 }
 
-This creates 2 directories: {\tt .../msu\_git/commonutils} and {\tt .../msu\_git/smooth}.
-
-After downloading create a directory in the smooth directory such as projectX and using the git copy command, copy the items in the scottrun directory into the new directory using the following command when the terminal is in the project directory.
+This creates 2 directories: {\tt .../msu\_git/commonutils} and {\tt .../msu\_git/smooth}. Next, create the Make files with cmake, then compile them.
+{\tt 
+\begin{verbatim}
+    % cd ../githome_msu/commonutils/software
+    % cmake .
+    % cd ../githome_msu/smooth/software
+    % cmake .
+    % cd ../githome_msu/smooth/program
+    % cmake .
+    % make simplex
+    % make smoothy_writecoefficients
+    % make smoothy_readcoefficients
+\end{verbatim}
+}
+As described further below, the foundational software and libraries are in the {\tt githome\_msu/commonutils/software} and {\tt githome\_msu/smooth/software} directories. The {\tt githome\_msu/smooth/program} directory has the short programs which call functions from the other directories. This arrangement should more easily allow the reader to copy the codes in {\tt programs} directory to make their own versions.
 
 \begin{description}
 \item[Step 3 : Making a Project Directory] 
 \end{description}
 {\tt 
 \begin{verbatim}
-    cp -r ../template/model* . 
+    % cp -r ../template myproject
 \end{verbatim}
 }
      
@@ -188,16 +200,9 @@ This will set up the directory structure for use.  \\
 
 {\tt 
 \begin{verbatim}
-    cmake /path/to/project 
+    cmake /path/to/project
 \end{verbatim}
 }
-
-The user should also be informed about CMake. 
-
-Once the installation is complete, open a terminal or command prompt and navigate to the directory where your project's CMakeLists.txt file is located.
-
-Run the cmake command followed by the path to the project directory. For example:
-
 
 \subsection{Structure}
 
