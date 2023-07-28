@@ -44,19 +44,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /opt/homebrew/Cellar/cmake/3.26.3/bin/cmake
+CMAKE_COMMAND = /usr/local/Cellar/cmake/3.26.3/bin/cmake
 
 # The command to remove a file.
-RM = /opt/homebrew/Cellar/cmake/3.26.3/bin/cmake -E rm -f
+RM = /usr/local/Cellar/cmake/3.26.3/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/ekakshkataria/git/smooth/software
+CMAKE_SOURCE_DIR = /Users/scottpratt/git/smooth/software
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/ekakshkataria/git/smooth/software
+CMAKE_BINARY_DIR = /Users/scottpratt/git/smooth/software
 
 # Include any dependencies generated for this target.
 include CMakeFiles/smooth.dir/depend.make
@@ -72,142 +72,142 @@ include CMakeFiles/smooth.dir/flags.make
 CMakeFiles/smooth.dir/src/emulator.cc.o: CMakeFiles/smooth.dir/flags.make
 CMakeFiles/smooth.dir/src/emulator.cc.o: src/emulator.cc
 CMakeFiles/smooth.dir/src/emulator.cc.o: CMakeFiles/smooth.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/ekakshkataria/git/smooth/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/smooth.dir/src/emulator.cc.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/smooth.dir/src/emulator.cc.o -MF CMakeFiles/smooth.dir/src/emulator.cc.o.d -o CMakeFiles/smooth.dir/src/emulator.cc.o -c /Users/ekakshkataria/git/smooth/software/src/emulator.cc
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/scottpratt/git/smooth/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/smooth.dir/src/emulator.cc.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/smooth.dir/src/emulator.cc.o -MF CMakeFiles/smooth.dir/src/emulator.cc.o.d -o CMakeFiles/smooth.dir/src/emulator.cc.o -c /Users/scottpratt/git/smooth/software/src/emulator.cc
 
 CMakeFiles/smooth.dir/src/emulator.cc.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/smooth.dir/src/emulator.cc.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/ekakshkataria/git/smooth/software/src/emulator.cc > CMakeFiles/smooth.dir/src/emulator.cc.i
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/scottpratt/git/smooth/software/src/emulator.cc > CMakeFiles/smooth.dir/src/emulator.cc.i
 
 CMakeFiles/smooth.dir/src/emulator.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/smooth.dir/src/emulator.cc.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/ekakshkataria/git/smooth/software/src/emulator.cc -o CMakeFiles/smooth.dir/src/emulator.cc.s
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/scottpratt/git/smooth/software/src/emulator.cc -o CMakeFiles/smooth.dir/src/emulator.cc.s
 
 CMakeFiles/smooth.dir/src/latincube.cc.o: CMakeFiles/smooth.dir/flags.make
 CMakeFiles/smooth.dir/src/latincube.cc.o: src/latincube.cc
 CMakeFiles/smooth.dir/src/latincube.cc.o: CMakeFiles/smooth.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/ekakshkataria/git/smooth/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/smooth.dir/src/latincube.cc.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/smooth.dir/src/latincube.cc.o -MF CMakeFiles/smooth.dir/src/latincube.cc.o.d -o CMakeFiles/smooth.dir/src/latincube.cc.o -c /Users/ekakshkataria/git/smooth/software/src/latincube.cc
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/scottpratt/git/smooth/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/smooth.dir/src/latincube.cc.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/smooth.dir/src/latincube.cc.o -MF CMakeFiles/smooth.dir/src/latincube.cc.o.d -o CMakeFiles/smooth.dir/src/latincube.cc.o -c /Users/scottpratt/git/smooth/software/src/latincube.cc
 
 CMakeFiles/smooth.dir/src/latincube.cc.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/smooth.dir/src/latincube.cc.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/ekakshkataria/git/smooth/software/src/latincube.cc > CMakeFiles/smooth.dir/src/latincube.cc.i
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/scottpratt/git/smooth/software/src/latincube.cc > CMakeFiles/smooth.dir/src/latincube.cc.i
 
 CMakeFiles/smooth.dir/src/latincube.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/smooth.dir/src/latincube.cc.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/ekakshkataria/git/smooth/software/src/latincube.cc -o CMakeFiles/smooth.dir/src/latincube.cc.s
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/scottpratt/git/smooth/software/src/latincube.cc -o CMakeFiles/smooth.dir/src/latincube.cc.s
 
 CMakeFiles/smooth.dir/src/master.cc.o: CMakeFiles/smooth.dir/flags.make
 CMakeFiles/smooth.dir/src/master.cc.o: src/master.cc
 CMakeFiles/smooth.dir/src/master.cc.o: CMakeFiles/smooth.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/ekakshkataria/git/smooth/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/smooth.dir/src/master.cc.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/smooth.dir/src/master.cc.o -MF CMakeFiles/smooth.dir/src/master.cc.o.d -o CMakeFiles/smooth.dir/src/master.cc.o -c /Users/ekakshkataria/git/smooth/software/src/master.cc
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/scottpratt/git/smooth/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/smooth.dir/src/master.cc.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/smooth.dir/src/master.cc.o -MF CMakeFiles/smooth.dir/src/master.cc.o.d -o CMakeFiles/smooth.dir/src/master.cc.o -c /Users/scottpratt/git/smooth/software/src/master.cc
 
 CMakeFiles/smooth.dir/src/master.cc.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/smooth.dir/src/master.cc.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/ekakshkataria/git/smooth/software/src/master.cc > CMakeFiles/smooth.dir/src/master.cc.i
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/scottpratt/git/smooth/software/src/master.cc > CMakeFiles/smooth.dir/src/master.cc.i
 
 CMakeFiles/smooth.dir/src/master.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/smooth.dir/src/master.cc.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/ekakshkataria/git/smooth/software/src/master.cc -o CMakeFiles/smooth.dir/src/master.cc.s
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/scottpratt/git/smooth/software/src/master.cc -o CMakeFiles/smooth.dir/src/master.cc.s
 
 CMakeFiles/smooth.dir/src/modelparinfo.cc.o: CMakeFiles/smooth.dir/flags.make
 CMakeFiles/smooth.dir/src/modelparinfo.cc.o: src/modelparinfo.cc
 CMakeFiles/smooth.dir/src/modelparinfo.cc.o: CMakeFiles/smooth.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/ekakshkataria/git/smooth/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/smooth.dir/src/modelparinfo.cc.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/smooth.dir/src/modelparinfo.cc.o -MF CMakeFiles/smooth.dir/src/modelparinfo.cc.o.d -o CMakeFiles/smooth.dir/src/modelparinfo.cc.o -c /Users/ekakshkataria/git/smooth/software/src/modelparinfo.cc
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/scottpratt/git/smooth/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/smooth.dir/src/modelparinfo.cc.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/smooth.dir/src/modelparinfo.cc.o -MF CMakeFiles/smooth.dir/src/modelparinfo.cc.o.d -o CMakeFiles/smooth.dir/src/modelparinfo.cc.o -c /Users/scottpratt/git/smooth/software/src/modelparinfo.cc
 
 CMakeFiles/smooth.dir/src/modelparinfo.cc.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/smooth.dir/src/modelparinfo.cc.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/ekakshkataria/git/smooth/software/src/modelparinfo.cc > CMakeFiles/smooth.dir/src/modelparinfo.cc.i
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/scottpratt/git/smooth/software/src/modelparinfo.cc > CMakeFiles/smooth.dir/src/modelparinfo.cc.i
 
 CMakeFiles/smooth.dir/src/modelparinfo.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/smooth.dir/src/modelparinfo.cc.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/ekakshkataria/git/smooth/software/src/modelparinfo.cc -o CMakeFiles/smooth.dir/src/modelparinfo.cc.s
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/scottpratt/git/smooth/software/src/modelparinfo.cc -o CMakeFiles/smooth.dir/src/modelparinfo.cc.s
 
 CMakeFiles/smooth.dir/src/observableinfo.cc.o: CMakeFiles/smooth.dir/flags.make
 CMakeFiles/smooth.dir/src/observableinfo.cc.o: src/observableinfo.cc
 CMakeFiles/smooth.dir/src/observableinfo.cc.o: CMakeFiles/smooth.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/ekakshkataria/git/smooth/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/smooth.dir/src/observableinfo.cc.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/smooth.dir/src/observableinfo.cc.o -MF CMakeFiles/smooth.dir/src/observableinfo.cc.o.d -o CMakeFiles/smooth.dir/src/observableinfo.cc.o -c /Users/ekakshkataria/git/smooth/software/src/observableinfo.cc
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/scottpratt/git/smooth/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/smooth.dir/src/observableinfo.cc.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/smooth.dir/src/observableinfo.cc.o -MF CMakeFiles/smooth.dir/src/observableinfo.cc.o.d -o CMakeFiles/smooth.dir/src/observableinfo.cc.o -c /Users/scottpratt/git/smooth/software/src/observableinfo.cc
 
 CMakeFiles/smooth.dir/src/observableinfo.cc.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/smooth.dir/src/observableinfo.cc.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/ekakshkataria/git/smooth/software/src/observableinfo.cc > CMakeFiles/smooth.dir/src/observableinfo.cc.i
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/scottpratt/git/smooth/software/src/observableinfo.cc > CMakeFiles/smooth.dir/src/observableinfo.cc.i
 
 CMakeFiles/smooth.dir/src/observableinfo.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/smooth.dir/src/observableinfo.cc.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/ekakshkataria/git/smooth/software/src/observableinfo.cc -o CMakeFiles/smooth.dir/src/observableinfo.cc.s
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/scottpratt/git/smooth/software/src/observableinfo.cc -o CMakeFiles/smooth.dir/src/observableinfo.cc.s
 
 CMakeFiles/smooth.dir/src/real.cc.o: CMakeFiles/smooth.dir/flags.make
 CMakeFiles/smooth.dir/src/real.cc.o: src/real.cc
 CMakeFiles/smooth.dir/src/real.cc.o: CMakeFiles/smooth.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/ekakshkataria/git/smooth/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/smooth.dir/src/real.cc.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/smooth.dir/src/real.cc.o -MF CMakeFiles/smooth.dir/src/real.cc.o.d -o CMakeFiles/smooth.dir/src/real.cc.o -c /Users/ekakshkataria/git/smooth/software/src/real.cc
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/scottpratt/git/smooth/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/smooth.dir/src/real.cc.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/smooth.dir/src/real.cc.o -MF CMakeFiles/smooth.dir/src/real.cc.o.d -o CMakeFiles/smooth.dir/src/real.cc.o -c /Users/scottpratt/git/smooth/software/src/real.cc
 
 CMakeFiles/smooth.dir/src/real.cc.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/smooth.dir/src/real.cc.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/ekakshkataria/git/smooth/software/src/real.cc > CMakeFiles/smooth.dir/src/real.cc.i
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/scottpratt/git/smooth/software/src/real.cc > CMakeFiles/smooth.dir/src/real.cc.i
 
 CMakeFiles/smooth.dir/src/real.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/smooth.dir/src/real.cc.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/ekakshkataria/git/smooth/software/src/real.cc -o CMakeFiles/smooth.dir/src/real.cc.s
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/scottpratt/git/smooth/software/src/real.cc -o CMakeFiles/smooth.dir/src/real.cc.s
 
 CMakeFiles/smooth.dir/src/scorecard.cc.o: CMakeFiles/smooth.dir/flags.make
 CMakeFiles/smooth.dir/src/scorecard.cc.o: src/scorecard.cc
 CMakeFiles/smooth.dir/src/scorecard.cc.o: CMakeFiles/smooth.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/ekakshkataria/git/smooth/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/smooth.dir/src/scorecard.cc.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/smooth.dir/src/scorecard.cc.o -MF CMakeFiles/smooth.dir/src/scorecard.cc.o.d -o CMakeFiles/smooth.dir/src/scorecard.cc.o -c /Users/ekakshkataria/git/smooth/software/src/scorecard.cc
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/scottpratt/git/smooth/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/smooth.dir/src/scorecard.cc.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/smooth.dir/src/scorecard.cc.o -MF CMakeFiles/smooth.dir/src/scorecard.cc.o.d -o CMakeFiles/smooth.dir/src/scorecard.cc.o -c /Users/scottpratt/git/smooth/software/src/scorecard.cc
 
 CMakeFiles/smooth.dir/src/scorecard.cc.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/smooth.dir/src/scorecard.cc.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/ekakshkataria/git/smooth/software/src/scorecard.cc > CMakeFiles/smooth.dir/src/scorecard.cc.i
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/scottpratt/git/smooth/software/src/scorecard.cc > CMakeFiles/smooth.dir/src/scorecard.cc.i
 
 CMakeFiles/smooth.dir/src/scorecard.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/smooth.dir/src/scorecard.cc.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/ekakshkataria/git/smooth/software/src/scorecard.cc -o CMakeFiles/smooth.dir/src/scorecard.cc.s
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/scottpratt/git/smooth/software/src/scorecard.cc -o CMakeFiles/smooth.dir/src/scorecard.cc.s
 
 CMakeFiles/smooth.dir/src/simplex.cc.o: CMakeFiles/smooth.dir/flags.make
 CMakeFiles/smooth.dir/src/simplex.cc.o: src/simplex.cc
 CMakeFiles/smooth.dir/src/simplex.cc.o: CMakeFiles/smooth.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/ekakshkataria/git/smooth/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/smooth.dir/src/simplex.cc.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/smooth.dir/src/simplex.cc.o -MF CMakeFiles/smooth.dir/src/simplex.cc.o.d -o CMakeFiles/smooth.dir/src/simplex.cc.o -c /Users/ekakshkataria/git/smooth/software/src/simplex.cc
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/scottpratt/git/smooth/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/smooth.dir/src/simplex.cc.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/smooth.dir/src/simplex.cc.o -MF CMakeFiles/smooth.dir/src/simplex.cc.o.d -o CMakeFiles/smooth.dir/src/simplex.cc.o -c /Users/scottpratt/git/smooth/software/src/simplex.cc
 
 CMakeFiles/smooth.dir/src/simplex.cc.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/smooth.dir/src/simplex.cc.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/ekakshkataria/git/smooth/software/src/simplex.cc > CMakeFiles/smooth.dir/src/simplex.cc.i
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/scottpratt/git/smooth/software/src/simplex.cc > CMakeFiles/smooth.dir/src/simplex.cc.i
 
 CMakeFiles/smooth.dir/src/simplex.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/smooth.dir/src/simplex.cc.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/ekakshkataria/git/smooth/software/src/simplex.cc -o CMakeFiles/smooth.dir/src/simplex.cc.s
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/scottpratt/git/smooth/software/src/simplex.cc -o CMakeFiles/smooth.dir/src/simplex.cc.s
 
 CMakeFiles/smooth.dir/src/smooth.cc.o: CMakeFiles/smooth.dir/flags.make
 CMakeFiles/smooth.dir/src/smooth.cc.o: src/smooth.cc
 CMakeFiles/smooth.dir/src/smooth.cc.o: CMakeFiles/smooth.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/ekakshkataria/git/smooth/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/smooth.dir/src/smooth.cc.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/smooth.dir/src/smooth.cc.o -MF CMakeFiles/smooth.dir/src/smooth.cc.o.d -o CMakeFiles/smooth.dir/src/smooth.cc.o -c /Users/ekakshkataria/git/smooth/software/src/smooth.cc
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/scottpratt/git/smooth/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/smooth.dir/src/smooth.cc.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/smooth.dir/src/smooth.cc.o -MF CMakeFiles/smooth.dir/src/smooth.cc.o.d -o CMakeFiles/smooth.dir/src/smooth.cc.o -c /Users/scottpratt/git/smooth/software/src/smooth.cc
 
 CMakeFiles/smooth.dir/src/smooth.cc.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/smooth.dir/src/smooth.cc.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/ekakshkataria/git/smooth/software/src/smooth.cc > CMakeFiles/smooth.dir/src/smooth.cc.i
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/scottpratt/git/smooth/software/src/smooth.cc > CMakeFiles/smooth.dir/src/smooth.cc.i
 
 CMakeFiles/smooth.dir/src/smooth.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/smooth.dir/src/smooth.cc.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/ekakshkataria/git/smooth/software/src/smooth.cc -o CMakeFiles/smooth.dir/src/smooth.cc.s
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/scottpratt/git/smooth/software/src/smooth.cc -o CMakeFiles/smooth.dir/src/smooth.cc.s
 
 CMakeFiles/smooth.dir/src/traininginfo.cc.o: CMakeFiles/smooth.dir/flags.make
 CMakeFiles/smooth.dir/src/traininginfo.cc.o: src/traininginfo.cc
 CMakeFiles/smooth.dir/src/traininginfo.cc.o: CMakeFiles/smooth.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/ekakshkataria/git/smooth/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/smooth.dir/src/traininginfo.cc.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/smooth.dir/src/traininginfo.cc.o -MF CMakeFiles/smooth.dir/src/traininginfo.cc.o.d -o CMakeFiles/smooth.dir/src/traininginfo.cc.o -c /Users/ekakshkataria/git/smooth/software/src/traininginfo.cc
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/scottpratt/git/smooth/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/smooth.dir/src/traininginfo.cc.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/smooth.dir/src/traininginfo.cc.o -MF CMakeFiles/smooth.dir/src/traininginfo.cc.o.d -o CMakeFiles/smooth.dir/src/traininginfo.cc.o -c /Users/scottpratt/git/smooth/software/src/traininginfo.cc
 
 CMakeFiles/smooth.dir/src/traininginfo.cc.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/smooth.dir/src/traininginfo.cc.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/ekakshkataria/git/smooth/software/src/traininginfo.cc > CMakeFiles/smooth.dir/src/traininginfo.cc.i
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/scottpratt/git/smooth/software/src/traininginfo.cc > CMakeFiles/smooth.dir/src/traininginfo.cc.i
 
 CMakeFiles/smooth.dir/src/traininginfo.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/smooth.dir/src/traininginfo.cc.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/ekakshkataria/git/smooth/software/src/traininginfo.cc -o CMakeFiles/smooth.dir/src/traininginfo.cc.s
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/scottpratt/git/smooth/software/src/traininginfo.cc -o CMakeFiles/smooth.dir/src/traininginfo.cc.s
 
 # Object files for target smooth
 smooth_OBJECTS = \
@@ -237,7 +237,7 @@ lib/libsmooth.a: CMakeFiles/smooth.dir/src/smooth.cc.o
 lib/libsmooth.a: CMakeFiles/smooth.dir/src/traininginfo.cc.o
 lib/libsmooth.a: CMakeFiles/smooth.dir/build.make
 lib/libsmooth.a: CMakeFiles/smooth.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/ekakshkataria/git/smooth/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Linking CXX static library lib/libsmooth.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/scottpratt/git/smooth/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Linking CXX static library lib/libsmooth.a"
 	$(CMAKE_COMMAND) -P CMakeFiles/smooth.dir/cmake_clean_target.cmake
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/smooth.dir/link.txt --verbose=$(VERBOSE)
 
@@ -250,6 +250,6 @@ CMakeFiles/smooth.dir/clean:
 .PHONY : CMakeFiles/smooth.dir/clean
 
 CMakeFiles/smooth.dir/depend:
-	cd /Users/ekakshkataria/git/smooth/software && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/ekakshkataria/git/smooth/software /Users/ekakshkataria/git/smooth/software /Users/ekakshkataria/git/smooth/software /Users/ekakshkataria/git/smooth/software /Users/ekakshkataria/git/smooth/software/CMakeFiles/smooth.dir/DependInfo.cmake --color=$(COLOR)
+	cd /Users/scottpratt/git/smooth/software && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/scottpratt/git/smooth/software /Users/scottpratt/git/smooth/software /Users/scottpratt/git/smooth/software /Users/scottpratt/git/smooth/software /Users/scottpratt/git/smooth/software/CMakeFiles/smooth.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/smooth.dir/depend
 
