@@ -1,5 +1,5 @@
 \documentclass[12pt]{article}
-%#Scott Pratt 2022
+%#Scott Pratt, Eren Erdogan, Ekaksh Kataria 2023
 \usepackage{subfiles}
 \usepackage{indentfirst}
 \usepackage{graphicx}
@@ -63,6 +63,10 @@ arc=0pt,outer arc=0pt,
 \usepackage{comment}
 \parskip 4pt
 \parindent 10pt
+\textwidth 7.0in
+\hoffset -0.8in
+\textheight 9.2in
+\voffset -1in
 
 %\newcommand{\bm}{\boldmath}
 \boldmath
@@ -90,7 +94,6 @@ arc=0pt,outer arc=0pt,
             
    \end{center}
 \end{titlepage}
-
 \tableofcontents
 
 \newpage
@@ -174,14 +177,14 @@ This creates 2 directories: {\tt .../msu\_git/commonutils} and {\tt .../msu\_git
     % cmake .
     % cd ../githome_msu/smooth/software
     % cmake .
-    % cd ../githome_msu/smooth/bin
+    % cd ../githome_msu/smooth/program
     % cmake .
     % make simplex
     % make smoothy_writecoefficients
     % make smoothy_readcoefficients
 \end{verbatim}
 }
-As described further below, the foundational software and libraries are in the {\tt githome\_msu/commonutils/software} and {\tt githome\_msu/smooth/software} directories. The {\tt githome\_msu/smooth/bin} directory has short programs which call functions from the other directories. This arrangement should more easily allow the reader to copy the codes in {\tt bin} directory to make their own versions.
+As described further below, the foundational software and libraries are in the {\tt githome\_msu/ commonutils/software} and {\tt githome\_msu/smooth/software} directories. The {\tt githome\_msu/smooth /program} directory has the short programs which call functions from the other directories. This arrangement should more easily allow the reader to copy the codes in {\tt programs} directory to make their own versions.
 
 \begin{description}
 \item[Step 3 : Making a Project Directory] 
@@ -235,18 +238,18 @@ The value of SigmaA controls the step size of the random walk in the parameter s
 
 \begin{description}
 \item[Template Project Directory] \
-\\
+
 \ 1. simplex.cc \\
-\ This cc helps in choosing the training points and making the model parameters and creates the model run directory using the prior info for the simplex \\
+\ This cc helps in choosing the training points and making the model parameters and creates the model run directory using the prior info for the simplex 
 
 \ 2. fakemodel.cc \\
-\ The fakemodel.cc is a template used to represent a potential model. It will be replaced by the actual model created by the user. \\ 
+\ The fakemodel.cc is a template used to represent a potential model. It will be replaced by the actual model created by the user. 
 
-\ 3. smoothy.cc \\
-\ This cc files read in the parameter files and reads in the training point info from the simplex and tune the function Y values and generate the coefficient for each observable and make a directory of the possible coefficient values \\
+\ 3. smoothy.cc 
+\ This cc files read in the parameter files and reads in the training point info from the simplex and tune the function Y values and generate the coefficient for each observable and make a directory of the possible coefficient values 
 
-\ 4. smoothy\_readcoefficients.cc \\
-\ This cc file reads in the coefficient files and reads in the training info from the simplex and tests the samples from the emulator at the training points. \\
+\ 4. smoothy\_readcoefficients.cc 
+\ This cc file reads in the coefficient files and reads in the training info from the simplex and tests the samples from the emulator at the training points. 
 
 \end{description}
 
@@ -265,20 +268,22 @@ From the motivation, we can interpret that the purpose of the simplex is to prod
 
 The user first needs to make sure that they follow the instructions under Section \ref{sec:Usage}. After this, one should decide on how they want to generate their training points. The code provides the user with different options, but one can choose to generate the training points in a different way as well.
 
-\subsection{Training Types}
-
-The user can change the training type via the parameter map file. To learn how, please refer to the appendix.
-
-\subsubsection{Type 1}
-
-This type makes sure the training points are generated 
-\subsubsection{Type 2}
-\subsubsection{Type 3}
-\subsubsection{Type 4}
+For training point generation we use the file simplextest.cc. The functionality, how to use and the output of these files are explained below.
 
 \subsection{Training Point Generation}
 
+Simplex is a mathematical term that generalizes the notion of a triangle or a tetrahedron to arbitrary dimensions. The simplex method uses the vertices of simplexes to get training points at different radii along the edges. This method also is computationally cheap due to its iterative process.
 
+To use the simplex method, use the following command in the terminal window:
+
+{\tt
+{
+\begin{verbatim}
+    simplextest parameters/emulator_parameters.txt
+\end{verbatim}
+}}
+
+This code is also responsible for generating the directory that the run files are stored. The stored values will be the values that used in the emulator.
 
 \section{Tuning the Emulator}
 
@@ -286,9 +291,7 @@ This type makes sure the training points are generated
 
 From the motivation, we can interpret that the purpose of the emulator is to reproduce the model reasonably away from the training points and the goal is to focus on a particular class of functions that are smooth. 
 
-The emulator has a specific functional form with numerous coefficients denoted as $A_{\vec{n}}$. The theory of steps illustrated on how to constrain the emulator is mentioned in the theory section below. 
-
-After Running the simplex.cc file we output the model\_par.txt files for each run using the prior information using the number of parameters sent from the model\_parameter.txt file from the info directory and use the simplex to create the training points.
+The emulator has a specific functional form with numerous coefficients denoted as $A_{\vec{n}}$. The theory of steps illustrated on how to constrain the emulator is mentioned in the theory section below.  After Running the simplex.cc file we output the model\_par.txt files for each run using the prior information using the number of parameters sent from the model\_parameter.txt file from the info directory and use the simplex to create the training points.
 
 \subsection{Code}
 
@@ -299,128 +302,33 @@ The fakemodel.cc is a template used to represent a potential model. It will be r
  
 \subsection{Writing Coefficients}
 
-
 In the terminal window run the following command after the simplex and importing the model.
 
 {\tt 
 \begin{verbatim}
-    smoothy parameters/emulator_parameters.txt ; 
+smoothy parameters/emulator_parameters.txt 
 \end{verbatim}
 }
 
-This code is responsible for invoking the primary functionality that adjusts the training points for the model. It generates coefficient samples, which are then organized in a coefficient directory within the project directory. The directory contains information about each observable and samples of various coefficient values. The following constructors are used to accomplish this task:
+This code is responsible for invoking the primary functionality that adjusts the training points for the model. It generates coefficient samples, which are then organized in a coefficient directory within the project directory. The directory contains information about each observable and samples of various coefficient values. The following methods are used to accomplish this task:
 
-\begin{description}
-\item[Step 1 : Reading the Training Information]
-\end{description}
+This code reads in the values from each run directory and stores the values of the observables and the parameters values and stores in the current code. 
 
-{\tt 
-\begin{verbatim}
-    master.ReadTrainingInfo(); 
-\end{verbatim}
-}
+The purpose of this function is to perform a Markov Chain Monte Carlo (MCMC) parameter tuning process to optimize some coefficients of a smooth emulator. The code attempts to find the best set of coefficients that maximize the log probability of the emulator given some training data. 
 
-This is called from the trainnginfo.cc file and takes in the run directory name and reads in the values from each run directory and stores the values of the observables and the parameters values and stores in the current code. 
+Final Output and Results:
+After completing the specified number of iterations, the algorithm calculates the success percentage (proportion of successful updates), the final value of SigmaA, and the log-likelihood normalized by the number of degrees of freedom (Ndof) for the best parameter set (BestLogP/Ndof). These results are displayed in the console using CLog::Info(). 
 
-\begin{description}
-\item[Step 2 : Tuning in all functions(Y). ]
-\end{description}
-
-{\tt 
-\begin{verbatim}
-    master.TuneAllY(); 
-\end{verbatim}
-}
-
-The purpose of this function is to perform a Markov Chain Monte Carlo (MCMC) parameter tuning process to optimize some coefficients of a smooth emulator. The code attempts to find the best set of coefficients that maximize the log probability of the emulator given some training data. \\
-
-\ 1. Adaptive Step Size:
-
-The algorithm employs an adaptive step size (stepsize) for each parameter during the trial update process. The step size depends on SigmaA, MCStepSize, and a constant LAMBDA. \\
-
-\ 2. Acceptance Criteria:
-
-If the trial log-likelihood (logPTrial) is higher than the current log-likelihood (logP), the trial parameter set is accepted as the new current parameter set, and the algorithm moves to the next iteration.
-
-If the trial log-likelihood is lower, the algorithm applies the Metropolis-Hastings acceptance criterion: the trial parameter set is accepted with a probability of exp(dlp) (where dlp = logPTrial - logP). The algorithm also keeps track of the best log-likelihood encountered so far (BestLogP). \\
-
-\ 3. Parameter Updates and Success Count:
-
-Successful updates are tracked using the success counter, which increments every time a trial parameter set is accepted (either unconditionally or based on the acceptance criterion). \\ 
-
-\ 4. Final Output and Results:
-
-After completing the specified number of iterations, the algorithm calculates the success percentage (proportion of successful updates), the final value of SigmaA, and the log-likelihood normalized by the number of degrees of freedom (Ndof) for the best parameter set (BestLogP/Ndof).
-
-These results are displayed in the console using CLog::Info(). \\ 
-
-\ 5. Interpreting the Results:
-
-The success percentage gives an indication of the acceptance rate of new parameter sets during the MCMC process. A higher success rate generally indicates efficient parameter tuning.
-
-The value of SigmaA represents the estimated uncertainty or spread in the parameter space.
-
-The BestLogP/Ndof provides a measure of the goodness of fit achieved by the best parameter set. \\
-
-\ 6. Optimization and Iterations:
-For better parameter tuning results, you may need to experiment with different values of MCStepSize, MCSigmaAStepSize, and LAMBDA and Increase the number of iterations (NMC). \\
-
-\ Overall, this code performs an MCMC parameter tuning process for the coefficients of a smooth emulator, attempting to find the optimal set of coefficients that best match the training data. The success rate, final variance (SigmaA), and log probabilities are reported for evaluation purposes. \\ 
-
-\begin{description}
-\item[Step 3 : Generating the coefficient (A) samples]
-\end{description}
-
-{\tt 
-\begin{verbatim}
-    master.GenerateCoefficientSamples()
-\end{verbatim}
-}
-
-\ This function is responsible for generating multiple samples of coefficients (A) for a smooth emulator using the MCMC tuning process. The function also updates statistics for the sampled variance (SigmaA) to calculate the average variance (SigmaAbar) over all the generated samples. \\
-
-In summary, GenerateASamples iteratively tunes the coefficients using MCMC and stores the optimized coefficient samples in a matrix for further analysis. It is used for the process of generating and analyzing samples for the smooth emulator.
-
-\begin{description}
-\item[Step 4: Testing the Coefficients At Training Points]
-\end{description}
-
-{\tt 
-\begin{verbatim}
-    master.TestAtTrainingPts(); 
-\end{verbatim}
-}
-
-\ This function is used to assess the accuracy of a smooth emulator by comparing its predictions with the actual training data at each training point. \\ 
-
-It Logs the comparison between the predicted value and the actual training data value for the current observable. Also, log the corresponding uncertainty. The function evaluates the smooth emulator's accuracy by generating predictions for each observable at the training points and comparing these predictions with the actual training data. \\ 
-
-\begin{description}
-\item[Step 5: Writing Coefficients for functions. ]
-\end{description}
-
-{\tt 
-\begin{verbatim}
-    master.WriteCoefficientsAllY(); 
-\end{verbatim}
-}
-
-\ This function is responsible for writing the coefficients of a smooth emulator to separate text files on the disk. \\
-
-\ 1. Writing Metadata:
-
-The function writes metadata about the number of parameters (NPars), maximum rank (MaxRank), and total number of coefficients (NCoefficients) to a file named "meta.txt" in the created directory. \\
-
-\ 2. Writing Coefficients for Each Sample:
-
-For each sample generated using the GenerateASamples() function, the function writes the corresponding coefficients (parameters) to a separate file named "sampleX.txt" in the created directory, where "X" represents the sample index. 
-
-Each file contains the coefficients for the smoothing emulator. The number of coefficients is equal to smooth->NCoefficients, and they are written in a column-wise format. This creates a directory containing the coefficient files and a metadata file for the observable. The directory name is specified by smoothmaster $\rightarrow$ CoefficientsDirName \\
-
-\ In summary, the `WriteCoefficients` function saves the coefficients of a smooth emulator to separate text files. It organizes the files in directories based on observable names, writes metadata, and stores the coefficients for each sample in a formatted manner. \\
+Interpreting the Results:
+The success percentage gives an indication of the acceptance rate of new parameter sets during the MCMC process. A higher success rate generally indicates efficient parameter tuning. The value of SigmaA represents the estimated uncertainty or spread in the parameter space. The BestLogP/Ndof provides a measure of the goodness of fit achieved by the best parameter set. 
 
 
-\section{Performing the Full Model Runs}
+The function also updates statistics for the sampled variance (SigmaA) to calculate the average variance (SigmaAbar) over all the generated samples. In summary, GenerateASamples iteratively tunes the coefficients using MCMC and stores the optimized coefficient samples in a matrix for further analysis. It is used for the process of generating and analyzing samples for the smooth emulator.
+
+The Code also Logs the comparison between the predicted value and the actual training data value for the current observable. Also, log the corresponding uncertainty. The function evaluates the smooth emulator's accuracy by generating predictions for each observable at the training points and comparing these predictions with the actual training data.  
+
+
+The code also writes metadata about the number of parameters (NPars), maximum rank (MaxRank), and total number of coefficients (NCoefficients) to a file named "meta.txt" in the created directory. For each sample generated using the GenerateASamples() function, the function writes the corresponding coefficients (parameters) to a separate file named "sampleX.txt" in the created directory, where "X" represents the sample index. The number of coefficients is equal to smooth $\rightarrow$ NCoefficients, and they are written in a column-wise format. 
 
 
 \section{MCMC}
@@ -434,23 +342,25 @@ Each file contains the coefficients for the smoothing emulator. The number of co
 \begin{description}
 \item[Constraining the emulator] \
 \\
-\ 1. $M$ full model runs are conducted at different positions $\vec{\theta}_{m=1,M}$. These runs provide corresponding values $F_{m=1,M}$. \\
+\ 1. $M$ full model runs are conducted at different positions $\vec{\theta}_{m=1,M}$. These runs provide corresponding values $F_{m=1,M}$. 
 
-\ 2. The functional form of the emulator has a large number of coefficients $A_{\vec{n}}$, which exceeds the number of training points M. However, the dependence of the coefficient A is purely linear. \\
+\ 2. The functional form of the emulator has a large number of coefficients $A_{\vec{n}}$, which exceeds the number of training points M. However, the dependence of the coefficient A is purely linear. 
 
-\ 3. The coefficients are enumerated as $A_c$ with $c=1\cdots C$, where $C>M$.\\
+\ 3. The coefficients are enumerated as $A_c$ with $c=1\cdots C$, where $C>M$.
 
-\ 4. Random values are assigned to the coefficients $A_M$ through $A_C$, excluding the first $M$ coefficients. \\
+\ 4. Random values are assigned to the coefficients $A_M$ through $A_C$, excluding the first $M$ coefficients. 
 
-\ 5. A set of linear equations is solved to determine the values of the first $M$ coefficients. This process involves finding the coefficients that best fit the training points. \\
+\ 5. A set of linear equations is solved to determine the values of the first $M$ coefficients. This process involves finding the coefficients that best fit the training points. 
 
-\ 6. A weight is applied to the values of $A$, taking into account their consistency with the prior likelihood of $A$ and the given constraints. This step helps to incorporate prior knowledge and constraints into the emulator. \\
+\ 6. A weight is applied to the values of $A$, taking into account their consistency with the prior likelihood of $A$ and the given constraints. This step helps to incorporate prior knowledge and constraints into the emulator. 
 
-\ 7. A representative set of A is generated, typically consisting of a dozen samples. Each sample function passes through all the training points but may deviate further from them. \\
+\ 7. A representative set of A is generated, typically consisting of a dozen samples. Each sample function passes through all the training points but may deviate further from them. 
 
-\ 8. By averaging over $N_{\rm sample}$ sets of coefficients, a prediction for the emulator can be made at a specific point $\theta$. The $N_{\rm sample}$ points provide an estimate, and their variance represents the uncertainty associated with the emulator's prediction. \\
+\ 8. By averaging over $N_{\rm sample}$ sets of coefficients, a prediction for the emulator can be made at a specific point $\theta$. The $N_{\rm sample}$ points provide an estimate, and their variance represents the uncertainty associated with the emulator's prediction. 
 
 \end{description}\
+
+
 
 
 \appendix
@@ -554,10 +464,11 @@ It is a boolean parameter that determines whether the smooth emulator uses an "R
 By incorporating the R-factor into the tuning process, the emulator can optimize the coefficients (A) in a way that balances the fit to the training data with the overall smoothness of the model.
 
 \subsection{TrainType}
-  Determines the training type 
+  Determines the training type that the simplex will use. The default type is 1. All types have different uses, pros, and cons. The differences between type are explained below:
+
+  
 
 \subsection{RTrain}
-
 
 
 
