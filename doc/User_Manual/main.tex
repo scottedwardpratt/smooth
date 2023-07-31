@@ -104,7 +104,7 @@ arc=0pt,outer arc=0pt,
 
  % Motivation behind this program and its uses
 
-This manual describes how to install and run the Smooth Emulator software. The software performs three basic functions. First, the Simplex sampler simply chooses a set of points in model parameter space, at which full model runs will be performed to then tune the emulator. The user must provide a description of the model parameters and the prior in a text files in a standard format. There are several options, the first of which is to choose the points that represent a simplex, e.g. an equilateral triangle in two dimensions or a tetrahedron in three dimensions. In a simplex, all points are equi-distant from one another.  The number of training points is then determined as well. In addition to the standard simplex, there are additional options which are motivated by the simplex form. For the simplex form, if there are $N_p$ model parameters, there are $N_p+1$ training points in the simplex, which matches the number of points needed to determine a linear fit. Another choice, which is based on the simplex chooses enough points to determine a quadratic fit, $(N_p+1)(N_p+2)/2$. The software will write the information about the training points in a standard format, which is described in the manual.
+This manual describes how to install and run the Smooth Emulator software. The software performs three basic functions. First, the Simplex Sampler simply chooses a set of points in model parameter space, at which full model runs will be performed to then tune the emulator. The user must provide a description of the model parameters and the prior in a text files in a standard format. There are several options, the first of which is to choose the points that represent a simplex, e.g. an equilateral triangle in two dimensions or a tetrahedron in three dimensions. In a simplex, all points are equi-distant from one another.  The number of training points is then determined as well. In addition to the standard simplex, there are additional options which are motivated by the simplex form. For the simplex form, if there are $N_p$ model parameters, there are $N_p+1$ training points in the simplex, which matches the number of points needed to determine a linear fit. Another choice, which is based on the simplex chooses enough points to determine a quadratic fit, $(N_p+1)(N_p+2)/2$. The software will write the information about the training points in a standard format, which is described in the manual.
 
  If the user decides to use training points from a different procedure, the user can still write the information about the points in a different format, and the emulator tuning will still work, as the emulator itself is not predicated on a specific choice of training points. The user is then responsible for running the full model at the training points and expressing observables for each training points in a standard format. The manual describes the output format.
 
@@ -261,12 +261,12 @@ The order in how the code works is mentioned in the next section
 
 The user is required to have some knowledge of C++ in order to write a routine program that calls methods from the software directory for their needs. Some example codes can be viewed in the template directory.
 
-\section{Simplex}
+\section{Simplex Sampling}
 
 \subsection{Summary}
-From the motivation, we can interpret that the purpose of the simplex is to produce training points. The emulator will use these training points to tune itself, and output results. Thus, it is important that one takes their time, and chooses how they want to generate their training points carefully.
+The purpose of a sampler is to produce training points to be used for emulator tuning. It is important to optimize the choice of points so that the number of full model runs necessary for tuning to a desired accuracy is minimized. The user first needs to make sure that they follow the instructions under Section \ref{sec:Usage}. After this, one should decide on how they want to generate their training points. The code provides the user with different options, but one can choose to generate the training points in a different way as well.
 
-The user first needs to make sure that they follow the instructions under Section \ref{sec:Usage}. After this, one should decide on how they want to generate their training points. The code provides the user with different options, but one can choose to generate the training points in a different way as well.
+
 
 For training point generation we use the file simplextest.cc. The functionality, how to use and the output of these files are explained below.
 
@@ -285,13 +285,19 @@ To use the simplex method, use the following command in the terminal window:
 
 This code is also responsible for generating the directory that the run files are stored. The stored values will be the values that used in the emulator.
 
-\section{Tuning the Emulator}
+\section{Tuning Smooth Emulator}
 
 \subsection{Summary}
 
-From the motivation, we can interpret that the purpose of the emulator is to reproduce the model reasonably away from the training points and the goal is to focus on a particular class of functions that are smooth. 
+The purpose of an emulator is to reproduce the model away from the training points. The Smooth Emulator is based on an assumption that the model can be reasonably reproduced by a Taylor expansion with higher order terms becoming progressively less important. As explained in Sec. (theorysec), the expansion coefficients, $A_{\vec{n}}$, represent a Taylor expansion where $\vec{n}=n_1,n_2\cdots$ represent the terms $A_{\vec{n}}\theta_1^{n_1}\theta_2^{n_2}\cdots$. The theory of the emulator is describe in Sec. (theorysec).  After generating the training points and storing them according to the format described in Sec. (simplexsampler), and then running the model and storing the observables in the format described in Sec. (runmodelsec), one is ready to run Smooth Emulator to generate and store the coefficients $A_{\vec{n}}$. 
 
-The emulator has a specific functional form with numerous coefficients denoted as $A_{\vec{n}}$. The theory of steps illustrated on how to constrain the emulator is mentioned in the theory section below.  After Running the simplex.cc file we output the model\_par.txt files for each run using the prior information using the number of parameters sent from the model\_parameter.txt file from the info directory and use the simplex to create the training points.
+From within the User's project directory, the following files need to exist before running Smooth Emulator.
+.\\
+.\\
+The coefficients will be stored in the directory {\tt coefficients}. 
+
+Before running, the user will likely wish to edit the parameters file, which is typically stored in the {\tt parameters/} directory. 
+
 
 \subsection{Code}
 
