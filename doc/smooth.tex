@@ -91,7 +91,7 @@ arc=0pt,outer arc=0pt,
 
 \section{Smooth Emulator}
 
-The choice of model emulators, $E(\vec{theta})$, depends on the prior understanding of the model being emulated, $F(\vec{\theta})$. If one knows that  a function is linear, then a linear fit is clearly the best choice. Whereas to reproduce lumpy features, where the lumps have a characteristic length scale, Gaussian process emulators are highly effective. The quality of an emulator can be assessed through the following criteria:
+The choice of model emulators, $E(\vec{\theta})$, depends on the prior understanding of the model being emulated, $F(\vec{\theta})$. If one knows that  a function is linear, then a linear fit is clearly the best choice. Whereas to reproduce lumpy features, where the lumps have a characteristic length scale, Gaussian process emulators are highly effective. The quality of an emulator can be assessed through the following criteria:
 \begin{itemize}
   \item $E(\vec{\theta}_t)=M(\vec{\theta}_t)$ at the training points, $\vec{\theta}_t$. 
   \item The emulator should reasonably reproduce the model away from the training points. This should hold true for either interpolation or extrapolation.
