@@ -28,8 +28,9 @@ class CTrainingInfo{
 public:
 	CObservableInfo *observableinfo;
 	CPriorInfo *priorinfo;
-	CTrainingInfo(int NTrainingPts,CObservableInfo *observableinfo,CPriorInfo *priorinfo);
+	CTrainingInfo(vector<int> NTrainingList, CObservableInfo *observableinfo,CPriorInfo *priorinfo);
 	int NTrainingPts,NObservables;
+	vector<int> NTrainingList;
 	vector<vector<double>> YTrain,SigmaYTrain;
 	vector<CModelParameters *> modelpars;
 	void ReadTrainingInfo(string rundirname);

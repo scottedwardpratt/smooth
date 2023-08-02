@@ -46,7 +46,7 @@ void CSimplexSampler::SetThetaType1(){
 		ThetaTrain[itrain][itrain-1]=z;
 		R=z;
 	}
-	
+
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		for(ipar=0;ipar<NPars;ipar++){
 			ThetaTrain[itrain][ipar]*=(RTrain/R);
@@ -172,7 +172,7 @@ void CSimplexSampler::SetThetaType4(){
 		ThetaTrain[itrain][itrain-1]=z;
 		R=z;
 	}
-	
+
 	N1=NTrainingPts;
 	n=N1;
 	NTrainingPts+=N1*(N1-1)/2;
@@ -189,7 +189,7 @@ void CSimplexSampler::SetThetaType4(){
 		}
 	}
 	Rprime=R*sqrt(double(NPars-1)/double(2*NPars));
-	
+
 	// Scale
 	for(itrain=0;itrain<N1;itrain++){
 		for(ipar=0;ipar<=NPars;ipar++){
@@ -208,7 +208,7 @@ void CSimplexSampler::WriteModelPars(string model_dir){
 	string filename,dirname;
 	int itrain,ipar;
 	vector<CModelParameters *> modelparameters(NTrainingPts);
-	
+
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		modelparameters[itrain]=new CModelParameters(priorinfo);
 		for(ipar=0;ipar<NPars;ipar++){
@@ -216,15 +216,13 @@ void CSimplexSampler::WriteModelPars(string model_dir){
 		}
 		modelparameters[itrain]->TranslateTheta_to_X();
 	}
-	
+
 	string command="rm -r -f modelruns/run*";
 	system(command.c_str());
-	
-	
+
+
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		dirname=model_dir+"/run"+to_string(itrain);
-		command="mkdir "+dirname;
-		system(command.c_str());
 		filename=dirname+"/mod_parameters.txt";
 		fptr=fopen(filename.c_str(),"w");
 		for(ipar=0;ipar<NPars;ipar++){
@@ -232,7 +230,7 @@ void CSimplexSampler::WriteModelPars(string model_dir){
 			priorinfo->parname[ipar].c_str(),modelparameters[itrain]->X[ipar]);
 		}
 	}
-	
+
 	fclose(fptr);
-	
+
 }

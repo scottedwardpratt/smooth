@@ -4,11 +4,12 @@ CSmoothMaster* CTrainingInfo::smoothmaster=NULL;
 
 using namespace std;
 
-CTrainingInfo::CTrainingInfo(int NTrainingPts_set,CObservableInfo *observableinfo_set,CPriorInfo *priorinfo_set){
+CTrainingInfo::CTrainingInfo(vector<int> NTrainingList_set,CObservableInfo *observableinfo_set,CPriorInfo *priorinfo_set){
 	observableinfo=observableinfo_set;
 	priorinfo=priorinfo_set;
 	NObservables=observableinfo->NObservables;
-	NTrainingPts=NTrainingPts_set;
+	NTrainingList = NTrainingList_set;
+	NTrainingPts = NTrainingList.size();
 	int iy,ntrain;
 	YTrain.resize(NObservables);
 	SigmaYTrain.resize(NObservables);
@@ -32,8 +33,8 @@ void CTrainingInfo::ReadTrainingInfo(string rundirname){
 	string obs_name;
 	double y,sigmay,x;
 	FILE *fptr;
-	for(itrain=0;itrain<NTrainingPts;itrain++){
-		snprintf(filename,300,"%s/run%d/obs.txt",rundirname.c_str(),itrain);
+	for(int i: NTrainingList){
+		snprintf(filename,300,"%s/run%d/obs.txt",rundirname.c_str(),i);
 		fptr=fopen(filename,"r");
 		nsuccess=0;
 		do{
@@ -50,7 +51,7 @@ void CTrainingInfo::ReadTrainingInfo(string rundirname){
 	fclose(fptr);
 	if(nsuccess!=smoothmaster->observableinfo->NObservables)
 		CLog::Fatal("In CTrainingInfo::ReadTrainInfo, only read in "+to_string(nsuccess)+" observables from file "+string(filename)+"\n");
-	
+
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		snprintf(filename,300,"%s/run%d/mod_parameters.txt",rundirname.c_str(),itrain);
 		fptr=fopen(filename,"r");
@@ -67,7 +68,7 @@ void CTrainingInfo::ReadTrainingInfo(string rundirname){
 	if(nread!=priorinfo->NModelPars){
 		CLog::Fatal("Only read in "+to_string(nread)+" parameter values from "+string(filename)+". But there are "+to_string(priorinfo->NModelPars)+" parameters needed.\n");
 	}
-	
+
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		/*printf("----- itrain=%d -------\n",itrain);
 		for(ipar=0;ipar<priorinfo->NModelPars;ipar++){
@@ -75,5 +76,5 @@ void CTrainingInfo::ReadTrainingInfo(string rundirname){
 		}*/
 		modelpars[itrain]->TranslateX_to_Theta();
 	}
-	
+
 }
