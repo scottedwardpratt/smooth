@@ -16,9 +16,7 @@ CSmoothMaster::CSmoothMaster(CparameterMap *parmap_set){
 	priorinfo=new CPriorInfo(filename);
 	NPars=priorinfo->NModelPars;
 	parmap->set("Smooth_NPars",NPars);
-	cout << "here1" << endl;
 	string NTrainingStr = parmap->getS("SmoothEmulator_NTrainingList","0");
-	cout << "here2" << endl;
 	vector<int> NTrainingList;
 
 	stringstream ss(NTrainingStr);
@@ -39,10 +37,12 @@ CSmoothMaster::CSmoothMaster(CparameterMap *parmap_set){
 			NTrainingList.push_back(stoi(token));
 		}
 	}
+	for (auto& i : NTrainingList) {
+        cout << i << " " ;
+    }
 
 	CTrainingInfo::smoothmaster=this;
 	traininginfo=new CTrainingInfo(NTrainingList,observableinfo,priorinfo);
-	cout << "here3" << endl;
 
 	smooth=new CSmooth(parmap);
 
@@ -124,6 +124,7 @@ void CSmoothMaster::TestAtTrainingPts(){
 	vector<double> Y,SigmaY;
 	Y.resize(NObservables);
 	SigmaY.resize(NObservables);
+	cout << traininginfo->NTrainingPts << endl;
 	CLog::Info("--- TESTING AT TRAINING POINTS ----\n");
 	for(itrain=0;itrain<traininginfo->NTrainingPts;itrain++){
 		CLog::Info("------ itrain="+to_string(itrain)+" --------\n");
