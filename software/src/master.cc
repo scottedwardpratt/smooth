@@ -16,9 +16,9 @@ CSmoothMaster::CSmoothMaster(CparameterMap *parmap_set){
 	priorinfo=new CPriorInfo(filename);
 	NPars=priorinfo->NModelPars;
 	parmap->set("Smooth_NPars",NPars);
-
+	cout << "here1" << endl;
 	string NTrainingStr = parmap->getS("SmoothEmulator_NTrainingList","0");
-
+	cout << "here2" << endl;
 	vector<int> NTrainingList;
 
 	stringstream ss(NTrainingStr);
@@ -40,24 +40,25 @@ CSmoothMaster::CSmoothMaster(CparameterMap *parmap_set){
 		}
 	}
 
-CTrainingInfo::smoothmaster=this;
-traininginfo=new CTrainingInfo(NTrainingList,observableinfo,priorinfo);
+	CTrainingInfo::smoothmaster=this;
+	traininginfo=new CTrainingInfo(NTrainingList,observableinfo,priorinfo);
+	cout << "here3" << endl;
 
-smooth=new CSmooth(parmap);
+	smooth=new CSmooth(parmap);
 
-CSmoothEmulator::NPars=NPars;
-CSmoothEmulator::smooth=smooth;
-CSmoothEmulator::smoothmaster=this;
-CSmoothEmulator::parmap=parmap;
-CSmoothEmulator::randy=randy;
-CSmoothEmulator::NTrainingPts=NTrainingList.size();
-CSmoothEmulator::NPars=NPars;
-CSmoothEmulator::smooth=smooth;
-CSmoothEmulator::smoothmaster=this;
-emulator.resize(observableinfo->NObservables);
-for(int i=0;i<observableinfo->NObservables;i++){
-	emulator[i]=new CSmoothEmulator(observableinfo->observable_name[i]);
-}
+	CSmoothEmulator::NPars=NPars;
+	CSmoothEmulator::smooth=smooth;
+	CSmoothEmulator::smoothmaster=this;
+	CSmoothEmulator::parmap=parmap;
+	CSmoothEmulator::randy=randy;
+	CSmoothEmulator::NTrainingPts=NTrainingList.size();
+	CSmoothEmulator::NPars=NPars;
+	CSmoothEmulator::smooth=smooth;
+	CSmoothEmulator::smoothmaster=this;
+	emulator.resize(observableinfo->NObservables);
+	for(int i=0;i<observableinfo->NObservables;i++){
+		emulator[i]=new CSmoothEmulator(observableinfo->observable_name[i]);
+	}
 
 }
 

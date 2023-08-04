@@ -4,5 +4,6 @@
 /Users/ekakshkataria/git/smooth/ekakshrun/CMakeFiles/fakemodel.dir
 /Users/ekakshkataria/git/smooth/ekakshrun/CMakeFiles/smoothy.dir
 /Users/ekakshkataria/git/smooth/ekakshrun/CMakeFiles/smoothy_writecoefficients.dir
+/Users/ekakshkataria/git/smooth/ekakshrun/CMakeFiles/keepscore.dir
 /Users/ekakshkataria/git/smooth/ekakshrun/CMakeFiles/edit_cache.dir
 /Users/ekakshkataria/git/smooth/ekakshrun/CMakeFiles/rebuild_cache.dir

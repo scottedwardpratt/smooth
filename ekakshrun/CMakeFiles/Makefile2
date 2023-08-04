@@ -28,6 +28,9 @@ default_target: all
 
 .SUFFIXES: .hpux_make_needs_suffix_list
 
+# Produce verbose output by default.
+VERBOSE = 1
+
 # Command-line flag to silence nested $(MAKE).
 $(VERBOSE)MAKESILENT = -s
 
@@ -67,6 +70,7 @@ all: CMakeFiles/simplextest.dir/all
 all: CMakeFiles/fakemodel.dir/all
 all: CMakeFiles/smoothy.dir/all
 all: CMakeFiles/smoothy_writecoefficients.dir/all
+all: CMakeFiles/keepscore.dir/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
@@ -80,6 +84,7 @@ clean: CMakeFiles/simplextest.dir/clean
 clean: CMakeFiles/fakemodel.dir/clean
 clean: CMakeFiles/smoothy.dir/clean
 clean: CMakeFiles/smoothy_writecoefficients.dir/clean
+clean: CMakeFiles/keepscore.dir/clean
 .PHONY : clean
 
 #=============================================================================
@@ -142,7 +147,7 @@ CMakeFiles/simplextest.dir/all: CMakeFiles/extern_commonutils.dir/all
 CMakeFiles/simplextest.dir/all: CMakeFiles/extern_smooth.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/simplextest.dir/build.make CMakeFiles/simplextest.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/simplextest.dir/build.make CMakeFiles/simplextest.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/ekakshkataria/git/smooth/ekakshrun/CMakeFiles --progress-num=3,4 "Built target simplextest"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/ekakshkataria/git/smooth/ekakshrun/CMakeFiles --progress-num=5,6 "Built target simplextest"
 .PHONY : CMakeFiles/simplextest.dir/all
 
 # Build rule for subdir invocation for target.
@@ -196,7 +201,7 @@ CMakeFiles/smoothy.dir/all: CMakeFiles/extern_commonutils.dir/all
 CMakeFiles/smoothy.dir/all: CMakeFiles/extern_smooth.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy.dir/build.make CMakeFiles/smoothy.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy.dir/build.make CMakeFiles/smoothy.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/ekakshkataria/git/smooth/ekakshrun/CMakeFiles --progress-num=5,6 "Built target smoothy"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/ekakshkataria/git/smooth/ekakshrun/CMakeFiles --progress-num=7,8 "Built target smoothy"
 .PHONY : CMakeFiles/smoothy.dir/all
 
 # Build rule for subdir invocation for target.
@@ -223,7 +228,7 @@ CMakeFiles/smoothy_writecoefficients.dir/all: CMakeFiles/extern_commonutils.dir/
 CMakeFiles/smoothy_writecoefficients.dir/all: CMakeFiles/extern_smooth.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy_writecoefficients.dir/build.make CMakeFiles/smoothy_writecoefficients.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy_writecoefficients.dir/build.make CMakeFiles/smoothy_writecoefficients.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/ekakshkataria/git/smooth/ekakshrun/CMakeFiles --progress-num=7,8 "Built target smoothy_writecoefficients"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/ekakshkataria/git/smooth/ekakshrun/CMakeFiles --progress-num=9,10 "Built target smoothy_writecoefficients"
 .PHONY : CMakeFiles/smoothy_writecoefficients.dir/all
 
 # Build rule for subdir invocation for target.
@@ -241,6 +246,33 @@ smoothy_writecoefficients: CMakeFiles/smoothy_writecoefficients.dir/rule
 CMakeFiles/smoothy_writecoefficients.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy_writecoefficients.dir/build.make CMakeFiles/smoothy_writecoefficients.dir/clean
 .PHONY : CMakeFiles/smoothy_writecoefficients.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/keepscore.dir
+
+# All Build rule for target.
+CMakeFiles/keepscore.dir/all: CMakeFiles/extern_commonutils.dir/all
+CMakeFiles/keepscore.dir/all: CMakeFiles/extern_smooth.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/keepscore.dir/build.make CMakeFiles/keepscore.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/keepscore.dir/build.make CMakeFiles/keepscore.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/ekakshkataria/git/smooth/ekakshrun/CMakeFiles --progress-num=3,4 "Built target keepscore"
+.PHONY : CMakeFiles/keepscore.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/keepscore.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/ekakshkataria/git/smooth/ekakshrun/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/keepscore.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/ekakshkataria/git/smooth/ekakshrun/CMakeFiles 0
+.PHONY : CMakeFiles/keepscore.dir/rule
+
+# Convenience name for target.
+keepscore: CMakeFiles/keepscore.dir/rule
+.PHONY : keepscore
+
+# clean rule for target.
+CMakeFiles/keepscore.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/keepscore.dir/build.make CMakeFiles/keepscore.dir/clean
+.PHONY : CMakeFiles/keepscore.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

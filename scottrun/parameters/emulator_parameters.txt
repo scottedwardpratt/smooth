@@ -11,7 +11,7 @@ SmoothEmulator_UseSigmaYRreal false
 SmoothEmulator_ConstrainA0 true
 SmoothEmulator_CutoffA false
 SmoothEmulator_LAMBDA 3.0
-SmoothEmulator_ModelRunDirName modelruns_test
+SmoothEmulator_ModelRunDirName modelruns
 SmoothEmulator_CoefficientsDirName coefficients
 Smooth_MAXRANK 4
 Smooth_UseRFactor false

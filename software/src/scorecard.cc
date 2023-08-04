@@ -5,13 +5,12 @@ using namespace std;
 void CScoreCard::CalcScore(CSmoothEmulator *emulator,vector<vector<double>> &ThetaTest,double YExpSet,double SigmaYExpSet){
 	YExp=YExpSet;
 	SigmaYExp=SigmaYExpSet;
-	int itest,isample,NTest;
-	double yi,Pi,Pibar,Pi2bar;
 	score=0.0;
+
 	NTest=ThetaTest.size();
 	if(ThetaTest.size()!=NTest)
 		NTest=ThetaTest.size();
-	
+
 	for(itest=0;itest<NTest;itest++){
 		Pibar=Pi2bar=0.0;
 		for(isample=0;isample<emulator->NASample;isample++){

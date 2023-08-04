@@ -11,7 +11,9 @@
 
 class CScoreCard{
 public:
-	double score,YExp,SigmaYExp;
+	double score,YExp,SigmaYExp,SigmaYReal;
+	int itest,isample,NTest;
+	double yi,Pi,Pibar,Pi2bar;
 	void CalcScore(CSmoothEmulator *emulator,vector<vector<double>> &ThetaTest,double YExpSet,double SigmaYExpSet);
 };
 

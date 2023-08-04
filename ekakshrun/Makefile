@@ -31,6 +31,9 @@ default_target: all
 
 .SUFFIXES: .hpux_make_needs_suffix_list
 
+# Produce verbose output by default.
+VERBOSE = 1
+
 # Command-line flag to silence nested $(MAKE).
 $(VERBOSE)MAKESILENT = -s
 
@@ -194,6 +197,19 @@ smoothy_writecoefficients/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy_writecoefficients.dir/build.make CMakeFiles/smoothy_writecoefficients.dir/build
 .PHONY : smoothy_writecoefficients/fast
 
+#=============================================================================
+# Target rules for targets named keepscore
+
+# Build rule for target.
+keepscore: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 keepscore
+.PHONY : keepscore
+
+# fast build rule for target.
+keepscore/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/keepscore.dir/build.make CMakeFiles/keepscore.dir/build
+.PHONY : keepscore/fast
+
 fakemodel.o: fakemodel.cc.o
 .PHONY : fakemodel.o
 
@@ -217,6 +233,30 @@ fakemodel.s: fakemodel.cc.s
 fakemodel.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/fakemodel.dir/build.make CMakeFiles/fakemodel.dir/fakemodel.cc.s
 .PHONY : fakemodel.cc.s
+
+keepscore.o: keepscore.cc.o
+.PHONY : keepscore.o
+
+# target to build an object file
+keepscore.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/keepscore.dir/build.make CMakeFiles/keepscore.dir/keepscore.cc.o
+.PHONY : keepscore.cc.o
+
+keepscore.i: keepscore.cc.i
+.PHONY : keepscore.i
+
+# target to preprocess a source file
+keepscore.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/keepscore.dir/build.make CMakeFiles/keepscore.dir/keepscore.cc.i
+.PHONY : keepscore.cc.i
+
+keepscore.s: keepscore.cc.s
+.PHONY : keepscore.s
+
+# target to generate assembly for a file
+keepscore.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/keepscore.dir/build.make CMakeFiles/keepscore.dir/keepscore.cc.s
+.PHONY : keepscore.cc.s
 
 simplextest.o: simplextest.cc.o
 .PHONY : simplextest.o
@@ -301,12 +341,16 @@ help:
 	@echo "... extern_commonutils"
 	@echo "... extern_smooth"
 	@echo "... fakemodel"
+	@echo "... keepscore"
 	@echo "... simplextest"
 	@echo "... smoothy"
 	@echo "... smoothy_writecoefficients"
 	@echo "... fakemodel.o"
 	@echo "... fakemodel.i"
 	@echo "... fakemodel.s"
+	@echo "... keepscore.o"
+	@echo "... keepscore.i"
+	@echo "... keepscore.s"
 	@echo "... simplextest.o"
 	@echo "... simplextest.i"
 	@echo "... simplextest.s"
