@@ -17,15 +17,16 @@ int main(int argc,char *argv[]){
 		exit(1);
 	}
 	double average_score_yexp=0.0,average_score_real=0.0;
-	unsigned int ntest=100,ipar,NPars, itest;
+	unsigned int ntest=10,ipar,NPars, itest;
 	vector<vector<double>> ThetaTest;
 	vector<double> Theta;
 
 
 	CparameterMap *parmap=new CparameterMap();
 	parmap->ReadParsFromFile(string(argv[1]));
+
 	CSmoothMaster master(parmap);
-	CSimplexSampler *simplex=new CSimplexSampler(parmap);
+
 	master.randy->reset(-time(NULL));
 	NPars=master.NPars;
 
@@ -38,8 +39,6 @@ int main(int argc,char *argv[]){
 	for(itest=0;itest<ntest;itest++){
 		ThetaTest[itest].resize(NPars);
 	}
-
-	simplex->SetThetaSimplex();
 
 	for(itest=0;itest<ntest;itest++)
 	{
@@ -55,9 +54,12 @@ int main(int argc,char *argv[]){
 		{
 			Theta[ipar]=-1.0+2.0*master.randy->ran();
 		}
-		double YExp = master.traininginfo->YTrain[0][itest];
-		double SigmaYExp = master.traininginfo->SigmaYTrain[0][itest]; // we can replace 0 with the correct index for the observable
-		scorecard.CalcScore(master.emulator[0],ThetaTest,YExp,SigmaYExp);
+
+		double YExp = master.traininginfo->YTrain[1][itest];
+		double SigmaYExp = master.traininginfo->SigmaYTrain[1][itest]; // we can replace 0 with the correct index for the observable
+		master.emulator[0]->CalcY(Theta, YExp, SigmaYExp);
+
+		scorecard.CalcScore(master.emulator[1],ThetaTest,YExp,SigmaYExp);
 		printf("score=%g\n",scorecard.score);
 		average_score_yexp += scorecard.score;
 	}
