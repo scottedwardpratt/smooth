@@ -16,9 +16,10 @@ CSmoothMaster::CSmoothMaster(CparameterMap *parmap_set){
 	priorinfo=new CPriorInfo(filename);
 	NPars=priorinfo->NModelPars;
 	parmap->set("Smooth_NPars",NPars);
-	string NTrainingStr = parmap->getS("SmoothEmulator_NTrainingList","0");
-	vector<int> NTrainingList;
 
+	string NTrainingStr = parmap->getS("SmoothEmulator_NTrainingPts","1");
+
+	vector<int> NTrainingList;
 	stringstream ss(NTrainingStr);
 	string token;
 
@@ -37,12 +38,9 @@ CSmoothMaster::CSmoothMaster(CparameterMap *parmap_set){
 			NTrainingList.push_back(stoi(token));
 		}
 	}
-	for (auto& i : NTrainingList) {
-        cout << i << " " ;
-    }
 
 	CTrainingInfo::smoothmaster=this;
-	traininginfo=new CTrainingInfo(NTrainingList,observableinfo,priorinfo);
+	traininginfo = new CTrainingInfo(NTrainingList,observableinfo,priorinfo);
 
 	smooth=new CSmooth(parmap);
 
@@ -56,6 +54,7 @@ CSmoothMaster::CSmoothMaster(CparameterMap *parmap_set){
 	CSmoothEmulator::smooth=smooth;
 	CSmoothEmulator::smoothmaster=this;
 	emulator.resize(observableinfo->NObservables);
+
 	for(int i=0;i<observableinfo->NObservables;i++){
 		emulator[i]=new CSmoothEmulator(observableinfo->observable_name[i]);
 	}

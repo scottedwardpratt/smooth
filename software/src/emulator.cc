@@ -390,6 +390,19 @@ void CSmoothEmulator::CalcY(CModelParameters *modpars,double &Y,double &SigmaY){
 	SigmaY=sqrt(fabs(SigmaY-Y*Y));
 }
 
+void CSmoothEmulator::CalcY(vector<double> Theta,double &Y,double &SigmaY){
+	double y;
+	Y=SigmaY=0.0;
+	for(int isample=0;isample<NASample;isample++){
+		y=smooth->CalcY(ASample[isample],LAMBDA,Theta);
+		Y+=y;
+		SigmaY+=y*y;
+	}
+	SigmaY=SigmaY/double(NASample);
+	Y=Y/double(NASample);
+	SigmaY=sqrt(fabs(SigmaY-Y*Y));
+}
+
 void CSmoothEmulator::WriteCoefficients(){
 	int isample,ic;
 	FILE *fptr;
