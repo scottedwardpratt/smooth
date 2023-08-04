@@ -21,8 +21,6 @@ int main(int argc,char *argv[]){
 	vector<vector<double>> ThetaTest;
 	vector<double> Theta;
 
-	CTrainingInfo trainingInfo();
-	trainingInfo.ReadTrainingInfo("modelruns");
 
 	CparameterMap *parmap=new CparameterMap();
 	parmap->ReadParsFromFile(string(argv[1]));
@@ -31,8 +29,12 @@ int main(int argc,char *argv[]){
 	master.randy->reset(-time(NULL));
 	NPars=master.NPars;
 
+
 	Theta.resize(NPars);
 	ThetaTest.resize(ntest);
+
+	master.ReadTrainingInfo();
+
 	for(itest=0;itest<ntest;itest++){
 		ThetaTest[itest].resize(NPars);
 	}
@@ -53,8 +55,8 @@ int main(int argc,char *argv[]){
 		{
 			Theta[ipar]=-1.0+2.0*master.randy->ran();
 		}
-		double YExp = trainingInfo.YTrain[0][itest];
-		double SigmaYExp = trainingInfo.SigmaYTrain[0][itest]; // we can replace 0 with the correct index for the observable
+		double YExp = master.traininginfo->YTrain[0][itest];
+		double SigmaYExp = master.traininginfo->SigmaYTrain[0][itest]; // we can replace 0 with the correct index for the observable
 		scorecard.CalcScore(master.emulator[0],ThetaTest,YExp,SigmaYExp);
 		printf("score=%g\n",scorecard.score);
 		average_score_yexp += scorecard.score;
