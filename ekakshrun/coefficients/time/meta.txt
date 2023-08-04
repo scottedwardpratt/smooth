@@ -1,2 +1,0 @@
-# NPars  MaxRank NCoefficients
-4  4  70
