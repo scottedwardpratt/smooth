@@ -371,7 +371,7 @@ To access the simplex parameter file one should go to their project directory an
 }
 After these commands, one should see a {\tt{simplex\_parameters.txt}} file. The user should open this file with their preferred editor. The user should see three different parameters with different input variables. The parameters are listed below:
 
-\subsubsection{Train Type}
+\subsubsection{TrainType}
 This parameter determines the training type that the simplex will use. The default type is 1. All the types have different uses, pros, and cons. The differences between types are explained in the next section.
 
 \subsubsection{RTrain}
@@ -383,10 +383,12 @@ This parameters is used to determine the path file that the run files will be cr
 \subsection{Training Types}
 
 \subsubsection{Type 1}
-This is the default training type that the program uses. Depending on the number of parameters, the program creates a simplex in a certain dimension. This simplex's vertices will be used to generate new training points along the edges, and these points will be scaled to be in different radii from the centre. 
+ Depending on the number of parameters, the program creates a simplex in $N$ dimensions. This simplex's vertices will be used to generate new training points. These points will be scaled by different values so the training points aren't in the same radius. This results in the minimum number of required points for linear fits. Thus, the user might want to select this training type if their model is a linear one.
 
 \subsubsection{Type 2}
 
+ Depending on the number of parameters, the program creates a simplex in $N$ dimensions. This simplex's vertices will be used to generate new training points there and along the edges. These points will be scaled to be in different radii from the center. This results in the minimum number of required points for quadratic fits. Thus, the user might want to select this training type if their model is a quadratic one.
+ 
 \subsubsection{Type 3}
 This training type creates two different simplexes to put them on top of each other in a reflected way. The 2-dimensional visualization of this would look like the "Star of David". The points created by the crossed edges are used as training points for the emulation.
  
@@ -489,7 +491,7 @@ The code also writes metadata about the number of parameters (NPars), maximum ra
 \appendix
 
 
-\section{Emulator Parameter}\label{sec:Emulator Parameter}
+\section{Emulator Parameters}\label{sec:Emulator Parameter}
 
 The Emulator Parameter is the file user changes in order to use and optimize the code according to the model the user has and the output user is expecting. The parameters described below can be found in the parameter directory and in the file emulator\_parameter.txt.
 
