@@ -79,11 +79,13 @@ arc=0pt,outer arc=0pt,
    \begin{center}
        \vspace*{1cm}
 
-       \textbf{User Manual}
+       \textbf{Smooth Emulator \& Simplex Sampler User Manual}
 
        \vspace{2.0cm}
 
        \textbf{Scott Pratt, Eren Erdogan, Ekaksh Kataria}
+
+       \today
        
        \vfill
             
@@ -104,11 +106,11 @@ arc=0pt,outer arc=0pt,
 
  % Motivation behind this program and its uses
 
-This manual describes how to install and run the Smooth Emulator software. The software performs three basic functions. First, the Simplex Sampler simply chooses a set of points in model parameter space, at which full model runs will be performed to then tune the emulator. The user must provide a description of the model parameters and the prior in a text files in a standard format. There are several options, the first of which is to choose the points that represent a simplex, e.g. an equilateral triangle in two dimensions or a tetrahedron in three dimensions. In a simplex, all points are equi-distant from one another.  The number of training points is then determined as well. In addition to the standard simplex, there are additional options which are motivated by the simplex form. For the simplex form, if there are $N_p$ model parameters, there are $N_p+1$ training points in the simplex, which matches the number of points needed to determine a linear fit. Another choice, which is based on the simplex chooses enough points to determine a quadratic fit, $(N_p+1)(N_p+2)/2$. The software will write the information about the training points in a standard format, which is described in the manual.
+This manual describes how to install and run the Smooth Emulator software. The software performs three basic functions. First, the Simplex Sampler chooses a set of points in model parameter space, at which full model runs will performed to then tune the emulator. The user must provide a description of the model parameters and the prior in a text files in a standard format. There are several options, the first of which is to choose the points that represent a simplex, e.g. an equilateral triangle in two dimensions or a tetrahedron in three dimensions. In a simplex, all points are equidistant from one another, and the number of training points is $N_p+1$, where $N_p$ is the number of parameters. In addition to the standard simplex, there are additional options which are motivated by the simplex form. For the standard form the  $N_p+1$ training points in the simplex match the number of points needed to determine a linear fit. Another choice, which is based on the simplex chooses enough points to determine a quadratic fit, $(N_p+1)(N_p+2)/2$. The software will write the information about the training points in a standard format, which is described in the manual. If the user decides to use training points from a different procedure, the user can still record the information about the points in a same format, and the emulator tuning will still work, as the emulator itself is not predicated on a specific choice of training points.
 
- If the user decides to use training points from a different procedure, the user can still write the information about the points in a different format, and the emulator tuning will still work, as the emulator itself is not predicated on a specific choice of training points. The user is then responsible for running the full model at the training points and expressing observables for each training points in a standard format. The manual describes the output format.
+ The user is then responsible for running the full model at the training points and expressing observables, and the uncertainties, for each training point in a standard format. The manual describes the output format.
 
- The second functionality of the software is to build and tune the emulator. Once the observables are calculated at the training points, the emulator will be built and tuned. User input mainly consists of altering a text file of parameters, which provide the user several choices in how the emulator functions. After being trained, the Taylor coefficients representing the emulator are written to a file. One can always add additional training points, and retrain the emulator. 
+ The second functionality of the software is to build and tune the emulator. The emulator reads the information above, along with another user-provided parameter file to choose which observables are to be emulated, which parameters will be varied, and which emulator options will be applied. After being trained, the Taylor coefficients representing the emulator are written to a file. One can always add additional training points, and retrain the emulator. 
 
 The third functionality of the software is to perform a MCMC exploration of parameter space using the emulator. This user must express the experimental observables and their uncertainties in a standard format. The MCMC software will read the emulator coefficients from file and perform the MCMC exploration. This procedure is also guided by a simple text file of parameters. The MCMC software uses python and Matplotlib to generate plots that describe the posterior. 
 
@@ -132,37 +134,49 @@ Smooth Emulator is largely a C++ project. In addition to a C++ compiler, the use
     \item Python/Matplotlib (only for generating plots in the MCMC procedure)
 \end{itemize}
 
-CMake is an open-source, cross-platform build system that helps automate the process of building, testing, and packaging software projects. It provides a simple and efficient way to generate platform-specific build files from a platform-independent configuration. Hopefully, CMake will perform the needed gymnastics to find the Eigen3 and GSL installations. To install CMake, either visit the CMake website (https://cmake.org/), or use the package manager.
+CMake is an open-source, cross-platform build system that helps automate the process of compiling and linking for software projects. Hopefully, CMake will perform the needed gymnastics to find the Eigen3 and GSL installations. To install CMake, either visit the CMake website (https://cmake.org/), or use the system's package manager for the specific system. For example, on Mac OS, if one uses {\it homebrew} as a package manager, the command is\\
+\vspace{-20pt}
+{\tt 
+\begin{verbatim} % brew install cmake\end{verbatim}
+}
 
-Eigen is a C++ template library for vector and matrix math, i.e. linear algebra. The user can visit the Eigen website (https://eigen.tuxfamily.org/dox/), or use their system's package manager.
+Eigen is a C++ template library for vector and matrix math, i.e. linear algebra. The user can visit the Eigen website (\url{https://eigen.tuxfamily.org/dox/}), or use their system's package manager. For example on Mac OS with {\it homeebrew},\\
+\vspace{-20pt}
+{\tt 
+\begin{verbatim} % brew install eigen\end{verbatim}
+}
 
-The GNU Scientific Library (GSL) is a numerical library for C and C++ programmers. The library provides a wide range of mathematical routines such as random number generators, special functions and least-squares fitting. There are over 1000 functions in total with an extensive test suite. One can either download the software from the GSL website (https://www.gnu.org/software/gsl/), or use a package manager.
-
-
+The GNU Scientific Library (GSL) is a numerical library for C and C++ programmers. The library provides a wide range of mathematical routines such as random number generators, special functions and least-squares fitting. There are over 1000 functions in total with an extensive test suite. One can either download the software from the GSL website (https://www.gnu.org/software/gsl/), or use a package manager. Again, for {\it homebrew} on Mac OS,\\
+\vspace{-20pt}
+{\tt 
+\begin{verbatim} % brew install gsl\end{verbatim}
+}
 
 \begin{description}
 \item[Step 1 : Making Home Directory and Setting Home Environment Variable]
 \end{description}
 
-The software requires two repositories. They should be cloned into the same directory. For compilation purposes this directory needs to be accessed via an environmental directory.  For example the directory might be named {\tt githome\_msu} (another name would be fine, just substitute it everywhere below). First, create the directory, then enter that directory.
+The software requires two repositories. They should be cloned into the same directory. For compilation purposes this directory needs to be accessed via an environmental variable.  For example the directory might be named {\tt githome\_msu} (another name would be fine, just substitute it everywhere below). First, create the directory, then enter that directory,\\
+\vspace{-20pt}
 {\tt 
 \begin{verbatim}
     % mkdir (some path)/githome_msu
     % cd (some path)/githome_msu
 \end{verbatim}
 }
-Then, create an environmental variable which describes the location of the directory above. 
-
+Here, ``(some path)'' might be something like {\tt /Users/CarlosSmith}. Then, create an environmental variable which describes the location of the directory above.\\
+\vspace{-20pt}
 {\tt 
 \begin{verbatim}
     % export GITHOME_MSU=(some path)/githome_msu
 \end{verbatim}
 }
-It is recommended to copy this command into the user's .bashrc (or equivalent) file to avoid re-enerting it each time one needs to recompile.
+It is recommended to copy this command into the user's {\tt .bashrc} (or equivalent) file to avoid re-defining it each time one needs to recompile.
 
 \begin{description}
 \item[Step 2 : Downloading and Compiling] 
 \end{description}
+\vspace{-20pt}
 {\tt 
 \begin{verbatim}
     % git clone https://github.com/scottedwardpratt/smooth.git
@@ -170,7 +184,8 @@ It is recommended to copy this command into the user's .bashrc (or equivalent) f
 \end{verbatim}
 }
 
-This creates 2 directories: {\tt .../msu\_git/commonutils} and {\tt .../msu\_git/smooth}. Next, create the Make files with cmake, then compile them.
+This creates 2 directories: {\tt .../msu\_git/commonutils} and {\tt .../msu\_git/smooth}. Next, create the makefiles with cmake, then compile them.\\
+\vspace{-20pt}
 {\tt 
 \begin{verbatim}
     % cd ../githome_msu/commonutils/software
@@ -184,7 +199,7 @@ This creates 2 directories: {\tt .../msu\_git/commonutils} and {\tt .../msu\_git
     % make smoothy_readcoefficients
 \end{verbatim}
 }
-As described further below, the foundational software and libraries are in the {\tt githome\_msu/ commonutils/software} and {\tt githome\_msu/smooth/software} directories. The {\tt githome\_msu/smooth /program} directory has the short programs which call functions from the other directories. This arrangement should more easily allow the reader to copy the codes in {\tt programs} directory to make their own versions.
+As described further below, the foundational software and libraries are located in {\tt githome\_msu/ commonutils/software} and {\tt githome\_msu/smooth/software} directories. The {\tt githome\_msu/smooth /program} directory has the short programs which call functions from the other directories. This arrangement should more easily allow the reader to copy the codes in {\tt programs} directory to make their own versions.
 
 \begin{description}
 \item[Step 3 : Making a Project Directory] 
@@ -200,28 +215,28 @@ This will set up the directory structure for use.  \\
 \begin{description}
 \item[Step 4 : CMake]
 \end{description}
-
+\vspace{-20pt}
 {\tt 
 \begin{verbatim}
-    cmake /path/to/project
+    % cmake /path/to/project
 \end{verbatim}
 }
 
-\subsection{Structure}
+\subsection{Directory and File Structure}
 
 The directory structure of the repository is as follows: 
 
-\includegraphics[width = 120mm]{Structure_Tree.png}
+\centerline{\includegraphics[width = 0.95\textwidth]{Structure_Tree.png}}
 
 \subsubsection{Software Directory}
 
-The software file contains all the classes and the main functionality of the emulator. The Software file contains the two main directories, the Include directory and the source directory called src.
+The software file contains all the header files and source files for the main functionality of the emulator. The {\tt software/} directory contains the two main directories, the Include directory and the source directory called src.
 
-\subsubsection{Include Directory}
+\subsubsection{Include Directory ({\tt software/include/msu_smooth/})}
 
 This directory contains all the header files. The header files contain a set of predefined library functions and newly defined classes for the different functions used in the emulator code. 
 
-\subsubsection{Source Directory (Src)}
+\subsubsection{Source Directory ({\tt software/src})}
 
 Within this directory, you will find the core functions of the emulator in the form of .cc files. Each step of the process has its own class with distinct constructors. These .cc files reference the corresponding .h file using the "\#include" feature and then define each class with unique initial values, methods, and constructors. 
 
