@@ -36,7 +36,7 @@ int CPriorInfo::GetIPosition(string par_name){
 		CLog::Fatal("In CPriorInfo::GetIposition, cannot find parameter "+par_name+"\n");
 	}
 	return iter->second;
-} 
+}
 
 string CPriorInfo::GetName(int i){
 	return parname[i];

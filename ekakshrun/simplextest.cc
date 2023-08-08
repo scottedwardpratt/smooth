@@ -9,11 +9,11 @@ int main(int argc,char *argv[]){
 		exit(1);
 	}
 	CparameterMap *parmap=new CparameterMap();
-	
+
 	parmap->ReadParsFromFile(string(argv[1]));
 	CSimplexSampler *simplex=new CSimplexSampler(parmap);
-	
-	simplex->SetThetaType1();
+
+	simplex->SetThetaSimplex();
 	simplex->WriteModelPars("modelruns");
 	return 0;
 }

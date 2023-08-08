@@ -1,0 +1,3 @@
+Simplex_TrainType 1 // Must be 1 or 2 or 3 or 4
+Simplex_RTrain 0.95
+SmoothEmulator_ModelRunDirName modelruns

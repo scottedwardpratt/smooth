@@ -38,10 +38,10 @@ public:
 	vector<double> SigmaASample;
 	vector<double> A,ATrial;
 	vector<vector<double>> ThetaTrain;
-	
+
 	CSmoothEmulator(string observable_name_set);
-	
-	
+
+
 	void CalcAFromTraining(vector<double> &AA);
 	void PrintA(vector<double> &Aprint);
 
@@ -62,11 +62,12 @@ public:
 
 	void GenerateASamples();
 	void CalcY(CModelParameters *modpars,double &Y,double &SigmaY);
+	void CalcY(vector<double> Theta,double &Y,double &SigmaY);
 	void WriteCoefficients();
 	void ReadCoefficients();
 
 	void Init();
-	
+
 	static CSmoothMaster *smoothmaster;
 	static int NPars;
 	static CSmooth *smooth;

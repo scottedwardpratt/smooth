@@ -11,7 +11,7 @@ unsigned int CSmoothEmulator::NTrainingPts=0;
 CSmoothEmulator::CSmoothEmulator(string observable_name_set){
 	observable_name=observable_name_set;
 	NTrainingPts=smoothmaster->traininginfo->NTrainingPts;
-	
+
 	LAMBDA=parmap->getD("SmoothEmulator_LAMBDA",3.0);
 	NMC=parmap->getI("SmoothEmulator_NMC",10000);
 	NASample=parmap->getI("SmoothEmulator_NASample",10);
@@ -22,12 +22,12 @@ CSmoothEmulator::CSmoothEmulator(string observable_name_set){
 	ConstrainA0=parmap->getB("SmoothEmulator_ConstrainA0",false);
 	CutOffA=parmap->getB("SmoothEmulator_CutoffA",false);
 	SigmaAMin=parmap->getD("SmoothEmulator_SigmaAMin",0.1*SigmaA0);
-	
+
 	iY=smoothmaster->observableinfo->GetIPosition(observable_name);
 	SigmaA0=smoothmaster->observableinfo->SigmaA0[iY];
 
 	Init();
-	
+
 }
 
 void CSmoothEmulator::SetThetaTrain(){
@@ -390,6 +390,19 @@ void CSmoothEmulator::CalcY(CModelParameters *modpars,double &Y,double &SigmaY){
 	SigmaY=sqrt(fabs(SigmaY-Y*Y));
 }
 
+void CSmoothEmulator::CalcY(vector<double> Theta,double &Y,double &SigmaY){
+	double y;
+	Y=SigmaY=0.0;
+	for(int isample=0;isample<NASample;isample++){
+		y=smooth->CalcY(ASample[isample],LAMBDA,Theta);
+		Y+=y;
+		SigmaY+=y*y;
+	}
+	SigmaY=SigmaY/double(NASample);
+	Y=Y/double(NASample);
+	SigmaY=sqrt(fabs(SigmaY-Y*Y));
+}
+
 void CSmoothEmulator::WriteCoefficients(){
 	int isample,ic;
 	FILE *fptr;
@@ -436,6 +449,6 @@ void CSmoothEmulator::ReadCoefficients(){
 		}
 		fclose(fptr);
 	}
-	
-	
+
+
 }

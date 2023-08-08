@@ -1,5 +1,5 @@
 SmoothEmulator_NPars 4
-SmoothEmulator_NTrainingPts 5
+SmoothEmulator_NTrainingPts 2,3-4
 SmoothEmulator_SigmaA 100.0
 SmoothEmulator_SigmaYMin 10
 SmoothEmulator_NMC 100000
@@ -11,9 +11,9 @@ SmoothEmulator_UseSigmaYRreal false
 SmoothEmulator_ConstrainA0 true
 SmoothEmulator_CutoffA false
 SmoothEmulator_LAMBDA 3.0
-SmoothEmulator_ModelRunDirName modelruns_test
+SmoothEmulator_ModelRunDirName modelruns
 SmoothEmulator_CoefficientsDirName coefficients
 Smooth_MAXRANK 4
 Smooth_UseRFactor false
-Simplex_TrainType 1 // Must be 1 or 2 or 3 or 4
+Simplex_TrainType 2 // Must be 1 or 2 or 3 or 4
 Simplex_RTrain 0.95

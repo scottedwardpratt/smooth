@@ -5,7 +5,9 @@
 
 #include <cstdio>
 #include <vector>
+#include <string>
 #include <Eigen/Dense>
+#include <sstream>
 #include "msu_commonutils/parametermap.h"
 #include "msu_commonutils/misc.h"
 #include "msu_commonutils/randy.h"
@@ -26,7 +28,7 @@ class CModelParInfo;
 
 class CSmoothMaster{
 public:
-	int NTrainingPts;
+	int TrainType;
 	CSmoothMaster(CparameterMap *parmap_set);
 	CparameterMap *parmap;
 	unsigned int NPars;
@@ -37,7 +39,7 @@ public:
 	Crandy *randy;
 	CSmooth *smooth;
 	string ModelRunDirName,CoefficientsDirName;
-	
+
 	void ReadTrainingInfo();
 	void GenerateCoefficientSamples();
 	void TuneAllY(); // tune all observables
@@ -56,7 +58,7 @@ public:
 	void ReadCoefficientsAllY();
 	void ReadCoefficients(string obsname);
 	void ReadCoefficients(int iY);
-	
+
 };
 
 #endif
