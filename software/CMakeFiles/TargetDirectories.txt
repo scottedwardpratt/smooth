@@ -1,3 +1,0 @@
-/home/quirren/git/smooth/software/CMakeFiles/smooth.dir
-/home/quirren/git/smooth/software/CMakeFiles/edit_cache.dir
-/home/quirren/git/smooth/software/CMakeFiles/rebuild_cache.dir
