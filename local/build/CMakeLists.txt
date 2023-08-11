@@ -5,9 +5,6 @@ set(GITHOME_MSU $ENV{GITHOME_MSU})
 set (MAIN_PROGRAM_DIR "${GITHOME_MSU}/smooth/local/main_programs")
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY $ENV{GITHOME_MSU}/smooth/local/bin)
 
-include(CMakePrintHelpers)
-cmake_print_variables(MAIN_PROGRAM_DIR)
-
 add_custom_target(extern_commonutils COMMAND make WORKING_DIRECTORY ${GITHOME_MSU}/commonutils/software)
 add_custom_target(extern_smooth COMMAND make WORKING_DIRECTORY ${GITHOME_MSU}/smooth/software)
 
