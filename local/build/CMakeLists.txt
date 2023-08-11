@@ -3,8 +3,6 @@ set(CMAKE_VERBOSE_MAKEFILE on)
 project(smooth)
 set(GITHOME_MSU $ENV{GITHOME_MSU})
 set (MAIN_PROGRAM_DIR "${GITHOME_MSU}/smooth/local/main_programs")
-set (BUILD_DIR "${GITHOME_MSU}/smooth/local/build")
-set (BIN_DIR "${GITHOME_MSU}/smooth/local/bin")
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY $ENV{GITHOME_MSU}/smooth/local/bin)
 
 include(CMakePrintHelpers)
