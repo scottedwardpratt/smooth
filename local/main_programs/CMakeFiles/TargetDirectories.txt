@@ -1,0 +1,8 @@
+/Users/scottpratt/git/smooth/local/codes/CMakeFiles/extern_commonutils.dir
+/Users/scottpratt/git/smooth/local/codes/CMakeFiles/extern_smooth.dir
+/Users/scottpratt/git/smooth/local/codes/CMakeFiles/simplex.dir
+/Users/scottpratt/git/smooth/local/codes/CMakeFiles/fakemodel.dir
+/Users/scottpratt/git/smooth/local/codes/CMakeFiles/smoothy_writecoefficients.dir
+/Users/scottpratt/git/smooth/local/codes/CMakeFiles/smoothy_readcoefficients.dir
+/Users/scottpratt/git/smooth/local/codes/CMakeFiles/edit_cache.dir
+/Users/scottpratt/git/smooth/local/codes/CMakeFiles/rebuild_cache.dir
