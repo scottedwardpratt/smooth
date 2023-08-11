@@ -114,17 +114,10 @@ This manual describes how to install and run the Smooth Emulator software. The s
 
 The third functionality of the software is to perform a MCMC exploration of parameter space using the emulator. This user must express the experimental observables and their uncertainties in a standard format. The MCMC software will read the emulator coefficients from file and perform the MCMC exploration. This procedure is also guided by a simple text file of parameters. The MCMC software uses python and Matplotlib to generate plots that describe the posterior. 
 
-\section{Getting Started}\label{sec:simplex}
+\section{Installation and Getting Started}\label{sec:installation}
 
-\subsection{Installation}
-
-Smooth Emulator software should run on UNIX, Mac OS or Linux, but is not supported for Windows OS.
-
-\begin{description}
-\item[Step 0 : Prerequisites] 
-\end{description}
-
-Smooth Emulator is largely a C++ project. In addition to a C++ compiler, the user needs the following software installed.
+\subsection{Prerequisites}
+Smooth Emulator software should run on UNIX, Mac OS or Linux, but is not supported for Windows OS. Smooth Emulator is largely  written in C++. In addition to a C++ compiler, the user needs the following software installed.
 
 \begin{itemize}
     \item git
@@ -152,9 +145,7 @@ The GNU Scientific Library (GSL) is a numerical library for C and C++ programmer
 \begin{verbatim} % brew install gsl\end{verbatim}
 }
 
-\begin{description}
-\item[Step 1 : Making Home Directory and Setting Home Environment Variable]
-\end{description}
+\subsection{Making Home Directory and Setting Home Environment Variable}
 
 The software requires two repositories. They should be cloned into the same directory. For compilation purposes this directory needs to be accessed via an environmental variable.  For example the directory might be named {\tt githome\_msu} (another name would be fine, just substitute it everywhere below). First, create the directory, then enter that directory,\\
 \vspace{-20pt}
@@ -173,9 +164,8 @@ Here, ``(some path)'' might be something like {\tt /Users/CarlosSmith}. Then, cr
 }
 It is recommended to copy this command into the user's {\tt .bashrc} (or equivalent) file to avoid re-defining it each time one needs to recompile.
 
-\begin{description}
-\item[Step 2 : Downloading and Compiling]\label{sec:Downloading and Compiling}
-\end{description}
+\subsection{Downloading}\label{sec:Downloading_Compiling}
+From within the {\tt githome\_msu/} directory,\\
 \vspace{-20pt}
 {\tt 
 \begin{verbatim}
@@ -184,7 +174,19 @@ It is recommended to copy this command into the user's {\tt .bashrc} (or equival
 \end{verbatim}
 }
 
-This creates 2 directories: {\tt .../msu\_git/commonutils} and {\tt .../msu\_git/smooth}. Next, create the makefiles with cmake, then compile them.\\
+This creates 2 directories: {\tt .../githome\_msu/commonutils} and {\tt .../githome\_msu/smooth}.
+
+\subsection{Directory and File Structure}
+
+The directory structure of the repository is as follows: 
+
+\centerline{\includegraphics[width = 0.95\textwidth]{Structure_Tree.png}}
+
+Once compiled, the material in the {\tt commonutils/} directory creates a library that is used for a variety of tasks, not particularly designed for Smooth Emulator or Simplex Sampler. The {\tt smooth/} directory contains codes that are used to create libraries specific to the sampler and emulator. The {\tt smooth} directory includes a {\tt smooth/local/} directory in which the user may wish to create main which 
+
+\subsection{Compiling Libraries}
+
+Next, create the makefiles with cmake, then compile them.\\
 \vspace{-20pt}
 {\tt 
 \begin{verbatim}
@@ -203,28 +205,14 @@ As described further below, the foundational software and libraries are located 
 
 
 
-\begin{description}
-\item[Step 3 : Making a Project Directory] 
-\end{description}
+\subsection{Making a Project Directory}
 {\tt 
 \begin{verbatim}
 
     % cp -r ../template myproject
 \end{verbatim}
 }
-After compiling the communities and smooth directory in the githome\_msu, create the direcotry for the user project by copping the template directory. 
-This will set up the directory structure for use. 
-
-\begin{description}
-\item[Step 4 : CMake]
-\end{description}
-<<<<<<< HEAD
-\vspace{-20pt}
-{\tt 
-\begin{verbatim}
-    % cmake /path/to/project
-\end{verbatim}
-}
+After compiling the communities and smooth directory in the githome\_msu, create the direcotry for the user project by copping the template directory. This will set up the directory structure for use. 
 
 \subsection{Directory and File Structure}
 
@@ -239,32 +227,26 @@ In the project directory do the following command to compile and make the execut
 
 This will create the executables with are mentioned below the structure code with their functionality and 
 
-\subsection{Directory and File Structure}
-
-The directory structure of the repository is as follows: 
-
-\centerline{\includegraphics[width = 0.95\textwidth]{Structure_Tree.png}}
-
 
 \subsubsection{Bin Directory}
 
 This directory contains the codes with the .cc files that can be referenced to understand the executables.
 
-\begin{description}
-\item[Template Project Directory]
-\ 1. simplex.cc
-\ This cc helps in choosing the training points and making the model parameters and creates the model run directory using the prior info for the simplex 
+\subsection{Template Project Directory]}
+\begin{enumerate}\itemsep=0pt
+\item {\tt simplex.cc}: 
+This cc helps in choosing the training points and making the model parameters and creates the model run directory using the prior info for the simplex 
 
-\ 2. fakemodel.cc 
-\ The fakemodel.cc is a template used to represent a potential model. It will be replaced by the actual model created by the user. 
+\item {\tt fakemodel.cc}: 
+The fakemodel.cc is a template used to represent a potential model. It will be replaced by the actual model created by the user. 
 
-\ 3. smoothy\_writecoefficients.cc 
-\ This cc files read in the parameter files and reads in the training point info from the simplex and tune the function Y values and generate the coefficient for each observable and make a directory of the possible coefficient values 
+\item {\tt smoothy\_writecoefficients.cc}:
+This cc files read in the parameter files and reads in the training point info from the simplex and tune the function Y values and generate the coefficient for each observable and make a directory of the possible coefficient values 
 
-\ 4. smoothy\_readcoefficients.cc 
-\ This cc file reads in the coefficient files and reads in the training info from the simplex and tests the samples from the emulator at the training points. 
+\item {\tt smoothy\_readcoefficients.cc}: 
+This cc file reads in the coefficient files and reads in the training info from the simplex and tests the samples from the emulator at the training points. 
+\end{enumerate}
 
-\end{description}
 \subsubsection{Software Directory}
 
 The software file contains all the header files and source files for the main functionality of the emulator. The {\tt software/} directory contains the two main directories, the Include directory and the source directory called src.
@@ -479,28 +461,25 @@ The code also writes metadata about the number of parameters (NPars), maximum ra
 
 \section{Theory}
 
-\begin{description}
-\item[Constraining the emulator] \
-\\
-\ 1. $M$ full model runs are conducted at different positions $\vec{\theta}_{m=1,M}$. These runs provide corresponding values $F_{m=1,M}$. 
+\subsection{Constraining the emulator}
+\begin{enumerate}\itemsep=0pt
+\item $M$ full model runs are conducted at different positions $\vec{\theta}_{m=1,M}$. These runs provide corresponding values $F_{m=1,M}$. 
 
-\ 2. The functional form of the emulator has a large number of coefficients $A_{\vec{n}}$, which exceeds the number of training points M. However, the dependence of the coefficient A is purely linear. 
+\item The functional form of the emulator has a large number of coefficients $A_{\vec{n}}$, which exceeds the number of training points M. However, the dependence of the coefficient A is purely linear. 
 
-\ 3. The coefficients are enumerated as $A_c$ with $c=1\cdots C$, where $C>M$.
+\item The coefficients are enumerated as $A_c$ with $c=1\cdots C$, where $C>M$.
 
-\ 4. Random values are assigned to the coefficients $A_M$ through $A_C$, excluding the first $M$ coefficients. 
+\item Random values are assigned to the coefficients $A_M$ through $A_C$, excluding the first $M$ coefficients. 
 
-\ 5. A set of linear equations is solved to determine the values of the first $M$ coefficients. This process involves finding the coefficients that best fit the training points. 
+\item A set of linear equations is solved to determine the values of the first $M$ coefficients. This process involves finding the coefficients that best fit the training points. 
 
-\ 6. A weight is applied to the values of $A$, taking into account their consistency with the prior likelihood of $A$ and the given constraints. This step helps to incorporate prior knowledge and constraints into the emulator. 
+\item A weight is applied to the values of $A$, taking into account their consistency with the prior likelihood of $A$ and the given constraints. This step helps to incorporate prior knowledge and constraints into the emulator. 
 
-\ 7. A representative set of A is generated, typically consisting of a dozen samples. Each sample function passes through all the training points but may deviate further from them. 
+\item A representative set of A is generated, typically consisting of a dozen samples. Each sample function passes through all the training points but may deviate further from them. 
 
-\ 8. By averaging over $N_{\rm sample}$ sets of coefficients, a prediction for the emulator can be made at a specific point $\theta$. The $N_{\rm sample}$ points provide an estimate, and their variance represents the uncertainty associated with the emulator's prediction. 
+\item By averaging over $N_{\rm sample}$ sets of coefficients, a prediction for the emulator can be made at a specific point $\theta$. The $N_{\rm sample}$ points provide an estimate, and their variance represents the uncertainty associated with the emulator's prediction. 
 
-\end{description}\
-
-
+\end{enumerate}
 
 
 \appendix
