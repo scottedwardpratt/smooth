@@ -10,7 +10,7 @@ add_custom_target(extern_smooth COMMAND make WORKING_DIRECTORY ${GITHOME_MSU}/sm
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -Wall -std=c++17")
 set(CMAKE_MODULE_PATH "${MAIN_PROGRAM_DIR}/cmake")
-find_package(GSL 1.15 REQUIRED)
+find_package(GSL REQUIRED)
 find_package(Eigen3 REQUIRED)
 include_directories(SYSTEM ${GSL_INCLUDE_DIR} ${EIGEN3_INCLUDE_DIR} ${GITHOME_MSU}/commonutils/software/include ${GITHOME_MSU}/smooth/software/include)      
 link_directories(${GITHOME_MSU}/smooth/software/lib ${GITHOME_MSU}/commonutils/software/lib)
