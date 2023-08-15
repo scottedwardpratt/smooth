@@ -20,7 +20,7 @@ void CSimplexSampler::SetThetaSimplex(){
 	else if(TrainType==4)
 		SetThetaType4();
 	else{
-		CLog::Fatal("Inside CSimplexSampler::SetThetaSimplex, Traintype must be 1,2,3, or 4\n");
+		CLog::Fatal("Inside CSimplexSampler::SetThetaSimplex, TrainType must be 1,2,3, or 4\n");
 	}
 }
 
