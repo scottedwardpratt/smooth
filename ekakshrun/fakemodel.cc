@@ -11,7 +11,8 @@ using namespace std;
 #include "msu_commonutils/log.h"
 #include "msu_commonutils/randy.h"
 
-#include "fakemodels/fake1.cc"
+
+#include "fakemodcls.cc"
 
 using namespace std;
 int main(){
@@ -24,26 +25,23 @@ int main(){
 	FILE *fptr;
 	string filename,Yname;
 	char parname[300];
-
+	unsigned int NPars_Set;
+  int maxrank = 1-NPars_Set;
+  double SigmaReal = 10;
 
 
 	NPars=priorinfo->NModelPars;
 	X.resize(NPars);
+	FakeModel fakeModel(NPars_Set, maxrank);
+	fakeModel.RandomizeA(SigmaReal);
 
-
-
-
-	vector<FakeModel> fakeModels;
-	for (int i = 0; i < observableinfo->NObservables; i++) {
-		string Yname = observableinfo->GetName(i);
-		fakeModels.emplace_back(i, Yname);
-	}
 
 	exists = true;
 	itrain = 0;
 	do {
-		// ... other code ...
 
+		filename="modelruns/run"+to_string(itrain)+"/mod_parameters.txt";
+		exists=filesystem::exists(filename);
 		if (exists) {
 			fptr = fopen(filename.c_str(), "r");
 			for (ipar = 0; ipar < NPars; ipar++) {
@@ -54,7 +52,7 @@ int main(){
 			fptr = fopen(filename.c_str(), "w");
 			for (iY = 0; iY < observableinfo->NObservables; iY++) {
 				Yname = observableinfo->GetName(iY);
-				fakeModels[iY].GetY(X, Y, SigmaY); // Use the FakeModel's GetY method
+				fakeModel.GetY_2(iY, Yname, X, Y, SigmaY);
 				fprintf(fptr, "%s %g %g\n", Yname.c_str(), Y, SigmaY);
 			}
 			fclose(fptr);
