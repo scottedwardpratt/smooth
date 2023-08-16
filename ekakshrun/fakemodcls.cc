@@ -3,7 +3,7 @@
 #include <cmath>
 #include <ctime>
 #include <cstdio>
-#include "Crandy.h"
+
 using namespace std;
 #include "msu_commonutils/parametermap.h"
 #include "msu_commonutils/constants.h"
@@ -12,6 +12,12 @@ using namespace std;
 #include "msu_smooth/observableinfo.h"
 #include "msu_commonutils/log.h"
 #include "msu_commonutils/randy.h"
+#include "msu_commonutils/misc.h"
+#include <list>
+#include "msu_smooth/smooth.h"
+#include "msu_smooth/simplex.h"
+#include <iostream>
+#include <Eigen/Dense>
 
 using namespace std;
 
@@ -22,6 +28,14 @@ private:
     string Yname;
     Crandy *randy;
     double coefficient_sin, coefficient_cos, coefficient_exp;
+
+  	vector<double> A;
+  	double LAMBDA;
+  	CFake_Taylor(unsigned int NPars_Set,int maxrank,Crandy *randy);
+  	CSmooth *smooth;
+  	void GetY_2(vector<double> &theta,double &Y,double &SigmaY);
+  	void RandomizeA(double SigmaReal);
+  };
 
 public:
     FakeModel(int iY, string Yname) : iY(iY), Yname(Yname) {
@@ -56,4 +70,6 @@ public:
         }
         printf("%s  Y=%g +/- %g\n", Yname.c_str(), Y, SigmaY);
     }
+
+
 };
