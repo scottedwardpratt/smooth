@@ -1,8 +1,0 @@
-/Users/ekakshkataria/git/smooth/scottrun/CMakeFiles/extern_commonutils.dir
-/Users/ekakshkataria/git/smooth/scottrun/CMakeFiles/extern_smooth.dir
-/Users/ekakshkataria/git/smooth/scottrun/CMakeFiles/simplextest.dir
-/Users/ekakshkataria/git/smooth/scottrun/CMakeFiles/fakemodel.dir
-/Users/ekakshkataria/git/smooth/scottrun/CMakeFiles/smoothy.dir
-/Users/ekakshkataria/git/smooth/scottrun/CMakeFiles/smoothy_writecoefficients.dir
-/Users/ekakshkataria/git/smooth/scottrun/CMakeFiles/edit_cache.dir
-/Users/ekakshkataria/git/smooth/scottrun/CMakeFiles/rebuild_cache.dir

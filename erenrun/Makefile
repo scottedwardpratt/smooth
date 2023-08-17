@@ -31,9 +31,6 @@ default_target: all
 
 .SUFFIXES: .hpux_make_needs_suffix_list
 
-# Produce verbose output by default.
-VERBOSE = 1
-
 # Command-line flag to silence nested $(MAKE).
 $(VERBOSE)MAKESILENT = -s
 
@@ -159,6 +156,32 @@ simplextest/fast:
 .PHONY : simplextest/fast
 
 #=============================================================================
+# Target rules for targets named PCA
+
+# Build rule for target.
+PCA: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 PCA
+.PHONY : PCA
+
+# fast build rule for target.
+PCA/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PCA.dir/build.make CMakeFiles/PCA.dir/build
+.PHONY : PCA/fast
+
+#=============================================================================
+# Target rules for targets named PCA_read
+
+# Build rule for target.
+PCA_read: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 PCA_read
+.PHONY : PCA_read
+
+# fast build rule for target.
+PCA_read/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PCA_read.dir/build.make CMakeFiles/PCA_read.dir/build
+.PHONY : PCA_read/fast
+
+#=============================================================================
 # Target rules for targets named fakemodel
 
 # Build rule for target.
@@ -209,6 +232,54 @@ smoothy_readcoefficients: cmake_check_build_system
 smoothy_readcoefficients/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy_readcoefficients.dir/build.make CMakeFiles/smoothy_readcoefficients.dir/build
 .PHONY : smoothy_readcoefficients/fast
+
+PCA.o: PCA.cc.o
+.PHONY : PCA.o
+
+# target to build an object file
+PCA.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PCA.dir/build.make CMakeFiles/PCA.dir/PCA.cc.o
+.PHONY : PCA.cc.o
+
+PCA.i: PCA.cc.i
+.PHONY : PCA.i
+
+# target to preprocess a source file
+PCA.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PCA.dir/build.make CMakeFiles/PCA.dir/PCA.cc.i
+.PHONY : PCA.cc.i
+
+PCA.s: PCA.cc.s
+.PHONY : PCA.s
+
+# target to generate assembly for a file
+PCA.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PCA.dir/build.make CMakeFiles/PCA.dir/PCA.cc.s
+.PHONY : PCA.cc.s
+
+PCA_read.o: PCA_read.cc.o
+.PHONY : PCA_read.o
+
+# target to build an object file
+PCA_read.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PCA_read.dir/build.make CMakeFiles/PCA_read.dir/PCA_read.cc.o
+.PHONY : PCA_read.cc.o
+
+PCA_read.i: PCA_read.cc.i
+.PHONY : PCA_read.i
+
+# target to preprocess a source file
+PCA_read.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PCA_read.dir/build.make CMakeFiles/PCA_read.dir/PCA_read.cc.i
+.PHONY : PCA_read.cc.i
+
+PCA_read.s: PCA_read.cc.s
+.PHONY : PCA_read.s
+
+# target to generate assembly for a file
+PCA_read.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PCA_read.dir/build.make CMakeFiles/PCA_read.dir/PCA_read.cc.s
+.PHONY : PCA_read.cc.s
 
 fakemodel.o: fakemodel.cc.o
 .PHONY : fakemodel.o
@@ -340,11 +411,19 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... extern_commonutils"
 	@echo "... extern_smooth"
+	@echo "... PCA"
+	@echo "... PCA_read"
 	@echo "... fakemodel"
 	@echo "... simplextest"
 	@echo "... smoothy"
 	@echo "... smoothy_readcoefficients"
 	@echo "... smoothy_writecoefficients"
+	@echo "... PCA.o"
+	@echo "... PCA.i"
+	@echo "... PCA.s"
+	@echo "... PCA_read.o"
+	@echo "... PCA_read.i"
+	@echo "... PCA_read.s"
 	@echo "... fakemodel.o"
 	@echo "... fakemodel.i"
 	@echo "... fakemodel.s"

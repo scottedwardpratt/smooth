@@ -1,9 +1,0 @@
-/home/quirren/git/smooth/erenrun/CMakeFiles/extern_commonutils.dir
-/home/quirren/git/smooth/erenrun/CMakeFiles/extern_smooth.dir
-/home/quirren/git/smooth/erenrun/CMakeFiles/simplextest.dir
-/home/quirren/git/smooth/erenrun/CMakeFiles/fakemodel.dir
-/home/quirren/git/smooth/erenrun/CMakeFiles/smoothy.dir
-/home/quirren/git/smooth/erenrun/CMakeFiles/smoothy_writecoefficients.dir
-/home/quirren/git/smooth/erenrun/CMakeFiles/smoothy_readcoefficients.dir
-/home/quirren/git/smooth/erenrun/CMakeFiles/edit_cache.dir
-/home/quirren/git/smooth/erenrun/CMakeFiles/rebuild_cache.dir
