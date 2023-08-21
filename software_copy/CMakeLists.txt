@@ -6,7 +6,7 @@ message("CXX is ${CXX}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -Wall -std=c++17")
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-find_package(GSL 1.15 REQUIRED)
+find_package(GSL REQUIRED)
 find_package(Eigen3 REQUIRED)
 include_directories(SYSTEM include ${GITHOME_MSU}/commonutils/software/include ${GSL_INCLUDE_DIR} ${EIGEN3_INCLUDE_DIR})
 

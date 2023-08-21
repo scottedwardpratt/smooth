@@ -8,10 +8,18 @@ PCA::PCA(string filename){
 
   CSmoothMaster master(parmap);
 
-  nruns = master.emulator[0]->NTrainingPts;
+  nruns = 0;
+
+  filesystem::path p1 { "./modelruns" };
+
+   for (auto& p : filesystem::directory_iterator(p1))
+   {
+      ++nruns;
+   }
 
   Y.resize(nruns);
   SigmaY.resize(nruns);
+
 }
 
 
@@ -22,38 +30,47 @@ void PCA::CalcPCA(){
   double y,sigmay;
   FILE *fptr;
 
-  YNew.resize(nruns);
+
 
   for (int irun = 0; irun < nruns; irun++) {
-
     snprintf(filename,300,"modelruns/run%d/obs.txt",irun);
     fptr=fopen(filename,"r");
 
     while(!feof(fptr)){
       fscanf(fptr,"%s %lf %lf",obs_name, &y, &sigmay);
       if(!feof(fptr)){
-        Y[irun].push_back(y);
-        SigmaY[irun].push_back(sigmay);
+        Y.at(irun).push_back(y);
+        SigmaY.at(irun).push_back(sigmay);
       }
+
     }
+    fclose(fptr);
+
   }
 
-  for(size_t i = 0 ; i < YNew.size(); i++){
+
+  YNew.resize(Y.size());
+
+  for(int i = 0 ; i < nruns; i++){
+
     YNew[i].resize(Y[i].size());
+
   }
 
   for (size_t i = 0; i < Y.size(); i++) {
     for (size_t j = 0; j < Y[i].size(); j++) {
       YNew[i][j] = Y[i][j] / 0.5; //SigmaY[i][j] instead of 0.5
+
     }
   }
+
 
   YBar.resize(YNew[0].size());
 
   for (size_t i = 0; i < YBar.size() ; i++) {
     YBar[i] = 0;
-    for (int iruns = 0 ; iruns < nruns ; iruns++){
-      YBar[i] += YNew[iruns][i] / nruns;
+    for (int irun = 0 ; irun < nruns ; irun++){
+      YBar[i] += YNew[irun][i] / nruns;
 
     }
 
@@ -101,9 +118,13 @@ void PCA::ReadPCA(){
     v.push_back(stod(line));
   }
 
+
   int matrix_size = v.size();
-  eigvals(matrix_size, matrix_size);
+
+  eigvals.resize(matrix_size, matrix_size);
   eigvals.setZero();
+
+
 
   for (size_t i = matrix_size; i > 0; i--) {
     eigvals(i-1,i-1) = v[matrix_size - i];
@@ -112,7 +133,7 @@ void PCA::ReadPCA(){
   eigvalFile.close();
 
   ifstream eigvecFile("PCA_Info/eigvecs.txt");
-  eigvecs(matrix_size, matrix_size);
+  eigvecs.resize(matrix_size, matrix_size);
   int col = 0;
 
   while (std::getline(eigvecFile, line)) {
@@ -131,6 +152,37 @@ void PCA::ReadPCA(){
     }
     col++;
   }
+}
 
-  cout << eigvecs << endl;
+void PCA::RunPCA(){
+
+  string command="rm -r -f PCA_Info/run*";
+	system(command.c_str());
+
+  for (int irun = 0; irun < nruns; irun++) {
+    string filename;
+    FILE *fptr;
+
+    string dirname= "PCA_Info/run" +to_string(irun);
+    command= "mkdir " +dirname;
+    system(command.c_str());
+
+    Eigen::VectorXd obsVec(Y[0].size());
+
+    for (size_t i = 0; i < Y[0].size(); i++) {
+      obsVec(i) = Y[irun][i];
+    }
+
+    Eigen::VectorXd PCAVec(Y[0].size());
+
+    PCAVec = eigvecs * obsVec;
+
+    filename=dirname+"/PCA_values.txt";
+		fptr=fopen(filename.c_str(),"w");
+
+    for(size_t i = 0; i < Y[0].size(); i++){
+      string obsname = "pca" + to_string(i);
+			fprintf(fptr,"%s %g\n", obsname.c_str(), PCAVec(i));
+		}
+  }
 }

@@ -3,6 +3,10 @@
 #include <vector>
 #include <Eigen/Dense>
 #include <Eigen/Eigenvalues>
+#include <stdio.h>
+#include <sys/types.h>
+#include <dirent.h>
+#include <filesystem>
 
 #include "msu_commonutils/parametermap.h"
 #include "msu_smooth/master.h"
@@ -17,6 +21,7 @@ public:
   PCA(string filename);
   void CalcPCA();
   void ReadPCA();
+  void RunPCA();
 };
 
 #endif
