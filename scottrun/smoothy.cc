@@ -5,7 +5,7 @@
 using namespace std;
 int main(int argc,char *argv[]){
 	if(argc!=2){
-		printf("Usage smoothy emulator parameter filename");
+		printf("Usage smoothy emulator_parameter_filename");
 		exit(1);
 	}
 	CparameterMap *parmap=new CparameterMap();
