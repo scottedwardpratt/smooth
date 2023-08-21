@@ -15,7 +15,16 @@ using namespace std;
 #include "fakemodcls.cc"
 
 using namespace std;
-int main(){
+int main(int argc,char *argv[]){
+	if(argc!=2){
+		printf("Usage fakemodel model_parameters_filename\n");
+		exit(1);
+	}
+	CparameterMap *parmap=new CparameterMap();
+	parmap->ReadParsFromFile(string(argv[1]));
+
+
+
 	CObservableInfo *observableinfo=new CObservableInfo("Info/observable_info.txt");
 	CPriorInfo *priorinfo=new CPriorInfo("Info/prior_info.txt");
 	int NPars,ipar,iY,itrain;
@@ -28,6 +37,9 @@ int main(){
 	unsigned int NPars_Set;
   int maxrank = 1-NPars_Set;
   double SigmaReal = 10;
+	int seed;
+
+	seed = parmap->getI("SmoothEmulator_Seed",time(NULL));
 
 
 	NPars=priorinfo->NModelPars;
@@ -52,13 +64,15 @@ int main(){
 			fptr = fopen(filename.c_str(), "w");
 			for (iY = 0; iY < observableinfo->NObservables; iY++) {
 				Yname = observableinfo->GetName(iY);
-				fakeModel.GetY_2(iY, Yname, X, Y, SigmaY);
+				fakeModel.GetY_1(iY, Yname, X, Y, SigmaY);
 				fprintf(fptr, "%s %g %g\n", Yname.c_str(), Y, SigmaY);
 			}
 			fclose(fptr);
 		}
 		itrain += 1;
 	} while (exists);
+
+
 
 	return 0;
 }

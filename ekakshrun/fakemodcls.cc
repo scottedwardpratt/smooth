@@ -31,10 +31,14 @@ public:
   	double LAMBDA;
   	CSmooth *smooth;
     unsigned int NPars;
+    int seed;
+    double Y;
+    double SigmaY;
+
 
     FakeModel(unsigned int NPars_Set,int maxrank){
     	NPars=NPars_Set;
-      randy = new Crandy(time(NULL));
+      randy = new Crandy(seed);
     	smooth = new CSmooth(NPars,maxrank);
       coefficient_sin = 50.0 * randy->ran();
       coefficient_cos = 50.0 * randy->ran();
@@ -71,19 +75,29 @@ public:
         Y += coefficient_exp * exp(arg / (Lambda * NPars));
         SigmaY = 0.0;
 
-        if (iY == 0) {
-            printf("-----------------------\n");
-        }
-        printf("%s  Y=%g +/- %g\n", Yname.c_str(), Y, SigmaY);
-    }
+
+        this->Yname = Yname;
+        this->Y = Y;
+        this->SigmaY = SigmaY;
+      }
 
     void GetY_2(int iY, string Yname,vector<double> &X,double &Y,double &SigmaY){
     	Y=smooth->CalcY(A,LAMBDA,X);
     	SigmaY=1.0;
-      if (iY == 0) {
-          printf("-----------------------\n");
-      }
-      printf("%s  Y=%g +/- %g\n", Yname.c_str(), Y, SigmaY);
+      this->Yname = Yname;
+      this->Y = Y;
+      this->SigmaY = SigmaY;
+
+    }
+
+
+    void Print_Fakemod(){
+        char message[200];
+        if (iY == 0) {
+          CLog::Info("-------\n");
+        }
+        snprintf(message, 200, "%s  Y=%g +/- %g\n", Yname.c_str(), Y, SigmaY);
+        CLog::Info(message);
     }
 
 
