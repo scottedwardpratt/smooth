@@ -1,0 +1,51 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+\newpage
+\setcounter{section}{5}
+\section{Tuning the Emulator}
+
+\subsection{Summary}
+
+From the motivation, we can interpret that the purpose of the emulator is to reproduce the model reasonably away from the training points and the goal is to focus on a particular class of functions that are smooth. 
+
+The emulator has a specific functional form with numerous coefficients denoted as $A_{\vec{n}}$. The theory of steps illustrated on how to constrain the emulator is mentioned in the theory section below.  After Running the simplex.cc file we output the model\_par.txt files for each run using the prior information using the number of parameters sent from the model\_parameter.txt file from the info directory and use the simplex to create the training points.
+
+\subsection{Code}
+
+The Code uses a fake model which acts as a template used to represent a potential model. It will be replaced by the actual model created by the user. The file reads in the model prior info and the observable info files from the info directory and generates the observable text files in the run directory. 
+
+To use the fake model run the following command in the terminal window in the project directory. 
+
+{\tt 
+\begin{verbatim}
+    % fakemodel 
+\end{verbatim}
+}
+ 
+\subsection{Writing Coefficients}
+
+In the terminal window run the following command after the simplex and importing the model.
+
+{\tt 
+\begin{verbatim}
+    % smoothy parameters/emulator_parameters.txt 
+\end{verbatim}
+}
+
+This code is responsible for invoking the primary functionality that adjusts the training points for the model. It produces samples of coefficients, which are then arranged in a directory within the project directory that provides details about each observable and various coefficient values.
+
+This function aims to perform a Markov Chain Monte Carlo (MCMC) parameter tuning process to optimize some coefficients of a smooth emulator. The code attempts to find the best set of coefficients that maximize the log probability of the emulator given some training data. 
+
+Final Output and Results:
+After completing the specified number of iterations, the algorithm calculates the success percentage (proportion of successful updates), the final value of SigmaA, and the log-likelihood normalized by the number of degrees of freedom (Ndof) for the best parameter set (BestLogP/Ndof).  
+
+Interpreting the Results:
+The success percentage gives an indication of the acceptance rate of new parameter sets during the MCMC process. A higher success rate generally indicates efficient parameter tuning. The value of SigmaA represents the estimated uncertainty or spread in the parameter space. The BestLogP/Ndof provides a measure of the goodness of fit achieved by the best parameter set. 
+
+The function also updates statistics for the sampled variance (SigmaA) to calculate the average variance (SigmaAbar) over all the generated samples. In summary, It iteratively tunes the coefficients using MCMC and stores the optimized coefficient samples in a matrix for further analysis. It is used for the process of generating and analyzing samples for the smooth emulator.
+
+The Code also Logs the comparison between the predicted value and the actual training data value for the current observable. Also, log the corresponding uncertainty. The function evaluates the smooth emulator's accuracy by generating predictions for each observable at the training points and comparing these predictions with the actual training data.  
+
+The code also writes metadata about the number of parameters (NPars), maximum rank (MaxRank), and total number of coefficients (NCoefficients) to a file named "meta.txt" in the created directory. For each sample generated using the function, it writes the corresponding coefficients (parameters) to a separate file named "sampleX.txt" in the created directory, where "X" represents the sample index. The number of coefficients is equal to NCoefficients, and they are written in a column-wise format. 
+
+\end{document}

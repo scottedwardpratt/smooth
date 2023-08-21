@@ -1,0 +1,179 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+\newpage
+\setcounter{section}{2}
+
+\section{Simplex Sampler}
+
+\begin{comment}
+\begin{enumerate}
+\item {\tt fakemodel.cc}: 
+The fakemodel.cc is a template used to represent a potential model. It will be replaced by the actual model created by the user. 
+
+\item {\tt smoothy\_writecoefficients.cc}:
+This cc files read in the parameter files and reads in the training point info from the simplex and tune the function Y values and generate the coefficient for each observable and make a directory of the possible coefficient values 
+
+\item {\tt smoothy\_readcoefficients.cc}: 
+This cc file reads in the coefficient files and reads in the training info from the simplex and tests the samples from the emulator at the training points. 
+\end{enumerate}
+
+\subsection{Software Directory}
+
+The {\tt ../githome\_msu/smooth/software} directory file contains all the header and source files used to calculate the libraries for the main functionality of the emulator. Should the User wish to see the header files, they are in {\tt ../githome\_msu/smooth/software/include/msu\_smooth/}. The source files are in {\tt ../githome\_msu/smooth/software/src/}, but are not written or organized in a way that makes it particulary easy for an outsider to modify. If one needs to recompile the libraries, one can enter {\tt ../githome\_msu/smooth/software/} and rerun {\tt cmake .} followed by {\tt make}. 
+
+\newpage
+
+\subsection{Project Directory}
+The project directory is where the emulator works. There are files in this directory: 
+
+1. Info Directory 
+
+The Directory includes the parameter and observable file. 
+The prior info file contains the list of parameters and their maximum and minimum values in the following example structure. 
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{c|c|c|c}
+         Parameter Name & Distribution Type & Min Value & Max Value \\
+         par1 & gaussian & 0 & 100\\
+         par2 & linear & 0 & 37 \\
+         par3 & uniform & 0 &  56 \\
+          \vdots & \vdots & \vdots & \vdots
+    \end{tabular}
+    \caption{{\tt{prior\_info.txt}}}
+    \label{tab:my_label}
+\end{table}
+ 
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{c|c|c}
+         Observable Name & Unit & Value\\
+         length & meters & 0.3 \\
+         mass & kg & 100 \\
+         time & seconds & 20 \\
+          \vdots & \vdots & \vdots 
+    \end{tabular}
+    \caption{{\tt{observable\_info.txt}}}
+    \label{tab:my_label}
+\end{table}
+
+2. Parameter Directory 
+
+The Emulator Parameter is the file user changes in order to use and optimize the code according to the model the user has and the output user is expecting. The parameters described below can be found in the parameter directory and in the file emulator\_parameter.txt. The functionality is mentioned in the Appendix \ref{sec:Emulator Parameter}. These files are structured in the following manner.
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{c|c}
+         Parameter Name & Value \\
+         par1 & 1 \\
+         par2 & somePath \\
+         par3 & true \\
+          \vdots & \vdots 
+    \end{tabular}
+    \caption{{\tt{mod\_parameters.txt}}}
+    \label{tab:my_label}
+\end{table}
+
+\newpage
+
+3. {\tt Modelruns/} Directory
+
+The Modelrun Directory includes the parameters and observables provided by the user in each run directory. It has two files: one for the model parameters with the parameter name and value, and another for the observable with its name, value, and uncertainty. These files are structured in the following manner.
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{c|c}
+         Parameter Name & Value \\
+         par1 & 96.472 \\
+         par2 & 17.244 \\
+         par3 & 29.456 \\
+          \vdots & \vdots 
+    \end{tabular}
+    \caption{{\tt{mod\_parameters.txt}}}
+    \label{tab:my_label}
+\end{table}
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{c|c|c}
+         Parameter Name & Value & Uncertainty\\
+         length & 109.384 & 7.234\\
+         mass & 58.34 & 2.59 \\
+         time & 15.23 & 0.97 \\
+          \vdots & \vdots & \vdots
+    \end{tabular}
+    \caption{{\tt{obs.txt}}}
+    \label{tab:my_label}
+\end{table} 
+
+\subsection{Usage}
+\label{sec:Usage}
+
+The user is required to have some knowledge of C++ in order to write a routine program that calls methods from the software directory for their needs. Some example codes can be viewed in the template directory.
+
+
+\end{comment}
+
+\subsection{Summary}
+Simplex Sampler produces a list of points in model-parameter space to be used for training an emulator. The program reads a simple text file that provides the names of parameters and their ranges. Simple sampler also takes input from a text file providing the User several choices, such as choosing which which algorithm to apply when generating the training points, or the directory name for writing the points. Given the choice of algorithm, Simplex Sampler determines the number of training points based on the algorithm.
+
+The 
+
+\subsection{Parameters}
+
+This refers to parameters Simplex Sampler uses when generating the training points, e.g. a choice of specific algorithm. It does not refer to information about model parameters. To access the simplex parameter file one should go to their project directory and follow the steps listed below:
+
+{\tt
+\begin{verbatim}
+    % cd parameters
+    % ls
+\end{verbatim}
+}
+One should see a {\tt{simplex\_parameters.txt}} file.  These files are text files in the format:\\
+{\tt\begin{verbatim}
+   first_parameter_name   value
+   second_parameter_name  value
+   .
+   .
+   \end{verbatim}
+}
+Both the name and value should be single strings (without spaces). Each parameter has a default value, which will be used if the parameter is not mentioned in the parameter file. The User can add comments with the {\tt \#} symbol. Simplex Sampler has three User-defined parameters.
+    
+\subsubsection{Simplex\_TrainType}
+Possible values are ``1'', ``2'' or ``3''. The default, ``1'', will position points according to a Simplex. 
+
+\subsubsection{Simplex\_RTrain}
+This parameter determines the distance from the origin that the training points will be selected throughout the parameter space. 
+
+\subsubsection{SmoothEmulator\_ModelRunDirName}
+This parameters is used to determine the path file that the run files will be created in. The default name is {\tt{modelruns}}, but the user can change this to anything they want.
+
+\subsection{Training Types}
+
+\subsubsection{Type 1}
+ Depending on the number of parameters, the program creates a simplex in $N$ dimensions. This simplex's vertices will be used to generate new training points. These points will be scaled by different values so the training points aren't in the same radius. This results in the minimum number of required points for linear fits. Thus, the user might want to select this training type if their model is a linear one.
+
+\subsubsection{Type 2}
+
+ Depending on the number of parameters, the program creates a simplex in $N$ dimensions. This simplex's vertices will be used to generate new training points there and along the edges. These points will be scaled to be in different radii from the center. This results in the minimum number of required points for quadratic fits. Thus, the user might want to select this training type if their model is a quadratic one.
+ 
+\subsubsection{Type 3}
+This training type creates two different simplexes to put them on top of each other in a reflected way. The 2-dimensional visualization of this would look like the "Star of David". The points created by the crossed edges are used as training points for the emulation.
+ 
+\subsubsection{Type 4}
+
+\subsection{Training Point Generation}
+
+Simplex is a mathematical term that generalizes the notion of a triangle or a tetrahedron to arbitrary dimensions. The simplex method uses the vertices of simplexes to get training points at different radii along the edges. This method also is computationally cheap due to its iterative process.
+
+To use the simplex method, use the following command in your project directory:
+
+{\tt
+{
+\begin{verbatim}
+    % simplextest parameters/simplex_parameters.txt
+\end{verbatim}
+}}
+
+This code is also responsible for generating the directory that the run files are stored. The stored values will be the values that are used in the emulator.
+\end{document}
