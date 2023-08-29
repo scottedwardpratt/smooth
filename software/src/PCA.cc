@@ -182,7 +182,7 @@ void PCA::RunPCA(){
 
     for(size_t i = 0; i < Y[0].size(); i++){
       string obsname = "pca" + to_string(i);
-			fprintf(fptr,"%s %g\n", obsname.c_str(), PCAVec(i));
+			fprintf(fptr,"%s %s %g\n","dummy" ,obsname.c_str(),PCAVec(i));
 		}
   }
 }

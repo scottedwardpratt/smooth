@@ -16,6 +16,10 @@ int main(int argc, char *argv[]) {
   }
 
   PCA *pca = new PCA(argv[1]);
+
   pca->CalcPCA();
 
+  pca->ReadPCA();
+
+  pca->RunPCA();
 }
