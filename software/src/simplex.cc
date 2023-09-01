@@ -7,6 +7,7 @@ CSimplexSampler::CSimplexSampler(CparameterMap *parmap){
 	TrainType=parmap->getI("Simplex_TrainType",1);
 	RTrain=parmap->getD("Simplex_RTrain",0.9);
 	priorinfo=new CPriorInfo("Info/prior_info.txt");
+	ModelDirName=parmap->GetD("Simplex_ModelDirName","modelruns")
 	NPars=priorinfo->NModelPars;
 }
 
@@ -203,9 +204,9 @@ void CSimplexSampler::SetThetaType4(){
 	}
 }
 
-void CSimplexSampler::WriteModelPars(string model_dir){
+void CSimplexSampler::WriteModelPars(){
 	FILE *fptr;
-	string filename,dirname;
+	string filename,dirname,command;
 	int itrain,ipar;
 	vector<CModelParameters *> modelparameters(NTrainingPts);
 
@@ -217,13 +218,11 @@ void CSimplexSampler::WriteModelPars(string model_dir){
 		modelparameters[itrain]->TranslateTheta_to_X();
 	}
 
-	string command="rm -r -f modelruns/run*";
-	system(command.c_str());
-
-
+	dirname=ModelDirName+"/run"+to_string(itrain);
+	command="mkdir -p "+dirname;
 	for(itrain=0;itrain<NTrainingPts;itrain++){
-		dirname=model_dir+"/run"+to_string(itrain);
-		command="mkdir "+dirname;
+		//command="rm -r -f "+ModelDirName+"/run"+to_string(itrain)+"/mod_parameters.txt";
+		//system(command.c_str());
 		system(command.c_str());
 		filename=dirname+"/mod_parameters.txt";
 		fptr=fopen(filename.c_str(),"w");
@@ -231,8 +230,7 @@ void CSimplexSampler::WriteModelPars(string model_dir){
 			fprintf(fptr,"%s %g\n",
 			priorinfo->parname[ipar].c_str(),modelparameters[itrain]->X[ipar]);
 		}
+		fclose(fptr);
 	}
-
-	fclose(fptr);
 
 }

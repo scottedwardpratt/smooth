@@ -23,6 +23,7 @@ public:
 	unsigned int NPars,NTrainingPts,TrainType;
 	vector<vector<double>> ThetaTrain;
 	double RTrain;
+	string ModelDirName;
 	CPriorInfo *priorinfo;
 	vector<CModelParameters *> modelparameters;
 	CSimplexSampler(CparameterMap *parmap);
@@ -32,7 +33,7 @@ public:
 	void SetThetaType4();
 	void SetThetaSimplex();
 
-	void WriteModelPars(string model_dir);
+	void WriteModelPars();
 
 };
 

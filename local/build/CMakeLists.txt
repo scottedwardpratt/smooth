@@ -19,8 +19,8 @@ find_library(${GITHOME_MSU}/commonutils/software/lib msu_commonutils)
 find_library(${GITHOME_MSU}/smooth/software/lib smooth)
 
 #################################################
-set(SOURCE_FILES ${MAIN_PROGRAM_DIR}/simplex.cc)
-add_executable(simplex ${MAIN_PROGRAM_DIR}/simplex.cc)
+set(SOURCE_FILES ${MAIN_PROGRAM_DIR}/simplex_main.cc)
+add_executable(simplex ${MAIN_PROGRAM_DIR}/simplex_main.cc)
 add_dependencies(simplex extern_smooth extern_commonutils)
 target_link_libraries(simplex ${GITHOME_MSU}/smooth/software/lib/libsmooth.a  ${GITHOME_MSU}/commonutils/software/lib/libmsu_commonutils.a ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY} ${EIGEN3_LIBRARY})
 #################################################
