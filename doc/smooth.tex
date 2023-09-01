@@ -86,16 +86,17 @@ arc=0pt,outer arc=0pt,
 \today\\
 
 \centerline{\bf\Large Smooth Emulator and Simplex Sampling}
-\centerline{Scott Pratt}
+\centerline{Scott Pratt, Eren Erdogan and Ekaksh Kataria}
+\centerline{Facility for Rare Isotope Beams and Department of Physics and Astronomy}
 \centerline{Michigan State University}
 
 \section{Smooth Emulator}
 
-The choice of model emulators, $E(\vec{\theta})$, depends on the prior understanding of the model being emulated, $F(\vec{\theta})$. If one knows that  a function is linear, then a linear fit is clearly the best choice. Whereas to reproduce lumpy features, where the lumps have a characteristic length scale, Gaussian process emulators are highly effective. The quality of an emulator can be assessed through the following criteria:
+The choice of model emulators, $E(\vec{\theta})$, depends on the prior understanding of the model being emulated, $M(\vec{\theta})$. If one knows that  a function is linear, then a linear fit is clearly the best choice. Whereas to reproduce lumpy features, where the lumps have a characteristic length scale, Gaussian process emulators are highly effective. The quality of an emulator can be assessed through the following criteria:
 \begin{itemize}
   \item $E(\vec{\theta}_t)=M(\vec{\theta}_t)$ at the training points, $\vec{\theta}_t$. 
   \item The emulator should reasonably reproduce the model away from the training points. This should hold true for either interpolation or extrapolation.
-  \item The emulator should accurately represent its uncertainty
+  \item The emulator should reasonably represent its uncertainty
   \item A minimal number of training points should be needed
   \item The method should easily adjust to larger numbers of parameters, $\theta_i,~i=1\cdots N$
   \item The emulator should not be affected by unitary transformations of the parameter space
