@@ -13,10 +13,11 @@ Simplex Sampler produces a list of points in model-parameter space to be used fo
 This refers to parameters Simplex Sampler uses when generating the training points, e.g. a choice of specific algorithm. It does not refer to information about model parameters. To access the simplex parameter file one should go to their project directory and follow the steps listed below. Here the {\it project directory} is the location from which Simplex will be run. One should first edit the parameters text file. For example, in the template the parameters file is {\tt parameters/simplex\_parameters.txt}, where the path is relative to the project directory.
 Parameters files can have any name or location. These files are text files in the format. An example of a parameter file is:\\
 {\tt\begin{verbatim}
-   Simplex_TrainType                    1                   # Must be 1 or 2 or 3
-   Simplex_RTrain                       0.95                # Sets radius of simplex
-   Simplex_ModelRunDirName              modelruns           # Directory where training point information stored
-   Simplex_ModelParameterPriorInfoFile  Info/prior_info.txt # File that describes model parameters
+ Simplex_TrainType                    1             # Must be 1 or 2 or 3
+ Simplex_RTrain                       0.95          # Radius of simplex
+ Simplex_ModelRunDirName              modelruns     # Directory with training
+                                                            point information
+ Simplex_ModelParPriorInfoFile  Info/prior_info.txt # Describes model parameters
 \end{verbatim}
 }
 For the parameter file, the first string is the parameter name and is followed by the value. Both are single strings (without spaces). The \# symbol is used for comments. Each parameter has a default value, which will be used if the parameter is not mentioned in the parameter file.  Simplex Sampler has four User-defined parameters.
@@ -34,7 +35,7 @@ This file describes which model parameters will be varied in the analysis, along
 
 \subsection{Specifying Model Parameters and Priors}
 
-Before proceeding, Simplex requires information about the parameters, specifically, their ranges. That file is defined by the {\tt Simplex\_ModelParameterPriorInfoFile} parameter mentioned above. An example of such a file might be
+Before proceeding, Simplex requires information about the parameters, specifically, their ranges. That file is defined by the {\tt Simplex\_ModelParPriorInfoFile} parameter mentioned above. An example of such a file might be
 {\tt\begin{verbatim}
    GroundConductivity  uniform     300    1500
    OceanReflectivity   uniform     1.15   1.45
