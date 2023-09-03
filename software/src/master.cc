@@ -6,18 +6,18 @@ CSmoothMaster::CSmoothMaster(CparameterMap *parmap_set){
 	int ranseed=parmap->getI("RANDY_SEED",-time(NULL));
 	randy=new Crandy(ranseed);
 
-	string filename=parmap->getS("OBSERVABLE_INFO_FILENAME","Info/observable_info.txt");
+	string filename=parmap->getS("SmoothEmulator_ObservableInfoFilename","Info/observable_info.txt");
 	observableinfo=new CObservableInfo(filename);
 
 	ModelRunDirName=parmap->getS("SmoothEmulator_ModelRunDirName","model_runs");
 	CoefficientsDirName=parmap->getS("SmoothEmulator_CoefficientsDirName","coefficients");
 
-	filename=parmap->getS("PRIOR_INFO_FILENAME","Info/prior_info.txt");
+	filename=parmap->getS("SmoothEmulator_ModelParInfoFilename","Info/modelpar_info.txt");
 	priorinfo=new CPriorInfo(filename);
 	NPars=priorinfo->NModelPars;
 	parmap->set("Smooth_NPars",NPars);
 
-	string NTrainingStr = parmap->getS("SmoothEmulator_NTrainingPts","1");
+	string NTrainingStr = parmap->getS("SmoothEmulator_TrainingPts","1");
 
 	vector<int> NTrainingList;
 	stringstream ss(NTrainingStr);

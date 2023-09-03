@@ -6,8 +6,9 @@ using namespace std;
 CSimplexSampler::CSimplexSampler(CparameterMap *parmap){
 	TrainType=parmap->getI("Simplex_TrainType",1);
 	RTrain=parmap->getD("Simplex_RTrain",0.9);
-	priorinfo=new CPriorInfo("Info/prior_info.txt");
-	ModelDirName=parmap->GetD("Simplex_ModelDirName","modelruns")
+	string prior_info_filename=parmap->getS("Simplex_ModelParInfoFileName","Info/modelparinfo.txt");
+	priorinfo=new CPriorInfo(prior_info_filename);
+	ModelDirName=parmap->GetD("Simplex_ModelRunDirName","modelruns")
 	NPars=priorinfo->NModelPars;
 }
 

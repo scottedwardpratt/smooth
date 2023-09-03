@@ -14,7 +14,7 @@ CSmoothEmulator::CSmoothEmulator(string observable_name_set){
 
 	LAMBDA=parmap->getD("SmoothEmulator_LAMBDA",3.0);
 	NMC=parmap->getI("SmoothEmulator_NMC",10000);
-	NASample=parmap->getI("SmoothEmulator_NASample",10);
+	NASample=parmap->getI("SmoothEmulator_NASample",8);
 	MCStepSize=parmap->getD("SmoothEmulator_MCStepSize",0.5);
 	MCSigmaAStepSize=parmap->getD("SmoothEmulator_MCSigmaAStepSize",0.1);
 	TuneChooseMCMC=parmap->getB("SmoothEmulator_TuneChooseMCMC",true);
@@ -331,7 +331,7 @@ double CSmoothEmulator::GetLog_AProb(vector<double> &AA,double ASigmaA){
 	}
 	// next line keeps A from drifting out to infinity
 	if(CutOffA)
-		answer-=log(1.0+0.25*(ASigmaA*ASigmaA)/(SigmaA0*SigmaA0));
+			answer-=log(1.0+0.25*(ASigmaA*ASigmaA)/(SigmaA0*SigmaA0));
 	return answer;
 }
 
