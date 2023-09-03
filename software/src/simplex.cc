@@ -8,7 +8,7 @@ CSimplexSampler::CSimplexSampler(CparameterMap *parmap){
 	RTrain=parmap->getD("Simplex_RTrain",0.9);
 	string prior_info_filename=parmap->getS("Simplex_ModelParInfoFileName","Info/modelparinfo.txt");
 	priorinfo=new CPriorInfo(prior_info_filename);
-	ModelDirName=parmap->GetD("Simplex_ModelRunDirName","modelruns")
+	ModelDirName=parmap->getS("Simplex_ModelRunDirName","modelruns");
 	NPars=priorinfo->NModelPars;
 }
 
