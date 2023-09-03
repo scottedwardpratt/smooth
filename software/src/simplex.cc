@@ -4,6 +4,10 @@
 using namespace std;
 
 CSimplexSampler::CSimplexSampler(CparameterMap *parmap){
+	string logfilename=parmap->getS("Simplex_LogFileName","Screen");
+	if(logfilename!="Screen"){
+		CLog::Init(logfilename);
+	}
 	TrainType=parmap->getI("Simplex_TrainType",1);
 	RTrain=parmap->getD("Simplex_RTrain",0.9);
 	string prior_info_filename=parmap->getS("Simplex_ModelParInfoFileName","Info/modelparinfo.txt");

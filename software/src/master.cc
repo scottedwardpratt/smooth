@@ -5,6 +5,11 @@ CSmoothMaster::CSmoothMaster(CparameterMap *parmap_set){
 	parmap=parmap_set;
 	int ranseed=parmap->getI("RANDY_SEED",-time(NULL));
 	randy=new Crandy(ranseed);
+	
+	string logfilename=parmap->getS("SmoothEmulator_LogFileName","Screen");
+	if(logfilename!="Screen"){
+		CLog::Init(logfilename);
+	}
 
 	string filename=parmap->getS("SmoothEmulator_ObservableInfoFilename","Info/observable_info.txt");
 	observableinfo=new CObservableInfo(filename);

@@ -1,3 +1,4 @@
+#SmoothEmulator_LogFileName smoothylog.txt
 SmoothEmulator_NPars 4
 SmoothEmulator_NTrainingPts 5
 SmoothEmulator_SigmaA 100.0
