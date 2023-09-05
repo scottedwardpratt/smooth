@@ -15,15 +15,20 @@ class PCA{
 public:
 
   PCA(string parameter_filename);
-  int nruns;
-  Eigen::MatrixXd eigvals, eigvecs;
-  vector<vector<double>> Y,SigmaY;
+  int nruns,Nobs;
+  Eigen::MatrixXd eigvecs;
+	Eigen::VectorXd eigvals;
+  vector<vector<double>> Y;
+	vector<double> SigmaY,Ybar;
 	vector<int> NTrainingList;
 	string modelruns_dirname;
+	CObservableInfo *observable_info;
 
   void CalcPCA();
   void WriteZTraining();
   void ReadPCA();
+	
+	void TranslateZtoY(vector<double> &Z,vector<double> &Y,vector<double> &SigmaZ,vector<vector<double>> &SigmaY);
 };
 
 #endif

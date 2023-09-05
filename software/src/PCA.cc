@@ -6,6 +6,10 @@ PCA::PCA(string filename){
 	CparameterMap *parmap=new CparameterMap();
 	parmap->ReadParsFromFile(filename);
 
+	observable_info=new CObservableInfo(parmap->getS("SmoothEmulator_ObservableInfoFileName","Info/observable_info.txt"));
+	
+
+
 	modelruns_dirname=parmap->getS("SmoothEmulator_ModelRunDirName","modelruns");
 	string NTrainingStr = parmap->getS("SmoothEmulator_TrainingPts","1");
 	
@@ -35,88 +39,91 @@ PCA::PCA(string filename){
 
 }
 
-
 void PCA::CalcPCA(){
-	vector<vector<double>> YNew;
-	vector<double> YBar;
+	vector<vector<double>> Ytilde,Y;
+	vector<double> Ytildebar;
 	char filename[300],obs_name[300];
 	double y,sigmay;
-	int irun;
+	int iy,jy,irun,nruns=NTrainingList.size();
+	Nobs=observable_info->NObservables;
+	Eigen::MatrixXd *A;
 	FILE *fptr;
-		
-	for(irun=0;irun<NTrainingList.size();irun++){
+	Y.resize(nruns);
+	Ytilde.resize(nruns);
+	for(irun=0;irun<nruns;irun++){
+		Y[irun].resize(Nobs);
+		Ytilde[irun].resize(Nobs);
+	}
+	Ybar.resize(Nobs);
+	SigmaY.resize(Nobs);
+	for(iy=0;iy<Nobs;iy++)
+		SigmaY[iy]=Ybar[iy]=0.0;
+	
+	
+	for(irun=0;irun<nruns;irun++){
 		snprintf(filename,300,"%s/run%d/obs.txt",modelruns_dirname.c_str(),NTrainingList[irun]);
 		fptr=fopen(filename,"r");
 		while(!feof(fptr)){
 			fscanf(fptr,"%s %lf %lf",obs_name, &y, &sigmay);
 			if(!feof(fptr)){
-				Y.at(irun).push_back(y);
-				SigmaY.at(irun).push_back(sigmay);
+				iy=observable_info->GetIPosition(obs_name);
+				SigmaY[iy]+=sigmay/double(nruns);
+				Y[irun][iy]=y;
+				Ybar[iy]+=y/double(nruns);
 			}
-
 		}
 		fclose(fptr);
 	}
-
-	YNew.resize(Y.size());
-
-	for(int i = 0 ; i < nruns; i++){
-
-		YNew[i].resize(Y[i].size());
-
-	}
-
-	for (size_t i = 0; i < Y.size(); i++) {
-		for (size_t j = 0; j < Y[i].size(); j++) {
-			YNew[i][j] = Y[i][j] / 0.5; //SigmaY[i][j] instead of 0.5
-
+	
+	for(iy=0;iy<Nobs;iy++){
+		for(irun=0;irun<nruns;irun++){
+			Ytilde[irun][iy]=(Ytilde[irun][iy]-Ybar[iy])/SigmaY[iy];
 		}
 	}
-
-
-	YBar.resize(YNew[0].size());
-
-	for (size_t i = 0; i < YBar.size() ; i++) {
-		YBar[i] = 0;
-		for (int irun = 0 ; irun < nruns ; irun++){
-			YBar[i] += YNew[irun][i] / nruns;
-
-		}
-
-	}
-
-	Eigen::MatrixXd A(YBar.size(), YBar.size());
-
-	for (size_t iy = 0 ; iy < YBar.size() ; iy++) {
-		for (size_t ij = 0 ; ij < YBar.size() ; ij++) {
-			float avg = 0;
-			for (int irun = 0; irun < nruns; irun++) {
-				avg += ((YNew[irun][iy] - YBar[iy]) * (YNew[irun][ij] - YBar[ij])) / nruns ;
+	
+	A = new Eigen::MatrixXd(Nobs,Nobs);
+	A->setZero();
+	
+	for(iy=0;iy<Nobs;iy++){
+		for(jy=0;jy<Nobs;jy++){
+			for(irun=0;irun<nruns;irun++){
+				(*A)(iy,jy)+=(Ytilde[irun][iy]*Ytilde[irun][jy])/double(nruns);
 			}
-			A(iy,ij) = avg;
-
 		}
 	}
-
-	Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> es(A);
+				
+	Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> es(*A);
+	eigvals = es.eigenvalues();
 	eigvecs = es.eigenvectors();
-	Eigen::VectorXd eigvalsVec = es.eigenvalues();
 
-	ofstream eigvalFile("PCA_Info/eigvals.txt");
-	if (eigvalFile.is_open())
-	{
-		eigvalFile << eigvalsVec << '\n';
+	ofstream PCAInfoFile("PCA_Info/info.txt");
+	
+	if (PCAInfoFile.is_open()){
+		PCAInfoFile << "Nobs  Nruns" << endl;
+		PCAInfoFile << Nobs <<  " " << nruns << endl;
+		PCAInfoFile << "<Y>" << endl;
+		for(iy=0;iy<Nobs;iy++)
+			PCAInfoFile << Ybar[i] " ";
+		PCAInfo/file << endl;
+		PCAInfoFile << "SigmaY" << endl;
+		for(iy=0;iy<Nobs;iy++)
+			PCAInfoFile << SigmaY[i] " ";
+		PCAInfo/file << endl;
+		PCAInfoFile << "EigenValues" << endl;
+		for(iy=0;iy<Nobs;iy++)
+			PCAInfoFile << eigvals(iy) " ";
+		PCAInfo/file << endl;
+		PCAInfoFile << "EigenVectors" << endl;
+		for(iy=0;iy<Nobs;iy++){
+			for(jy=0;jy<Nobs;jy++){
+				PCAInfoFile << eigvecs(iy,jy) " ";
+			}
+			PCAInfo/file << endl;
+		}
 	}
-	eigvalFile.close();
+	PCAInfoFile.close();
 
-	ofstream eigvecFile("PCA_Info/eigvecs.txt");
-	if (eigvecFile.is_open())
-	{
-		eigvecFile << eigvecs << '\n';
-	}
-	eigvecFile.close();
 }
-
 
 void PCA::ReadPCA(){
 	ifstream eigvalFile("PCA_Info/eigvals.txt");

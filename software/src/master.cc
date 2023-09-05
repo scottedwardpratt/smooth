@@ -136,61 +136,67 @@ void CSmoothMaster::TestAtTrainingPts(){
 		for(iY=0;iY<NObservables;iY++){
 			CalcY(iY,traininginfo->modelpars[itrain],Y[iY],SigmaY[iY]);
 			snprintf(pchars,CLog::CHARLENGTH,
-				"Y[%d]=%10.3e =? %10.3e,    SigmaY=%12.5e\n",iY,Y[iY],traininginfo->YTrain[iY][itrain],SigmaY[iY]);
-				CLog::Info(pchars);
-			}
+			"Y[%d]=%10.3e =? %10.3e,    SigmaY=%12.5e\n",iY,Y[iY],traininginfo->YTrain[iY][itrain],SigmaY[iY]);
+			CLog::Info(pchars);
 		}
 	}
-	void CSmoothMaster::TestAtTrainingPts(int iY){
-		char pchars[CLog::CHARLENGTH];
-		int itrain;
-		double Y,SigmaY;
-		CLog::Info("--- TESTING AT TRAINING POINTS ----\n");
-		for(itrain=0;itrain<traininginfo->NTrainingPts;itrain++){
-			CLog::Info("------ itrain="+to_string(itrain)+" --------\n");
-			CalcY(iY,traininginfo->modelpars[itrain],Y,SigmaY);
-			snprintf(pchars,CLog::CHARLENGTH,
-				"Y[%d]=%10.3e =? %10.3e,    SigmaY=%12.5e\n",iY,Y,traininginfo->YTrain[iY][itrain],SigmaY);
-				CLog::Info(pchars);
-			}
-		}
-		void CSmoothMaster::TestAtTrainingPts(string obsname){
-			char pchars[CLog::CHARLENGTH];
-			int itrain,iY;
-			double Y,SigmaY;
-			iY=observableinfo->GetIPosition(obsname);
-			CLog::Info("--- TESTING AT TRAINING POINTS ----\n");
-			for(itrain=0;itrain<traininginfo->NTrainingPts;itrain++){
-				CLog::Info("------ itrain="+to_string(itrain)+" --------\n");
-				CalcY(iY,traininginfo->modelpars[itrain],Y,SigmaY);
-				snprintf(pchars,CLog::CHARLENGTH,
-					"Y[%d]=%10.3e =? %10.3e,    SigmaY=%12.5e\n",iY,Y,traininginfo->YTrain[iY][itrain],SigmaY);
-					CLog::Info(pchars);
-				}
-			}
+}
 
-			void CSmoothMaster::WriteCoefficientsAllY(){
-				for(int iY=0;iY<observableinfo->NObservables;iY++){
-					emulator[iY]->WriteCoefficients();
-				}
-			}
-			void CSmoothMaster::WriteCoefficients(string obsname){
-				int iY=observableinfo->GetIPosition(obsname);
-				WriteCoefficients(iY);
-			}
-			void CSmoothMaster::WriteCoefficients(int iY){
-				emulator[iY]->WriteCoefficients();
-			}
+void CSmoothMaster::TestAtTrainingPts(int iY){
+	char pchars[CLog::CHARLENGTH];
+	int itrain;
+	double Y,SigmaY;
+	CLog::Info("--- TESTING AT TRAINING POINTS ----\n");
+	for(itrain=0;itrain<traininginfo->NTrainingPts;itrain++){
+		CLog::Info("------ itrain="+to_string(itrain)+" --------\n");
+		CalcY(iY,traininginfo->modelpars[itrain],Y,SigmaY);
+		snprintf(pchars,CLog::CHARLENGTH,
+		"Y[%d]=%10.3e =? %10.3e,    SigmaY=%12.5e\n",iY,Y,traininginfo->YTrain[iY][itrain],SigmaY);
+		CLog::Info(pchars);
+	}
+}
 
-			void CSmoothMaster::ReadCoefficientsAllY(){
-				for(int iY=0;iY<observableinfo->NObservables;iY++){
-					emulator[iY]->ReadCoefficients();
-				}
-			}
-			void CSmoothMaster::ReadCoefficients(string obsname){
-				int iY=observableinfo->GetIPosition(obsname);
-				ReadCoefficients(iY);
-			}
-			void CSmoothMaster::ReadCoefficients(int iY){
-				emulator[iY]->ReadCoefficients();
-			}
+void CSmoothMaster::TestAtTrainingPts(string obsname){
+	char pchars[CLog::CHARLENGTH];
+	int itrain,iY;
+	double Y,SigmaY;
+	iY=observableinfo->GetIPosition(obsname);
+	CLog::Info("--- TESTING AT TRAINING POINTS ----\n");
+	for(itrain=0;itrain<traininginfo->NTrainingPts;itrain++){
+		CLog::Info("------ itrain="+to_string(itrain)+" --------\n");
+		CalcY(iY,traininginfo->modelpars[itrain],Y,SigmaY);
+		snprintf(pchars,CLog::CHARLENGTH,
+		"Y[%d]=%10.3e =? %10.3e,    SigmaY=%12.5e\n",iY,Y,traininginfo->YTrain[iY][itrain],SigmaY);
+		CLog::Info(pchars);
+	}
+}
+
+void CSmoothMaster::WriteCoefficientsAllY(){
+	for(int iY=0;iY<observableinfo->NObservables;iY++){
+		emulator[iY]->WriteCoefficients();
+	}
+}
+
+void CSmoothMaster::WriteCoefficients(string obsname){
+	int iY=observableinfo->GetIPosition(obsname);
+	WriteCoefficients(iY);
+}
+
+void CSmoothMaster::WriteCoefficients(int iY){
+	emulator[iY]->WriteCoefficients();
+}
+
+void CSmoothMaster::ReadCoefficientsAllY(){
+	for(int iY=0;iY<observableinfo->NObservables;iY++){
+		emulator[iY]->ReadCoefficients();
+	}
+}
+
+void CSmoothMaster::ReadCoefficients(string obsname){
+	int iY=observableinfo->GetIPosition(obsname);
+	ReadCoefficients(iY);
+}
+
+void CSmoothMaster::ReadCoefficients(int iY){
+	emulator[iY]->ReadCoefficients();
+}
