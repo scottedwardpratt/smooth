@@ -14,14 +14,16 @@
 class PCA{
 public:
 
+  PCA(string parameter_filename);
   int nruns;
   Eigen::MatrixXd eigvals, eigvecs;
   vector<vector<double>> Y,SigmaY;
+	vector<int> NTrainingList;
+	string modelruns_dirname;
 
-  PCA(string filename);
   void CalcPCA();
+  void WriteZTraining();
   void ReadPCA();
-  void RunPCA();
 };
 
 #endif

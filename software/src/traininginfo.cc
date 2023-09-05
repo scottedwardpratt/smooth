@@ -28,13 +28,19 @@ CTrainingInfo::CTrainingInfo(vector<int> NTrainingList_set,CObservableInfo *obse
 }
 
 void CTrainingInfo::ReadTrainingInfo(string rundirname){
-	int itrain,iy,nsuccess=0,ipar,nread;
+	int itrain,ifile,iy,nsuccess=0,ipar,nread;
 	char filename[300],obs_charname[300],mod_par_name[300];
 	string obs_name;
 	double y,sigmay,x;
 	FILE *fptr;
-	for(int i: NTrainingList){
-		snprintf(filename,300,"%s/run%d/obs.txt",rundirname.c_str(),i);
+	for(itrain=0;itrain<NTrainingList.size();itrain++){
+		ifile=NTrainingList[itrain];
+		if(smoothmaster->UsePCA){
+			snprintf(filename,300,"%s/run%d/obs_PCA.txt",rundirname.c_str(),ifile);
+		}
+		else{
+			snprintf(filename,300,"%s/run%d/obs.txt",rundirname.c_str(),ifile);
+		}
 		fptr=fopen(filename,"r");
 		nsuccess=0;
 		do{

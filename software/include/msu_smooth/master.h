@@ -39,6 +39,7 @@ public:
 	Crandy *randy;
 	CSmooth *smooth;
 	string ModelRunDirName,CoefficientsDirName;
+	bool UsePCA;
 
 	void ReadTrainingInfo();
 	void GenerateCoefficientSamples();

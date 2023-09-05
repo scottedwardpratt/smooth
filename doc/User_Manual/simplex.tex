@@ -2,7 +2,7 @@
 \begin{document}
 \setcounter{section}{2}
 
-\section{Simplex Sampler}
+\section{Simplex Sampler}\label{sec:simplex}
 
 \subsection{Summary}
 Simplex Sampler produces a list of points in model-parameter space to be used for training an emulator. The algorithms are based on the $n-$dimensional simplex. For example, in two dimensions the points are arranged in an equilateral triangle, and for three dimensions of parameters points are arranged in a tetrahedron. The program reads a simple text file that provides the names of model parameters and the range of their prior distribution. Simple sampler also takes input from a text file providing the User several choices, such as choosing which algorithm to apply when generating the training points, or the directory name for writing the points. Given the choice of algorithm, Simplex Sampler determines the number of training points based on the algorithm.
@@ -13,10 +13,10 @@ This refers to parameters Simplex Sampler uses when generating the training poin
 Parameters files can have any name or location. These files are text files in the format. An example of a parameter file is:
 {\tt
 \begin{verbatim}
- #Simplex_LogFileName       simplexlog.txt    # comment out to direct output to screen
- Simplex_TrainType          1                 # Must be 1 or 2 or 3
- Simplex_RTrain             0.95              # Radius of simplex
- Simplex_ModelRunDirName    modelruns         # Directory with training
+ #Simplex_LogFileName          simplexlog.txt      # if blank, output to screen
+ Simplex_TrainType             1                   # Must be 1 or 2 or 3
+ Simplex_RTrain                0.95                # Radius of simplex
+ Simplex_ModelRunDirName       modelruns           # Directory with training
                                                            point information
  Simplex_ModelParInfoFileName  Info/prior_info.txt # Describes model parameters
 \end{verbatim}
@@ -31,17 +31,16 @@ This sets the distance from the origin that the training points will be selected
 \item {\bf Simplex\_ModelRunDirName}\\
 This sets the path file that the run files will be created in. The default name is {\tt{modelruns}}, but the user can change this to anything they want. The default is ``modeldirs''. The path is relative to the project directory, i.e. the directory from which you run the {\it simplex} command.
 \item {\bf Simplex\ ModelParInfoFileName}\\
-This file describes which model parameters will be varied in the analysis, along with their ranges, or priors. The default is {\tt Info/prior\_info.txt}, where the path is relative to the project directory.
+This file describes which model parameters will be varied in the analysis, along with their ranges, or priors. The default is {\tt Info/modelpar\_info.txt}, where the path is relative to the project directory.
 \end{enumerate}
 
 \subsection{Specifying Model Parameters and Priors}
 
-Before proceeding, Simplex requires information about the parameters, specifically, their ranges. That file is defined by the {\tt Simplex\_ModelParPriorInfoFile} parameter mentioned above. An example of such a file might be
+Before proceeding, Simplex requires information about the parameters, specifically, their ranges. That file is defined by the {\tt Simplex\_ModelParInfoFile} parameter mentioned above. An example of such a file might be
 {\tt\begin{verbatim}
-   GroundConductivity  uniform     300    1500
-   OceanReflectivity   uniform     1.15   1.45
-   CloudReflectivity   gaussian    4.0    2.9
-   Viscosity           uniform     0.08   0.24
+   NuclearCompressibility  gaussian     210   40
+   ScreeningMass           uniform      0.3   1.2
+   Viscosity               uniform      0.08  0.3
 \end{verbatim}
 }
 The first column is the model-parameter name, and the last three parameters describe the range of the parameters, which is usually the prior, assuming the prior is uniform or Gausian. The second entry for each parameter defines whether the range/prior is uniform or {\tt gaussian}. If the prior is {\tt uniform}, the next two numbers specify the lower and upper ranges of the parameter. If the range/prior is {\tt gaussian}, the third entry describes the center of the Gaussian, $\theta_0$, and the fourth entry describes the Gaussian width, $\sigma_0$, where the prior distribution is $\propto \exp\{-(\theta-\theta_0)^2/2\sigma_0^2\}$. Simplex will read the information to determine the number of parameters. It will then assign the points assuming each model parameter has a range from -1 to 1, then translate and scale the points according to the ranges/priors defined in the file.
@@ -65,17 +64,16 @@ Simplex is a mathematical term that generalizes the notion of a triangle or a te
 To run the Simplex program, enter the following command from your project directory:
 {\tt
 \begin{verbatim}
-    % SMOOTH_HOME/local/bin/simplex PARAMETER_FILE_NAME
+   ~/MY_PROJECT % GITHOME_MSU/smooth/local/bin/simplex PARAMETER_FILE_NAME
 \end{verbatim}
 }
-Here {\tt SMOOTH\_HOME} is the path to the Smooth Emulator installation, and {\tt PARAMETER\_FILE\_NAME} is the name of the simplex parameter file, e.g. {\tt parameters/simplex\_parameters.txt}. Paths are either absolute, or are relative to the project directory. 
+Here {\tt GITHOME\_MSU} is the path to the Smooth Emulator installation, and {\tt PARAMETER\_FILE\_NAME} is the name of the simplex parameter file, e.g. {\tt parameters/simplex\_parameters.txt}. Paths are either absolute, or are relative to the project directory. 
 
 Simplex will write the information about the training points in the directory defined by the {\tt Simplex\_ModelRunDirName} parameter. Within the directory, a sub-directory will be created for each training point, named {\tt run0/, run1/, run2/}$\cdots$. Within each subdirectory, Simplex creates a file {\tt runI/mod\_parameters.txt} for the I$^{\rm th}$ training point. For example, the {\tt run0/mod\_parameters.txt} file might be
 {\tt\begin{verbatim}
-   GroundConductivity     329.08
-   OceanReflectivity      1.201
-   CloudReflectivity      3.178
-   Viscosity              0.192
+   NuclearCompressibility     229.08
+   ScreeningMass              0.453
+   Viscosity                  0.192
 \end{verbatim}
 }
 At this point, it is up to the User to run their full model at each training point and create a file {\tt runI/obs.txt}, which stores values of the observables at those training points as calculated by the full model. Once that is completed, one can begin the emulation procedure.

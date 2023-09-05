@@ -38,3 +38,9 @@ set(SOURCE_FILES ${MAIN_PROGRAM_DIR}/smoothy_readcoefficients_main.cc)
 add_executable(smoothy_readcoefficients ${MAIN_PROGRAM_DIR}/smoothy_readcoefficients_main.cc)
 add_dependencies(smoothy_readcoefficients extern_smooth extern_commonutils)
 target_link_libraries(smoothy_readcoefficients ${GITHOME_MSU}/smooth/software/lib/libsmooth.a  ${GITHOME_MSU}/commonutils/software/lib/libmsu_commonutils.a ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY} ${EIGEN3_LIBRARY})
+#################################################
+set(SOURCE_FILES ${MAIN_PROGRAM_DIR}/pca_main.cc)
+add_executable(pca ${MAIN_PROGRAM_DIR}/pca_main.cc)
+add_dependencies(pca extern_smooth extern_commonutils)
+target_link_libraries(pca ${GITHOME_MSU}/smooth/software/lib/libsmooth.a  ${GITHOME_MSU}/commonutils/software/lib/libmsu_commonutils.a ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY} ${EIGEN3_LIBRARY})
+
