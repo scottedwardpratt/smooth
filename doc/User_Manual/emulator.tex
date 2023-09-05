@@ -1,7 +1,6 @@
 \documentclass[main.tex]{subfiles}
 \begin{document}
-\newpage
-\setcounter{section}{5}
+\setcounter{section}{4}
 \section{Tuning the Emulator}
 
 \subsection{Summary}
@@ -39,20 +38,20 @@ Smooth Emulator requires a parameter file. This can be located anywhere, as it w
 
 {\tt
 \begin{verbatim}
- #SmoothEmulator_LogFileName smoothlog.txt
- SmoothEmulator_NPars 4
- SmoothEmulator_LAMBDA 3.0
- SmoothEmulator_MAXRANK 4
- SmoothEmulator_NMC 100000  # Steps between samples 
- SmoothEmulator_NASample 8  # No. of coefficient samples
- SmoothEmulator_TuneChooseMCMC true # set false if NPars<5
- SmoothEmulator_UseSigmaYRreal false # 
- SmoothEmulator_ConstrainA0 true
- SmoothEmulator_CutoffA false
- SmoothEmulator_ModelRunDirName modelruns
- SmoothEmulator_CoefficientsDirName coefficients
- SmoothEmulator_ModelParInfoFileName
- SmoothEmulator_ObservableInfoFileName
+ #SmoothEmulator_LogFileName           smoothlog.txt
+ SmoothEmulator_LAMBDA                 3.0
+ SmoothEmulator_MAXRANK                4
+ SmoothEmulator_NMC                    100000  # Steps between samples 
+ SmoothEmulator_NASample               8  # No. of coefficient samples
+ SmoothEmulator_TuneChooseMCMC         true # set true if NPars>~5
+ SmoothEmulator_UseSigmaYRreal         false 
+ SmoothEmulator_ConstrainA0            true
+ SmoothEmulator_CutoffA                false
+ SmoothEmulator_ModelRunDirName        modelruns
+ SmoothEmulator_CoefficientsDirName    coefficients
+ SmoothEmulator_ModelParInfoFileName   Info/modelpar_info.txt
+ SmoothEmulator_ObservableInfoFileName Info/observable_info.txt
+ RANDY_SEED                            1234
 \end{verbatim}
 }
 If any of these parameters are missing from the parameters file, Smooth Emulator will assign a default value.
@@ -65,7 +64,7 @@ This is the smoothness parameter $\Lambda$. It sets the relative importance of t
 If this is commented out, as it is in the example above, Smooth Emulator's main output will be directed to the screen. Otherwise, the output will be recorded in the specified file.
 \item {\bf SmoothEmulator\_MAXRANK}\\
 As Smooth Emulator assumes a Taylor expansion, this the maximum power of $\theta^n$ that is considered. Higher values require more coefficients, which in turn, slows down the tuning process. The default is 4.
-\item {\bf SmoothEmulator\_SmoothEmulator\_TuneChooseMCMC}\\
+\item {\bf SmoothEmulator\_TuneChooseMCMC}\\
 If set to {\tt false}, Smooth Emulator will set all but $N_{\rm train}$ coefficients randomly, according to their Gaussian prior. Then, it will solve for the remaining coefficients in order to fit the training data. The weight is calculated for the remaining coefficients, at which point the coefficients are kept or rejected proportional to the weight. The coefficients chosen in this manner are perfectly independent of one another, but at the cost of requiring many samplings before finding a weight to keep. This choice is efficient when the number of training points is small. If {\tt SmoothEmulator\_SmoothEmulator\_TuneChooseMCMC} is set to {\tt true}, Smooth Emulator will choose the coefficients as a small random step from the previous coefficients, then keep or reject the coefficients according to a Metropolis algorithm. The downside is that many steps are required to create a sampling set of coefficients that are independent of one another. This method is preferable for larger numbers of training points.  The default is {\tt true}.
 \item {\bf SmoothEmulator\_NMC}\\
 When the previous parameter is set to {\tt true}, this sets the number of steps between retained samples of coefficients. For larger numbers of parameters, this should be set at many thousands. Higher values lead to more independent sets of coefficients, but the calculation then requires more time. 
@@ -106,8 +105,10 @@ The second line provides an initial estimate for the parameter $\sigma_A$. The U
 This lists which full-model training runs SmoothEmulator will use to train the emulator. This provides the User with the flexibility to use some subset for training, as may be the case when testing the accuracy. The default is ``1''. An example the User might enter could be\\
 {\tt ~SmoothEmulator\_TrainingPts  0-4,13,15}\\
 This would choose the training information from the directories {\tt run0,run1,run2,run3,run4,run13} and {\tt run14}, which would be found in the directory denoted by the {\tt SmoothEmulator\_ModelRunDirName} parameter.
-\end{enumerate}
+\item {\bf RANDY\_SEED}\\
+This sets the seed for the random number generator. If the line is commented out, it will be set to {\tt std::time(NULL)}.
 
+\end{enumerate}
 \subsection{Running the Smooth Emulator Program}
 
 The source code for the Smooth Emulator main program can be found in the {\tt SMOOTH\_HOME/local/main\_programs/} directory. This directory contains source code for several main programs. They are separated from the bulk of the software, which is in the {\tt SMOOTH\_HOME/software/} directory. The main programs are designed so that the User can easily copy and edit them to create versions that might be more appropriate to the User's specific needs. When compiled, from the {\tt SMOOTH\_HOME/local/build/} directory, the executables appear in the {\tt SMOOTH\_HOME/local/bin/} directory. The source code {\tt smoothy\_tune\_main.cc} is
@@ -122,7 +123,6 @@ int main(int argc,char *argv[]){
     CparameterMap *parmap=new CparameterMap();
     parmap->ReadParsFromFile(string(argv[1]));
     CSmoothMaster master(parmap);
-    master.randy->reset(-time(NULL));
     master.ReadTrainingInfo();
     master.GenerateCoefficientSamples();
     //master.TestAtTrainingPts();
@@ -136,24 +136,20 @@ Similarly, there is a code {\tt SMOOTH\_HOME/local/main\_programs/smoothy\_readc
 From within the {\tt SMOOTH\_HOME/local/build/} directory, one can compile the tuning program with the commands:
 {\tt
 \begin{verbatim}
- ~/SMOOTH_HOME/local/build % cmake .
- ~/SMOOTH_HOME/local/build % make smoothy_tune
+ ~/GITHOME_MSU/smooth/local/build % cmake .
+ ~/GITHOME_MSU/smooth/local/build % make smoothy_tune
 \end{verbatim}
 }
 The executable {\tt smoothy\_tune} should now appear in the {\tt SMOOTH\_HOME/local/bin/} directory. Assuming the {\tt bin/} directory has been added to the User's path, the User may switch to the User's project directory, and enter the command
 {\tt
 \begin{verbatim}
- ~/SMOOTH_HOME/MY_PROJECT % smoothy_tune PARAMETERS/MY_PARAMETERS.TXT
+  ~/MY_PROJECT % smoothy_tune PARAMETERS/MY_PARAMETERS.TXT
 \end{verbatim}
 }
-In the above, {\tt SMOOTH\_HOME}, {\tt MY\_PROJECT}, and {\tt PARAMETERS/MY\_PARAMETERS.TXT} would be replaced by the User.
+In the above, {\tt GITHOME\_MSU} is the path of the Smooth Emulator installation. {\tt MY\_PROJECT}, and {\tt PARAMETERS/MY\_PARAMETERS.TXT} would be replaced by the User.
 
 The program will write the Taylor coefficients for the $N_{\rm sample}$ samples to files specified by the {\tt SmoothEmulator\_CoefficientsDirName} parameter.  Along with the coefficients, in the same directory Smooth Emulator writes a file {\tt meta.txt} which provides information, such as the maximum rank and net number of model parameters, to make it possible to read the coefficients later on.
 
 Smooth Emulator will output lines describing its progress, either to the screen or to a file, as specified by the {\tt SmoothEmulator\_LogFile} parameter described above. This output includes a report on the percentage of steps in the MCMC program that were successful. The line {\tt BestLogP/Ndof} describes the weight used to evaluate the likelihood of a coefficients sample. This value should roughtly converge once the Metropolis procedure has settled on the most likely region. 
-
-/be
-
-The Code uses a fake model which acts as a template used to represent a potential model. It will be replaced by the actual model created by the user. The file reads in the model prior info and the observable info files from the info directory and generates the observable text files in the run directory. 
 
 \end{document}

@@ -3,7 +3,7 @@ using namespace std;
 
 CSmoothMaster::CSmoothMaster(CparameterMap *parmap_set){
 	parmap=parmap_set;
-	int ranseed=parmap->getI("RANDY_SEED",-time(NULL));
+	int ranseed=parmap->getI("RANDY_SEED",time(NULL));
 	randy=new Crandy(ranseed);
 	
 	string logfilename=parmap->getS("SmoothEmulator_LogFileName","Screen");
@@ -23,7 +23,7 @@ CSmoothMaster::CSmoothMaster(CparameterMap *parmap_set){
 	parmap->set("Smooth_NPars",NPars);
 
 	string NTrainingStr = parmap->getS("SmoothEmulator_TrainingPts","1");
-
+	
 	vector<int> NTrainingList;
 	stringstream ss(NTrainingStr);
 	string token;

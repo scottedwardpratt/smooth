@@ -1,6 +1,5 @@
 \documentclass[main.tex]{subfiles}
 \begin{document}
-\newpage
 \setcounter{section}{2}
 
 \section{Simplex Sampler}
@@ -11,11 +10,13 @@ Simplex Sampler produces a list of points in model-parameter space to be used fo
 \subsection{Simplex Parameters (not model parameters!)}
 
 This refers to parameters Simplex Sampler uses when generating the training points, e.g. a choice of specific algorithm. It does not refer to information about model parameters. To access the simplex parameter file one should go to their project directory and follow the steps listed below. Here the {\it project directory} is the location from which Simplex will be run. One should first edit the parameters text file. For example, in the template the parameters file is {\tt parameters/simplex\_parameters.txt}, where the path is relative to the project directory.
-Parameters files can have any name or location. These files are text files in the format. An example of a parameter file is:\\
-{\tt\begin{verbatim}
- Simplex_TrainType             1                   # Must be 1 or 2 or 3
- Simplex_RTrain                0.95                # Radius of simplex
- Simplex_ModelRunDirName       modelruns           # Directory with training
+Parameters files can have any name or location. These files are text files in the format. An example of a parameter file is:
+{\tt
+\begin{verbatim}
+ #Simplex_LogFileName       simplexlog.txt    # comment out to direct output to screen
+ Simplex_TrainType          1                 # Must be 1 or 2 or 3
+ Simplex_RTrain             0.95              # Radius of simplex
+ Simplex_ModelRunDirName    modelruns         # Directory with training
                                                            point information
  Simplex_ModelParInfoFileName  Info/prior_info.txt # Describes model parameters
 \end{verbatim}

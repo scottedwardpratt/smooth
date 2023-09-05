@@ -1,20 +1,14 @@
-#SmoothEmulator_LogFileName smoothylog.txt
-SmoothEmulator_NPars 4
-SmoothEmulator_NTrainingPts 5
-SmoothEmulator_SigmaA 100.0
-SmoothEmulator_SigmaYMin 10
-SmoothEmulator_NMC 100000
-SmoothEmulator_NASample 5
-SmoothEmulator_MCStepSize .05
-SmoothEmulator_MCSigmaAStepSize .12
-SmoothEmulator_TuneChooseMCMC true
-SmoothEmulator_UseSigmaYRreal false
-SmoothEmulator_ConstrainA0 true
-SmoothEmulator_CutoffA false
-SmoothEmulator_LAMBDA 3.0
-SmoothEmulator_ModelRunDirName modelruns
-SmoothEmulator_CoefficientsDirName coefficients
-Smooth_MAXRANK 4
-Smooth_UseRFactor false
-Simplex_TrainType 1 // Must be 1 or 2 or 3 or 4
-Simplex_RTrain 0.95
+ #SmoothEmulator_LogFileName smoothlog.txt
+ SmoothEmulator_NPars 4
+ SmoothEmulator_LAMBDA 3.0
+ SmoothEmulator_MAXRANK 4
+ SmoothEmulator_NMC 100000  # Steps between samples 
+ SmoothEmulator_NASample 8  # No. of coefficient samples
+ SmoothEmulator_TuneChooseMCMC true # set false if NPars<5
+ SmoothEmulator_UseSigmaYRreal false # 
+ SmoothEmulator_ConstrainA0 true
+ SmoothEmulator_CutoffA false
+ SmoothEmulator_ModelRunDirName modelruns
+ SmoothEmulator_CoefficientsDirName coefficients
+ SmoothEmulator_ModelParInfoFileName
+ SmoothEmulator_ObservableInfoFileName
