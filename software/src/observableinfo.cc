@@ -15,7 +15,6 @@ CObservableInfo::CObservableInfo(string obs_inf_filename_set){
 	ReadObservableInfo(observable_info_filename);
 }
 
-
 int CObservableInfo::GetIPosition(string obsname){
 	map<string,int>::iterator iter;
 	pair<string,int> mpair;
@@ -54,6 +53,6 @@ void CObservableInfo::ReadObservableInfo(string observable_info_filename){
 void CObservableInfo::PrintInfo(){
 	CLog::Info("Observable         Unit\n");
 	for(int i=0;i<NObservables;i++){
-		CLog::Info(observable_name[i]+"    "+unit[i]+"\n");
+		CLog::Info(observable_name[i]+"   "+unit[i]+"\n");
 	}
 }

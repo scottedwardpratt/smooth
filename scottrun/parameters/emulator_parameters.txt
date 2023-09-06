@@ -10,5 +10,7 @@
  SmoothEmulator_CutoffA false
  SmoothEmulator_ModelRunDirName modelruns
  SmoothEmulator_CoefficientsDirName coefficients
- SmoothEmulator_ModelParInfoFileName
- SmoothEmulator_ObservableInfoFileName
+ SmoothEmulator_ModelParInfoDir    Info
+ SmoothEmulator_ObservableInfoDir  Info
+ SmoothEmulator_TrainingPts 0-9
+ SmoothEmulator_UsePCA

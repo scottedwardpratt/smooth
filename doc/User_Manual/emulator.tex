@@ -49,8 +49,10 @@ Smooth Emulator requires a parameter file. This can be located anywhere, as it w
  SmoothEmulator_CutoffA                false
  SmoothEmulator_ModelRunDirName        modelruns
  SmoothEmulator_CoefficientsDirName    coefficients
- SmoothEmulator_ModelParInfoFileName   Info/modelpar_info.txt
- SmoothEmulator_ObservableInfoFileName Info/observable_info.txt
+ SmoothEmulator_ModelParInfoDirName    Info
+ SmoothEmulator_ObservableInfoDirName  Info
+ SmoothEmulator_TrainingPts            0-9
+ SmoothEmulator_UsePCA                 false
  RANDY_SEED                            1234
 \end{verbatim}
 }
@@ -88,11 +90,11 @@ Here $\sigma_{A0}$ is the initial guess for the spread. This can safeguard again
 This gives the directory in which the training data from the full model runs is stored. The default is {\tt modelruns}.
 \item {\bf SmoothEmulator\_CoefficientsDirName}\\
 After tuning, Smooth Emulator can write the coefficients of the expansion to a file in this directory. Smooth Emulator can also read the coefficients. The default is {\tt coefficients}.
-\item {\bf SmoothEmulator\_ModelParsInfoFile}\\
-Typically, this is set to the same value as {\tt Simplex\_ModelParsInfoFile} if using Simplex. It provides the names and ranges of the model parameters. Smooth Emulator translates the scales the parameters so that they have uniform ranges, in the case of uniform distributions, or uniform widths, and zero mean for the Gaussian distributions. The default is {\tt Info/modelpar\_info.txt}
+\item {\bf SmoothEmulator\_ModelParInfoDir}\\
+Typically, this is set to the same value as {\tt Simplex\_ModelParInfoDir} if using Simplex. It defines the name directory in which the file {\tt modelpar\ info.txt} file is found.  This file provides the names and ranges of the model parameters, i.e. the prior. Smooth Emulator translates the scales the parameters so that they have uniform ranges, in the case of uniform distributions, or uniform widths, and zero mean for the Gaussian distributions. The default is {\tt Info}.
 
-\item {\bf SmoothEmulator\_ObservableInfoFilename}\\
-Smooth Emulator requires knowledge of the observables. This file lists their names and rough expectations of their range. An example of such a file is
+\item {\bf SmoothEmulator\_ObservableInfoDir}\\
+Smooth Emulator requires knowledge of the observables. The directory is defined relative to the project directory, and this typically is set to {\tt Info}, whic is the default. If so, in the {\tt Info/} directory one finds a file {\tt Info/observable\_info.txt}, which lists their names and rough expectations of the observables and their range. An example of such a file is
 {\tt
 \begin{verbatim}
 meanpt_pion  40

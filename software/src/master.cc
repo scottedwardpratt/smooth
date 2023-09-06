@@ -11,7 +11,13 @@ CSmoothMaster::CSmoothMaster(CparameterMap *parmap_set){
 		CLog::Init(logfilename);
 	}
 
-	string filename=parmap->getS("SmoothEmulator_ObservableInfoFilename","Info/observable_info.txt");
+	string filename;
+	if(UsePCA){
+		filename=parmap->getS("SmoothEmulator_ObservableInfoDir","Info")+"/pca_info.txt";
+	}
+	else{
+		filename=parmap->getS("SmoothEmulator_ObservableInfoDir","Info")+"/observable_info.txt";
+	}
 	observableinfo=new CObservableInfo(filename);
 
 	ModelRunDirName=parmap->getS("SmoothEmulator_ModelRunDirName","modelruns");

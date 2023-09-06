@@ -20,6 +20,7 @@ public:
 	Eigen::VectorXd eigvals;
   vector<vector<double>> Y;
 	vector<double> SigmaY,Ybar;
+	vector<vector<double>> SigmaY_emulator;
 	vector<int> NTrainingList;
 	string modelruns_dirname;
 	CObservableInfo *observable_info;
@@ -28,7 +29,7 @@ public:
   void WriteZTraining();
   void ReadPCA();
 	
-	void TranslateZtoY(vector<double> &Z,vector<double> &Y,vector<double> &SigmaZ,vector<vector<double>> &SigmaY);
+	void TranslateZtoY(vector<double> &Z,vector<double> &Y,vector<double> &SigmaZ,vector<vector<double>> &SigmaY_emulator);
 };
 
 #endif
