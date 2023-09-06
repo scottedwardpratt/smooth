@@ -27,7 +27,7 @@ public:
 
   void CalcPCA();
   void WriteZTraining();
-  void ReadPCA();
+  void ReadPCATransformationInfo();
 	
 	void TranslateZtoY(vector<double> &Z,vector<double> &Y,vector<double> &SigmaZ,vector<vector<double>> &SigmaY_emulator);
 };

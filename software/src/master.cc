@@ -13,17 +13,18 @@ CSmoothMaster::CSmoothMaster(CparameterMap *parmap_set){
 
 	string filename;
 	if(UsePCA){
-		filename=parmap->getS("SmoothEmulator_ObservableInfoDir","Info")+"/pca_info.txt";
+		filename="Info/pca_info.txt";
+		CoefficientsDirName="coefficients_pca";
 	}
 	else{
-		filename=parmap->getS("SmoothEmulator_ObservableInfoDir","Info")+"/observable_info.txt";
+		filename="Info/observable_info.txt";
+		CoefficientsDirName="coefficients";
 	}
 	observableinfo=new CObservableInfo(filename);
 
 	ModelRunDirName=parmap->getS("SmoothEmulator_ModelRunDirName","modelruns");
-	CoefficientsDirName=parmap->getS("SmoothEmulator_CoefficientsDirName","coefficients");
 
-	filename=parmap->getS("SmoothEmulator_ModelParInfoFilename","Info/modelpar_info.txt");
+	filename="Info/modelpar_info.txt";
 	priorinfo=new CPriorInfo(filename);
 	NPars=priorinfo->NModelPars;
 	parmap->set("Smooth_NPars",NPars);

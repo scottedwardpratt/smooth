@@ -6,7 +6,7 @@ PCA::PCA(string filename){
 	CparameterMap *parmap=new CparameterMap();
 	parmap->ReadParsFromFile(filename);
 
-	observable_info=new CObservableInfo(parmap->getS("SmoothEmulator_ObservableInfoDir","Info")+"/observable_info.txt");
+	observable_info=new CObservableInfo("Info/observable_info.txt");
 
 	modelruns_dirname=parmap->getS("SmoothEmulator_ModelRunDirName","modelruns");
 	string NTrainingStr = parmap->getS("SmoothEmulator_TrainingPts","1");
@@ -128,31 +128,50 @@ void PCA::CalcPCA(){
 	
 	// Write PCA Observables for Training Pts
 	
-	vector<double> Z;
-	Z.resize(Nobs);
+	vector<vector<double>> Z;
 	int iz;
 	string pcaname;
+	
+	Z.resize(nruns);
+	for(irun=0;irun<nruns;irun++){
+		Z[irun].resize(nruns);
+	}
+	
 	for(irun=0;irun<nruns;irun++){
 		for(iz=0;iz<Nobs;iz++){
-			Z[iz]=0.0;
+			Z[irun][iz]=0.0;
 			for(iy=0;iy<Nobs;iy++){
-				Z[iz]+=eigvec(iz,iy)*Ytilde[irun][iy];
-			}
-		}
-				iy=observable_info->GetIPosition(obs_name);
-				SigmaY[iy]+=sigmay/double(nruns);
-				Y[irun][iy]=y;
-				Ybar[iy]+=y/double(nruns);
+				Z[irun][iz]+=eigvecs(iz,iy)*Ytilde[irun][iy];
 			}
 		}
 		snprintf(filename,300,"%s/run%d/pca_obs.txt",modelruns_dirname.c_str(),NTrainingList[irun]);
 		fptr=fopen(filename,"w");
 		for(iz=0;iz<Nobs;iz++){
-			pcaname="z"+to_string(z);
-			fprintf(fptr,"%s  %g\n",pcaname.c_str(),SigmaA0);			
+			pcaname="z"+to_string(iz);
+			fprintf(fptr,"%s  %g  0.0z\n",pcaname.c_str(),Z[irun][iz]);	
 		}
 		fclose(fptr);
 	}
+	
+	// Write Info File for PCA
+	
+	double SA0Zsquared,SA0Y,SA0Z;
+	
+	fptr=fopen("Info/pca_info.txt","w");
+	
+	for(int iz=0;iz<Nobs;iz++){
+		SA0Zsquared=0.0;
+		for(iy=0;iy<nruns;iy++){
+			SA0Y=observable_info->SigmaA0[iy];
+			SA0Zsquared+=SA0Y*SA0Y*eigvecs(iz,iy)*eigvecs(iz,iy);
+		}
+		SA0Z=sqrt(SA0Zsquared);
+		pcaname="z"+to_string(iz);
+		fprintf(fptr,"%s %g\n",pcaname.c_str(),SA0Z);
+	}
+	
+	fclose(fptr);
+	
 
 }
 

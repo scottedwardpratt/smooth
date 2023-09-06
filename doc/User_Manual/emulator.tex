@@ -48,9 +48,6 @@ Smooth Emulator requires a parameter file. This can be located anywhere, as it w
  SmoothEmulator_ConstrainA0            true
  SmoothEmulator_CutoffA                false
  SmoothEmulator_ModelRunDirName        modelruns
- SmoothEmulator_CoefficientsDirName    coefficients
- SmoothEmulator_ModelParInfoDirName    Info
- SmoothEmulator_ObservableInfoDirName  Info
  SmoothEmulator_TrainingPts            0-9
  SmoothEmulator_UsePCA                 false
  RANDY_SEED                            1234
@@ -88,21 +85,7 @@ W(A_i)_{\rm additional}=\frac{1}{1+\frac{1}{4}\frac{A_i^2}{\sigma_{A}^2}}.
 Here $\sigma_{A0}$ is the initial guess for the spread. This can safeguard against the width $\sigma_A$ drifting off to arbitrarily large values. Unless necessary, it is recommended to leave this at the default, {\tt false}.
 \item {\bf SmoothEmulator\_ModelRunDirName}\\
 This gives the directory in which the training data from the full model runs is stored. The default is {\tt modelruns}.
-\item {\bf SmoothEmulator\_CoefficientsDirName}\\
-After tuning, Smooth Emulator can write the coefficients of the expansion to a file in this directory. Smooth Emulator can also read the coefficients. The default is {\tt coefficients}.
-\item {\bf SmoothEmulator\_ModelParInfoDir}\\
-Typically, this is set to the same value as {\tt Simplex\_ModelParInfoDir} if using Simplex. It defines the name directory in which the file {\tt modelpar\ info.txt} file is found.  This file provides the names and ranges of the model parameters, i.e. the prior. Smooth Emulator translates the scales the parameters so that they have uniform ranges, in the case of uniform distributions, or uniform widths, and zero mean for the Gaussian distributions. The default is {\tt Info}.
 
-\item {\bf SmoothEmulator\_ObservableInfoDir}\\
-Smooth Emulator requires knowledge of the observables. The directory is defined relative to the project directory, and this typically is set to {\tt Info}, whic is the default. If so, in the {\tt Info/} directory one finds a file {\tt Info/observable\_info.txt}, which lists their names and rough expectations of the observables and their range. An example of such a file is
-{\tt
-\begin{verbatim}
-meanpt_pion  40
-meanpt_proton 60
-meanv2_pion 0.05
-\end{verbatim}
-}
-The second line provides an initial estimate for the parameter $\sigma_A$. The User needn't worry if this is off by a few factors of two from the final value, but if it is off by orders of magnitude, it might take Smooth Emulator a long time to find the appropriate range. The default file name is {\tt Info/observable\_info.txt}
 \item {\bf SmoothEmulator\_TrainingPts}\\
 This lists which full-model training runs SmoothEmulator will use to train the emulator. This provides the User with the flexibility to use some subset for training, as may be the case when testing the accuracy. The default is ``1''. An example the User might enter could be\\
 {\tt ~SmoothEmulator\_TrainingPts  0-4,13,15}\\
@@ -111,9 +94,31 @@ This would choose the training information from the directories {\tt run0,run1,r
 This sets the seed for the random number generator. If the line is commented out, it will be set to {\tt std::time(NULL)}.
 
 \end{enumerate}
+
+
+subsection{Editing Info Files}
+
+\begin{enumerate}
+
+\item {\bf Info/observable\_info.txt}\\
+Smooth Emulator requires knowledge of the observables. An example of such a file is
+{\tt
+\begin{verbatim}
+meanpt_pion  40
+meanpt_proton 60
+meanv2_pion 0.05
+\end{verbatim}
+}
+The second line provides an initial estimate for the parameter $\sigma_A$. The User needn't worry if this is off by a few factors of two from the final value, but if it is off by orders of magnitude, it might take Smooth Emulator a long time to find the appropriate range.
+
+\item {\bf Info/modelpar\_info.txt}\\
+This file provides the names and ranges of the model parameters, i.e. the prior. Smooth Emulator translates the scales the parameters so that they have uniform ranges, in the case of uniform distributions, or uniform widths, and zero mean for the Gaussian distributions. This same file was used for running Simplex Sampler and is described in Sec. \ref{subsec:modelparinfo}. 
+
+\end{enumerate}
+
 \subsection{Running the Smooth Emulator Program}
 
-The source code for the Smooth Emulator main program can be found in the {\tt SMOOTH\_HOME/local/main\_programs/} directory. This directory contains source code for several main programs. They are separated from the bulk of the software, which is in the {\tt SMOOTH\_HOME/software/} directory. The main programs are designed so that the User can easily copy and edit them to create versions that might be more appropriate to the User's specific needs. When compiled, from the {\tt SMOOTH\_HOME/local/build/} directory, the executables appear in the {\tt SMOOTH\_HOME/local/bin/} directory. The source code {\tt smoothy\_tune\_main.cc} is
+The source code for the Smooth Emulator main program can be found in the {\tt GITHOME\_MSU/smooth/local/main\_programs/} directory. This directory contains source code for several main programs. They are separated from the bulk of the software, which is in the {\tt GITHOME\_MSU/smooth/software/} directory. The main programs are designed so that the User can easily copy and edit them to create versions that might be more appropriate to the User's specific needs. When compiled, from the {\tt GITHOME\_MSU/smooth/local/build/} directory, the executables appear in the {\tt GITHOME\_MSU/smooth/local/bin/} directory. The source code {\tt smoothy\_tune\_main.cc} is
 {\tt
 \begin{verbatim}
 using namespace std;
@@ -133,16 +138,16 @@ int main(int argc,char *argv[]){
 }
 \end{verbatim}
 }
-Similarly, there is a code {\tt SMOOTH\_HOME/local/main\_programs/smoothy\_readcoefficients\_main.cc}, which provides an example of how one might read the coefficients for later use.
+Similarly, there is a code {\tt GITHOME\_MSU/smooth/local/main\_programs/smoothy\_readcoefficients\_main.cc}, which provides an example of how one might read the coefficients for later use.
 
-From within the {\tt SMOOTH\_HOME/local/build/} directory, one can compile the tuning program with the commands:
+From within the {\tt GITHOME\_MSU/smooth/local/build/} directory, one can compile the tuning program with the commands:
 {\tt
 \begin{verbatim}
  ~/GITHOME_MSU/smooth/local/build % cmake .
  ~/GITHOME_MSU/smooth/local/build % make smoothy_tune
 \end{verbatim}
 }
-The executable {\tt smoothy\_tune} should now appear in the {\tt SMOOTH\_HOME/local/bin/} directory. Assuming the {\tt bin/} directory has been added to the User's path, the User may switch to the User's project directory, and enter the command
+The executable {\tt smoothy\_tune} should now appear in the {\tt GITHOME\_MSU/smooth/local/bin/} directory. Assuming the {\tt bin/} directory has been added to the User's path, the User may switch to the User's project directory, and enter the command
 {\tt
 \begin{verbatim}
   ~/MY_PROJECT % smoothy_tune PARAMETERS/MY_PARAMETERS.TXT
@@ -150,7 +155,7 @@ The executable {\tt smoothy\_tune} should now appear in the {\tt SMOOTH\_HOME/lo
 }
 In the above, {\tt GITHOME\_MSU} is the path of the Smooth Emulator installation. {\tt MY\_PROJECT}, and {\tt PARAMETERS/MY\_PARAMETERS.TXT} would be replaced by the User.
 
-The program will write the Taylor coefficients for the $N_{\rm sample}$ samples to files specified by the {\tt SmoothEmulator\_CoefficientsDirName} parameter.  Along with the coefficients, in the same directory Smooth Emulator writes a file {\tt meta.txt} which provides information, such as the maximum rank and net number of model parameters, to make it possible to read the coefficients later on.
+The program will write the Taylor coefficients for the $N_{\rm sample}$ samples to files in the {\tt coefficients} directory.  The coefficients for each observable are given in separate subdirectories, named by the observables. Along with the coefficients, in the same directory Smooth Emulator writes a file {\tt meta.txt} which provides information, such as the maximum rank and net number of model parameters, to make it possible to read the coefficients later on.
 
 Smooth Emulator will output lines describing its progress, either to the screen or to a file, as specified by the {\tt SmoothEmulator\_LogFile} parameter described above. This output includes a report on the percentage of steps in the MCMC program that were successful. The line {\tt BestLogP/Ndof} describes the weight used to evaluate the likelihood of a coefficients sample. This value should roughtly converge once the Metropolis procedure has settled on the most likely region. 
 

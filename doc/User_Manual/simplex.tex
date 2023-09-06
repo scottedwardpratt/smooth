@@ -18,7 +18,6 @@ Parameters files can have any name or location. These files are text files in th
  Simplex_RTrain                0.95                # Radius of simplex
  Simplex_ModelRunDirName       modelruns           # Directory with training
                                                            point information
- Simplex_ModelParInfoFileName  Info/prior_info.txt # Describes model parameters
 \end{verbatim}
 }
 For the parameter file, the first string is the parameter name and is followed by the value. Both are single strings (without spaces). The \# symbol is used for comments. Each parameter has a default value, which will be used if the parameter is not mentioned in the parameter file.  Simplex Sampler has four User-defined parameters.
@@ -34,9 +33,8 @@ This sets the path file that the run files will be created in. The default name 
 This file describes which model parameters will be varied in the analysis, along with their ranges, or priors. The default is {\tt Info/modelpar\_info.txt}, where the path is relative to the project directory.
 \end{enumerate}
 
-\subsection{Specifying Model Parameters and Priors}
-
-Before proceeding, Simplex requires information about the parameters, specifically, their ranges. That file is defined by the {\tt Simplex\_ModelParInfoFile} parameter mentioned above. An example of such a file might be
+\subsection{Specifying Model Parameters and Priors}\label{subsec:modelparinfo}
+Before proceeding, Simplex requires information about the parameters, specifically, their ranges. The User enters this information into the file {\tt Info/modelpar\_info.txt}. An example of such a file might be
 {\tt\begin{verbatim}
    NuclearCompressibility  gaussian     210   40
    ScreeningMass           uniform      0.3   1.2
