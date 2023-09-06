@@ -93,6 +93,9 @@ This would choose the training information from the directories {\tt run0,run1,r
 \item {\bf RANDY\_SEED}\\
 This sets the seed for the random number generator. If the line is commented out, it will be set to {\tt std::time(NULL)}.
 
+\item {\bf SmoothEmultor\_UsePCA}\\
+By default, this is set to false. If one wishes to emulate the PCA observables, i.e. those that are linear combinations of the real observables, this should be set to true. One must then be sure to have run the pca decomposition programs first. For more, see Sec. \ref{sec:pca}. 
+
 \end{enumerate}
 
 
