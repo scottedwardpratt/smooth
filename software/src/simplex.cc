@@ -222,14 +222,16 @@ void CSimplexSampler::WriteModelPars(){
 		}
 		modelparameters[itrain]->TranslateTheta_to_X();
 	}
+	printf("check aaa, NTrainingPts=%d\n",NTrainingPts);
 
-	dirname=ModelDirName+"/run"+to_string(itrain);
-	command="mkdir -p "+dirname;
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		//command="rm -r -f "+ModelDirName+"/run"+to_string(itrain)+"/mod_parameters.txt";
 		//system(command.c_str());
+		dirname=ModelDirName+"/run"+to_string(itrain);
+		command="mkdir -p "+dirname;
+		printf("command=%s, dirname=%s\n",command.c_str(),dirname.c_str(dd));
 		system(command.c_str());
-		filename=dirname+"/mod_parameters.txt";
+		filename=dirname+"/modelpar_info.txt.txt";
 		fptr=fopen(filename.c_str(),"w");
 		for(ipar=0;ipar<NPars;ipar++){
 			fprintf(fptr,"%s %g\n",
