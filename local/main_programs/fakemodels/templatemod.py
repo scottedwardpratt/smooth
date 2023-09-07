@@ -14,7 +14,7 @@ class FakeModel:
         self.A = []
         self.Yname = ""
         self.Y = 0.0
-        self.SigmaY = 0.0
+        self.SigmaY = 1.0
 
 
     def GetY_1(self, iY, Yname, X):
@@ -24,7 +24,7 @@ class FakeModel:
         Y = self.coefficient_sin * math.sin(arg / Lambda) + self.coefficient_cos * math.cos(arg / Lambda)
         arg = sum([self.randy.random() * x / (2.0 * math.pi) for x in X])
         Y += self.coefficient_exp * math.exp(arg / (Lambda * NPars))
-        SigmaY = 0.0
+        SigmaY = 1.0
 
         self.Yname = Yname
         self.Y = Y
@@ -32,7 +32,7 @@ class FakeModel:
         return Y, SigmaY
 
 
-with open("Info/prior_info.txt", "r") as file:
+with open("Info/modelpar_info.txt", "r") as file:
     NPars = sum(1 for line in file)
 
 X = [0] * NPars
