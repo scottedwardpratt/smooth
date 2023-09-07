@@ -229,7 +229,7 @@ void CSimplexSampler::WriteModelPars(){
 		//system(command.c_str());
 		dirname=ModelDirName+"/run"+to_string(itrain);
 		command="mkdir -p "+dirname;
-		printf("command=%s, dirname=%s\n",command.c_str(),dirname.c_str(dd));
+		printf("command=%s, dirname=%s\n",command.c_str(),dirname.c_str());
 		system(command.c_str());
 		filename=dirname+"/modelpar_info.txt.txt";
 		fptr=fopen(filename.c_str(),"w");
