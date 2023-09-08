@@ -30,32 +30,27 @@ string CObservableInfo::GetName(int i){
 }
 
 void CObservableInfo::ReadObservableInfo(string filename){
-	char dummy1[120];
+	char dummy[120];
 	double sig0;
 	name_map.clear();
 	observable_name.clear();
 	NObservables=0;
 	FILE *fptr=fopen(filename.c_str(),"r");
 	do{
-		fscanf(fptr,"%s %lf",dummy1,&sig0);
+		fscanf(fptr,"%s",dummy);
 		if(!feof(fptr)){
-			observable_name.push_back(string(dummy1));
+			fscanf(fptr,"%lf",&sig0);
+			observable_name.push_back(string(dummy));
 			SigmaA0.push_back(sig0);
 			name_map.insert(pair<string,int>(observable_name[NObservables],NObservables));
 			NObservables+=1;
 		}
 	}while(!feof(fptr));
-	
-	printf("Nobs=%d\n",NObservables);
-	for(int iy=0;iy<NObservables;iy++){
-		printf("%s  %g\n",observable_name[iy].c_str(),SigmaA0[iy]);
-	}
-	//exit(1);
 	fclose(fptr);
 }
 
 void CObservableInfo::ReadExperimentalInfo(string filename){
-	char dummy1[120];
+	char dummy[120];
 	double sig0,Y0;
 	int NObsRead=0;
 	int iY;
@@ -63,9 +58,10 @@ void CObservableInfo::ReadExperimentalInfo(string filename){
 	SigmaExp.resize(NObservables);
 	FILE *fptr=fopen(filename.c_str(),"r");
 	do{
-		fscanf(fptr,"%s %lf %lf",dummy1,&Y0,&sig0);
+		fscanf(fptr,"%s",dummy);
 		if(!feof(fptr)){
-			iY=GetIPosition(string(dummy1));
+			fscanf(fptr,"%lf %lf",&Y0,&sig0);
+			iY=GetIPosition(string(dummy));
 			YExp[iY]=Y0;
 			SigmaExp[iY]=sig0;
 			NObsRead+=1;

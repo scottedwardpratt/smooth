@@ -26,7 +26,7 @@ public:
 	CObservableInfo *observable_info;
 
   void CalcPCA();
-  void WriteZTraining();
+  void WriteTrainingInfo();
   void ReadPCATransformationInfo();
 	
 	void TranslateZtoY(vector<double> &Z,vector<double> &Y,vector<double> &SigmaZ,vector<vector<double>> &SigmaY_emulator);

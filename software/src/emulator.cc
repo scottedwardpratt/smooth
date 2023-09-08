@@ -26,9 +26,6 @@ CSmoothEmulator::CSmoothEmulator(string observable_name_set){
 	SigmaA=SigmaA0;
 	SigmaAMin=parmap->getD("SmoothEmulator_SigmaAMin",0.1*SigmaA0);
 
-	
-	printf("SigmaA0=%g, MCStepSize=%g, MCSigmaAStepSize=%g, SigmaAMin=%g\n",SigmaA0,MCStepSize,MCSigmaAStepSize,SigmaAMin);
-
 	Init();
 
 }
@@ -39,7 +36,6 @@ void CSmoothEmulator::SetThetaTrain(){
 		ThetaTrain[itrain].resize(NPars);
 		for(int ipar=0;ipar<NPars;ipar++){
 			ThetaTrain[itrain][ipar]=smoothmaster->traininginfo->modelpars[itrain]->Theta[ipar];
-			//printf("ThetaTrain[%d][%d]=%g\n",itrain,ipar,ThetaTrain[itrain][ipar]);
 		}
 	}
 }
@@ -96,7 +92,6 @@ void CSmoothEmulator::TuneMCMC(){
 	Aptr=&A;
 	ATrialptr=&ATrial;
 	SigmaATrial=SigmaA0;
-	printf("------ SigmaA=%g\n",SigmaA);
 	double logP,logPTrial;
 	logP=GetLog_AProb(*Aptr,SigmaA);
 	BestLogP=-1000000.0;
@@ -177,7 +172,6 @@ void CSmoothEmulator::TuneMCMC_withSigma(){
 	}
 
 
-	//printf("logP_fromA=%g\n",logP);
 	BestLogP=-1000000000.0;
 	for(imc=0;imc<NMC;imc++){
 		for(ic=0;ic<smooth->NCoefficients;ic++){
@@ -194,14 +188,9 @@ void CSmoothEmulator::TuneMCMC_withSigma(){
 		for(itrain=0;itrain<NTrainingPts;itrain++){
 			Y=smooth->CalcY(*ATrialptr,LAMBDA,ThetaTrain[itrain]);
 			logPTrial-=0.5*(YTrain[itrain]-Y)*(YTrain[itrain]-Y)/(SigmaYTrain[itrain]*SigmaYTrain[itrain]);
-			//printf("%4d: YTrain=%10.4f, Y=%10.4f, SigmaY=%5.2f, logPTrial=%g\n",itrain,YTrain[itrain],Y,SigmaYTrain[itrain],logPTrial);
 		}
 
 		dlp=logPTrial-logP;
-		//printf("dlp=%g\n",dlp);
-
-
-
 		if(dlp>0.0){
 			Aswitch=Aptr;
 			Aptr=ATrialptr;
@@ -234,7 +223,6 @@ void CSmoothEmulator::TuneMCMC_withSigma(){
 		if(logP>BestLogP)
 			BestLogP=logP;
 	}
-	//	cout << "dlp is now:" << dlp << endl;
 
 	if(Aptr!=&A){
 		for(ic=0;ic<smooth->NCoefficients;ic++){
@@ -307,7 +295,6 @@ void CSmoothEmulator::CalcAFromTraining(vector<double> &AA){
 	YTarget.resize(NTrainingPts);
 
 	for(itrain=0;itrain<NTrainingPts;itrain++){
-		//printf("ThetaTrain[%d]=(%g,%g,%g,%g)\n",itrain,ThetaTrain[itrain][0],ThetaTrain[itrain][1],ThetaTrain[itrain][2],ThetaTrain[itrain][3]);
 		YTarget(itrain)=YTrain[itrain]-smooth->CalcY_Remainder(AA,LAMBDA,ThetaTrain[itrain],NTrainingPts);
 		for(ic=0;ic<NTrainingPts;ic++){
 			M(itrain,ic)=smooth->GetM(ic,LAMBDA,ThetaTrain[itrain]);

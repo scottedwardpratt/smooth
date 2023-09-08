@@ -7,8 +7,9 @@ PCA::PCA(string filename){
 	parmap->ReadParsFromFile(filename);
 
 	observable_info=new CObservableInfo("Info/observable_info.txt");
+	
 	observable_info->ReadExperimentalInfo("Info/experimental_info.txt");
-
+	
 	modelruns_dirname=parmap->getS("SmoothEmulator_ModelRunDirName","modelruns");
 	string NTrainingStr = parmap->getS("SmoothEmulator_TrainingPts","1");
 	
@@ -34,7 +35,7 @@ PCA::PCA(string filename){
 
 	Y.resize(nruns);
 	SigmaY.resize(nruns);
-
+	
 }
 
 void PCA::CalcPCA(){
@@ -58,7 +59,6 @@ void PCA::CalcPCA(){
 		Ybar[iy]=0.0;
 		SigmaY[iy]=observable_info->SigmaExp[iy];
 	}
-	
 	
 	for(irun=0;irun<nruns;irun++){
 		snprintf(filename,300,"%s/run%d/obs.txt",modelruns_dirname.c_str(),NTrainingList[irun]);
@@ -161,7 +161,7 @@ void PCA::CalcPCA(){
 	fptr=fopen("Info/pca_info.txt","w");
 	for(int iz=0;iz<Nobs;iz++){
 		SA0Zsquared=0.0;
-		for(iy=0;iy<nruns;iy++){
+		for(iy=0;iy<Nobs;iy++){
 			SA0Y=observable_info->SigmaA0[iy];
 			SA0Zsquared+=SA0Y*SA0Y*eigvecs(iz,iy)*eigvecs(iz,iy);
 		}
@@ -174,6 +174,7 @@ void PCA::CalcPCA(){
 	// write Experimental File for PCA
 	vector<double> YExpTilde,ZExp;
 	YExpTilde.resize(Nobs);
+	ZExp.resize(Nobs);
 	fptr=fopen("Info/experimental_info_pca.txt","w");
 	for(iy=0;iy<Nobs;iy++){
 		YExpTilde[iy]=(observable_info->YExp[iy]-Ybar[iy])/SigmaY[iy];
@@ -188,7 +189,7 @@ void PCA::CalcPCA(){
 	}
 	
 	fclose(fptr);
-
+	
 }
 
 void PCA::ReadPCATransformationInfo(){
@@ -226,7 +227,7 @@ void PCA::ReadPCATransformationInfo(){
 	
 }
 
-void PCA::WriteZTraining(){
+void PCA::WriteTrainingInfo(){
 	int ifile;
 
 	string command="rm -r -f PCA_Info/run*";
@@ -236,11 +237,7 @@ void PCA::WriteZTraining(){
 		string filename;
 		FILE *fptr;
 
-		string dirname= "PCA_Info/run" +to_string(irun);
-		command= "mkdir " +dirname;
-		system(command.c_str());
-
-		Eigen::VectorXd obsVec(Y[0].size());
+		Eigen::VectorXd obsVec(Nobs);
 
 		for (size_t i = 0; i < Y[0].size(); i++){
 			obsVec(i) = Y[irun][i];

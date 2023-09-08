@@ -207,7 +207,7 @@ void CSimplexSampler::SetThetaType4(){
 			ThetaTrain[itrain][ipar]*=(RTrain/Rprime);
 		}
 	}
-}
+} 
 
 void CSimplexSampler::WriteModelPars(){
 	FILE *fptr;
@@ -229,7 +229,6 @@ void CSimplexSampler::WriteModelPars(){
 		command="mkdir -p "+dirname;
 		system(command.c_str());
 		filename=dirname+"/mod_parameters.txt";
-		printf("filename=%s\n",filename.c_str());
 		fptr=fopen(filename.c_str(),"w");
 		for(ipar=0;ipar<NPars;ipar++){
 			fprintf(fptr,"%s %g\n",
