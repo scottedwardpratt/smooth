@@ -5,14 +5,14 @@
 #include <vector>
 #include <array>
 #include <fstream>
+#include <cstdio>
 #include "msu_commonutils/log.h"
 #include "msu_smooth/observableinfo.h"
 
 using namespace std;
 
-CObservableInfo::CObservableInfo(string obs_inf_filename_set){
-	observable_info_filename=obs_inf_filename_set;
-	ReadObservableInfo(observable_info_filename);
+CObservableInfo::CObservableInfo(string filename){
+	ReadObservableInfo(filename);
 }
 
 int CObservableInfo::GetIPosition(string obsname){
@@ -29,14 +29,14 @@ string CObservableInfo::GetName(int i){
 	return observable_name[i];
 }
 
-void CObservableInfo::ReadObservableInfo(string observable_info_filename){
+void CObservableInfo::ReadObservableInfo(string filename){
 	char dummy1[120],dummy2[120];
 	double sig0;
 	name_map.clear();
 	observable_name.clear();
 	unit.clear();
 	NObservables=0;
-	FILE *fptr=fopen(observable_info_filename.c_str(),"r");
+	FILE *fptr=fopen(filename.c_str(),"r");
 	do{
 		fscanf(fptr,"%s %s %lf",dummy1,dummy2,&sig0);
 		if(!feof(fptr)){
@@ -48,6 +48,30 @@ void CObservableInfo::ReadObservableInfo(string observable_info_filename){
 		}
 	}while(!feof(fptr));
 	fclose(fptr);
+}
+
+void CObservableInfo::ReadExperimentalInfo(string filename){
+	char dummy1[120];
+	double sig0,Y0;
+	int NObsRead=0;
+	int iY;
+	YExp.resize(NObservables);
+	SigmaExp.resize(NObservables);
+	FILE *fptr=fopen(filename.c_str(),"r");
+	do{
+		fscanf(fptr,"%s %lf %lf",dummy1,&Y0,&sig0);
+		if(!feof(fptr)){
+			iY=GetIPosition(string(dummy1));
+			YExp[iY]=Y0;
+			SigmaExp[iY]=sig0;
+			NObsRead+=1;
+		}
+	}while(!feof(fptr));
+	fclose(fptr);
+	if(NObsRead!=NObservables){
+		CLog::Fatal("NObservables="+to_string(NObservables)+", N of Experimental Observables="+to_string(NObsRead)+"\n");
+	}
+
 }
 
 void CObservableInfo::PrintInfo(){

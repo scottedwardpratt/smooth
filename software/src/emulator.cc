@@ -15,16 +15,19 @@ CSmoothEmulator::CSmoothEmulator(string observable_name_set){
 	LAMBDA=parmap->getD("SmoothEmulator_LAMBDA",3.0);
 	NMC=parmap->getI("SmoothEmulator_NMC",10000);
 	NASample=parmap->getI("SmoothEmulator_NASample",8);
-	MCStepSize=parmap->getD("SmoothEmulator_MCStepSize",0.5);
-	MCSigmaAStepSize=parmap->getD("SmoothEmulator_MCSigmaAStepSize",0.1);
+	MCStepSize=parmap->getD("SmoothEmulator_MCStepSize",0.05);
+	MCSigmaAStepSize=parmap->getD("SmoothEmulator_MCSigmaAStepSize",0.05);
 	TuneChooseMCMC=parmap->getB("SmoothEmulator_TuneChooseMCMC",true);
 	UseSigmaYReal=parmap->getB("SmoothEmulator_UseSigmaYRreal",false);
 	ConstrainA0=parmap->getB("SmoothEmulator_ConstrainA0",false);
 	CutOffA=parmap->getB("SmoothEmulator_CutoffA",false);
-	SigmaAMin=parmap->getD("SmoothEmulator_SigmaAMin",0.1*SigmaA0);
-
 	iY=smoothmaster->observableinfo->GetIPosition(observable_name);
 	SigmaA0=smoothmaster->observableinfo->SigmaA0[iY];
+	SigmaA=SigmaA0;
+	SigmaAMin=parmap->getD("SmoothEmulator_SigmaAMin",0.1*SigmaA0);
+
+	
+	printf("SigmaA0=%g, MCStepSize=%g, MCSigmaAStepSize=%g, SigmaAMin=%g\n",SigmaA0,MCStepSize,MCSigmaAStepSize,SigmaAMin);
 
 	Init();
 
@@ -92,7 +95,8 @@ void CSmoothEmulator::TuneMCMC(){
 	}
 	Aptr=&A;
 	ATrialptr=&ATrial;
-	SigmaATrial=SigmaA;
+	SigmaATrial=SigmaA0;
+	printf("------ SigmaA=%g\n",SigmaA);
 	double logP,logPTrial;
 	logP=GetLog_AProb(*Aptr,SigmaA);
 	BestLogP=-1000000.0;
@@ -101,7 +105,9 @@ void CSmoothEmulator::TuneMCMC(){
 			stepsize=SigmaA*MCStepSize*pow(LAMBDA,smooth->rank[ic]);
 			(*ATrialptr)[ic]=(*Aptr)[ic]+stepsize*randy->ran_gauss();
 		}
-		SigmaATrial=fabs(SigmaA+SigmaA0*MCSigmaAStepSize*randy->ran_gauss());
+		do{
+			SigmaATrial=fabs(SigmaA+SigmaA0*MCSigmaAStepSize*randy->ran_gauss());
+		}while(SigmaATrial<SigmaAMin);
 		for(ic=NTrainingPts;ic<smooth->NCoefficients;ic++){
 			(*ATrialptr)[ic]*=(SigmaATrial/SigmaA);
 		}

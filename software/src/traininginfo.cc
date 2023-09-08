@@ -34,6 +34,7 @@ void CTrainingInfo::ReadTrainingInfo(string rundirname){
 	double y,sigmay,x;
 	FILE *fptr;
 	for(itrain=0;itrain<NTrainingList.size();itrain++){
+		printf("check, itrain=%d\n",itrain);
 		ifile=NTrainingList[itrain];
 		if(smoothmaster->UsePCA){
 			snprintf(filename,300,"%s/run%d/obs_PCA.txt",rundirname.c_str(),ifile);
@@ -46,6 +47,7 @@ void CTrainingInfo::ReadTrainingInfo(string rundirname){
 		do{
 			fscanf(fptr,"%s %lf %lf",obs_charname,&y,&sigmay);
 			if(!feof(fptr)){
+				printf("obs_charname=%s\n",obs_charname);
 				obs_name=string(obs_charname);
 				iy=smoothmaster->observableinfo->GetIPosition(obs_name);
 				YTrain[iy][itrain]=y;
@@ -55,6 +57,7 @@ void CTrainingInfo::ReadTrainingInfo(string rundirname){
 		}while(!feof(fptr));
 	}
 	fclose(fptr);
+	printf("check f\n");
 	if(nsuccess!=smoothmaster->observableinfo->NObservables)
 		CLog::Fatal("In CTrainingInfo::ReadTrainInfo, only read in "+to_string(nsuccess)+" observables from file "+string(filename)+"\n");
 

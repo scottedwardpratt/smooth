@@ -7,6 +7,7 @@ PCA::PCA(string filename){
 	parmap->ReadParsFromFile(filename);
 
 	observable_info=new CObservableInfo("Info/observable_info.txt");
+	observable_info->ReadExperimentalInfo("Info/experimental_info.txt");
 
 	modelruns_dirname=parmap->getS("SmoothEmulator_ModelRunDirName","modelruns");
 	string NTrainingStr = parmap->getS("SmoothEmulator_TrainingPts","1");

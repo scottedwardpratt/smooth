@@ -2,6 +2,7 @@
 using namespace std;
 
 CSmoothMaster::CSmoothMaster(CparameterMap *parmap_set){
+	printf("howdy\n");
 	parmap=parmap_set;
 	int ranseed=parmap->getI("RANDY_SEED",time(NULL));
 	randy=new Crandy(ranseed);

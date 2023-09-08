@@ -6,11 +6,12 @@
  SmoothEmulator_NASample 8  # No. of coefficient samples
  SmoothEmulator_TuneChooseMCMC true # set false if NPars<5
  SmoothEmulator_UseSigmaYRreal false # 
- SmoothEmulator_ConstrainA0 true
+ SmoothEmulator_ConstrainA0 false
  SmoothEmulator_CutoffA false
  SmoothEmulator_ModelRunDirName modelruns
  SmoothEmulator_CoefficientsDirName coefficients
  SmoothEmulator_ModelParInfoDir    Info
  SmoothEmulator_ObservableInfoDir  Info
- SmoothEmulator_TrainingPts 0-9
- SmoothEmulator_UsePCA
+ SmoothEmulator_TrainingPts 0-4
+ SmoothEmulator_UsePCA   false
+ 
