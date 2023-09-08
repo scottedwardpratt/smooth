@@ -14,7 +14,7 @@ class CObservableInfo{
 public:
 	CObservableInfo(string filename);
 	int NObservables;
-	vector<string> observable_name,unit;
+	vector<string> observable_name;
 	vector<double> SigmaA0; // representative spread of coefficients
 	map<string,int> name_map;
 	int GetIPosition(string obsname);  // finds position given name of observable

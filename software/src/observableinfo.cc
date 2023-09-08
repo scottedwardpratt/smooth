@@ -30,23 +30,27 @@ string CObservableInfo::GetName(int i){
 }
 
 void CObservableInfo::ReadObservableInfo(string filename){
-	char dummy1[120],dummy2[120];
+	char dummy1[120];
 	double sig0;
 	name_map.clear();
 	observable_name.clear();
-	unit.clear();
 	NObservables=0;
 	FILE *fptr=fopen(filename.c_str(),"r");
 	do{
-		fscanf(fptr,"%s %s %lf",dummy1,dummy2,&sig0);
+		fscanf(fptr,"%s %lf",dummy1,&sig0);
 		if(!feof(fptr)){
 			observable_name.push_back(string(dummy1));
-			unit.push_back(string(dummy2));
 			SigmaA0.push_back(sig0);
 			name_map.insert(pair<string,int>(observable_name[NObservables],NObservables));
 			NObservables+=1;
 		}
 	}while(!feof(fptr));
+	
+	printf("Nobs=%d\n",NObservables);
+	for(int iy=0;iy<NObservables;iy++){
+		printf("%s  %g\n",observable_name[iy].c_str(),SigmaA0[iy]);
+	}
+	//exit(1);
 	fclose(fptr);
 }
 
@@ -75,8 +79,8 @@ void CObservableInfo::ReadExperimentalInfo(string filename){
 }
 
 void CObservableInfo::PrintInfo(){
-	CLog::Info("Observable         Unit\n");
+	CLog::Info("Observable    \n");
 	for(int i=0;i<NObservables;i++){
-		CLog::Info(observable_name[i]+"   "+unit[i]+"\n");
+		CLog::Info(observable_name[i]+"\n");
 	}
 }

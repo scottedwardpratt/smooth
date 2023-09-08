@@ -54,8 +54,10 @@ void PCA::CalcPCA(){
 	}
 	Ybar.resize(Nobs);
 	SigmaY.resize(Nobs);
-	for(iy=0;iy<Nobs;iy++)
-		SigmaY[iy]=Ybar[iy]=0.0;
+	for(iy=0;iy<Nobs;iy++){
+		Ybar[iy]=0.0;
+		SigmaY[iy]=observable_info->SigmaExp[iy];
+	}
 	
 	
 	for(irun=0;irun<nruns;irun++){
@@ -65,7 +67,6 @@ void PCA::CalcPCA(){
 			fscanf(fptr,"%s %lf %lf",obs_name, &y, &sigmay);
 			if(!feof(fptr)){
 				iy=observable_info->GetIPosition(obs_name);
-				SigmaY[iy]+=sigmay/double(nruns);
 				Y[irun][iy]=y;
 				Ybar[iy]+=y/double(nruns);
 			}
@@ -75,7 +76,7 @@ void PCA::CalcPCA(){
 	
 	for(iy=0;iy<Nobs;iy++){
 		for(irun=0;irun<nruns;irun++){
-			Ytilde[irun][iy]=(Ytilde[irun][iy]-Ybar[iy])/SigmaY[iy];
+			Ytilde[irun][iy]=(Y[irun][iy]-Ybar[iy])/SigmaY[iy];
 		}
 	}
 	
@@ -157,9 +158,7 @@ void PCA::CalcPCA(){
 	// Write Info File for PCA
 	
 	double SA0Zsquared,SA0Y,SA0Z;
-	
 	fptr=fopen("Info/pca_info.txt","w");
-	
 	for(int iz=0;iz<Nobs;iz++){
 		SA0Zsquared=0.0;
 		for(iy=0;iy<nruns;iy++){
@@ -170,9 +169,25 @@ void PCA::CalcPCA(){
 		pcaname="z"+to_string(iz);
 		fprintf(fptr,"%s %g\n",pcaname.c_str(),SA0Z);
 	}
-	
 	fclose(fptr);
 	
+	// write Experimental File for PCA
+	vector<double> YExpTilde,ZExp;
+	YExpTilde.resize(Nobs);
+	fptr=fopen("Info/experimental_info_pca.txt","w");
+	for(iy=0;iy<Nobs;iy++){
+		YExpTilde[iy]=(observable_info->YExp[iy]-Ybar[iy])/SigmaY[iy];
+	}
+	for(iz=0;iz<Nobs;iz++){
+		ZExp[iz]=0.0;
+		for(iy=0;iy<Nobs;iy++){
+			ZExp[iz]+=eigvecs(iz,iy)*YExpTilde[iy];
+		}
+		pcaname="z"+to_string(iz);
+		fprintf(fptr,"%s %g %g\n",pcaname.c_str(),ZExp[iz],1.0);
+	}
+	
+	fclose(fptr);
 
 }
 

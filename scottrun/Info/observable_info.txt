@@ -1,4 +1,3 @@
-length  meters  1.0
-mass    kg      1..0
-time    seconds 1.0   
-
+length  50.0
+mass    50.0
+time    50.0

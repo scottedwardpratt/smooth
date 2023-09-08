@@ -2,7 +2,7 @@
  SmoothEmulator_NPars 4
  SmoothEmulator_LAMBDA 3.0
  SmoothEmulator_MAXRANK 4
- SmoothEmulator_NMC 100000  # Steps between samples 
+ SmoothEmulator_NMC 10000  # Steps between samples 
  SmoothEmulator_NASample 8  # No. of coefficient samples
  SmoothEmulator_TuneChooseMCMC true # set false if NPars<5
  SmoothEmulator_UseSigmaYRreal false # 
@@ -13,5 +13,7 @@
  SmoothEmulator_ModelParInfoDir    Info
  SmoothEmulator_ObservableInfoDir  Info
  SmoothEmulator_TrainingPts 0-4
+ SmoothEmulator_MCStepSize 0.01
+ SmoothEmulator_MCSigmaAStepSize 0.01
  SmoothEmulator_UsePCA   false
  

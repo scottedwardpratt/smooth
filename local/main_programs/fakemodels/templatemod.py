@@ -2,11 +2,13 @@ import math
 import random
 import os
 
+ranseed=1234
 
 class FakeModel:
     def __init__(self, NPars_Set, maxrank):
         self.NPars = NPars_Set
         self.randy = random.Random()
+        self.randy.seed(ranseed)
         self.coefficient_sin = 50.0 * self.randy.random()
         self.coefficient_cos = 50.0 * self.randy.random()
         self.coefficient_exp = 50.0 * self.randy.random()

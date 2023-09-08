@@ -50,6 +50,7 @@ void CTrainingInfo::ReadTrainingInfo(string rundirname){
 				printf("obs_charname=%s\n",obs_charname);
 				obs_name=string(obs_charname);
 				iy=smoothmaster->observableinfo->GetIPosition(obs_name);
+				printf("iy=%d\n",iy);
 				YTrain[iy][itrain]=y;
 				SigmaYTrain[iy][itrain]=sigmay;
 				nsuccess+=1;
