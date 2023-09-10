@@ -24,7 +24,6 @@ public:
 	void Print();
 	int NModelPars;
 	CPriorInfo *priorinfo;
-	
 };
 
 #endif
