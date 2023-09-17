@@ -18,43 +18,7 @@ find_library(${GITHOME_MSU}/commonutils/software/lib msu_commonutils)
 find_library(${GITHOME_MSU}/smooth/software/lib smooth)
 
 #################################################
-set(SOURCE_FILES ./simplextest.cc)
-add_executable(simplextest ${CMAKE_CURRENT_SOURCE_DIR}/simplextest.cc)
-add_dependencies(simplextest extern_smooth extern_commonutils)
-target_link_libraries(simplextest ${GITHOME_MSU}/smooth/software/lib/libsmooth.a  ${GITHOME_MSU}/commonutils/software/lib/libmsu_commonutils.a ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY} ${EIGEN3_LIBRARY})
-
-#################################################
-set(SOURCE_FILES ./PCA.cc)
-add_executable(PCA ${CMAKE_CURRENT_SOURCE_DIR}/PCA.cc)
-add_dependencies(PCA extern_smooth extern_commonutils)
-target_link_libraries(PCA ${GITHOME_MSU}/smooth/software/lib/libsmooth.a  ${GITHOME_MSU}/commonutils/software/lib/libmsu_commonutils.a ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY} ${EIGEN3_LIBRARY})
-
-#################################################
-set(SOURCE_FILES ./PCA_read.cc)
-add_executable(PCA_read ${CMAKE_CURRENT_SOURCE_DIR}/PCA_read.cc)
-add_dependencies(PCA_read extern_smooth extern_commonutils)
-target_link_libraries(PCA_read ${GITHOME_MSU}/smooth/software/lib/libsmooth.a  ${GITHOME_MSU}/commonutils/software/lib/libmsu_commonutils.a ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY} ${EIGEN3_LIBRARY})
-
-#################################################
-set(SOURCE_FILES ./fakemodel.cc)
-add_executable(fakemodel ${CMAKE_CURRENT_SOURCE_DIR}/fakemodel.cc)
-add_dependencies(fakemodel extern_smooth extern_commonutils)
-target_link_libraries(fakemodel ${GITHOME_MSU}/smooth/software/lib/libsmooth.a  ${GITHOME_MSU}/commonutils/software/lib/libmsu_commonutils.a ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY} ${EIGEN3_LIBRARY})
-
-#################################################
-set(SOURCE_FILES ./smoothy.cc)
-add_executable(smoothy ${CMAKE_CURRENT_SOURCE_DIR}/smoothy.cc)
-add_dependencies(smoothy extern_smooth extern_commonutils)
-target_link_libraries(smoothy ${GITHOME_MSU}/smooth/software/lib/libsmooth.a  ${GITHOME_MSU}/commonutils/software/lib/libmsu_commonutils.a ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY} ${EIGEN3_LIBRARY})
-
-#################################################
-set(SOURCE_FILES ./smoothy_writecoefficients.cc)
-add_executable(smoothy_writecoefficients ${CMAKE_CURRENT_SOURCE_DIR}/smoothy_writecoefficients.cc)
-add_dependencies(smoothy_writecoefficients extern_smooth extern_commonutils)
-target_link_libraries(smoothy_writecoefficients ${GITHOME_MSU}/smooth/software/lib/libsmooth.a  ${GITHOME_MSU}/commonutils/software/lib/libmsu_commonutils.a ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY} ${EIGEN3_LIBRARY})
-
-#################################################
-set(SOURCE_FILES ./smoothy_readcoefficients.cc)
-add_executable(smoothy_readcoefficients ${CMAKE_CURRENT_SOURCE_DIR}/smoothy_readcoefficients.cc)
-add_dependencies(smoothy_readcoefficients extern_smooth extern_commonutils)
-target_link_libraries(smoothy_readcoefficients ${GITHOME_MSU}/smooth/software/lib/libsmooth.a  ${GITHOME_MSU}/commonutils/software/lib/libmsu_commonutils.a ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY} ${EIGEN3_LIBRARY})
+set(SOURCE_FILES ./PCA_test.cc)
+add_executable(PCA_test ${CMAKE_CURRENT_SOURCE_DIR}/PCA_test.cc)
+add_dependencies(PCA_test extern_smooth extern_commonutils)
+target_link_libraries(PCA_test ${GITHOME_MSU}/smooth/software/lib/libsmooth.a  ${GITHOME_MSU}/commonutils/software/lib/libmsu_commonutils.a ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY} ${EIGEN3_LIBRARY})
