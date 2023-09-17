@@ -29,11 +29,9 @@ public:
   void WriteTransformationInfo();
   void ReadTransformationInfo();
 	
-	void TransformZtoY(vector<double> &Z,vector<double> &Y,vector<double> &SigmaZ,
-	vector<vector<double>> &SigmaY_emulator);
+	void TransformZtoY(vector<double> &Z,vector<double> &Y);
 	
-	void TransformYtoZ(vector<double> &Y,vector<vector<double>> &SigmaY_emulator,
-	vector<double> &Z,vector<double> &SigmaZ);
+	void TransformYtoZ(vector<double> &Y,vector<double> &Z);
 	
 };
 

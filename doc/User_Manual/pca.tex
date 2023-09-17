@@ -18,24 +18,35 @@ If one wishes to emulate the PCA observables, i.e. those that are linear combina
 \item {\bf SmoothEmulator\_ModelRunDirName} and {\bf SmoothEmulator\_TrainingPts} should be set the same as used by Smooth Emulator.
 \end{enumerate}
 
-\subsection{Running the PCA decomposition program}
+\subsection{Running the PCA programs}
+
+The first sample program is {\tt pca\_calctransformation}, which reads the training information from the full model runs and calculates the principal component information. Quantities such as the PCA eigenvalues and eigenvectors are stored. This provides the User knowledge of which linear combination of observables carry significant resolving power. By storing the eigenvectors, the information may be retrieved later. This allows the User to easily transform from the observable, $y_a$, to the PCA components $z_a$. 
 
 One should first to {\tt GITHOME\_MSU/local/build} and compile/install the program\\
-{\tt GITHOME\_MSU/local/bin/pca}.
+{\tt GITHOME\_MSU/local/bin/pca_calctransformation}.
 {\tt
 \begin{verbatim}
  .../local/build % cmake .
- .../local/build % make pca
+ .../local/build % make pca_calctransformation
  \end{verbatim}
 }
 Next, from the project directory (assuming the training point information has already been collected) one can enter the command (assuming the path includes {\tt GITHOME\_MSU/local/bin})
 {\tt
 \begin{verbatim}
- ../my_project/ % pca PARAMETER_FILENAME
+ ../my_project/ % pca_calctransformation PARAMETER_FILENAME
  \end{verbatim}
 }
 Here, {\tt PARAMETER\_FILENAME} is likely {\tt parameters/emulator\_parameters.txt}. At this point, all the information about observables from the training has equivalent representation for the PCA components.
 
 In order to emulate the PCA components, one must set the parameter {\tt SmoothEmulator\_UsePCA} to true. Then, running the program {\tt smoothy\_tune} as described above will build and tune an emulator for the PCA components. It will store the Taylor coefficients in the directory {\tt coefficients\_pca/}.
+
+The second sample program reads the transformation information written by {\tt pca\_calctransformation}. This program gives an example of transforming a vector of principal components, $z_a$, to a vector of observables $y_a$. To compile the programs, change into the build directory as above and enter
+pca_calctransformation
+{\tt
+\begin{verbatim}
+ .../local/build % cmake .
+ .../local/build % make pca_readtransformation
+ \end{verbatim}
+}
 
 \end{document} 
