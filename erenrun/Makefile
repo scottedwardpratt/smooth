@@ -31,6 +31,9 @@ default_target: all
 
 .SUFFIXES: .hpux_make_needs_suffix_list
 
+# Produce verbose output by default.
+VERBOSE = 1
+
 # Command-line flag to silence nested $(MAKE).
 $(VERBOSE)MAKESILENT = -s
 
@@ -143,263 +146,41 @@ extern_smooth/fast:
 .PHONY : extern_smooth/fast
 
 #=============================================================================
-# Target rules for targets named simplextest
+# Target rules for targets named PCA_test
 
 # Build rule for target.
-simplextest: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 simplextest
-.PHONY : simplextest
+PCA_test: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 PCA_test
+.PHONY : PCA_test
 
 # fast build rule for target.
-simplextest/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/simplextest.dir/build.make CMakeFiles/simplextest.dir/build
-.PHONY : simplextest/fast
+PCA_test/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PCA_test.dir/build.make CMakeFiles/PCA_test.dir/build
+.PHONY : PCA_test/fast
 
-#=============================================================================
-# Target rules for targets named PCA
-
-# Build rule for target.
-PCA: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 PCA
-.PHONY : PCA
-
-# fast build rule for target.
-PCA/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/PCA.dir/build.make CMakeFiles/PCA.dir/build
-.PHONY : PCA/fast
-
-#=============================================================================
-# Target rules for targets named PCA_read
-
-# Build rule for target.
-PCA_read: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 PCA_read
-.PHONY : PCA_read
-
-# fast build rule for target.
-PCA_read/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/PCA_read.dir/build.make CMakeFiles/PCA_read.dir/build
-.PHONY : PCA_read/fast
-
-#=============================================================================
-# Target rules for targets named fakemodel
-
-# Build rule for target.
-fakemodel: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 fakemodel
-.PHONY : fakemodel
-
-# fast build rule for target.
-fakemodel/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/fakemodel.dir/build.make CMakeFiles/fakemodel.dir/build
-.PHONY : fakemodel/fast
-
-#=============================================================================
-# Target rules for targets named smoothy
-
-# Build rule for target.
-smoothy: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 smoothy
-.PHONY : smoothy
-
-# fast build rule for target.
-smoothy/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy.dir/build.make CMakeFiles/smoothy.dir/build
-.PHONY : smoothy/fast
-
-#=============================================================================
-# Target rules for targets named smoothy_writecoefficients
-
-# Build rule for target.
-smoothy_writecoefficients: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 smoothy_writecoefficients
-.PHONY : smoothy_writecoefficients
-
-# fast build rule for target.
-smoothy_writecoefficients/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy_writecoefficients.dir/build.make CMakeFiles/smoothy_writecoefficients.dir/build
-.PHONY : smoothy_writecoefficients/fast
-
-#=============================================================================
-# Target rules for targets named smoothy_readcoefficients
-
-# Build rule for target.
-smoothy_readcoefficients: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 smoothy_readcoefficients
-.PHONY : smoothy_readcoefficients
-
-# fast build rule for target.
-smoothy_readcoefficients/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy_readcoefficients.dir/build.make CMakeFiles/smoothy_readcoefficients.dir/build
-.PHONY : smoothy_readcoefficients/fast
-
-PCA.o: PCA.cc.o
-.PHONY : PCA.o
+PCA_test.o: PCA_test.cc.o
+.PHONY : PCA_test.o
 
 # target to build an object file
-PCA.cc.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/PCA.dir/build.make CMakeFiles/PCA.dir/PCA.cc.o
-.PHONY : PCA.cc.o
+PCA_test.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PCA_test.dir/build.make CMakeFiles/PCA_test.dir/PCA_test.cc.o
+.PHONY : PCA_test.cc.o
 
-PCA.i: PCA.cc.i
-.PHONY : PCA.i
-
-# target to preprocess a source file
-PCA.cc.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/PCA.dir/build.make CMakeFiles/PCA.dir/PCA.cc.i
-.PHONY : PCA.cc.i
-
-PCA.s: PCA.cc.s
-.PHONY : PCA.s
-
-# target to generate assembly for a file
-PCA.cc.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/PCA.dir/build.make CMakeFiles/PCA.dir/PCA.cc.s
-.PHONY : PCA.cc.s
-
-PCA_read.o: PCA_read.cc.o
-.PHONY : PCA_read.o
-
-# target to build an object file
-PCA_read.cc.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/PCA_read.dir/build.make CMakeFiles/PCA_read.dir/PCA_read.cc.o
-.PHONY : PCA_read.cc.o
-
-PCA_read.i: PCA_read.cc.i
-.PHONY : PCA_read.i
+PCA_test.i: PCA_test.cc.i
+.PHONY : PCA_test.i
 
 # target to preprocess a source file
-PCA_read.cc.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/PCA_read.dir/build.make CMakeFiles/PCA_read.dir/PCA_read.cc.i
-.PHONY : PCA_read.cc.i
+PCA_test.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PCA_test.dir/build.make CMakeFiles/PCA_test.dir/PCA_test.cc.i
+.PHONY : PCA_test.cc.i
 
-PCA_read.s: PCA_read.cc.s
-.PHONY : PCA_read.s
-
-# target to generate assembly for a file
-PCA_read.cc.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/PCA_read.dir/build.make CMakeFiles/PCA_read.dir/PCA_read.cc.s
-.PHONY : PCA_read.cc.s
-
-fakemodel.o: fakemodel.cc.o
-.PHONY : fakemodel.o
-
-# target to build an object file
-fakemodel.cc.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/fakemodel.dir/build.make CMakeFiles/fakemodel.dir/fakemodel.cc.o
-.PHONY : fakemodel.cc.o
-
-fakemodel.i: fakemodel.cc.i
-.PHONY : fakemodel.i
-
-# target to preprocess a source file
-fakemodel.cc.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/fakemodel.dir/build.make CMakeFiles/fakemodel.dir/fakemodel.cc.i
-.PHONY : fakemodel.cc.i
-
-fakemodel.s: fakemodel.cc.s
-.PHONY : fakemodel.s
+PCA_test.s: PCA_test.cc.s
+.PHONY : PCA_test.s
 
 # target to generate assembly for a file
-fakemodel.cc.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/fakemodel.dir/build.make CMakeFiles/fakemodel.dir/fakemodel.cc.s
-.PHONY : fakemodel.cc.s
-
-simplextest.o: simplextest.cc.o
-.PHONY : simplextest.o
-
-# target to build an object file
-simplextest.cc.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/simplextest.dir/build.make CMakeFiles/simplextest.dir/simplextest.cc.o
-.PHONY : simplextest.cc.o
-
-simplextest.i: simplextest.cc.i
-.PHONY : simplextest.i
-
-# target to preprocess a source file
-simplextest.cc.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/simplextest.dir/build.make CMakeFiles/simplextest.dir/simplextest.cc.i
-.PHONY : simplextest.cc.i
-
-simplextest.s: simplextest.cc.s
-.PHONY : simplextest.s
-
-# target to generate assembly for a file
-simplextest.cc.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/simplextest.dir/build.make CMakeFiles/simplextest.dir/simplextest.cc.s
-.PHONY : simplextest.cc.s
-
-smoothy.o: smoothy.cc.o
-.PHONY : smoothy.o
-
-# target to build an object file
-smoothy.cc.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy.dir/build.make CMakeFiles/smoothy.dir/smoothy.cc.o
-.PHONY : smoothy.cc.o
-
-smoothy.i: smoothy.cc.i
-.PHONY : smoothy.i
-
-# target to preprocess a source file
-smoothy.cc.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy.dir/build.make CMakeFiles/smoothy.dir/smoothy.cc.i
-.PHONY : smoothy.cc.i
-
-smoothy.s: smoothy.cc.s
-.PHONY : smoothy.s
-
-# target to generate assembly for a file
-smoothy.cc.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy.dir/build.make CMakeFiles/smoothy.dir/smoothy.cc.s
-.PHONY : smoothy.cc.s
-
-smoothy_readcoefficients.o: smoothy_readcoefficients.cc.o
-.PHONY : smoothy_readcoefficients.o
-
-# target to build an object file
-smoothy_readcoefficients.cc.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy_readcoefficients.dir/build.make CMakeFiles/smoothy_readcoefficients.dir/smoothy_readcoefficients.cc.o
-.PHONY : smoothy_readcoefficients.cc.o
-
-smoothy_readcoefficients.i: smoothy_readcoefficients.cc.i
-.PHONY : smoothy_readcoefficients.i
-
-# target to preprocess a source file
-smoothy_readcoefficients.cc.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy_readcoefficients.dir/build.make CMakeFiles/smoothy_readcoefficients.dir/smoothy_readcoefficients.cc.i
-.PHONY : smoothy_readcoefficients.cc.i
-
-smoothy_readcoefficients.s: smoothy_readcoefficients.cc.s
-.PHONY : smoothy_readcoefficients.s
-
-# target to generate assembly for a file
-smoothy_readcoefficients.cc.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy_readcoefficients.dir/build.make CMakeFiles/smoothy_readcoefficients.dir/smoothy_readcoefficients.cc.s
-.PHONY : smoothy_readcoefficients.cc.s
-
-smoothy_writecoefficients.o: smoothy_writecoefficients.cc.o
-.PHONY : smoothy_writecoefficients.o
-
-# target to build an object file
-smoothy_writecoefficients.cc.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy_writecoefficients.dir/build.make CMakeFiles/smoothy_writecoefficients.dir/smoothy_writecoefficients.cc.o
-.PHONY : smoothy_writecoefficients.cc.o
-
-smoothy_writecoefficients.i: smoothy_writecoefficients.cc.i
-.PHONY : smoothy_writecoefficients.i
-
-# target to preprocess a source file
-smoothy_writecoefficients.cc.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy_writecoefficients.dir/build.make CMakeFiles/smoothy_writecoefficients.dir/smoothy_writecoefficients.cc.i
-.PHONY : smoothy_writecoefficients.cc.i
-
-smoothy_writecoefficients.s: smoothy_writecoefficients.cc.s
-.PHONY : smoothy_writecoefficients.s
-
-# target to generate assembly for a file
-smoothy_writecoefficients.cc.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/smoothy_writecoefficients.dir/build.make CMakeFiles/smoothy_writecoefficients.dir/smoothy_writecoefficients.cc.s
-.PHONY : smoothy_writecoefficients.cc.s
+PCA_test.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PCA_test.dir/build.make CMakeFiles/PCA_test.dir/PCA_test.cc.s
+.PHONY : PCA_test.cc.s
 
 # Help Target
 help:
@@ -411,34 +192,10 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... extern_commonutils"
 	@echo "... extern_smooth"
-	@echo "... PCA"
-	@echo "... PCA_read"
-	@echo "... fakemodel"
-	@echo "... simplextest"
-	@echo "... smoothy"
-	@echo "... smoothy_readcoefficients"
-	@echo "... smoothy_writecoefficients"
-	@echo "... PCA.o"
-	@echo "... PCA.i"
-	@echo "... PCA.s"
-	@echo "... PCA_read.o"
-	@echo "... PCA_read.i"
-	@echo "... PCA_read.s"
-	@echo "... fakemodel.o"
-	@echo "... fakemodel.i"
-	@echo "... fakemodel.s"
-	@echo "... simplextest.o"
-	@echo "... simplextest.i"
-	@echo "... simplextest.s"
-	@echo "... smoothy.o"
-	@echo "... smoothy.i"
-	@echo "... smoothy.s"
-	@echo "... smoothy_readcoefficients.o"
-	@echo "... smoothy_readcoefficients.i"
-	@echo "... smoothy_readcoefficients.s"
-	@echo "... smoothy_writecoefficients.o"
-	@echo "... smoothy_writecoefficients.i"
-	@echo "... smoothy_writecoefficients.s"
+	@echo "... PCA_test"
+	@echo "... PCA_test.o"
+	@echo "... PCA_test.i"
+	@echo "... PCA_test.s"
 .PHONY : help
 
 
