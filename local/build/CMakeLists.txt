@@ -34,10 +34,10 @@ add_executable(smoothy_readcoefficients ${MAIN_PROGRAM_DIR}/smoothy_readcoeffici
 add_dependencies(smoothy_readcoefficients extern_smooth extern_commonutils)
 target_link_libraries(smoothy_readcoefficients ${GITHOME_MSU}/smooth/software/lib/libsmooth.a  ${GITHOME_MSU}/commonutils/software/lib/libmsu_commonutils.a ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY} ${EIGEN3_LIBRARY})
 #################################################
-set(SOURCE_FILES ${MAIN_PROGRAM_DIR}/pca_initialize_main.cc)
-add_executable(pca_initialize ${MAIN_PROGRAM_DIR}/pca_initialize_main.cc)
-add_dependencies(pca_initialize extern_smooth extern_commonutils)
-target_link_libraries(pca_initialize ${GITHOME_MSU}/smooth/software/lib/libsmooth.a  ${GITHOME_MSU}/commonutils/software/lib/libmsu_commonutils.a ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY} ${EIGEN3_LIBRARY})
+set(SOURCE_FILES ${MAIN_PROGRAM_DIR}/pca_calctransformation_main.cc)
+add_executable(pca_calctransformation ${MAIN_PROGRAM_DIR}/pca_calctransformation_main.cc)
+add_dependencies(pca_calctransformation extern_smooth extern_commonutils)
+target_link_libraries(pca_calctransformation ${GITHOME_MSU}/smooth/software/lib/libsmooth.a  ${GITHOME_MSU}/commonutils/software/lib/libmsu_commonutils.a ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY} ${EIGEN3_LIBRARY})
 #################################################
 set(SOURCE_FILES ${MAIN_PROGRAM_DIR}/smoothy_calcobs_main.cc)
 add_executable(smoothy_calcobs ${MAIN_PROGRAM_DIR}/smoothy_calcobs_main.cc)

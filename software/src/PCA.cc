@@ -38,7 +38,7 @@ PCA::PCA(string filename){
 	
 }
 
-void PCA::CalcPCA(){
+void PCA::CalcTransformationInfo(){
 	vector<vector<double>> Ytilde,Y;
 	vector<double> Ytildebar;
 	char filename[300],obs_name[300];
@@ -192,7 +192,7 @@ void PCA::CalcPCA(){
 	
 }
 
-void PCA::ReadPCATransformationInfo(){
+void PCA::ReadTransformationInfo(){
 	char dummy[200];
 	int iy,jy;
 	FILE *fptr=fopen("PCA_Info/transformation_info.txt","r");
@@ -227,7 +227,7 @@ void PCA::ReadPCATransformationInfo(){
 	
 }
 
-void PCA::WriteTrainingInfo(){
+void PCA::WriteTransformationInfo(){
 	int ifile;
 
 	string command="rm -r -f PCA_Info/run*";
@@ -260,7 +260,7 @@ void PCA::WriteTrainingInfo(){
 	}
 }
 
-void PCA::TranslateZtoY(vector<double> &Z,vector<double> &Y,vector<double> &SigmaZ_emulator,vector<vector<double>> &SigmaY_emulator){
+void PCA::TransformZtoY(vector<double> &Z,vector<double> &Y,vector<double> &SigmaZ_emulator,vector<vector<double>> &SigmaY_emulator){
 	int iy,jy,ky;
 	SigmaY_emulator.resize(Nobs);
 	for(iy=0;iy<Nobs;iy++){

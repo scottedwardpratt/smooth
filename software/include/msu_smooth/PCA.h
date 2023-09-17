@@ -25,11 +25,16 @@ public:
 	string modelruns_dirname;
 	CObservableInfo *observable_info;
 
-  void CalcPCA();
-  void WriteTrainingInfo();
-  void ReadPCATransformationInfo();
+  void CalcTransformationInfo();
+  void WriteTransformationInfo();
+  void ReadTransformationInfo();
 	
-	void TranslateZtoY(vector<double> &Z,vector<double> &Y,vector<double> &SigmaZ,vector<vector<double>> &SigmaY_emulator);
+	void TransformZtoY(vector<double> &Z,vector<double> &Y,vector<double> &SigmaZ,
+	vector<vector<double>> &SigmaY_emulator);
+	
+	void TransformYtoZ(vector<double> &Y,vector<vector<double>> &SigmaY_emulator,
+	vector<double> &Z,vector<double> &SigmaZ);
+	
 };
 
 #endif
