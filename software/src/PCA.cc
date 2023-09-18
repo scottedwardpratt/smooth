@@ -260,7 +260,8 @@ void PCA::WriteTransformationInfo(){
 	}
 }
 
-void PCA::TransformZtoY(vector<double> &Z,vector<double> &Y,vector<double> &SigmaZ_emulator,vector<vector<double>> &SigmaY_emulator){
+/*
+void PCA::TransformZtoY(vector<double> &Z,vector<double> &Y){
 	int iy,jy,ky;
 	SigmaY_emulator.resize(Nobs);
 	for(iy=0;iy<Nobs;iy++){
@@ -281,3 +282,4 @@ void PCA::TransformZtoY(vector<double> &Z,vector<double> &Y,vector<double> &Sigm
 	}
 	
 }
+*/
