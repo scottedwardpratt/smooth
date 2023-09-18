@@ -4,12 +4,12 @@
 \section{Template-Based Tutorial}\label{sec:tutorial}
 
 \subsection{Overview}
-This section describes the steps the User takes in order to run the full template code provided with the explanations in the sections above. The User should refer to this section to get a brief overview of how to run the template and edit their respective {\tt my\_project/} directory.
+This section privies the steps the user takes in order to run the full template code provided with the explanations in the sections above. The User should refer to this section to get a brief overview of how to run the template and edit their respective {\tt my\_project/} directory.
 
 \subsection{Step 1: Installation}
-After completing the necessary prerequisites listed in section \ref{sec:installation}[Installation] and following the steps outlined in section \ref{sec:Prerequisites}[Prerequisites] to install the required cmake, eigen, and gsl libraries, and setting the Home Environment Variable by creating the Home Directory as described in section \ref{sec:Making Home Environment Variable}[Making Home Directory and Setting Home Environment Variable], the user must proceed to clone the smooth and commonutils directories and compile the libraries, as explained in sections \ref{sec:Downloading_Compiling}[Downloading] and \ref{Compiling}[Compiling Libraries]. Then, the User can establish a personalized project directory by duplicating the project\_template directory onto their computer.
+After completing the necessary prerequisites listed in section \ref{sec:installation}[Installation] and following the steps outlined in section \ref{sec:Prerequisites}[Prerequisites] to install the required cmake, eigen, and gsl libraries, and setting the Home Environment Variable by creating the Home Directory as described in section \ref{sec:Making Home Environment Variable}[Making Home Directory and Setting Home Environment Variable], the user must proceed to clone the smooth and commonutils directories and compile the libraries, as explained in sections \ref{sec:Downloading_Compiling}[Downloading] and \ref{Compiling}[Compiling Libraries]. Then, the user can establish a personalized project directory by duplicating the project\_template directory onto their computer.
 
-\subsection{Step 2: Running Simplex}
+\subsection{Step 2: Running the Simplex}
 
 After all the installations the User should be present in the  {\tt GITHOME MSU/smooth/project\_template} Directory and start by running the Simplex to generate the training points by entering the following command from your project directory:
 {\tt
@@ -21,14 +21,23 @@ Here {\tt GITHOME\_MSU} is the path to the Smooth Emulator installation, and {\t
 
 The information about the training points will be stored by Simplex in the directory specified by the {\tt Simplex\_ModelRunDirName} parameter. For each training point, a subdirectory named {\tt run0/, run1/, run2/}$\cdots$ will be created within this directory. Inside each subdirectory, Simplex will create the file {\tt mod\_parameters.txt} to store the specific parameters for that training point. For more information refer to the section \ref{sec:simplex}[Simplex Sampler].
 
+Within each subdirectory, Simplex creates a file {\tt runI/mod\_parameters.txt} for the I$^{\rm th}$ training point. For example, the {\tt run0/mod\_parameters.txt} file might be
+{\tt\begin{verbatim}
+   NuclearCompressibility     229.08
+   ScreeningMass              0.453
+   Viscosity                  0.192
+\end{verbatim}
+}
+
 
 \subsection{Step 3: Fake full model template}
-Once the training points have been generated, the User will input a Real full model based on the given structure, tailored to address their specific problem. The full Real model will input the model\_prior\_info.txt and observable\_info.txt
+Once the training points have been generated, the user will input a Real full model based on the given structure, tailored to address their specific problem. The full Real model will input the model\_prior\_info.txt and observable\_info.txt
 
-Within {\tt GITHOME MSU/smooth/local/main programs/fakemodel/} there are three files. The first is the information about the model parameters, and their priors is stored in {\tt GITHOME MSU/smooth/local/fakemodel/modelpar\_info.txt}, and information about the observables is store in {\tt GITHOME MSU/smooth/local/fakemodel/observable\_info.txt}. The code
-{\tt GITHOME MSU/smooth/local/fakemodel/templatemod.py} plays the role of the full model. It is a simple python script that produces model output for training and stores it in the {\tt GITHOME MSU/smooth/project\_template/modelruns} directory. 
-To run the program, use the command\
+Within {\tt GITHOME MSU/smooth/local/main programs/fakemodel/} there are three files. The first is the information about the model parameters, and their priors is stored in {\tt GITHOME MSU/smooth/local/fakemodel/prior\_info.txt}, and information about the observables is store in {\tt GITHOME MSU/smooth/templete/Info/observable\_info.txt}. The code
+{\tt GITHOME MSU/smooth/local/fakemodel/templatemod.py} in simulates a fake mathematical model to generate data based on specific functions and coefficients. The user inputs the precise model based on the given structure, tailored to address their specific problem. The code outputs the Model Runs Files, creates the {\tt GITHOME MSU/smooth/project\_template/modelruns} directory that stores information for each full-model run.
+To run the program, use the command:
 
+\
 \vspace{-20pt}
 {\tt
 \begin{verbatim}
@@ -36,11 +45,11 @@ To run the program, use the command\
 \end{verbatim}
 }
 The program reads the parameters, generates obs.txt files as output, and creates output files within the {\tt PROJECT\_TEMPLATE/modelruns} directories, The directories
-{\tt  PROJECT\_TEMPLATE/modelruns/run0/},{\tt  PROJECT\_TEMPLATE/modelruns/run1/}, $\cdots$, having files describing the model parameters for each run, along with the output required by the emulator for each specific full-model run. These files contain observables generated by the fake model, including values and associated sigma values. The code's structure includes the `FakeModel` class, which creates random coefficients, calculates specific functions, and prints information related to the fake model. The User should replace the observable files and change the following parameters according to the given Real model as needed.
+{\tt  PROJECT\_TEMPLATE/modelruns/run0/},{\tt  PROJECT\_TEMPLATE/modelruns/run1/}, $\cdots$, having files describing the model parameters for each run, along with the output required by the emulator for each specific full-model run. These files contain observables generated by the fake model, including values and associated sigma values. The code's structure includes the `FakeModel` class, which creates random coefficients, calculates specific functions, and prints information related to the fake model. The user should replace the observable files and change the following parameters according to the given Real model as needed.
 
 
 \subsection{Step 4: Running the Smooth Emulator}
-To compile the tuning program, the User should navigate to {\tt GITHOME\_MSU/smooth/local/build/} directory and execute the following commands.
+To compile the tuning program, User should navigate to {\tt GITHOME\_MSU/smooth/local/build/} directory and execute the following commands.
 {\tt
 \begin{verbatim}
  ~/GITHOME_MSU/smooth/local/build % cmake .
@@ -50,10 +59,10 @@ To compile the tuning program, the User should navigate to {\tt GITHOME\_MSU/smo
 The executable {\tt smoothy\_tune} should now appear in the {\tt GITHOME\_MSU/smooth/local/bin/} directory. After the addition of the {\tt bin/} directory to the User's path, the User may switch to the User's project directory, and enter the command
 {\tt
 \begin{verbatim}
-  ~/MY_PROJECT % smoothy_tune PARAMETERS/MY_PARAMETERS.TXT
+  ~/MY_PROJECT % GITHOME_MSU/smooth/local/bin/smoothy_tune PARAMETERS/MY_PARAMETERS.TXT
 \end{verbatim}
 }
-In the above, {\tt GITHOME\_MSU} is the path of the Smooth Emulator installation. {\tt PROJECT\_TEMPLATE}, and {\tt PARAMETERS/PROJECT\_TEMPLATE.TXT} would be replaced by the User.
+In the above, {\tt GITHOME\_MSU} is the path of the Smooth Emulator installation. {\tt PROJECT\_TEMPLATE}, and {\tt PARAMETERS/emulator\_parameters.txt} would be replaced by the User.
 
 The program generates Taylor coefficients for $N_{\rm sample}$ samples and saves them in the {\tt coefficients} directory. Each observable has its own subdirectory with its name. Besides the coefficients, Smooth Emulator also produces a {\tt meta.txt} file in the same directory. It includes essential information like the observable's maximum rank and net number of model parameters. This file can be used to access the coefficients later.
 
