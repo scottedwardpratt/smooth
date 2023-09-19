@@ -370,30 +370,30 @@ void CSmoothEmulator::PrintA(vector<double> &Aprint){
 	}
 }
 
-void CSmoothEmulator::CalcY(CModelParameters *modpars,double &Y,double &SigmaY){
+void CSmoothEmulator::CalcY(CModelParameters *modpars,double &Y,double &SigmaY_emulator){
 	double y;
-	Y=SigmaY=0.0;
+	Y=SigmaY_emulator=0.0;
 	for(int isample=0;isample<NASample;isample++){
 		y=smooth->CalcY(ASample[isample],LAMBDA,modpars->Theta);
 		Y+=y;
-		SigmaY+=y*y;
+		SigmaY_emulator+=y*y;
 	}
-	SigmaY=SigmaY/double(NASample);
+	SigmaY_emulator=SigmaY_emulator/double(NASample);
 	Y=Y/double(NASample);
-	SigmaY=sqrt(fabs(SigmaY-Y*Y));
+	SigmaY_emulator=sqrt(fabs(SigmaY_emulator-Y*Y));
 }
 
-void CSmoothEmulator::CalcY(vector<double> Theta,double &Y,double &SigmaY){
+void CSmoothEmulator::CalcY(vector<double> Theta,double &Y,double &SigmaY_emulator){
 	double y;
-	Y=SigmaY=0.0;
+	Y=SigmaY_emulator=0.0;
 	for(int isample=0;isample<NASample;isample++){
 		y=smooth->CalcY(ASample[isample],LAMBDA,Theta);
 		Y+=y;
-		SigmaY+=y*y;
+		SigmaY_emulator+=y*y;
 	}
-	SigmaY=SigmaY/double(NASample);
+	SigmaY_emulator=SigmaY_emulator/double(NASample);
 	Y=Y/double(NASample);
-	SigmaY=sqrt(fabs(SigmaY-Y*Y));
+	SigmaY_emulator=sqrt(fabs(SigmaY_emulator-Y*Y));
 }
 
 void CSmoothEmulator::WriteCoefficients(){

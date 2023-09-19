@@ -47,9 +47,9 @@ public:
 	void TuneY(string obsname); // tune one observable
 	void TuneY(int iY); // tune one observable
 	void SetThetaTrain();
-	void CalcY(int iY,CModelParameters *modelpars,double &Y,double &SigmaY);
-	void CalcY(string obsname,CModelParameters *modelpars,double &Y,double &SigmaY);
-	void CalcAllY(CModelParameters *modelpars,vector<double> &Y,vector<double> &SigmaY);
+	void CalcY(int iY,CModelParameters *modelpars,double &Y,double &SigmaY_emulator);
+	void CalcY(string obsname,CModelParameters *modelpars,double &Y,double &SigmaY_emulator);
+	void CalcAllY(CModelParameters *modelpars,vector<double> &Y,vector<double> &SigmaY_emulator);
 	void TestAtTrainingPts();
 	void TestAtTrainingPts(string obsname);
 	void TestAtTrainingPts(int iY);
