@@ -19,11 +19,13 @@ int main(int argc, char *argv[]) {
 
   pca->ReadPCATransformationInfo();
 	
-	vector<double> Z,Y;
+	vector<double> Z,Y,SigmaZ_emulator,SigmaY_emulator;
 	
-	pca->TransformZtoY(Z,Y,vector<double> &SigmaZ,
-	vector<vector<double>> &SigmaY_emulator);
-
-  pca->WriteTransformationInfo();
+	Z.resize(pca->Nobs);
+	Y.resize(pca->Nobs);
+	SigmaZ_emulator.resize(pca->Nobs);
+	SigmaY_emulator.resize(pca->Nobs);
+	
+	pca->TransformZtoY(Z,SigmaZ_emulator,Y,SigmaY_emulator);
 
 }

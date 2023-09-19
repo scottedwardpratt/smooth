@@ -260,9 +260,10 @@ void PCA::WriteTransformationInfo(){
 	}
 }
 
-/*
-void PCA::TransformZtoY(vector<double> &Z,vector<double> &Y){
-	int iy,jy,ky;
+
+void PCA::TransformZtoY(vector<double> &Z,vector<double> &SigmaZ_emulator,
+vector<double> &Y,vector<double> &SigmaY_emulator){
+	int iy,ky;
 	SigmaY_emulator.resize(Nobs);
 	for(iy=0;iy<Nobs;iy++){
 		SigmaY_emulator.resize(Nobs);
@@ -272,14 +273,33 @@ void PCA::TransformZtoY(vector<double> &Z,vector<double> &Y){
 		for(ky=0;ky<Nobs;ky++){
 			Y[iy]+=Z[ky]*eigvecs(ky,iy);
 		}
-		for(jy=0;jy<Nobs;jy++){
-			SigmaY_emulator[iy][jy]=0.0;
-			for(ky=0;ky<Nobs;ky++){
-				SigmaY_emulator[iy][jy]+=SigmaZ_emulator[ky]*SigmaZ_emulator[ky]*eigvecs(ky,iy)*eigvecs(ky,jy);
-			}
-			SigmaY_emulator[iy][jy]*=SigmaY[iy]*SigmaY[jy];
+		SigmaY_emulator[iy]=0.0;
+		for(ky=0;ky<Nobs;ky++){
+			SigmaY_emulator[iy]+=SigmaZ_emulator[ky]*SigmaZ_emulator[ky]*eigvecs(ky,iy)*eigvecs(ky,iy);
 		}
+		SigmaY_emulator[iy]=SigmaY[iy]*sqrt(SigmaY_emulator[iy]);
 	}
-	
 }
-*/
+
+
+void PCA::TransformYtoZ(vector<double> &Z,vector<double> &SigmaZ_emulator,
+vector<double> &Y,vector<double> &SigmaY_emulator){
+	int iy,ky;
+	SigmaZ_emulator.resize(Nobs);
+	for(iy=0;iy<Nobs;iy++){
+		SigmaZ_emulator.resize(Nobs);
+	}
+	for(iy=0;iy<Nobs;iy++){
+		Z[iy]=0.0;
+		for(ky=0;ky<Nobs;ky++){
+			Z[iy]+=Y[ky]*eigvecs(iy,ky);
+		}
+		SigmaZ_emulator[iy]=0.0;
+		for(ky=0;ky<Nobs;ky++){
+			SigmaZ_emulator[iy]+=(SigmaY_emulator[ky]*SigmaY_emulator[ky]/(SigmaY[iy]*SigmaY[iy]))*eigvecs(iy,ky)*eigvecs(iy,ky);
+		}
+		SigmaZ_emulator[iy]=sqrt(SigmaZ_emulator[iy]);
+	}
+}
+
+
