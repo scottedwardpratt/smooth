@@ -5,7 +5,7 @@
 \section{Installation and Getting Started}\label{sec:installation}
 
 \subsection{Prerequisites}
-Smooth Emulator software should run on UNIX, Mac OS or Linux, but is not supported for Windows OS. Smooth Emulator is largely  written in C++. In addition to a C++ compiler, the user needs the following software installed.
+{\it Smooth Emulator} software should run on UNIX, Mac OS or Linux, but is not supported for Windows OS. {\it Smooth Emulator} is largely  written in C++. In addition to a C++ compiler, the user needs the following software installed.
 
 \begin{itemize}
     \item git
@@ -53,12 +53,12 @@ Here, ``(some path)'' might be something like {\tt /Users/CarlosSmith}. Then, cr
 It is recommended to copy this command into the user's {\tt .bashrc} (or equivalent) file to avoid re-defining it each time one needs to recompile.
 
 \subsection{Downloading}\label{sec:Downloading_Compiling}
-From within the {\tt githome\_msu/} directory,\\
+From within the {\tt GITHOME\_MSU/} directory,\\
 \vspace{-20pt}
 {\tt 
 \begin{verbatim}
-    % git clone https://github.com/scottedwardpratt/smooth.git
-    % git clone https://github.com/scottedwardpratt/commonutils.git
+    GITHOME_MSU% git clone https://github.com/scottedwardpratt/smooth.git
+    GITHOME_MSU% git clone https://github.com/scottedwardpratt/commonutils.git
 \end{verbatim}
 }
 
@@ -70,7 +70,7 @@ The directory structure of the repository is as follows:
 
 \centerline{\includegraphics[width = 0.95\textwidth]{Structure_Tree.png}}
 
-Once compiled, the material in the {\tt commonutils/} directory creates a library that is used for a variety of tasks, not particularly designed for Smooth Emulator or Simplex Sampler. The {\tt smooth/} directory contains codes that are used to create libraries specific to the sampler and emulator. The {\tt smooth} directory also includes a {\tt smooth/local/} directory. Executables are stored in {\tt smooth/local/bin}. The short main program source files are located in {\tt smooth/local/main\_programs/}. It is not envisioned that the User would edit files in the {\tt smooth/software/} directory, but that the User may well wish to create custom versions of the short main programs in {\tt smooth/local/main\_programs/}.
+Once compiled, the material in the {\tt commonutils/} directory creates a library that is used for a variety of tasks, not particularly designed for {\it Smooth Emulator} or {\it Simplex Sampler}. The {\tt smooth/} directory contains codes that are used to create libraries specific to the sampler and emulator. The {\tt smooth} directory also includes a {\tt smooth/local/} directory. Executables are stored in {\tt smooth/local/bin}. The short main program source files are located in {\tt smooth/local/main\_programs/}. It is not envisioned that the User would edit files in the {\tt smooth/software/} directory, but that the User may well wish to create custom versions of the short main programs in {\tt smooth/local/main\_programs/}.
 
 \subsection{Compiling Libraries }
 
@@ -78,33 +78,34 @@ First, change into software directories, then create the makefiles with cmake, t
 \vspace{-20pt}
 {\tt 
 \begin{verbatim}
-    % cd ../githome_msu/smooth/commonutils/software
-    % cmake .
-    % make
-    % cd ../githome_msu/smooth/software
-    % cmake .
-    % make
+    % cd GITHOME_MSU/smooth/commonutils/software
+    GITHOME_MSU/smooth/commonutils/software% cmake .
+    GITHOME_MSU/smooth/commonutils/software% make
+    GITHOME_MSU/smooth/commonutils/software% cd ../githome_msu/smooth/software
+    GITHOME_MSU/smooth/smooth/software% cmake .
+    GITHOME_MSU/smooth/smooth/software% make
 \end{verbatim}
-At this point all the libraries are built. Finally, compile the main programs. Below, this illustrates how to build the programs used for generating training points with Simplex and for tuning the emulator with Smoothy:
+At this point all the libraries are built, but this does not include the main programs. The main programs, are short, and are located in a separate location, as they are meant to serve as examples which the User might copy and edit at will.
+
+Finally, compile the main programs. Below, this illustrates how to build the programs used for generating training points with Simplex and for tuning the emulator with Smoothy:
 \begin{verbatim}
-    % cd ../githome_msu/smooth/local/build
-    % cmake .
-    % make simplex
-    % make smoothy_writecoefficients
-    % make smoothy_readcoefficients
+    % cd GITHOME_MSU/smooth/local/build
+    GITHOME_MSU/smooth/local/build% cmake .
+    GITHOME_MSU/smooth/local/build% make simplex
+    GITHOME_MSU/smooth/local/build% make smoothy_tune
 \end{verbatim}
 }
-Other main programs can also be found in {\tt ../githome\_msu/smooth/local/main\_programs}. If you build your own main programs (probably using these as examples), you can edit the {\tt CMakeList.txt} file in {\tt ../githome\_msu/smooth/local/build} as an example. The executables should appear in {\tt ../githome\_msu/smooth/local/bin/}. 
+Other source codes for main programs can be found in {\tt GITHOME\_MSU/smooth/local/main\_programs/}. If you build your own main programs (probably using these as examples), you can edit the {\tt CMakeList.txt} file in {\tt GITHOME\_MSU/smooth/local/build}, using the existing entries as an example. The executables should appear in {\tt GITHOME\_MSU/smooth/local/bin/}. 
 
 \subsection{Making a Project Directory}
 
 Create a directory anywhere on your computer and copy the template directory.
 {\tt 
 \begin{verbatim}
-    % cp -r ../githome_msu/smooth/project_template my_project
+    % cp -r ../githome_msu/smooth/project_template MY_PROJECT
 \end{verbatim}
 }
-Within {\tt my\_project/} there are three sub-directories. The first is {\tt my\_project/Info/}. Information about the model parameters, and their priors is stored in {\tt my\_project/prior\_info.txt}, and information about the observables is store in {\tt my\_project/observable\_info.txt}. The {\tt my\_project/parameters} directory stores user-defined parameter files used by Simplex Sampler, {\tt my\_project/parameters/simplex\_parameters.txt}, and by Smooth Emulator {\tt my\_project/parameters/emulator\_parameters.txt}. The {\tt my\_project/modelruns} directory will store information for each full-model run. The directories
-{\tt  my\_project/modelruns/run0/}, {\tt  my\_project/modelruns/run1/}, $\cdots$, have files describing the model parameters for each run, along with the output required by the emulator for each specific full-model run. For example, the {\tt  my\_project/modelruns/run1/} directory has the files {\tt mod\_parameters.txt} and {\tt obs.txt}. The first file stores the model parameter values for that particular training run. The User then runs their full model based on those parameters and stores the corresponding observables in {\tt obs.txt}. The User may generate the {\tt mod\_parameters.txt} files using Simplex Sampler, or the user might generate them according to some other prescription. Once the User has then generated the {\tt obs.txt} files, Smooth Emulator can then build and tune the emulator.
+Within {\tt MY\_PROJECT/} there are three sub-directories. The first is {\tt MY\_PROJECT/Info/}. Information about the model parameters, and their priors is stored in {\tt MY\_PROJECT/prior\_info.txt}, and information about the observables is store in {\tt MY\_PROJECT/observable\_info.txt}. The {\tt MY\_PROJECT/parameters} directory stores user-defined parameter files used by {\it Simplex Sampler}, {\tt MY\_PROJECT/parameters/simplex\_parameters.txt}, and by {\it Smooth Emulator} {\tt MY\_PROJECT/parameters/emulator\_parameters.txt}. The {\tt MY\_PROJECT/modelruns} directory will store information for each full-model run. The directories
+{\tt  MY\_PROJECT/modelruns/run0/}, {\tt  MY\_PROJECT/modelruns/run1/}, $\cdots$, have files describing the model parameters for each run, along with the output required by the emulator for each specific full-model run. For example, the {\tt  MY\_PROJECT/modelruns/run1/} directory has the files {\tt mod\_parameters.txt} and {\tt obs.txt}. The first file stores the model parameter values for that particular training run. The User then runs their full model based on those parameters and stores the corresponding observables in {\tt obs.txt}. The User may generate the {\tt mod\_parameters.txt} files using {\it Simplex Sampler}, or the user might generate them according to some other prescription. Once the User has then generated the {\tt obs.txt} files, {\it Smooth Emulator} can then build and tune the emulator.
 
 \end{document}

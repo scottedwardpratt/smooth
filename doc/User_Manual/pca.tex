@@ -9,15 +9,15 @@ This section is incomplete, and the PCA software is not yet fully tested.
 
 Rather than emulating all observables, it can be more efficient to emulate a handful of principal components. After generating the training-point data, one can run the {\tt pca} program included with the distribution. This will create files that shadow those used to emulate the observables. This will create a file {\tt Info/pca\_info.txt} alongside {\tt Info/observable\_info.txt}. The difference is that the observables will be named {\tt z1,z2}$\cdots$. In each run directory, alongside the {\tt obs.txt} files, there will be a {\tt obs\_pca.txt} file. Finally, there will be a file {\tt PCA\_Info/tranformation\_info.txt} file that contains all the information and matrices required to perform the basis transformation. If the parameter {\tt Use\_PCA} is set to {\tt true}, the emulator will use the PCA files above instead of the observable files. The emulator will then store the Taylor coefficients in the directory {\tt coefficients\_pca/} rather than in {\tt coefficients/}. 
 
-To get an idea of the capabilities and functionality of the PCA elements of the Smooth Emulator Distribution, one can view the sample main program,\\
+To get an idea of the capabilities and functionality of the PCA elements of the {\it Smooth Emulator} Distribution, one can view the sample main program,\\
 {\tt GITHOME\_MSU/smooth/local/main\_programs/pca\_main.cc}. 
 
 \subsection{PCA Parameters (not model parameters!)}
-The PCA programs uses parameter that are prefixed with {\bf SmoothEmulator}. One would typically use the same parameter file as used for running Smooth Emulator. The relevant parameters are:
+The PCA programs uses parameter that are prefixed with {\bf SmoothEmulator}. One would typically use the same parameter file as used for running {\it Smooth Emulator}. The relevant parameters are:
 \begin{enumerate}\itemsep=0pt
 \item {\bf SmoothEmultor\_UsePCA}\\
 If one wishes to emulate the PCA observables, i.e. those that are linear combinations of the real observables, this should be set to true. One must then be sure to have run the PCA decomposition programs first. 
-\item {\bf SmoothEmulator\_ModelRunDirName} and {\bf SmoothEmulator\_TrainingPts} should be set the same as used by Smooth Emulator.
+\item {\bf SmoothEmulator\_ModelRunDirName} and {\bf SmoothEmulator\_TrainingPts} should be set the same as used by {\it Smooth Emulator}.
 \end{enumerate}
 
 \subsection{Running the PCA programs}
