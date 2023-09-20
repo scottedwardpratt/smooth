@@ -1,9 +1,0 @@
-/home/quirren/git/smooth/project1/CMakeFiles/extern_commonutils.dir
-/home/quirren/git/smooth/project1/CMakeFiles/extern_smooth.dir
-/home/quirren/git/smooth/project1/CMakeFiles/coffee.dir
-/home/quirren/git/smooth/project1/CMakeFiles/coffee2.dir
-/home/quirren/git/smooth/project1/CMakeFiles/keepscore.dir
-/home/quirren/git/smooth/project1/CMakeFiles/obs_test1.dir
-/home/quirren/git/smooth/project1/CMakeFiles/tea.dir
-/home/quirren/git/smooth/project1/CMakeFiles/edit_cache.dir
-/home/quirren/git/smooth/project1/CMakeFiles/rebuild_cache.dir
