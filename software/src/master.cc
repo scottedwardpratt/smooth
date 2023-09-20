@@ -170,7 +170,7 @@ void CSmoothMaster::TestAtTrainingPts(string obsname){
 		CLog::Info("------ itrain="+to_string(itrain)+" --------\n");
 		CalcY(iY,traininginfo->modelpars[itrain],Y,SigmaY_emulator);
 		snprintf(pchars,CLog::CHARLENGTH,
-		"Y[%d]=%10.3e =? %10.3e,    SigmaY=%12.5e\n",iY,Y,traininginfo->YTrain[iY][itrain],SigmaY);
+		"Y[%d]=%10.3e =? %10.3e,    SigmaY=%12.5e\n",iY,Y,traininginfo->YTrain[iY][itrain],SigmaY_emulator);
 		CLog::Info(pchars);
 	}
 }
