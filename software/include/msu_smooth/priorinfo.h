@@ -10,6 +10,7 @@
 #include "msu_commonutils/parametermap.h"
 #include "msu_commonutils/misc.h"
 #include "msu_commonutils/randy.h"
+#include "msu_commonutils/log.h"
 //#include "msu_commonutils/constants.h"
 //#include <list>
 //#include <iostream>
@@ -24,7 +25,8 @@ public:
 	vector<double> xmin, xmax;
 	map<string,int> name_map;
 	int GetIPosition(string par_name);  // finds position given name of observable
-	string GetName(int iposition); 
+	string GetName(int iposition);
+	void PrintInfo();
 };
 
 #endif

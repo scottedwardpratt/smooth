@@ -24,6 +24,7 @@ public:
 	void Print();
 	int NModelPars;
 	CPriorInfo *priorinfo;
+	void SetX(vector<double> &xset);
 };
 
 #endif
