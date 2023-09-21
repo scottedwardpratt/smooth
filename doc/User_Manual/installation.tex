@@ -35,19 +35,10 @@ The GNU Scientific Library (GSL) is a numerical library for C and C++ programmer
 
 \subsection{Making Home Directory and Setting Home Environment Variable}
 
-The software requires two repositories. They should be cloned into the same directory. For compilation purposes this directory needs to be accessed via an environmental variable.  For example the directory might be named {\tt githome\_msu} (another name would be fine, just substitute it everywhere below). First, create the directory, then enter that directory,\\
-\vspace{-20pt}
-{\tt 
+The software requires two repositories. They should be cloned into the same directory. For compilation purposes this directory needs to be accessed via an environmental variable.  For example the directory might be named {\tt /Users/CarlosSmith/git\_msu}. The User needs to set an environmental variable, {\tt GITHOME\_MSU}, to the full path of the directory, e.g. 
+{\tt
 \begin{verbatim}
-    % mkdir (some path)/githome_msu
-    % cd (some path)/githome_msu
-\end{verbatim}
-}
-Here, ``(some path)'' might be something like {\tt /Users/CarlosSmith}. Then, create an environmental variable which describes the location of the directory above.\\
-\vspace{-20pt}
-{\tt 
-\begin{verbatim}
-    % export GITHOME_MSU=(some path)/githome_msu
+    % export GITHOME_MSU="/Users/CarlosSmith/git_msu"
 \end{verbatim}
 }
 It is recommended to copy this command into the user's {\tt .bashrc} (or equivalent) file to avoid re-defining it each time one needs to recompile.
@@ -62,7 +53,7 @@ From within the {\tt GITHOME\_MSU/} directory,\\
 \end{verbatim}
 }
 
-This creates 2 directories: {\tt .../githome\_msu/commonutils} and {\tt .../githome\_msu/smooth}.
+This creates 2 directories: {\tt .../GITHOME\_MSU/commonutils} and {\tt .../GITHOME\_MSU/smooth}.
 
 \subsection{Directory and File Structure}
 
@@ -81,7 +72,7 @@ First, change into software directories, then create the makefiles with cmake, t
     % cd GITHOME_MSU/smooth/commonutils/software
     GITHOME_MSU/smooth/commonutils/software% cmake .
     GITHOME_MSU/smooth/commonutils/software% make
-    GITHOME_MSU/smooth/commonutils/software% cd ../githome_msu/smooth/software
+    GITHOME_MSU/smooth/commonutils/software% cd ../GITHOME_MSU/smooth/software
     GITHOME_MSU/smooth/smooth/software% cmake .
     GITHOME_MSU/smooth/smooth/software% make
 \end{verbatim}
@@ -102,7 +93,7 @@ Other source codes for main programs can be found in {\tt GITHOME\_MSU/smooth/lo
 Create a directory anywhere on your computer and copy the template directory.
 {\tt 
 \begin{verbatim}
-    % cp -r ../githome_msu/smooth/project_template MY_PROJECT
+    % cp -r ../GITHOME_MSU/smooth/project_template MY_PROJECT
 \end{verbatim}
 }
 Within {\tt MY\_PROJECT/} there are three sub-directories. The first is {\tt MY\_PROJECT/Info/}. Information about the model parameters, and their priors is stored in {\tt MY\_PROJECT/prior\_info.txt}, and information about the observables is store in {\tt MY\_PROJECT/observable\_info.txt}. The {\tt MY\_PROJECT/parameters} directory stores user-defined parameter files used by {\it Simplex Sampler}, {\tt MY\_PROJECT/parameters/simplex\_parameters.txt}, and by {\it Smooth Emulator} {\tt MY\_PROJECT/parameters/emulator\_parameters.txt}. The {\tt MY\_PROJECT/modelruns} directory will store information for each full-model run. The directories
