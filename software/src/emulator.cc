@@ -63,6 +63,7 @@ void CSmoothEmulator::Init(){
 }
 
 void CSmoothEmulator::Tune(){
+	FirstTune=true;
 	if(TuneChooseMCMC==true){
 		if(UseSigmaYReal){
 			if(FirstTune){
@@ -72,6 +73,10 @@ void CSmoothEmulator::Tune(){
 			TuneMCMC_withSigma();
 		}
 		else{
+			if(FirstTune){
+				TuneMCMC();
+				FirstTune=false;
+			}
 			TuneMCMC();
 		}
 	}
@@ -147,7 +152,8 @@ void CSmoothEmulator::TuneMCMC(){
 	}
 
 	int Ndof=smooth->NCoefficients-NTrainingPts;
-	CLog::Info("success percentage="+to_string(double(success)*100.0/double(NMC))+", SigmaA="+to_string(SigmaA)+", logP/Ndof="+to_string(logP/double(Ndof))+",BestLogP/Ndof="+to_string(BestLogP/double(Ndof))+"\n");
+	if(!FirstTune)
+		CLog::Info("success percentage="+to_string(double(success)*100.0/double(NMC))+", SigmaA="+to_string(SigmaA)+", logP/Ndof="+to_string(logP/double(Ndof))+",BestLogP/Ndof="+to_string(BestLogP/double(Ndof))+"\n");
 }
 
 void CSmoothEmulator::TuneMCMC_withSigma(){
@@ -170,7 +176,6 @@ void CSmoothEmulator::TuneMCMC_withSigma(){
 		Y=smooth->CalcY(*Aptr,LAMBDA,ThetaTrain[itrain]);
 		logP-=0.5*(YTrain[itrain]-Y)*(YTrain[itrain]-Y)/(SigmaYTrain[itrain]*SigmaYTrain[itrain]);
 	}
-
 
 	BestLogP=-1000000000.0;
 	for(imc=0;imc<NMC;imc++){
@@ -231,7 +236,8 @@ void CSmoothEmulator::TuneMCMC_withSigma(){
 	}
 
 	int Ndof=smooth->NCoefficients-NTrainingPts;
-	CLog::Info("success percentage="+to_string(double(success)*100.0/double(NMC))+", SigmaA="+to_string(SigmaA)+", logP/Ndof="+to_string(logP/double(Ndof))+",BestLogP/Ndof="+to_string(BestLogP/double(Ndof))+"\n");
+	if(!FirstTune)
+		CLog::Info("success percentage="+to_string(double(success)*100.0/double(NMC))+", SigmaA="+to_string(SigmaA)+", logP/Ndof="+to_string(logP/double(Ndof))+",BestLogP/Ndof="+to_string(BestLogP/double(Ndof))+"\n");
 }
 
 void CSmoothEmulator::TunePerfect(){

@@ -6,7 +6,6 @@ CSmooth::CSmooth(){
 }
 
 CSmooth::CSmooth(unsigned int NPars_Set,int maxrank_set){
-	//Npars=3
 	NPars=NPars_Set;
 	UseRFactor=false;
 	MaxRank=maxrank_set;
