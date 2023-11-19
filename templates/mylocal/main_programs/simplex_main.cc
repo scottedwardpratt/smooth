@@ -8,10 +8,10 @@ int main(int argc,char *argv[]){
 		printf("Usage simplextest simplex_parameters_filename\n");
 		exit(1);
 	}
-	CparameterMap *parmap=new CparameterMap();
+	NMSUPratt::CparameterMap *parmap=new CparameterMap();
 
 	parmap->ReadParsFromFile(string(argv[1]));
-	CSimplexSampler *simplex=new CSimplexSampler(parmap);
+	NBandSmooth::CSimplexSampler *simplex=new NBandSmooth::CSimplexSampler(parmap);
 	simplex->SetThetaSimplex();
 	simplex->WriteModelPars();
 	return 0;

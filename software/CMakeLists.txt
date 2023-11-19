@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
-set(GITHOME_BAND $ENV{GITHOME_BAND})
+set(GITHOME_BAND_SMOOTH $ENV{GITHOME_BAND_SMOOTH})
+set(GITHOME_MSU_PRATT $ENV{GITHOME_MSU_PRATT})
 project(msu_smooth CXX C)
 message("CXX is ${CXX}")
-
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -Wall -std=c++17")
 
@@ -12,9 +12,7 @@ find_package(Eigen3 REQUIRED)
 
 message("eigen3_include_dir is ${EIGEN3_INCLUDE_DIR}")
 
-include_directories(SYSTEM include ${GITHOME_BAND}/SmoothEmulator/software/include ${GITHOME_BAND}/SmoothEmulator/SmoothUtilities/software/include ${GSL_INCLUDE_DIR} $ENV{GSL_INCLUDE_DIR} ${EIGEN3_INCLUDE_DIR} $ENV{EIGEN3_INCLUDE_DIR} include)
-
-message("${GITHOME_MSU}/SmoothEmulator/SmoothUtilities/software/include")
+include_directories(SYSTEM include ${GITHOME_BAND_SMOOTH}/software/include ${GITHOME_MSU_PRATT}/commonutils/software/include ${GSL_INCLUDE_DIR} $ENV{GSL_INCLUDE_DIR} ${EIGEN3_INCLUDE_DIR} $ENV{EIGEN3_INCLUDE_DIR})
 
 file(GLOB smooth_src src/*.cc)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "lib")

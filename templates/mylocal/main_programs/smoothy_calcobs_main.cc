@@ -8,12 +8,12 @@ int main(int argc,char *argv[]){
 		CLog::Info("Usage smoothy_calcobs emulator parameter filename");
 		exit(1);
 	}
-	CparameterMap *parmap=new CparameterMap();
+	NMSUPratt::CparameterMap *parmap=new NMSUPratt::CparameterMap();
 	parmap->ReadParsFromFile(string(argv[1]));
-	CSmoothMaster master(parmap);
+	NBandSmooth::CSmoothMaster master(parmap);
 	master.ReadCoefficientsAllY();
 	
-	CModelParameters *modpars=new CModelParameters(master.priorinfo); // contains info about single point
+	NBandSmooth::CModelParameters *modpars=new NBandSmooth::CModelParameters(master.priorinfo); // contains info about single point
 	
 	master.priorinfo->PrintInfo();
 	// Prompt user for model parameter values
@@ -25,7 +25,7 @@ int main(int argc,char *argv[]){
 	modpars->SetX(X);
 	
 	//  Calc Observables
-	CObservableInfo *obsinfo=master.observableinfo;
+	NBandSmooth::CObservableInfo *obsinfo=master.observableinfo;
 	vector<double> Y(obsinfo->NObservables);
 	vector<double> SigmaY(obsinfo->NObservables);
 	master.CalcAllY(modpars,Y,SigmaY);

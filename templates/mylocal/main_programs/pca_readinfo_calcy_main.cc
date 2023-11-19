@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
     exit(1);
   }
 
-  PCA *pca = new PCA(argv[1]);
+  NBandSmooth::PCA *pca = new NBandSmooth::PCA(argv[1]);
 
   pca->ReadTransformationInfo();
 	

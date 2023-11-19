@@ -8,10 +8,10 @@ int main(int argc,char *argv[]){
 		printf("Usage smoothy emulator parameter filename");
 		exit(1);
 	}
-	CparameterMap *parmap=new CparameterMap();
+	NMSUPratt::CparameterMap *parmap=new CparameterMap();
 	parmap->ReadParsFromFile(string(argv[1]));
 	
-	CSmoothMaster master(parmap);
+	NBandSmooth::CSmoothMaster master(parmap);
 	master.randy->reset(-time(NULL));
 	
 	master.ReadCoefficientsAllY();
