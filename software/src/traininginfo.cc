@@ -6,13 +6,13 @@ using namespace NMSUPratt;
 CSmoothMaster* CTrainingInfo::smoothmaster=NULL;
 
 
-CTrainingInfo::CTrainingInfo(vector<int> NTrainingList_set,CObservableInfo *observableinfo_set,CPriorInfo *priorinfo_set){
+CTrainingInfo::CTrainingInfo(vector<unsigned int> NTrainingList_set,CObservableInfo *observableinfo_set,CPriorInfo *priorinfo_set){
 	observableinfo=observableinfo_set;
 	priorinfo=priorinfo_set;
 	NObservables=observableinfo->NObservables;
 	NTrainingList = NTrainingList_set;
 	NTrainingPts = NTrainingList.size();
-	int iy,ntrain;
+	unsigned int iy,ntrain;
 	YTrain.resize(NObservables);
 	SigmaYTrain.resize(NObservables);
 	for(iy=0;iy<NObservables;iy++){
@@ -30,7 +30,7 @@ CTrainingInfo::CTrainingInfo(vector<int> NTrainingList_set,CObservableInfo *obse
 }
 
 void CTrainingInfo::ReadTrainingInfo(string rundirname){
-	int itrain,ifile,iy,nsuccess=0,ipar,nread;
+	unsigned int itrain,ifile,iy,nsuccess=0,ipar,nread;
 	char filename[300],obs_charname[300],mod_par_name[300];
 	string obs_name;
 	double y,sigmay,x;
@@ -38,10 +38,10 @@ void CTrainingInfo::ReadTrainingInfo(string rundirname){
 	for(itrain=0;itrain<NTrainingList.size();itrain++){
 		ifile=NTrainingList[itrain];
 		if(smoothmaster->UsePCA){
-			snprintf(filename,300,"%s/run%d/obs_PCA.txt",rundirname.c_str(),ifile);
+			snprintf(filename,300,"%s/run%u/obs_PCA.txt",rundirname.c_str(),ifile);
 		}
 		else{
-			snprintf(filename,300,"%s/run%d/obs.txt",rundirname.c_str(),ifile);
+			snprintf(filename,300,"%s/run%u/obs.txt",rundirname.c_str(),ifile);
 		}
 		fptr=fopen(filename,"r");
 		nsuccess=0;
@@ -61,7 +61,7 @@ void CTrainingInfo::ReadTrainingInfo(string rundirname){
 		CLog::Fatal("In CTrainingInfo::ReadTrainInfo, only read in "+to_string(nsuccess)+" observables from file "+string(filename)+"\n");
 
 	for(itrain=0;itrain<NTrainingPts;itrain++){
-		snprintf(filename,300,"%s/run%d/mod_parameters.txt",rundirname.c_str(),itrain);
+		snprintf(filename,300,"%s/run%u/mod_parameters.txt",rundirname.c_str(),itrain);
 		fptr=fopen(filename,"r");
 		nread=0;
 		do{

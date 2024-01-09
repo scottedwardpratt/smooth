@@ -16,13 +16,13 @@ namespace NBandSmooth{
 	public:
 
 		PCA(string parameter_filename);
-		int nruns,Nobs;
+		unsigned int nruns,Nobs;
 		Eigen::MatrixXd eigvecs;
 		Eigen::VectorXd eigvals;
 		vector<vector<double>> Y;
 		vector<double> SigmaY,Ybar;
 		vector<vector<double>> SigmaY_emulator;
-		vector<int> NTrainingList;
+		vector<unsigned int> NTrainingList;
 		string modelruns_dirname;
 		CObservableInfo *observable_info;
 

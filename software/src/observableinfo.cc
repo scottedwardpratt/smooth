@@ -17,7 +17,7 @@ CObservableInfo::CObservableInfo(string filename){
 	ReadObservableInfo(filename);
 }
 
-int CObservableInfo::GetIPosition(string obsname){
+unsigned int CObservableInfo::GetIPosition(string obsname){
 	map<string,int>::iterator iter;
 	pair<string,int> mpair;
 	iter=name_map.find(obsname);
@@ -27,7 +27,7 @@ int CObservableInfo::GetIPosition(string obsname){
 	return iter->second;
 } 
 
-string CObservableInfo::GetName(int i){
+string CObservableInfo::GetName(unsigned int i){
 	return observable_name[i];
 }
 
@@ -54,8 +54,7 @@ void CObservableInfo::ReadObservableInfo(string filename){
 void CObservableInfo::ReadExperimentalInfo(string filename){
 	char dummy[120];
 	double sig0,Y0;
-	int NObsRead=0;
-	int iY;
+	unsigned int iY,NObsRead=0;
 	YExp.resize(NObservables);
 	SigmaExp.resize(NObservables);
 	FILE *fptr=fopen(filename.c_str(),"r");
@@ -78,7 +77,7 @@ void CObservableInfo::ReadExperimentalInfo(string filename){
 
 void CObservableInfo::PrintInfo(){
 	CLog::Info("Observable    \n");
-	for(int i=0;i<NObservables;i++){
+	for(unsigned int i=0;i<NObservables;i++){
 		CLog::Info(observable_name[i]+"\n");
 	}
 }

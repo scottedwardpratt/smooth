@@ -29,7 +29,7 @@ namespace NBandSmooth{
 		bool UseRFactor;
 
 		CSmooth();
-		CSmooth(unsigned int NPars_Set,int maxrank);
+		CSmooth(unsigned int NPars_Set,unsigned int maxrank);
 		CSmooth(CparameterMap *parmap);
 		void InitArrays();
 		void Copy(CSmooth *smooth);
@@ -39,7 +39,7 @@ namespace NBandSmooth{
 		double CalcY_Remainder(vector<double> &A,double LAMBDA,vector<double> &theta,unsigned int NTrainingPts);
 		double CalcY_Remainder_FromMtot(vector<double> &A,unsigned int NTrainingPts,vector<double> &Mtot);
 		double GetRFactor(double LAMBDA,vector<double> &theta);
-		double GetM(int ic,double LAMBDA,vector<double> &theta);
+		double GetM(unsigned int ic,double LAMBDA,vector<double> &theta);
 
 	};
 

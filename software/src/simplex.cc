@@ -214,7 +214,7 @@ void CSimplexSampler::SetThetaType4(){
 void CSimplexSampler::WriteModelPars(){
 	FILE *fptr;
 	string filename,dirname,command;
-	int itrain,ipar;
+	unsigned int itrain,ipar;
 	vector<CModelParameters *> modelparameters(NTrainingPts);
 
 	for(itrain=0;itrain<NTrainingPts;itrain++){

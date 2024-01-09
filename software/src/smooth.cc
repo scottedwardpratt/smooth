@@ -7,7 +7,7 @@ CSmooth::CSmooth(){
 	//
 }
 
-CSmooth::CSmooth(unsigned int NPars_Set,int maxrank_set){
+CSmooth::CSmooth(unsigned int NPars_Set,unsigned int maxrank_set){
 	NPars=NPars_Set;
 	UseRFactor=false;
 	MaxRank=maxrank_set;
@@ -218,7 +218,7 @@ double CSmooth::GetRFactor(double LAMBDA,vector<double> &theta){
 	return answer;
 }
 
-double CSmooth::GetM(int ic,double LAMBDA,vector<double> &theta){
+double CSmooth::GetM(unsigned int ic,double LAMBDA,vector<double> &theta){
 	unsigned int ir;
 	double answer,rfactor=1.0;
 	rfactor=GetRFactor(LAMBDA,theta);

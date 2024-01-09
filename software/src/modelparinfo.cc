@@ -13,7 +13,7 @@ CModelParameters::CModelParameters(CPriorInfo *priorinfo_set){
 void CModelParameters::TranslateX_to_Theta(){
 	//for min, max range
 	double sigmax,xbar;
-	int ipar;
+	unsigned int ipar;
 
 	for(ipar=0;ipar<NModelPars;ipar++){
 		if(priorinfo->type[ipar]=="uniform"){
@@ -32,7 +32,7 @@ void CModelParameters::TranslateX_to_Theta(){
 
 void CModelParameters::TranslateTheta_to_X(){
 	double sigmax,xbar;
-	int ipar;
+	unsigned int ipar;
 
 	for(ipar=0;ipar<NModelPars;ipar++){
 		if(priorinfo->type[ipar]=="uniform"){
@@ -52,7 +52,7 @@ void CModelParameters::TranslateTheta_to_X(){
 
 void CModelParameters::Print(){
 	char message[200];
-	int ipar;
+	unsigned int ipar;
 	for(ipar=0;ipar<NModelPars;ipar++){
 		snprintf(message,200,"   %.24s (%.8s): x=%11.4e, theta=%11.4e\n",
 		priorinfo->parname[ipar].c_str(),priorinfo->type[ipar].c_str(),X[ipar],Theta[ipar]);
@@ -61,7 +61,7 @@ void CModelParameters::Print(){
 }
 
 void CModelParameters::SetX(vector<double> &x){
-	for(int ipar=0;ipar<NModelPars;ipar++){
+	for(unsigned int ipar=0;ipar<NModelPars;ipar++){
 		X[ipar]=x[ipar];
 	}
 	TranslateX_to_Theta();

@@ -22,7 +22,7 @@ CPriorInfo::CPriorInfo(string parinfo_filename_set){
 			type.push_back(string(dummy2));
 			xmin.push_back(minval);  // Gaussian type xmin refers to <x> and <xmax> is sigma
 			xmax.push_back(maxval);
-			name_map.insert(pair<string,int>(parname[NModelPars],NModelPars));
+			name_map.insert(pair<string,unsigned int>(parname[NModelPars],NModelPars));
 			NModelPars+=1;
 		}
 	}while(!feof(fptr));
@@ -30,9 +30,9 @@ CPriorInfo::CPriorInfo(string parinfo_filename_set){
 }
 
 
-int CPriorInfo::GetIPosition(string par_name){
-	map<string,int>::iterator iter;
-	pair<string,int> mpair;
+unsigned int CPriorInfo::GetIPosition(string par_name){
+	map<string,unsigned int>::iterator iter;
+	pair<string,unsigned int> mpair;
 	iter=name_map.find(par_name);
 	if(iter==name_map.end()){
 		CLog::Fatal("In CPriorInfo::GetIposition, cannot find parameter "+par_name+"\n");
@@ -40,7 +40,7 @@ int CPriorInfo::GetIPosition(string par_name){
 	return iter->second;
 }
 
-string CPriorInfo::GetName(int i){
+string CPriorInfo::GetName(unsigned int i){
 	return parname[i];
 }
 
@@ -48,8 +48,8 @@ void CPriorInfo::PrintInfo(){
 	char cstring[CLog::CHARLENGTH];
 	CLog::Info("Prior Info\n");
 	CLog::Info("#         ParameterName Type   Xmin_or_Xbar  Xmax_or_SigmaX\n");
-	for(int ipar=0;ipar<NModelPars;ipar++){
-		snprintf(cstring,CLog::CHARLENGTH,"%2d: %15s %9s %10g %10g\n",
+	for(unsigned int ipar=0;ipar<NModelPars;ipar++){
+		snprintf(cstring,CLog::CHARLENGTH,"%2u: %15s %9s %10g %10g\n",
 		ipar,GetName(ipar).c_str(),type[ipar].c_str(),xmin[ipar],xmax[ipar]);
 		CLog::Info(cstring);
 	}

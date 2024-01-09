@@ -28,7 +28,7 @@ namespace NBandSmooth{
 
 	class CSmoothEmulator{
 	public:
-		int iY; // labels observable from observable info
+		unsigned int iY; // labels observable from observable info
 		string observable_name;
 		Eigen::MatrixXd M,Minv;
 		vector<vector<double>> Mtot;
@@ -62,7 +62,7 @@ namespace NBandSmooth{
 		void SetA_RanSech(double ASigmaA,vector<double> &AA);
 
 		double SigmaAbar;
-		int NSigmaA;
+		unsigned int NSigmaA;
 
 		void GenerateASamples();
 		void CalcY(CModelParameters *modpars,double &Y,double &SigmaY);
@@ -73,7 +73,7 @@ namespace NBandSmooth{
 		void Init();
 
 		static CSmoothMaster *smoothmaster;
-		static int NPars;
+		static unsigned int NPars;
 		static CSmooth *smooth;
 		static CparameterMap *parmap;
 		static Crandy *randy;

@@ -24,7 +24,7 @@ namespace NBandSmooth{
 		unsigned int NPars;
 		CReal();
 		virtual void CalcY(vector<double> &theta,double &Y,double &SigmaY);
-		void CalcYTrain(vector<double> &YTrain,vector<double> &SigmaYTrain,int NTrainingPts, vector<vector<double>> ThetaTrain);
+		void CalcYTrain(vector<double> &YTrain,vector<double> &SigmaYTrain,unsigned int NTrainingPts, vector<vector<double>> ThetaTrain);
 	};
 
 	class CReal_Taylor : public CReal{
@@ -32,7 +32,7 @@ namespace NBandSmooth{
 		Crandy *randy;
 		vector<double> A;
 		double LAMBDA;
-		CReal_Taylor(unsigned int NPars_Set,int maxrank,Crandy *randy);
+		CReal_Taylor(unsigned int NPars_Set,unsigned int maxrank,Crandy *randy);
 		CSmooth *smooth;
 		void CalcY(vector<double> &theta,double &Y,double &SigmaY);
 		// These are functions for generating fake real models

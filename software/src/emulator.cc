@@ -4,7 +4,7 @@ using namespace std;
 using namespace NBandSmooth;
 using namespace NMSUPratt;
 
-int CSmoothEmulator::NPars=0;
+unsigned int CSmoothEmulator::NPars=0;
 CSmooth *CSmoothEmulator::smooth=NULL;
 CSmoothMaster *CSmoothEmulator::smoothmaster=NULL;
 CparameterMap *CSmoothEmulator::parmap=NULL;
@@ -35,9 +35,9 @@ CSmoothEmulator::CSmoothEmulator(string observable_name_set){
 
 void CSmoothEmulator::SetThetaTrain(){
 	ThetaTrain.resize(NTrainingPts);
-	for(int itrain=0;itrain<NTrainingPts;itrain++){
+	for(unsigned int itrain=0;itrain<NTrainingPts;itrain++){
 		ThetaTrain[itrain].resize(NPars);
-		for(int ipar=0;ipar<NPars;ipar++){
+		for(unsigned int ipar=0;ipar<NPars;ipar++){
 			ThetaTrain[itrain][ipar]=smoothmaster->traininginfo->modelpars[itrain]->Theta[ipar];
 		}
 	}
@@ -65,9 +65,9 @@ void CSmoothEmulator::Init(){
 	M.resize(NTrainingPts,NTrainingPts);
 	Minv.resize(NTrainingPts,NTrainingPts);
 	Mtot.resize(NTrainingPts);
-	for(int it=0;it<NTrainingPts;it++){
+	for(unsigned int it=0;it<NTrainingPts;it++){
 		Mtot[it].resize(smooth->NCoefficients);
-		for(int ic=0;ic<smooth->NCoefficients;ic++){
+		for(unsigned int ic=0;ic<smooth->NCoefficients;ic++){
 			Mtot[it][ic]=0.0;
 		}
 	}
@@ -163,7 +163,7 @@ void CSmoothEmulator::TuneMCMC(){
 		}
 	}
 
-	int Ndof=smooth->NCoefficients-NTrainingPts;
+	unsigned int Ndof=smooth->NCoefficients-NTrainingPts;
 	if(!FirstTune)
 		CLog::Info("success percentage="+to_string(double(success)*100.0/double(NMC))+",SigmaA="+to_string(SigmaA)+",  logP/Ndof="+to_string(logP/double(Ndof))+", BestLogP/Ndof="+to_string(BestLogP/double(Ndof))+"\n");
 }
@@ -246,7 +246,7 @@ void CSmoothEmulator::TuneMCMC_withSigma(){
 		}
 	}
 
-	int Ndof=smooth->NCoefficients-NTrainingPts;
+	unsigned int Ndof=smooth->NCoefficients-NTrainingPts;
 	if(!FirstTune)
 		CLog::Info("success percentage="+to_string(double(success)*100.0/double(NMC))+", SigmaA="+to_string(SigmaA)+", logP/Ndof="+to_string(logP/double(Ndof))+",BestLogP/Ndof="+to_string(BestLogP/double(Ndof))+"\n");
 }
@@ -362,7 +362,7 @@ void CSmoothEmulator::OldCalcAFromTraining(vector<double> &AA){
 
 double CSmoothEmulator::GetLog_AProb(vector<double> &AA,double ASigmaA){
 	double answer=0.0;
-	int ic0=1;
+	unsigned int ic0=1;
 	if(ConstrainA0)
 		ic0=0;
 	//answer=0.000*smooth->NCoefficients*log(ASigmaA/SigmaA0);
@@ -425,7 +425,7 @@ void CSmoothEmulator::PrintA(vector<double> &Aprint){
 }
 
 void CSmoothEmulator::WriteCoefficients(){
-	int isample,ic;
+	unsigned int isample,ic;
 	FILE *fptr;
 	string filename;
 	string dirname=smoothmaster->CoefficientsDirName+"/"+observable_name;
@@ -434,7 +434,7 @@ void CSmoothEmulator::WriteCoefficients(){
 	filename=dirname+"/meta.txt";
 	fptr=fopen(filename.c_str(),"w");
 	fprintf(fptr,"# NPars  MaxRank NCoefficients\n");
-	fprintf(fptr,"%d  %d  %d\n",NPars,smooth->MaxRank,smooth->NCoefficients);
+	fprintf(fptr,"%u  %u  %u\n",NPars,smooth->MaxRank,smooth->NCoefficients);
 	fclose(fptr);
 	for(isample=0;isample<NASample;isample++){
 		filename=dirname+"/sample"+to_string(isample)+".txt";
@@ -447,7 +447,7 @@ void CSmoothEmulator::WriteCoefficients(){
 }
 
 void CSmoothEmulator::ReadCoefficients(){
-	int isample,ic,NPars_test,MaxRank_test,NC_test;
+	unsigned int isample,ic,NPars_test,MaxRank_test,NC_test;
 	FILE *fptr;
 	string filename;
 	string dirname=smoothmaster->CoefficientsDirName+"/"+observable_name;
@@ -457,7 +457,7 @@ void CSmoothEmulator::ReadCoefficients(){
 	filename=dirname+"/meta.txt";
 	fptr=fopen(filename.c_str(),"r");
 	fgets(dummy,100,fptr);
-	fscanf(fptr,"%d  %d  %d\n",&NPars_test,&MaxRank_test,&NC_test);
+	fscanf(fptr,"%u  %u  %u\n",&NPars_test,&MaxRank_test,&NC_test);
 	if(NPars_test!=NPars || MaxRank_test!=smooth->MaxRank || NC_test!=smooth->NCoefficients){
 		CLog::Fatal("Mismatch in array sizes in ReadCoefficients");
 	}

@@ -25,7 +25,7 @@ public:
 	void TranslateTheta_to_X();
 	void TranslateX_to_Theta();
 	void Print();
-	int NModelPars;
+	unsigned int NModelPars;
 	CPriorInfo *priorinfo;
 	void SetX(vector<double> &xset);
 };

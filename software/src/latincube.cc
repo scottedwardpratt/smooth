@@ -3,8 +3,9 @@ using namespace std;
 using namespace NBandSmooth;
 using namespace NMSUPratt;
 
-void NAlternativeParameterSampling::GetParsLHC(int NRuns,int NPars,Crandy *randy,vector<vector<double>> &Theta){
-	int irun,ipar;
+void NAlternativeParameterSampling::GetParsLHC(unsigned int NRuns,unsigned int NPars,Crandy *randy,vector<vector<double>> &Theta){
+	unsigned int irun,ipar;
+	(void) randy;
 	vector<double> ThetaOrdered;
 	ThetaOrdered.resize(NRuns);
 	vector<int> ishuffle;
@@ -13,7 +14,7 @@ void NAlternativeParameterSampling::GetParsLHC(int NRuns,int NPars,Crandy *randy
 	std::random_device rd;
 	std::mt19937 rangen(rd());
 	
-	if(int(Theta.size())!=NRuns){
+	if(Theta.size()!=NRuns){
 		Theta.resize(NRuns);
 		for(irun=0;irun<NRuns;irun++){
 			Theta[irun].resize(NPars);
@@ -21,7 +22,7 @@ void NAlternativeParameterSampling::GetParsLHC(int NRuns,int NPars,Crandy *randy
 	}
 	else{
 		for(irun=0;irun<NRuns;irun++){
-			if(int(Theta[irun].size())!=NPars){
+			if(Theta[irun].size()!=NPars){
 				Theta[irun].resize(NPars);
 			}
 		}
@@ -49,8 +50,8 @@ void NAlternativeParameterSampling::GetParsLHC(int NRuns,int NPars,Crandy *randy
 	
 }
 
-void NAlternativeParameterSampling::GetParsLHC_Modified(int NRuns,int NPars,Crandy *randy,vector<vector<double>> &Theta){
-	int irun,ipar;
+void NAlternativeParameterSampling::GetParsLHC_Modified(unsigned int NRuns,unsigned int NPars,Crandy *randy,vector<vector<double>> &Theta){
+	unsigned int irun,ipar;
 	vector<double> ThetaOrdered;
 	vector<vector<double>> BestTheta;
 	ThetaOrdered.resize(NRuns);
@@ -60,7 +61,7 @@ void NAlternativeParameterSampling::GetParsLHC_Modified(int NRuns,int NPars,Cran
 	double dTheta;
 	std::random_device rd;
 	std::mt19937_64 rangen(rd());
-	int Ntry=1000,itry ;
+	unsigned int Ntry=1000,itry;
 	
 	Theta.resize(NRuns);
 	BestTheta.resize(NRuns);
@@ -117,9 +118,9 @@ void NAlternativeParameterSampling::GetParsLHC_Modified(int NRuns,int NPars,Cran
 
 double NAlternativeParameterSampling::GetPEShuffle(vector<vector<double>> x){
 	double PE=0.0,r2;
-	int idim,ipart,jpart;
-	int NParts=x.size();
-	int NDim=x[0].size();
+	unsigned int idim,ipart,jpart;
+	unsigned int NParts=x.size();
+	unsigned int NDim=x[0].size();
 	for(ipart=0;ipart<NParts-1;ipart++){
 		for(jpart=ipart+1;jpart<NParts;jpart++){
 			r2=0.0;
@@ -132,11 +133,12 @@ double NAlternativeParameterSampling::GetPEShuffle(vector<vector<double>> x){
 	return PE;
 }
 
-void NAlternativeParameterSampling::GetParsCoulomb(int NParts,int NDim,Crandy *randy,vector<vector<double>> &x){
-	int ipart,idim;
+void NAlternativeParameterSampling::GetParsCoulomb(unsigned int NParts,unsigned int NDim,Crandy *randy,vector<vector<double>> &x){
+	(void) randy;
+	unsigned int ipart,idim;
 	vector<vector<double>> xx,v,vv;
 	double t,dt=0.001,PE,Etot,KE;
-	if(x.size()!=NParts){
+	if(x.size()!=(unsigned int)NParts){
 		x.resize(NParts);
 	}
 	xx.resize(NParts);
@@ -160,7 +162,7 @@ void NAlternativeParameterSampling::GetParsCoulomb(int NParts,int NDim,Crandy *r
 			printf("%8.5f ",x[ipart][idim]);
 		printf("\n");
 	}
-	for(int itest=0;itest<10;itest++){
+	for(unsigned int itest=0;itest<10;itest++){
 		for(t=0.0;t<10.0;t+=dt){
 			NAlternativeParameterSampling::Propagate(dt,x,xx,v,vv,PE);
 			NAlternativeParameterSampling::Propagate(dt,xx,x,vv,v,PE);
@@ -183,8 +185,8 @@ void NAlternativeParameterSampling::GetParsCoulomb(int NParts,int NDim,Crandy *r
 }
 
 void NAlternativeParameterSampling::CalcEnergy(vector<vector<double>> &x,vector<vector<double>> &vv,vector<vector<double>> &v,double &PE,double &KE,double &Etot){
-	int ipart,idim;
-	int NParts=x.size(), NDim=x[0].size();
+	unsigned int ipart,idim;
+	unsigned int NParts=x.size(), NDim=x[0].size();
 	double vi;
 	KE=0.0;
 	for(ipart=0;ipart<NParts;ipart++){
@@ -198,7 +200,7 @@ void NAlternativeParameterSampling::CalcEnergy(vector<vector<double>> &x,vector<
 }
 
 void NAlternativeParameterSampling::GetForcePotential(vector<double> &x,vector<double> &xx,vector<double> &Frel,double &potential){
-	int idim,NDim=x.size();
+	unsigned int idim,NDim=x.size();
 	double r2=0.0,r,delx,alpha=1.0;
 	potential=0.0;
 	for(idim=0;idim<NDim;idim++){
@@ -233,7 +235,7 @@ void NAlternativeParameterSampling::GetForcePotential(vector<double> &x,vector<d
 }
 
 void NAlternativeParameterSampling::Propagate(double dt,vector<vector<double>> &x,vector<vector<double>> &xx,vector<vector<double>> &v,vector<vector<double>> &vv,double &PE){
-	int idim,ipart,jpart,NParts=x.size(),NDim=x[0].size();
+	unsigned int idim,ipart,jpart,NParts=x.size(),NDim=x[0].size();
 	double potential;
 	PE=0.0;
 	vector<double> Frel;
@@ -281,10 +283,11 @@ void NAlternativeParameterSampling::Propagate(double dt,vector<vector<double>> &
 //-------------------------------------------------
 
 void NAlternativeParameterSampling::GetParsCoulombHO(Crandy *randy,vector<vector<double>> &Theta){
+	(void) randy;
 	printf("----- entering GetParsCoulombHO\n");
-	int ipart,idim;
-	int NParts=Theta.size();
-	int NDim=Theta[0].size();
+	unsigned int ipart,idim;
+	unsigned int NParts=Theta.size();
+	unsigned int NDim=Theta[0].size();
 	vector<vector<double>> x,xx,v,vv;
 	double t,dt=0.001,PE,Etot,KE;
 	
@@ -306,7 +309,7 @@ void NAlternativeParameterSampling::GetParsCoulombHO(Crandy *randy,vector<vector
 	NAlternativeParameterSampling::CalcEnergyHO(x,vv,v,PE,KE,Etot);
 	printf("ready to propagate\n");
 	
-	for(int itest=0;itest<20;itest++){
+	for(unsigned int itest=0;itest<20;itest++){
 		NAlternativeParameterSampling::CalcEnergyHO(x,vv,v,PE,KE,Etot);
 		printf("Before: Etot=%g, KE=%g, PE=%g\n",Etot,KE,PE);
 		for(t=0.0;t<100.0;t+=dt){
@@ -348,7 +351,7 @@ void NAlternativeParameterSampling::GetParsCoulombHO(Crandy *randy,vector<vector
 }
 
 void NAlternativeParameterSampling::GetFRelVRelHO(vector<double> &x,vector<double> &xx,vector<double> &Frel,double &Vrel){
-	int idim,NDim=x.size();
+	unsigned int idim,NDim=x.size();
 	double r2=0.0,r,delx,alpha=0.5;
 	Vrel=0.0;
 	for(idim=0;idim<NDim;idim++){
@@ -371,7 +374,7 @@ void NAlternativeParameterSampling::GetFRelVRelHO(vector<double> &x,vector<doubl
 }
 
 void NAlternativeParameterSampling::PropagateHO(double dt,vector<vector<double>> &x,vector<vector<double>> &xx,vector<vector<double>> &v,vector<vector<double>> &vv,double &PE){
-	int idim,ipart,jpart,NParts=x.size(),NDim=x[0].size();
+	unsigned int idim,ipart,jpart,NParts=x.size(),NDim=x[0].size();
 	double Vrel,Vext;
 	PE=0.0;
 	vector<double> Frel,Fext;
@@ -420,8 +423,8 @@ void NAlternativeParameterSampling::PropagateHO(double dt,vector<vector<double>>
 }
 
 void NAlternativeParameterSampling::CalcEnergyHO(vector<vector<double>> &x,vector<vector<double>> &vv,vector<vector<double>> &v,double &PE,double &KE,double &Etot){
-	int ipart,idim;
-	int NParts=x.size(), NDim=x[0].size();
+	unsigned int ipart,idim;
+	unsigned int NParts=x.size(), NDim=x[0].size();
 	double vi;
 	KE=0.0;
 	for(ipart=0;ipart<NParts;ipart++){
@@ -434,7 +437,7 @@ void NAlternativeParameterSampling::CalcEnergyHO(vector<vector<double>> &x,vecto
 }
 
 void NAlternativeParameterSampling::GetFextVextHO(vector<double> &x,vector<double> &Fext,double &Vext){
-	int idim,NDim=x.size();
+	unsigned int idim,NDim=x.size();
 	double k=0.5,r2=0.0;
 	for(idim=0;idim<NDim;idim++){
 		r2+=x[idim]*x[idim];

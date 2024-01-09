@@ -22,13 +22,13 @@ namespace NBandSmooth{
 	class CPriorInfo{
 	public:
 		CPriorInfo(string parinfo_filename);
-		int NModelPars;
+		unsigned int NModelPars;
 		string parinfo_filename;
 		vector<string> parname,type; // type is gaussian or linear
 		vector<double> xmin, xmax;
-		map<string,int> name_map;
-		int GetIPosition(string par_name);  // finds position given name of observable
-		string GetName(int iposition);
+		map<string,unsigned int> name_map;
+		unsigned int GetIPosition(string par_name);  // finds position given name of observable
+		string GetName(unsigned int iposition);
 		void PrintInfo();
 	};
 

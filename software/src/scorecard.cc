@@ -5,6 +5,7 @@ using namespace NMSUPratt;
 
 
 void CScoreCard::CalcScore(CSmoothEmulator *emulator,vector<vector<double>> &ThetaTest,double YExpSet,double SigmaYExpSet){
+	unsigned int itest,isample;
 	YExp=YExpSet;
 	SigmaYExp=SigmaYExpSet;
 	score=0.0;

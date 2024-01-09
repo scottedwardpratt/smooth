@@ -22,10 +22,10 @@ PCA::PCA(string filename){
 		size_t pos = token.find("-");
 		if (pos != string::npos) {
 
-			int start = stoi(token.substr(0, pos));
-			int end = stoi(token.substr(pos+1));
+			unsigned int start = stoi(token.substr(0, pos));
+			unsigned int end = stoi(token.substr(pos+1));
 
-			for (int i = start; i <= end; i++)
+			for (unsigned int i = start; i <= end; i++)
 				NTrainingList.push_back(i);
 		}
 		else {
@@ -45,7 +45,7 @@ void PCA::CalcTransformationInfo(){
 	vector<double> Ytildebar;
 	char filename[300],obs_name[300];
 	double y,sigmay;
-	int iy,jy,irun,nruns=NTrainingList.size();
+	unsigned int iy,jy,irun,nruns=NTrainingList.size();
 	Nobs=observable_info->NObservables;
 	Eigen::MatrixXd *A;
 	FILE *fptr;
@@ -63,7 +63,7 @@ void PCA::CalcTransformationInfo(){
 	}
 	
 	for(irun=0;irun<nruns;irun++){
-		snprintf(filename,300,"%s/run%d/obs.txt",modelruns_dirname.c_str(),NTrainingList[irun]);
+		snprintf(filename,300,"%s/run%u/obs.txt",modelruns_dirname.c_str(),NTrainingList[irun]);
 		fptr=fopen(filename,"r");
 		while(!feof(fptr)){
 			fscanf(fptr,"%s %lf %lf",obs_name, &y, &sigmay);
@@ -133,7 +133,7 @@ void PCA::CalcTransformationInfo(){
 	// Write PCA Observables for Training Pts
 	
 	vector<vector<double>> Z;
-	int iz;
+	unsigned int iz;
 	string pcaname;
 	
 	Z.resize(nruns);
@@ -148,7 +148,7 @@ void PCA::CalcTransformationInfo(){
 				Z[irun][iz]+=eigvecs(iz,iy)*Ytilde[irun][iy];
 			}
 		}
-		snprintf(filename,300,"%s/run%d/pca_obs.txt",modelruns_dirname.c_str(),NTrainingList[irun]);
+		snprintf(filename,300,"%s/run%u/pca_obs.txt",modelruns_dirname.c_str(),NTrainingList[irun]);
 		fptr=fopen(filename,"w");
 		for(iz=0;iz<Nobs;iz++){
 			pcaname="z"+to_string(iz);
@@ -161,7 +161,7 @@ void PCA::CalcTransformationInfo(){
 	
 	double SA0Zsquared,SA0Y,SA0Z;
 	fptr=fopen("Info/pca_info.txt","w");
-	for(int iz=0;iz<Nobs;iz++){
+	for(iz=0;iz<Nobs;iz++){
 		SA0Zsquared=0.0;
 		for(iy=0;iy<Nobs;iy++){
 			SA0Y=observable_info->SigmaA0[iy];
@@ -196,10 +196,10 @@ void PCA::CalcTransformationInfo(){
 
 void PCA::ReadTransformationInfo(){
 	char dummy[200];
-	int iy,jy;
+	unsigned int iy,jy;
 	FILE *fptr=fopen("PCA_Info/transformation_info.txt","r");
 	fgets(dummy,200,fptr);
-	fscanf(fptr,"%d %d",&Nobs,&nruns);
+	fscanf(fptr,"%u %u",&Nobs,&nruns);
 	Ybar.resize(Nobs);
 	SigmaY.resize(Nobs);
 	eigvals.resize(Nobs);
@@ -230,12 +230,12 @@ void PCA::ReadTransformationInfo(){
 }
 
 void PCA::WriteTransformationInfo(){
-	int ifile;
+	unsigned int ifile;
 
 	string command="rm -r -f PCA_Info/run*";
 	system(command.c_str());
 
-	for (int irun = 0; irun < nruns; irun++) {
+	for (unsigned int irun = 0; irun < nruns; irun++) {
 		string filename;
 		FILE *fptr;
 
@@ -265,7 +265,7 @@ void PCA::WriteTransformationInfo(){
 
 void PCA::TransformZtoY(vector<double> &Z,vector<double> &SigmaZ_emulator,
 vector<double> &Y,vector<double> &SigmaY_emulator){
-	int iy,ky;
+	unsigned int iy,ky;
 	SigmaY_emulator.resize(Nobs);
 	for(iy=0;iy<Nobs;iy++){
 		SigmaY_emulator.resize(Nobs);
@@ -286,7 +286,7 @@ vector<double> &Y,vector<double> &SigmaY_emulator){
 
 void PCA::TransformYtoZ(vector<double> &Z,vector<double> &SigmaZ_emulator,
 vector<double> &Y,vector<double> &SigmaY_emulator){
-	int iy,ky;
+	unsigned int iy,ky;
 	SigmaZ_emulator.resize(Nobs);
 	for(iy=0;iy<Nobs;iy++){
 		SigmaZ_emulator.resize(Nobs);

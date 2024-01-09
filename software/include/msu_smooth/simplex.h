@@ -44,11 +44,11 @@ namespace NBandSmooth{
 
 	namespace NAlternativeParameterSampling{
 		// Latin Hyer Cube parameters
-		void GetParsLHC(int NRuns,int NPars,Crandy *randy,vector<vector<double>> &Theta);
-		void GetParsLHC_Modified(int NRuns,int NPars,Crandy *randy,vector<vector<double>> &Theta);
+		void GetParsLHC(unsigned int NRuns,unsigned int NPars,Crandy *randy,vector<vector<double>> &Theta);
+		void GetParsLHC_Modified(unsigned int NRuns,unsigned int NPars,Crandy *randy,vector<vector<double>> &Theta);
 		double GetPEShuffle(vector<vector<double>> x);
 		// These are used for Coulomb force generated parameters
-		void GetParsCoulomb(int NRuns,int NPars,Crandy *randy,vector<vector<double>> &Theta);
+		void GetParsCoulomb(unsigned int NRuns,unsigned int NPars,Crandy *randy,vector<vector<double>> &Theta);
 		void CalcEnergy(vector<vector<double>> &x,vector<vector<double>> &vv,vector<vector<double>> &v,double &PE,double &KE,double &Etot);
 		void Propagate(double dt,vector<vector<double>> &x,vector<vector<double>> &xx,vector<vector<double>> &v,vector<vector<double>> &vv,double &PE);
 		void GetForcePotential(vector<double> &x,vector<double> &xx,vector<double> &F,double &potential);

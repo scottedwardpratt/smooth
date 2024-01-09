@@ -8,11 +8,12 @@ CReal::CReal(){
 }
 
 void CReal::CalcY(vector<double> &theta,double &Y,double &SigmaY){
+	(void) theta;
 	cout << "dummy function -- should not be hear" << endl;
 	Y=SigmaY=0.0;
 }
 
-CReal_Taylor::CReal_Taylor(unsigned int NPars_Set,int maxrank,Crandy *randyset){
+CReal_Taylor::CReal_Taylor(unsigned int NPars_Set,unsigned int maxrank,Crandy *randyset){
 	NPars=NPars_Set;
 	randy=randyset;
 	smooth = new CSmooth(NPars,maxrank);
@@ -46,6 +47,7 @@ void CReal_EEEK::CalcY(vector<double> &theta,double &Y,double &SigmaY)
 {
 	unsigned int ic;
 	double answer=0.0,term;
+	(void) SigmaY;
 	answer=0.0;
 	for(ic=0;ic<NPars;ic++){
 		term= A[ic]*sqrt(1+sin(2*theta[ic]/LAMBDA));
@@ -64,7 +66,7 @@ void CReal_EEEK::RandomizeA(double SigmaReal){
 }
 
 
-void CReal::CalcYTrain(vector<double> &YTrain,vector<double> &SigmaYTrain, int NTrainingPts, vector<vector<double>> ThetaTrain){
+void CReal::CalcYTrain(vector<double> &YTrain,vector<double> &SigmaYTrain, unsigned int NTrainingPts, vector<vector<double>> ThetaTrain){
 //	cout << "NTrainingPts" << NTrainingPts << endl;
 	//NtrainingPts is 4
 	unsigned int itrain;

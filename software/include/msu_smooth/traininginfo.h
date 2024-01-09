@@ -30,9 +30,9 @@ namespace NBandSmooth{
 	public:
 		CObservableInfo *observableinfo;
 		CPriorInfo *priorinfo;
-		CTrainingInfo(vector<int> NTrainingList, CObservableInfo *observableinfo,CPriorInfo *priorinfo);
-		int NTrainingPts,NObservables;
-		vector<int> NTrainingList;
+		CTrainingInfo(vector<unsigned int> NTrainingList, CObservableInfo *observableinfo,CPriorInfo *priorinfo);
+		unsigned int NTrainingPts,NObservables;
+		vector<unsigned int> NTrainingList;
 		vector<vector<double>> YTrain,SigmaYTrain;
 		vector<CModelParameters *> modelpars;
 		void ReadTrainingInfo(string rundirname);
