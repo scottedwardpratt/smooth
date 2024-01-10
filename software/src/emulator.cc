@@ -28,9 +28,7 @@ CSmoothEmulator::CSmoothEmulator(string observable_name_set){
 	SigmaA0=smoothmaster->observableinfo->SigmaA0[iY];
 	SigmaA=SigmaA0;
 	SigmaAMin=parmap->getD("SmoothEmulator_SigmaAMin",0.1*SigmaA0);
-
 	Init();
-
 }
 
 void CSmoothEmulator::SetThetaTrain(){
@@ -74,7 +72,7 @@ void CSmoothEmulator::Init(){
 }
 
 void CSmoothEmulator::Tune(){
-	FirstTune=true;
+	//FirstTune=true;
 	CalcMForTraining();
 	if(TuneChooseMCMC==true){
 		if(UseSigmaYReal){
@@ -125,7 +123,7 @@ void CSmoothEmulator::TuneMCMC(){
 		}
 		//
 		CalcAFromTraining(*ATrialptr);
-		Aptr=ATrialptr;
+		//Aptr=ATrialptr;
 		
 		//
 		logPTrial=GetLog_AProb(*ATrialptr,SigmaATrial);

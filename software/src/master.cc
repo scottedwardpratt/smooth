@@ -66,7 +66,6 @@ CSmoothMaster::CSmoothMaster(CparameterMap *parmap_set){
 	CSmoothEmulator::parmap=parmap;
 	CSmoothEmulator::randy=randy;
 	CSmoothEmulator::NTrainingPts=NTrainingList.size();
-	printf("NTrainingPts=%u\n",CSmoothEmulator::NTrainingPts);
 	CSmoothEmulator::smooth=smooth;
 	CSmoothEmulator::smoothmaster=this;
 	emulator.resize(observableinfo->NObservables);
@@ -84,22 +83,30 @@ void CSmoothMaster::ReadTrainingInfo(){
 
 void CSmoothMaster::TuneAllY(){
 	for(unsigned int iY=0;iY<observableinfo->NObservables;iY++){
+		if(iY==3)
+			emulator[3]->A[0]=5.5;
 		emulator[iY]->Tune();
 	}
 }
 
 void CSmoothMaster::TuneY(string obsname){
-	unsigned int iY=observableinfo->GetIPosition(obsname);;
+	unsigned int iY=observableinfo->GetIPosition(obsname);
+	if(iY==3)
+		emulator[3]->A[0]=5.5;
 	emulator[iY]->Tune();
 }
 
 void CSmoothMaster::TuneY(unsigned int iY){
+	if(iY==3)
+		emulator[3]->A[0]=5.5;
 	emulator[iY]->Tune();
 }
 
 void CSmoothMaster::GenerateCoefficientSamples(){
 	for(unsigned int iY=0;iY<observableinfo->NObservables;iY++){
 		CLog::Info("Tuning Emulator for "+observableinfo->GetName(iY)+"\n");
+		if(iY==3)
+			emulator[3]->A[0]=5.5;
 		emulator[iY]->GenerateASamples();
 	}
 }
@@ -172,34 +179,4 @@ void CSmoothMaster::TestAtTrainingPts(string obsname){
 		"Y[%u]=%10.3e =? %10.3e,    SigmaY=%12.5e\n",iY,Y,traininginfo->YTrain[iY][itrain],SigmaY_emulator);
 		CLog::Info(pchars);
 	}
-}
-
-void CSmoothMaster::WriteCoefficientsAllY(){
-	for(unsigned int iY=0;iY<observableinfo->NObservables;iY++){
-		emulator[iY]->WriteCoefficients();
-	}
-}
-
-void CSmoothMaster::WriteCoefficients(string obsname){
-	unsigned int iY=observableinfo->GetIPosition(obsname);
-	WriteCoefficients(iY);
-}
-
-void CSmoothMaster::WriteCoefficients(unsigned int iY){
-	emulator[iY]->WriteCoefficients();
-}
-
-void CSmoothMaster::ReadCoefficientsAllY(){
-	for(unsigned int iY=0;iY<observableinfo->NObservables;iY++){
-		emulator[iY]->ReadCoefficients();
-	}
-}
-
-void CSmoothMaster::ReadCoefficients(string obsname){
-	unsigned int iY=observableinfo->GetIPosition(obsname);
-	ReadCoefficients(iY);
-}
-
-void CSmoothMaster::ReadCoefficients(unsigned int iY){
-	emulator[iY]->ReadCoefficients();
 }
