@@ -46,7 +46,6 @@ void CSmooth::InitArrays(){
 	IPar[0].resize(rank[ic]);
 
 	ic+=1;
-//	cout << NPars << endl;
 	for(i[0]=0;i[0]<NPars;i[0]++){
 		dupfactor.push_back(0);
 		IPar.resize(ic+1);

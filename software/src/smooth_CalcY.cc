@@ -12,7 +12,6 @@ double CSmooth::CalcY(vector<double> &A,double LAMBDA,vector<double> &theta){
 		term=A[ic]*sqrt(double(dupfactor[ic])/double(factorial[rank[ic]]));
 		for(ir=0;ir<rank[ic];ir++){
 			term*=theta[IPar[ic][ir]]/LAMBDA;
-//			cout << "theta is:" << theta[IPar[ic][ir]] << endl;
 		}
 		answer+=term;
 	}

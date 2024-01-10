@@ -102,10 +102,10 @@ void CSmoothEmulator::TuneMCMC(){
 	double dlp,r,SigmaAswitch;
 	unsigned int success=0,ic,imc;
 	double BestLogP,stepsize;
-	CalcAFromTraining(A);
 	for(ic=0;ic<smooth->NCoefficients;ic++){
 		ATrial[ic]=A[ic];
 	}
+	CalcAFromTraining(A);
 	Aptr=&A;
 	ATrialptr=&ATrial;
 	SigmaATrial=SigmaA0;
@@ -123,7 +123,11 @@ void CSmoothEmulator::TuneMCMC(){
 		for(ic=NTrainingPts;ic<smooth->NCoefficients;ic++){
 			(*ATrialptr)[ic]*=(SigmaATrial/SigmaA);
 		}
+		//
 		CalcAFromTraining(*ATrialptr);
+		Aptr=ATrialptr;
+		
+		//
 		logPTrial=GetLog_AProb(*ATrialptr,SigmaATrial);
 		dlp=logPTrial-logP;
 
@@ -216,14 +220,11 @@ void CSmoothEmulator::TuneMCMC_withSigma(){
 			SigmaATrial=SigmaAswitch;
 			logP=logPTrial;
 			success+=1;
-			//			cout << "dlp is:" << dlp << endl;
 		}
 		else{
 			if(dlp>-100){
 				dlp=exp(dlp);
 				r=randy->ran();
-				//				cout << "dlp is:" << dlp << endl;
-				//				cout << "randy is: " << r <<endl;
 				if(dlp>r){
 					Aswitch=Aptr;
 					Aptr=ATrialptr;
@@ -405,8 +406,6 @@ void CSmoothEmulator::SetA_RanSech(double SigmaA,vector<double> &A){
 
 void CSmoothEmulator::GenerateASamples(){
 	unsigned int isample;
-	//	cout << "NASample is:" << NASample << endl;
-	//NASample = 10
 	FirstTune=true;
 	for(isample=0;isample<NASample;isample++){
 		Tune();
