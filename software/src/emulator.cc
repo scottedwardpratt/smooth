@@ -111,15 +111,14 @@ void CSmoothEmulator::TuneMCMC(){
 	logP=GetLog_AProb(*Aptr,SigmaA);
 	BestLogP=-1000000.0;
 	for(imc=0;imc<NMC;imc++){
-		for(ic=NTrainingPts;ic<smooth->NCoefficients;ic++){
-			stepsize=SigmaA*MCStepSize*pow(LAMBDA,smooth->rank[ic]);
-			(*ATrialptr)[ic]=(*Aptr)[ic]+stepsize*randy->ran_gauss();
+
+		SigmaATrial=fabs(SigmaA+SigmaA0*MCSigmaAStepSize*randy->ran_gauss());
+		if(SigmaATrial<SigmaAMin){
+			SigmaATrial=SigmaA;
 		}
-		do{
-			SigmaATrial=fabs(SigmaA+SigmaA0*MCSigmaAStepSize*randy->ran_gauss());
-		}while(SigmaATrial<SigmaAMin);
 		for(ic=NTrainingPts;ic<smooth->NCoefficients;ic++){
-			(*ATrialptr)[ic]*=(SigmaATrial/SigmaA);
+			stepsize=MCStepSize*pow(LAMBDA,smooth->rank[ic]);
+			(*ATrialptr)[ic]=SigmaATrial*( ((*Aptr)[ic]/SigmaA)+stepsize*randy->ran_gauss() );
 		}
 		//
 		CalcAFromTraining(*ATrialptr);

@@ -32,7 +32,7 @@ string CObservableInfo::GetName(unsigned int i){
 }
 
 void CObservableInfo::ReadObservableInfo(string filename){
-	char dummy[120];
+	char dummy[200];
 	double sig0;
 	name_map.clear();
 	observable_name.clear();
@@ -41,11 +41,17 @@ void CObservableInfo::ReadObservableInfo(string filename){
 	do{
 		fscanf(fptr,"%s",dummy);
 		if(!feof(fptr)){
-			fscanf(fptr,"%lf",&sig0);
-			observable_name.push_back(string(dummy));
-			SigmaA0.push_back(sig0);
-			name_map.insert(pair<string,int>(observable_name[NObservables],NObservables));
-			NObservables+=1;
+			if(dummy[0]!='#'){
+				fscanf(fptr,"%lf",&sig0);
+				observable_name.push_back(string(dummy));
+				SigmaA0.push_back(sig0);
+				name_map.insert(pair<string,int>(observable_name[NObservables],NObservables));
+				NObservables+=1;
+				fgets(dummy,200,fptr);
+			}
+			else{
+				fgets(dummy,200,fptr);
+			}
 		}
 	}while(!feof(fptr));
 	fclose(fptr);
