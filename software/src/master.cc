@@ -76,11 +76,6 @@ CSmoothMaster::CSmoothMaster(CparameterMap *parmap_set){
 
 }
 
-void CSmoothMaster::ReadTrainingInfo(){
-	traininginfo->ReadTrainingInfo(ModelRunDirName);
-	SetThetaTrain();
-}
-
 void CSmoothMaster::TuneAllY(){
 	for(unsigned int iY=0;iY<observableinfo->NObservables;iY++){
 		if(iY==3)

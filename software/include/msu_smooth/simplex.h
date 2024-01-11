@@ -29,6 +29,7 @@ namespace NBandSmooth{
 		double RTrain;
 		string ModelDirName;
 		CPriorInfo *priorinfo;
+		Crandy *randy;
 		vector<CModelParameters *> modelparameters;
 		CSimplexSampler(CparameterMap *parmap);
 		void SetThetaType1();

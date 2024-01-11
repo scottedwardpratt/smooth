@@ -6,6 +6,7 @@ using namespace NBandSmooth;
 using namespace NMSUPratt;
 
 CSimplexSampler::CSimplexSampler(CparameterMap *parmap){
+	randy=new Crandy(123);
 	string logfilename=parmap->getS("Simplex_LogFileName","Screen");
 	if(logfilename!="Screen"){
 		CLog::Init(logfilename);
@@ -113,6 +114,7 @@ void CSimplexSampler::SetThetaType2(){
 }
 
 void CSimplexSampler::SetThetaType3(){
+	CLog::Info("WARNING: Using Simplex_TrainType=3 sometimes bombs due to\nencountering non-invertible matrices when solving for coefficients\n");
 	unsigned int ipar,itrain,jtrain;
 	double R,z,RTrain;
 
@@ -146,19 +148,22 @@ void CSimplexSampler::SetThetaType3(){
 	for(itrain=NPars+1;itrain<2*NPars+2;itrain++){
 		ThetaTrain[itrain].resize(NPars);
 		for(ipar=0;ipar<NPars;ipar++){
-			ThetaTrain[itrain][ipar]=-ThetaTrain[itrain-NPars-1][ipar];
+			ThetaTrain[itrain][ipar]=-0.8*ThetaTrain[itrain-NPars-1][ipar];
 		}
 	}
+	
 	// Put last point at origin
 	ThetaTrain[2*NPars+2].resize(NPars);
 	for(ipar=0;ipar<NPars;ipar++){
 		ThetaTrain[2*NPars+2][ipar]=0.0;
+		printf("ThetaTrain[%u]=%g\n",2*NPars+2,ThetaTrain[2*NPars+2][ipar]);
 	}
 	NTrainingPts=2*NPars+3;
 
 }
 
 void CSimplexSampler::SetThetaType4(){
+	// This Type isn't recommended, just for playing
 	unsigned int ipar,itrain,jtrain,N1,n;
 	double R,Rprime,z,RTrain;
 	RTrain=0.9;
@@ -236,6 +241,13 @@ void CSimplexSampler::WriteModelPars(){
 			fprintf(fptr,"%s %g\n",
 			priorinfo->parname[ipar].c_str(),modelparameters[itrain]->X[ipar]);
 		}
+		printf("------ itrain=%u -------\n",itrain);
+		double R2=0.0;
+			for(ipar=0;ipar<NPars;ipar++){
+				printf("%2u %g\n",ipar,modelparameters[itrain]->Theta[ipar]);
+				R2+=pow(modelparameters[itrain]->Theta[ipar],2);
+			}
+			printf("---- R2=%g ----\n",R2);
 		fclose(fptr);
 	}
 

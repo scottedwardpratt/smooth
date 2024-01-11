@@ -7,23 +7,29 @@ using namespace NMSUPratt;
 CPriorInfo::CPriorInfo(string parinfo_filename_set){
 	parinfo_filename=parinfo_filename_set;
 	double minval,maxval;
-	char dummy1[120],dummy2[40];
+	char dummy1[200],dummy2[40],dummy3[200];
 
 	FILE *fptr;
 	fptr=fopen(parinfo_filename.c_str(), "r");
 	NModelPars=0;
 	do{
-		fscanf(fptr, "%s %s %lf %lf",dummy1,dummy2,&minval,&maxval);
-		if(!feof(fptr)){
-			if(string(dummy2)!="uniform" && string(dummy2)!="gaussian"){
-				CLog::Fatal("reading priorinfo: type="+string(dummy2)+". Must be uniform or gaussian.\n");
+		fscanf(fptr, "%s",dummy1);
+		if(dummy1[0]!='#' && !feof(fptr)){
+			fscanf(fptr, "%s %lf %lf",dummy2,&minval,&maxval);
+			if(!feof(fptr)){
+				if(string(dummy2)!="uniform" && string(dummy2)!="gaussian"){
+					CLog::Fatal("reading priorinfo: type="+string(dummy2)+". Must be uniform or gaussian.\n");
+				}
+				parname.push_back(string(dummy1));
+				type.push_back(string(dummy2));
+				xmin.push_back(minval);  // Gaussian type xmin refers to <x> and <xmax> is sigma
+				xmax.push_back(maxval);
+				name_map.insert(pair<string,unsigned int>(parname[NModelPars],NModelPars));
+				NModelPars+=1;
 			}
-			parname.push_back(string(dummy1));
-			type.push_back(string(dummy2));
-			xmin.push_back(minval);  // Gaussian type xmin refers to <x> and <xmax> is sigma
-			xmax.push_back(maxval);
-			name_map.insert(pair<string,unsigned int>(parname[NModelPars],NModelPars));
-			NModelPars+=1;
+		}
+		else{
+			fgets(dummy3,200,fptr);
 		}
 	}while(!feof(fptr));
 	fclose(fptr);

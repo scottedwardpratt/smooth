@@ -305,6 +305,13 @@ void CSmoothEmulator::CalcMForTraining(){
 		}
 	}
 	Minv=M.inverse();
+	for(itrain=0;itrain<NTrainingPts;itrain++){
+		for(ic=0;ic<NTrainingPts;ic++){
+			if(Minv(itrain,ic)!=Minv(itrain,ic)){
+				CLog::Fatal("Minv != Minv\n");
+			}
+		}
+	}
 }
 
 // This adjust first NTrainingPts coefficients to reproduce Y training values

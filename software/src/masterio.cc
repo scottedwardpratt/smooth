@@ -2,6 +2,11 @@
 using namespace std;
 using namespace NBandSmooth;
 
+void CSmoothMaster::ReadTrainingInfo(){
+	traininginfo->ReadTrainingInfo(ModelRunDirName);
+	SetThetaTrain();
+}
+
 void CSmoothMaster::WriteCoefficientsAllY(){
 	for(unsigned int iY=0;iY<observableinfo->NObservables;iY++){
 		emulator[iY]->WriteCoefficients();
