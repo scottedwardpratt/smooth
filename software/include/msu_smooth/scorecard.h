@@ -20,6 +20,6 @@ namespace NBandSmooth{
 		void CalcScore(CSmoothEmulator *emulator,vector<vector<double>> &ThetaTest,double YExpSet,double SigmaYExpSet);
 	};
 
-}
+};
 
 #endif

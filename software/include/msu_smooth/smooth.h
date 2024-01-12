@@ -43,6 +43,6 @@ namespace NBandSmooth{
 
 	};
 
-}
+};
 
 #endif

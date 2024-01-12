@@ -53,6 +53,6 @@ namespace NBandSmooth{
 		void RandomizeA(double SigmaReal);
 	};
 
-}
+};
 
 #endif

@@ -61,7 +61,7 @@ namespace NBandSmooth{
 		void GetFextVextHO(vector<double> &x,vector<double> &Fext,double &Vext);
 	};
 
-}
+};
 
 
 #endif

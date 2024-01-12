@@ -27,6 +27,6 @@ namespace NBandSmooth{
 		void PrintInfo();
 	};
 
-}
+};
 
 #endif
