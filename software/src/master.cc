@@ -2,7 +2,6 @@
 using namespace std;
 using namespace NBandSmooth;
 
-
 CSmoothMaster::CSmoothMaster(CparameterMap *parmap_set){
 	parmap=parmap_set;
 	int ranseed=parmap->getI("RANDY_SEED",time(NULL));
