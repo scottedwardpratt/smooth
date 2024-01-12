@@ -1,4 +1,5 @@
 #include "msu_smooth/simplex.h"
+#include "msu_smooth/modelparinfo.h"
 #include <cstdlib>
 
 using namespace std;
@@ -15,6 +16,7 @@ CSimplexSampler::CSimplexSampler(CparameterMap *parmap){
 	RTrain=parmap->getD("Simplex_RTrain",0.9);
 	string prior_info_filename="Info/modelpar_info.txt";
 	priorinfo=new CPriorInfo(prior_info_filename);
+	CModelParameters::priorinfo=priorinfo;
 	ModelDirName=parmap->getS("Simplex_ModelRunDirName","modelruns");
 	NPars=priorinfo->NModelPars;
 }
@@ -223,7 +225,7 @@ void CSimplexSampler::WriteModelPars(){
 	vector<CModelParameters *> modelparameters(NTrainingPts);
 
 	for(itrain=0;itrain<NTrainingPts;itrain++){
-		modelparameters[itrain]=new CModelParameters(priorinfo);
+		modelparameters[itrain]=new CModelParameters();
 		for(ipar=0;ipar<NPars;ipar++){
 			modelparameters[itrain]->Theta[ipar]=ThetaTrain[itrain][ipar];
 		}

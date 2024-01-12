@@ -1,10 +1,10 @@
 #include "msu_smooth/modelparinfo.h"
+NBandSmooth::CPriorInfo* NBandSmooth::CModelParameters::priorinfo=NULL;
 
 using namespace std;
 using namespace NBandSmooth;
 
-CModelParameters::CModelParameters(CPriorInfo *priorinfo_set){
-	priorinfo=priorinfo_set;
+CModelParameters::CModelParameters(){
 	NModelPars=priorinfo->NModelPars;
 	X.resize(NModelPars);
 	Theta.resize(NModelPars);

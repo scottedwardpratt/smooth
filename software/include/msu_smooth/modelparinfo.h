@@ -21,13 +21,13 @@ public:
 //has actual values of the parameter
 	vector<double> X;
 	vector<double> Theta;
-	CModelParameters(CPriorInfo *priorinfo_set);
+	CModelParameters();
 	void TranslateTheta_to_X();
 	void TranslateX_to_Theta();
 	void Print();
 	unsigned int NModelPars;
-	CPriorInfo *priorinfo;
 	void SetX(vector<double> &xset);
+	static CPriorInfo *priorinfo;
 };
 
 }

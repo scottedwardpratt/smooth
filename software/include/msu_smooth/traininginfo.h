@@ -23,7 +23,6 @@
 using namespace NMSUPratt;
 
 namespace NBandSmooth{
-	class CSmoothEmulator;
 	class CSmoothMaster;
 
 	class CTrainingInfo{

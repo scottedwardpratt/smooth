@@ -9,6 +9,7 @@ CSmoothMaster* CTrainingInfo::smoothmaster=NULL;
 CTrainingInfo::CTrainingInfo(vector<unsigned int> NTrainingList_set,CObservableInfo *observableinfo_set,CPriorInfo *priorinfo_set){
 	observableinfo=observableinfo_set;
 	priorinfo=priorinfo_set;
+	CModelParameters::priorinfo=priorinfo;
 	NObservables=observableinfo->NObservables;
 	NTrainingList = NTrainingList_set;
 	NTrainingPts = NTrainingList.size();
@@ -24,7 +25,7 @@ CTrainingInfo::CTrainingInfo(vector<unsigned int> NTrainingList_set,CObservableI
 
 	modelpars.resize(NTrainingPts);
 	for(ntrain=0;ntrain<NTrainingPts;ntrain++){
-		modelpars[ntrain]=new CModelParameters(smoothmaster->priorinfo);
+		modelpars[ntrain]=new CModelParameters();
 	}
 
 }
