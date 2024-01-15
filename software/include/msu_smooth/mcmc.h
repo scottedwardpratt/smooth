@@ -46,13 +46,14 @@ namespace NBandSmooth{
 		void WriteTrace(string filename);
 		
 		void CalcLL(CModelParameters *modpars,double &LL);
-		void CalcLLPlusDerivatives(CModelParInfo *modpars,double &LL,vector<double> &dLL_dtheta);
+		void CalcLLPlusDerivatives(CModelParameters *modpars,double &LL,vector<double> &dLL_dtheta);
 		CLLCalc *llcalc;
 	};
 	
 	class CLLCalc{
 	public:
 		CLLCalc();
+		CLLCalc(CSmoothMaster *master);
 		unsigned int NPars,NObs;
 		vector<double> Y,SigmaY,SigmaY_emulator;
 		vector<vector<double>> dYdTheta;
@@ -60,13 +61,13 @@ namespace NBandSmooth{
 		CPriorInfo *priorinfo;
 		CSmoothMaster *master;
 		virtual void CalcLL(CModelParameters *modpars,double &LL);
-		virtual void CalcLLPlusDerivatives(CModelParInfo *modpars,double &LL,vector<double> &dLL_dtheta);
+		virtual void CalcLLPlusDerivatives(CModelParameters *modpars,double &LL,vector<double> &dLL_dtheta);
 	};
 	
 	class CLLCalcSmooth : public CLLCalc{
 	public:
 		void CalcLL(CModelParameters *modpars,double &LL);
-		void CalcLLPlusDerivatives(CModelParInfo *modpars,double &LL,vector<double> &dLL_dtheta);
+		void CalcLLPlusDerivatives(CModelParameters *modpars,double &LL,vector<double> &dLL_dtheta);
 	};
 
 };

@@ -8,7 +8,7 @@ CLLCalc::CLLCalc(CSmoothMaster *master_set){
 	master=master_set;
 	NPars=master->NPars;
 	priorinfo=master->priorinfo;
-	obsinfo=master->obsinfo;
+	obsinfo=master->observableinfo;
 	obsinfo->ReadExperimentalInfo("Info/experimental_info.txt"); // might want to change this later to be more flexible
 	NObs=obsinfo->NObservables;
 	Y.resize(NObs);
@@ -21,31 +21,37 @@ CLLCalc::CLLCalc(CSmoothMaster *master_set){
 }
 
 void CLLCalc::CalcLL(CModelParameters *modpars,double &LL){
-	LL=-1.0;
+	(void) modpars;
+	(void) LL;
 }
 
-void CLLCalc::CalcLLPlusDerivatives(CModelParInfo *modpars,double &LL,vector<double> &dLL_dtheta){
-	LL=1000.0;
+void CLLCalc::CalcLLPlusDerivatives(CModelParameters *modpars,double &LL,vector<double> &dLL_dtheta){
+	(void) modpars;
+	(void) LL;
+	(void) dLL_dtheta;
 }
 
 void CLLCalcSmooth::CalcLL(CModelParameters *modpars,double &LL){
-	unsigned int iobs;
+	unsigned int iy;
+	double sigma2;
 	master->CalcAllY(modpars,Y,SigmaY_emulator);
 	LL=0.0;
-	for(iobs=0;iobs<NObs;iobs++){
-		sigma2=Sigmay_emulator[iY]*SigmaY_emulator[iy]+obsinfo->SigmaExp=[iy]*obsinfo->SigmaExp[iy];
-		LL+=0.5*pow(Y[iobs]-obsinfo->Yexp[iobs],2)/sigma2;
+	for(iy=0;iy<NObs;iy++){
+		sigma2=SigmaY_emulator[iy]*SigmaY_emulator[iy]+obsinfo->SigmaExp[iy]*obsinfo->SigmaExp[iy];
+		LL+=0.5*pow(Y[iy]-obsinfo->YExp[iy],2)/sigma2;
 	}
 	
 }
 
-void CLLCalcSmooth::CalcLLPlusDerivatives(CModelParameters *modpars,double &LL){
-	unsigned int iobs;
+void CLLCalcSmooth::CalcLLPlusDerivatives(CModelParameters *modpars,double &LL,vector<double> &dLL_dtheta){
+	(void) dLL_dtheta;
+	unsigned int iy;
+	double sigma2;
 	master->CalcAllY(modpars,Y,SigmaY_emulator);
 	LL=0.0;
-	for(iobs=0;iobs<NObs;iobs++){
-		sigma2=Sigmay_emulator[iY]*SigmaY_emulator[iy]+obsinfo->SigmaExp=[iy]*obsinfo->SigmaExp[iy];
-		LL+=0.5*pow(Y[iobs]-obsinfo->Yexp[iobs],2)/sigma2;
+	for(iy=0;iy<NObs;iy++){
+		sigma2=SigmaY_emulator[iy]*SigmaY_emulator[iy]+obsinfo->SigmaExp[iy]*obsinfo->SigmaExp[iy];
+		LL+=0.5*pow(Y[iy]-obsinfo->YExp[iy],2)/sigma2;
 	}
 	
 }
