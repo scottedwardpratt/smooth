@@ -41,7 +41,7 @@ namespace NBandSmooth{
 		double GetRFactor(double LAMBDA,vector<double> &theta);
 		double GetM(unsigned int ic,double LAMBDA,vector<double> &theta);
 		
-		void CalcDYDTheta(vector<double> &A,double lambda,vector<double> &theta,double &Y,vector<double> &dYdTheta);
+		void CalcYDYDTheta(vector<double> &A,double lambda,vector<double> &theta,double &Y,vector<double> &dYdTheta);
 
 	};
 
