@@ -40,6 +40,8 @@ namespace NBandSmooth{
 		double CalcY_Remainder_FromMtot(vector<double> &A,unsigned int NTrainingPts,vector<double> &Mtot);
 		double GetRFactor(double LAMBDA,vector<double> &theta);
 		double GetM(unsigned int ic,double LAMBDA,vector<double> &theta);
+		
+		void CalcDYDTheta(vector<double> &A,double lambda,vector<double> &theta,double &Y,vector<double> &dYdTheta);
 
 	};
 

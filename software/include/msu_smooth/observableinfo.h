@@ -18,7 +18,7 @@ namespace NBandSmooth{
 		unsigned int NObservables;
 		vector<string> observable_name;
 		vector<double> SigmaA0; // representative spread of coefficients
-		map<string,int> name_map;
+		map<string,unsigned int> name_map;
 		unsigned int GetIPosition(string obsname);  // finds position given name of observable
 		string GetName(unsigned int iposition);  // finds name give position
 		void ReadObservableInfo(string filename);

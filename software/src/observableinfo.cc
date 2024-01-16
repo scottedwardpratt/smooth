@@ -18,8 +18,8 @@ CObservableInfo::CObservableInfo(string filename){
 }
 
 unsigned int CObservableInfo::GetIPosition(string obsname){
-	map<string,int>::iterator iter;
-	pair<string,int> mpair;
+	map<string,unsigned int>::iterator iter;
+	//pair<string,unsigned int> mpair;
 	iter=name_map.find(obsname);
 	if(iter==name_map.end()){
 		CLog::Fatal("In CObservableInfo::GetIposition, cannot find observable "+obsname+"\n");
