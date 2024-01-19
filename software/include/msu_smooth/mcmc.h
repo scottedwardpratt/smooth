@@ -20,6 +20,7 @@ using namespace NBandSmooth;
 namespace NBandSmooth{
 	
 	class CLLCalc;
+	class CLLCalcSmooth;
 
 	class CMCMC{
 	public:
@@ -29,7 +30,7 @@ namespace NBandSmooth{
 		
 		CMCMC();
 		CMCMC(CSmoothMaster *master);
-		unsigned int NPars,NObs,NSkip;
+		unsigned int NPars,NObs;
 		vector<CModelParameters> trace;
 		vector<CModelParameters> burntrace;
 		double stepsize;
@@ -39,7 +40,7 @@ namespace NBandSmooth{
 		void ClearBurnTrace(CModelParameters *modpars);
 		
 		void BurnInMetropolis(unsigned int Nburn);
-		void PerformMetropolisTrace(unsigned int Ntrace);
+		void PerformMetropolisTrace(unsigned int Ntrace,unsigned int NSkip);
 		void BurnInLangevin(unsigned int Nburn);
 		void PerformLangevinTrace(unsigned int Ntrace);
 		void Langevin(unsigned int nsteps);
@@ -47,11 +48,12 @@ namespace NBandSmooth{
 		
 		void CalcLL(CModelParameters *modpars,double &LL);
 		void CalcLLPlusDerivatives(CModelParameters *modpars,double &LL,vector<double> &dLL_dtheta);
-		CLLCalc *llcalc;
+		CLLCalcSmooth *llcalc;
 	};
 	
 	class CLLCalc{
 	public:
+		double bestLL;
 		CLLCalc();
 		CLLCalc(CSmoothMaster *master);
 		unsigned int NPars,NObs;
@@ -66,6 +68,7 @@ namespace NBandSmooth{
 	
 	class CLLCalcSmooth : public CLLCalc{
 	public:
+		CLLCalcSmooth(CSmoothMaster *master);
 		void CalcLL(CModelParameters *modpars,double &LL);
 		void CalcLLPlusDerivatives(CModelParameters *modpars,double &LL,vector<double> &dLL_dtheta);
 	};

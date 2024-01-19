@@ -16,9 +16,7 @@ double CSmooth::CalcY(vector<double> &A,double LAMBDA,vector<double> &theta){
 		answer+=term;
 	}
 	answer*=rfactor;
-
-
-	return answer;
+  return answer;
 }
 
 double CSmooth::CalcY_Remainder(vector<double> &A,double LAMBDA,vector<double> &theta,unsigned int NTrainingPts){
@@ -58,15 +56,17 @@ double CSmooth::CalcY_FromMtot(vector<double> &A,vector<double> &Mtot){
 void CSmooth::CalcYDYDTheta(vector<double> &A,double LAMBDA,vector<double> &theta,double &Y,vector<double> &dYdTheta){
 	unsigned int ir,ic,ipar,n,ndiff,oldipar,npar;
 	dYdTheta.resize(theta.size(),0.0);
-	double rfactor = GetRFactor(LAMBDA, theta);
+	double rfactor=GetRFactor(LAMBDA, theta);
 	double term,prefactor;
 
 	vector<unsigned int> nparvec;
 	vector<unsigned int> iparvec;
 	nparvec.resize(0);
 	iparvec.resize(0);
-	
+	for(ipar=0;ipar<NPars;ipar++)
+		dYdTheta[ipar]=0.0;
 	Y=0.0;
+	
 	for(ic=0;ic<NCoefficients;ic++){
 		term=A[ic]*sqrt(double(dupfactor[ic])/double(factorial[rank[ic]]));
 		for(ir=0;ir<rank[ic];ir++){
@@ -75,62 +75,40 @@ void CSmooth::CalcYDYDTheta(vector<double> &A,double LAMBDA,vector<double> &thet
 		Y+=term;
 	}
 	Y*=rfactor;
-	
 
-	for(unsigned int ic = 0; ic < NCoefficients; ic++) {
-		prefactor = A[ic] * sqrt(double(dupfactor[ic]) / double(factorial[rank[ic]]));
+	for(unsigned int ic=0;ic<NCoefficients;ic++){
+		prefactor= A[ic]*sqrt(double(dupfactor[ic])/double(factorial[rank[ic]]));
 		iparvec.clear();
 		nparvec.clear();
 		ndiff=0;
-		
-		
-		printf("------ ic=%u --------\n",ic);
+		oldipar=99999;
 		for(ir=0;ir<rank[ic];ir++){
-			printf("%2u ",IPar[ic][ir]);
-		}
-		printf("\n");
-
-		oldipar = 99999;
-
-		for(ir = 0; ir < rank[ic]; ir++) {
-			ipar = IPar[ic][ir];
-			if(ipar != oldipar){
+			ipar=IPar[ic][ir];
+			if(ipar!=oldipar){
 				iparvec.push_back(ipar);
 				nparvec.push_back(1);
-				//iparvec[ndiff] += 1;
-				ndiff += 1;
-				oldipar = ipar;
-			}
-			else {
-				nparvec[ndiff-1]+=1 ;
-				printf("check, ndiff=%u, nparvec=%u\n",ndiff,nparvec[ndiff-1]);
+				ndiff+=1;
 				oldipar=ipar;
 			}
+			else{
+				nparvec[ndiff-1]+=1 ;
+			}
 		}
-		for(n=0;n<ndiff;n++){
-			printf("%2u,%2u   ",iparvec[n],nparvec[n]);
-		}
-		printf("\n");
-			
-		printf("ndiff=%u, prefactor=%g, iparvec size=%lu, nparvec size=%lu\n",
-		ndiff,prefactor,iparvec.size(),nparvec.size());
-		
 		term=prefactor;
-		for(n = 0;n<ndiff;n++){
-			ipar = iparvec[n];
+		for(n=0;n<ndiff;n++){
+			ipar=iparvec[n];
 			npar=nparvec[n];
 			term*=pow(theta[ipar]/LAMBDA,npar);
 		}
 		
 		for(n=0;n<ndiff;n++){
-			ipar = iparvec[n];
+			ipar=iparvec[n];
 			npar=nparvec[n];
 			dYdTheta[ipar]+=term*npar/theta[ipar];
 		}
-		
 	}	
-	for(unsigned int i = 0; i < dYdTheta.size(); i++) {
-		dYdTheta[i] *= rfactor;
+	for(ipar=0;ipar<dYdTheta.size();ipar++) {
+		dYdTheta[ipar]*=rfactor;
 	}
 }
 
