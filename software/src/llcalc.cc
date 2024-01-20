@@ -86,15 +86,26 @@ void CLLCalcSmooth::CalcLL(CModelParameters *modpars,double &LL){
 	//Misc::Pause();
 }
 
-void CLLCalcSmooth::CalcLLPlusDerivatives(CModelParameters *modpars,double &LL,vector<double> &dLL_dtheta){
-	(void) dLL_dtheta;
-	unsigned int iy;
+void CLLCalcSmooth::CalcLLPlusDerivatives(CModelParameters *modpars,double &LL,vector<double> &dLL_dTheta){
+	unsigned int iy,ipar;
 	double sigma2;
-	master->CalcAllY(modpars,Y,SigmaY_emulator);
+	vector<vector<double>> dYdTheta;
+	dYdTheta.resize(NObs);
+	for(iy=0;iy<NObs;iy++){
+		dYdTheta[iy].resize(NPars);
+		for(ipar=0;ipar<NPars;ipar++)
+			dYdTheta[iy][ipar]=0.0;
+	}
+	master->CalcAllYdYdTheta(modpars,Y,SigmaY_emulator,dYdTheta);
 	LL=0.0;
+	for(ipar=0;ipar<0;ipar++)
+		dLL_dTheta[ipar]=0.0;
 	for(iy=0;iy<NObs;iy++){
 		sigma2=SigmaY_emulator[iy]*SigmaY_emulator[iy]+obsinfo->SigmaExp[iy]*obsinfo->SigmaExp[iy];
 		LL-=0.5*pow(Y[iy]-obsinfo->YExp[iy],2)/sigma2;
+		for(ipar=0;ipar<NPars;ipar++){
+			dLL_dTheta[ipar]-=(Y[iy]-obsinfo->YExp[iy])*dYdTheta[iy][ipar]/sigma2;
+		}
 	}
 	
 }

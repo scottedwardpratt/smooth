@@ -101,3 +101,53 @@ void CMCMC::PerformMetropolisTrace(unsigned int Ntrace,unsigned int NSkip){
 	}
 	
 }
+
+void CMCMC::PerformLangevinTrace(unsigned int Ntrace,unsigned int NSkip){
+	unsigned int itrace,iskip,ipar;
+	bool inside;
+	double LL,ss,sqstep,dLLdTheta2;
+	vector<double> dLLdTheta,dTheta;
+	CModelParameters *oldmodpars,*newmodpars,*modpars;
+	if(trace.size()==0){
+		CLog::Fatal("Inside MCMC::PerformMetropolis, no initial point!\n");
+	}
+	dLLdTheta.resize(NPars);
+	dTheta.resize(NPars);
+	
+	for(itrace=0;itrace<Ntrace;itrace++){
+		oldmodpars=&trace[trace.size()-1];
+		newmodpars=new CModelParameters();
+		for(iskip=0;iskip<NSkip;iskip++){
+			llcalc->CalcLLPlusDerivatives(newmodpars,LL,dLLdTheta);
+			inside=true;
+			dLLdTheta2=0.0;
+			for(ipar=0;ipar<NPars;ipar++){
+				dLLdTheta2+=dLLdTheta[ipar]*dLLdTheta[ipar];
+			}
+			ss=stepsize/sqrt(dLLdTheta2);
+			sqstep=sqrt(2.0*ss);
+			for(ipar=0;ipar<NPars;ipar++){
+				dTheta[ipar]=ss*dLLdTheta[ipar]+sqstep*randy->ran_gauss();
+				newmodpars->Theta[ipar]=oldmodpars->Theta[ipar]+dTheta[ipar];
+				if(fabs(newmodpars->Theta[ipar])>1.0){
+					inside=false;
+					ipar=NPars;
+				}
+			}
+			if(inside){
+				*oldmodpars=*newmodpars;
+				printf("success\n");
+				for(ipar=0;ipar<NPars;ipar++)
+					printf("%7.3f ",dTheta[ipar]);
+				printf("\n");
+			}
+		}
+		modpars=new CModelParameters();
+		*modpars=*oldmodpars;
+		modpars->TranslateTheta_to_X();
+		trace.push_back(*modpars);
+		CLog::Info("finished for itrace"+to_string(itrace)+"\n");
+		delete newmodpars;
+	}
+	
+}

@@ -42,7 +42,7 @@ namespace NBandSmooth{
 		void BurnInMetropolis(unsigned int Nburn);
 		void PerformMetropolisTrace(unsigned int Ntrace,unsigned int NSkip);
 		void BurnInLangevin(unsigned int Nburn);
-		void PerformLangevinTrace(unsigned int Ntrace);
+		void PerformLangevinTrace(unsigned int Ntrace,unsigned int NSkip);
 		void Langevin(unsigned int nsteps);
 		void WriteTrace(string filename);
 		

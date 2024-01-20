@@ -50,8 +50,12 @@ namespace NBandSmooth{
 		void TuneY(unsigned int iY); // tune one observable
 		void SetThetaTrain();
 		void CalcY(unsigned int iY,CModelParameters *modelpars,double &Y,double &SigmaY_emulator);
+		void CalcYdYdTheta(unsigned int iY,CModelParameters *modelpars,double &Y,
+		double &SigmaY_emulator,vector<double> &dYdTheta);
 		void CalcY(string obsname,CModelParameters *modelpars,double &Y,double &SigmaY_emulator);
 		void CalcAllY(CModelParameters *modelpars,vector<double> &Y,vector<double> &SigmaY_emulator);
+		void CalcAllYdYdTheta(CModelParameters *modelpars,vector<double> &Y,
+		vector<double> &SigmaY_emulator,vector<vector<double>> &dYdTheta);
 		void TestAtTrainingPts();
 		void TestAtTrainingPts(string obsname);
 		void TestAtTrainingPts(unsigned int iY);

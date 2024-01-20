@@ -115,6 +115,11 @@ void CSmoothMaster::CalcY(unsigned int iY,CModelParameters *modelpars,double &Y,
 	emulator[iY]->CalcY(modelpars,Y,SigmaY_emulator);
 }
 
+void CSmoothMaster::CalcYdYdTheta(unsigned int iY,CModelParameters *modelpars,double &Y,
+double &SigmaY_emulator,vector<double> &dYdTheta){
+	emulator[iY]->CalcYDYDTheta(modelpars,Y,dYdTheta,SigmaY_emulator);
+}
+
 void CSmoothMaster::CalcY(string obsname,CModelParameters *modelpars,double &Y,double &SigmaY_emulator){
 	unsigned int iY=observableinfo->GetIPosition(obsname);
 	emulator[iY]->CalcY(modelpars,Y,SigmaY_emulator);
@@ -126,6 +131,18 @@ void CSmoothMaster::CalcAllY(CModelParameters *modelpars,vector<double> &Y,vecto
 	SigmaY_emulator.resize(NObservables);
 	for(unsigned int iY=0;iY<NObservables;iY++){
 		CalcY(iY,modelpars,Y[iY],SigmaY_emulator[iY]);
+	}
+}
+
+void CSmoothMaster::CalcAllYdYdTheta(CModelParameters *modelpars,vector<double> &Y,
+vector<double> &SigmaY_emulator,vector<vector<double>> &dYdTheta){
+	unsigned int NObservables=observableinfo->NObservables;
+	Y.resize(NObservables);
+	dYdTheta.resize(NObservables);
+	SigmaY_emulator.resize(NObservables);
+	for(unsigned int iY=0;iY<NObservables;iY++){
+		CalcYdYdTheta(iY,modelpars,Y[iY],SigmaY_emulator[iY],dYdTheta[iY]);
+		dYdTheta.resize(NPars);
 	}
 }
 
