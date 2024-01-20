@@ -107,5 +107,18 @@ void CLLCalcSmooth::CalcLLPlusDerivatives(CModelParameters *modpars,double &LL,v
 			dLL_dTheta[ipar]-=(Y[iy]-obsinfo->YExp[iy])*dYdTheta[iy][ipar]/sigma2;
 		}
 	}
+	if(LL>bestLL){
+		bestLL=LL;
+		printf("-------------------------------\n");
+		printf("Theta=");
+		for(ipar=0;ipar<NPars;ipar++){
+			printf("%6.3f ",modpars->Theta[ipar]);
+		}
+		printf("\nY = ");
+		for(iy=0;iy<NObs;iy++){
+			printf("(%g=?%g) ",Y[iy],obsinfo->YExp[iy]);
+		}
+		printf("\nbestLL=%g\n",bestLL);
+	}
 	
 }

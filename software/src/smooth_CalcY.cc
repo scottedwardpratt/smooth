@@ -54,7 +54,7 @@ double CSmooth::CalcY_FromMtot(vector<double> &A,vector<double> &Mtot){
 }
 
 void CSmooth::CalcYDYDTheta(vector<double> &A,double LAMBDA,vector<double> &theta,double &Y,vector<double> &dYdTheta){
-	unsigned int ir,ic,ipar,n,ndiff,oldipar,npar;
+	unsigned int ir,ic,ipar,iparprime,n,nprime,nparprime,ndiff,oldipar,npar;
 	dYdTheta.resize(theta.size(),0.0);
 	double rfactor=GetRFactor(LAMBDA, theta);
 	double term,prefactor;
@@ -63,12 +63,19 @@ void CSmooth::CalcYDYDTheta(vector<double> &A,double LAMBDA,vector<double> &thet
 	vector<unsigned int> iparvec;
 	nparvec.resize(0);
 	iparvec.resize(0);
+	dYdTheta.resize(NPars);
 	for(ipar=0;ipar<NPars;ipar++)
 		dYdTheta[ipar]=0.0;
 	Y=0.0;
 	
 	for(ic=0;ic<NCoefficients;ic++){
 		term=A[ic]*sqrt(double(dupfactor[ic])/double(factorial[rank[ic]]));
+		if(A[ic]!=A[ic]){
+			CLog::Fatal("Disaster in CSmooth::CalcYDYDTheta, A!=A\n");
+		}
+		if(term!=term){
+			CLog::Fatal("Disaster in CSmooth::CalcYDYDTheta, term!=term\n");
+		}
 		for(ir=0;ir<rank[ic];ir++){
 			term*=theta[IPar[ic][ir]]/LAMBDA;
 		}
@@ -76,6 +83,7 @@ void CSmooth::CalcYDYDTheta(vector<double> &A,double LAMBDA,vector<double> &thet
 	}
 	Y*=rfactor;
 
+	double termtest,Ytest=0.0;
 	for(unsigned int ic=0;ic<NCoefficients;ic++){
 		prefactor= A[ic]*sqrt(double(dupfactor[ic])/double(factorial[rank[ic]]));
 		iparvec.clear();
@@ -94,19 +102,30 @@ void CSmooth::CalcYDYDTheta(vector<double> &A,double LAMBDA,vector<double> &thet
 				nparvec[ndiff-1]+=1 ;
 			}
 		}
-		term=prefactor;
-		for(n=0;n<ndiff;n++){
-			ipar=iparvec[n];
-			npar=nparvec[n];
-			term*=pow(theta[ipar]/LAMBDA,npar);
-		}
 		
+		termtest=prefactor;
 		for(n=0;n<ndiff;n++){
 			ipar=iparvec[n];
 			npar=nparvec[n];
-			dYdTheta[ipar]+=term*npar/theta[ipar];
+			termtest*=pow(theta[ipar]/LAMBDA,npar);
+			term=prefactor;
+			for(nprime=0;nprime<ndiff;nprime++){
+				iparprime=iparvec[nprime];
+				nparprime=nparvec[nprime];
+				if(nprime!=n)
+					term*=pow(theta[iparprime]/LAMBDA,nparprime);
+				else
+					term*=(double(npar)/LAMBDA)*pow(theta[ipar]/LAMBDA,npar-1);
+			}
+			dYdTheta[ipar]+=term;
+			if(dYdTheta[ipar]!=dYdTheta[ipar]){
+				printf("ipar=%u, npar=%u, term=%g, theta=%g\n",ipar,npar,term,theta[ipar]);
+				CLog::Fatal("Disaster in CSmooth::CalcYDYDTheta\n");
+			}
 		}
+		Ytest+=termtest;
 	}	
+	printf("Y=%g, Ytest=%g\n",Y,Ytest*rfactor);
 	for(ipar=0;ipar<dYdTheta.size();ipar++) {
 		dYdTheta[ipar]*=rfactor;
 	}

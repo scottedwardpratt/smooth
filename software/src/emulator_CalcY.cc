@@ -42,6 +42,10 @@ void CSmoothEmulator::CalcYDYDTheta(vector<double> Theta,double &Y,vector<double
 		SigmaY+=y*y/double(NASample);
 		for(ipar=0;ipar<NPars;ipar++){
 			dYdTheta[ipar]+=dydtheta[ipar]/double(NASample);
+			if(dYdTheta[ipar]!=dYdTheta[ipar]){
+				printf("ipar=%u, y=%g, dydtheta=%g, LAMBDA=%g, Theta=%g\n",ipar,y,dydtheta[ipar],LAMBDA,Theta[ipar]);
+				CLog::Fatal("disaster in CalcYDYDTheta\n");
+			}
 		}
 	}
 	SigmaY=sqrt(fabs(SigmaY-Y*Y));

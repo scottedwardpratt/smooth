@@ -118,7 +118,7 @@ void CMCMC::PerformLangevinTrace(unsigned int Ntrace,unsigned int NSkip){
 		oldmodpars=&trace[trace.size()-1];
 		newmodpars=new CModelParameters();
 		for(iskip=0;iskip<NSkip;iskip++){
-			llcalc->CalcLLPlusDerivatives(newmodpars,LL,dLLdTheta);
+			llcalc->CalcLLPlusDerivatives(oldmodpars,LL,dLLdTheta);
 			inside=true;
 			dLLdTheta2=0.0;
 			for(ipar=0;ipar<NPars;ipar++){
@@ -128,6 +128,12 @@ void CMCMC::PerformLangevinTrace(unsigned int Ntrace,unsigned int NSkip){
 			sqstep=sqrt(2.0*ss);
 			for(ipar=0;ipar<NPars;ipar++){
 				dTheta[ipar]=ss*dLLdTheta[ipar]+sqstep*randy->ran_gauss();
+				if(dTheta[ipar]!=dTheta[ipar]){
+					oldmodpars->Print();
+					printf("ipar=%u, stepsize=%g, ss=%g, dLLdTheta=%g, sqstep=%g\n",ipar,stepsize,ss,dLLdTheta[ipar],sqstep);
+					
+					CLog::Fatal("disaster in PerformLangevinTrace\n");
+				}
 				newmodpars->Theta[ipar]=oldmodpars->Theta[ipar]+dTheta[ipar];
 				if(fabs(newmodpars->Theta[ipar])>1.0){
 					inside=false;
