@@ -83,7 +83,6 @@ void CSmooth::CalcYDYDTheta(vector<double> &A,double LAMBDA,vector<double> &thet
 	}
 	Y*=rfactor;
 
-	double termtest,Ytest=0.0;
 	for(unsigned int ic=0;ic<NCoefficients;ic++){
 		prefactor= A[ic]*sqrt(double(dupfactor[ic])/double(factorial[rank[ic]]));
 		iparvec.clear();
@@ -103,11 +102,9 @@ void CSmooth::CalcYDYDTheta(vector<double> &A,double LAMBDA,vector<double> &thet
 			}
 		}
 		
-		termtest=prefactor;
 		for(n=0;n<ndiff;n++){
 			ipar=iparvec[n];
 			npar=nparvec[n];
-			termtest*=pow(theta[ipar]/LAMBDA,npar);
 			term=prefactor;
 			for(nprime=0;nprime<ndiff;nprime++){
 				iparprime=iparvec[nprime];
@@ -123,9 +120,7 @@ void CSmooth::CalcYDYDTheta(vector<double> &A,double LAMBDA,vector<double> &thet
 				CLog::Fatal("Disaster in CSmooth::CalcYDYDTheta\n");
 			}
 		}
-		Ytest+=termtest;
 	}	
-	printf("Y=%g, Ytest=%g\n",Y,Ytest*rfactor);
 	for(ipar=0;ipar<dYdTheta.size();ipar++) {
 		dYdTheta[ipar]*=rfactor;
 	}
