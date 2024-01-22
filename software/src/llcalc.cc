@@ -58,7 +58,7 @@ void CLLCalcSmooth::CalcLL(CModelParameters *modpars,double &LL){
 	bool insidebounds=true;
 	LL=0.0;
 	for(ipar=0;ipar<NPars;ipar++){
-		if(fabs(modpars->Theta[ipar])>1.0){
+		if(modpars->priorinfo->type[ipar]=="uniform" && fabs(modpars->Theta[ipar])>1.0){
 			LL=-1.0E100;
 			insidebounds=false;
 		}
@@ -69,19 +69,24 @@ void CLLCalcSmooth::CalcLL(CModelParameters *modpars,double &LL){
 			sigma2=SigmaY_emulator[iy]*SigmaY_emulator[iy]+obsinfo->SigmaExp[iy]*obsinfo->SigmaExp[iy];
 			LL-=0.5*pow(Y[iy]-obsinfo->YExp[iy],2)/sigma2;
 		}
-		if(LL>bestLL){
-			bestLL=LL;
-			printf("-------------------------------\n");
-			printf("Theta=");
-			for(ipar=0;ipar<NPars;ipar++){
-				printf("%6.3f ",modpars->Theta[ipar]);
+		for(ipar=0;ipar<NPars;ipar++){
+			if(modpars->priorinfo->type[ipar]=="gaussian"){
+				LL-=0.5*pow(modpars->Theta[ipar]*modpars->GSCALE,2);
 			}
-			printf("\nY = ");
-			for(iy=0;iy<NObs;iy++){
-				printf("(%g=?%g) ",Y[iy],obsinfo->YExp[iy]);
-			}
-			printf("\nbestLL=%g\n",bestLL);
 		}
+	}
+	if(LL>bestLL){
+		bestLL=LL;
+		CLog::Info("-------------------------------\n");
+		CLog::Info("Theta=");
+		for(ipar=0;ipar<NPars;ipar++){
+			CLog::Info(to_string(modpars->Theta[ipar])+" ");
+		}
+		CLog::Info("\nY = ");
+		for(iy=0;iy<NObs;iy++){
+			CLog::Info(to_string(Y[iy])+"=?"+to_string(obsinfo->YExp[iy])+" ");
+		}
+		CLog::Info("\nbestLL="+to_string(bestLL)+"\n");
 	}
 	//Misc::Pause();
 }
@@ -107,18 +112,24 @@ void CLLCalcSmooth::CalcLLPlusDerivatives(CModelParameters *modpars,double &LL,v
 			dLL_dTheta[ipar]-=(Y[iy]-obsinfo->YExp[iy])*dYdTheta[iy][ipar]/sigma2;
 		}
 	}
+	for(ipar=0;ipar<NPars;ipar++){
+		if(modpars->priorinfo->type[ipar]=="gaussian"){
+			LL-=0.5*pow(modpars->Theta[ipar]*modpars->GSCALE,2);
+			dLL_dTheta[ipar]-=modpars->Theta[ipar]*pow(modpars->GSCALE,2);
+		}
+	}
 	if(LL>bestLL){
 		bestLL=LL;
-		printf("-------------------------------\n");
-		printf("Theta=");
+		CLog::Info("-------------------------------\n");
+		CLog::Info("Theta=");
 		for(ipar=0;ipar<NPars;ipar++){
-			printf("%6.3f ",modpars->Theta[ipar]);
+			CLog::Info(to_string(modpars->Theta[ipar])+" ");
 		}
-		printf("\nY = ");
+		CLog::Info("\nY = ");
 		for(iy=0;iy<NObs;iy++){
-			printf("(%g=?%g) ",Y[iy],obsinfo->YExp[iy]);
+			CLog::Info(to_string(Y[iy])+"=?"+to_string(obsinfo->YExp[iy])+" ");
 		}
-		printf("\nbestLL=%g\n",bestLL);
+		CLog::Info("\nbestLL="+to_string(bestLL)+"\n");
 	}
 	
 }

@@ -28,6 +28,7 @@ namespace NBandSmooth{
 		unsigned int NModelPars;
 		void SetX(vector<double> &xset);
 		static CPriorInfo *priorinfo;
+		static double GSCALE;
 	};
 
 };
