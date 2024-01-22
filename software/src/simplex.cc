@@ -158,7 +158,7 @@ void CSimplexSampler::SetThetaType3(){
 	ThetaTrain[2*NPars+2].resize(NPars);
 	for(ipar=0;ipar<NPars;ipar++){
 		ThetaTrain[2*NPars+2][ipar]=0.0;
-		printf("ThetaTrain[%u]=%g\n",2*NPars+2,ThetaTrain[2*NPars+2][ipar]);
+		//printf("ThetaTrain[%u]=%g\n",2*NPars+2,ThetaTrain[2*NPars+2][ipar]);
 	}
 	NTrainingPts=2*NPars+3;
 
@@ -243,13 +243,6 @@ void CSimplexSampler::WriteModelPars(){
 			fprintf(fptr,"%s %g\n",
 			priorinfo->parname[ipar].c_str(),modelparameters[itrain]->X[ipar]);
 		}
-		printf("------ itrain=%u -------\n",itrain);
-		double R2=0.0;
-			for(ipar=0;ipar<NPars;ipar++){
-				printf("%2u %g\n",ipar,modelparameters[itrain]->Theta[ipar]);
-				R2+=pow(modelparameters[itrain]->Theta[ipar],2);
-			}
-			printf("---- R2=%g ----\n",R2);
 		fclose(fptr);
 	}
 

@@ -96,7 +96,7 @@ void CMCMC::PerformMetropolisTrace(unsigned int Ntrace,unsigned int NSkip){
 		*modpars=*oldmodpars;
 		modpars->TranslateTheta_to_X();
 		trace.push_back(*modpars);
-		CLog::Info("finished for itrace"+to_string(itrace)+"\n");
+		//CLog::Info("finished for itrace"+to_string(itrace)+"\n");
 		delete newmodpars;
 	}
 	
@@ -130,8 +130,6 @@ void CMCMC::PerformLangevinTrace(unsigned int Ntrace,unsigned int NSkip){
 				dTheta[ipar]=ss*dLLdTheta[ipar]+sqstep*randy->ran_gauss();
 				if(dTheta[ipar]!=dTheta[ipar]){
 					oldmodpars->Print();
-					printf("ipar=%u, stepsize=%g, ss=%g, dLLdTheta=%g, sqstep=%g\n",ipar,stepsize,ss,dLLdTheta[ipar],sqstep);
-					
 					CLog::Fatal("disaster in PerformLangevinTrace\n");
 				}
 				newmodpars->Theta[ipar]=oldmodpars->Theta[ipar]+dTheta[ipar];
@@ -142,17 +140,13 @@ void CMCMC::PerformLangevinTrace(unsigned int Ntrace,unsigned int NSkip){
 			}
 			if(inside){
 				*oldmodpars=*newmodpars;
-				printf("success\n");
-				for(ipar=0;ipar<NPars;ipar++)
-					printf("%7.3f ",dTheta[ipar]);
-				printf("\n");
 			}
 		}
 		modpars=new CModelParameters();
 		*modpars=*oldmodpars;
 		modpars->TranslateTheta_to_X();
 		trace.push_back(*modpars);
-		CLog::Info("finished for itrace"+to_string(itrace)+"\n");
+		//CLog::Info("finished for itrace"+to_string(itrace)+"\n");
 		delete newmodpars;
 	}
 	

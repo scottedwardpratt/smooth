@@ -29,6 +29,7 @@ void CSmoothEmulator::CalcYDYDTheta(CModelParameters *modpars,double &Y,vector<d
 void CSmoothEmulator::CalcYDYDTheta(vector<double> Theta,double &Y,vector<double> &dYdTheta,double &SigmaY){
 	double y;
 	unsigned int ipar;
+	char dummy[200];
 	vector<double> dydtheta;
 	dYdTheta.resize(NPars);
 	dydtheta.resize(NPars);
@@ -43,7 +44,8 @@ void CSmoothEmulator::CalcYDYDTheta(vector<double> Theta,double &Y,vector<double
 		for(ipar=0;ipar<NPars;ipar++){
 			dYdTheta[ipar]+=dydtheta[ipar]/double(NASample);
 			if(dYdTheta[ipar]!=dYdTheta[ipar]){
-				printf("ipar=%u, y=%g, dydtheta=%g, LAMBDA=%g, Theta=%g\n",ipar,y,dydtheta[ipar],LAMBDA,Theta[ipar]);
+				snprintf(dummy,200,"ipar=%u, y=%g, dydtheta=%g, LAMBDA=%g, Theta=%g\n",ipar,y,dydtheta[ipar],LAMBDA,Theta[ipar]);
+				CLog::Info(dummy);
 				CLog::Fatal("disaster in CalcYDYDTheta\n");
 			}
 		}
