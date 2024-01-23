@@ -1,10 +1,12 @@
 #include "msu_smooth/priorinfo.h"
+#include "msu_smooth/modelparinfo.h"
 
 using namespace std;
 using namespace NBandSmooth;
 using namespace NMSUPratt;
 
 CPriorInfo::CPriorInfo(string parinfo_filename_set){
+	CModelParameters::priorinfo=this;
 	parinfo_filename=parinfo_filename_set;
 	double minval,maxval;
 	char dummy1[200],dummy2[40],dummy3[200];
@@ -32,6 +34,7 @@ CPriorInfo::CPriorInfo(string parinfo_filename_set){
 			fgets(dummy3,200,fptr);
 		}
 	}while(!feof(fptr));
+	CModelParameters::NModelPars=NModelPars;
 	fclose(fptr);
 }
 

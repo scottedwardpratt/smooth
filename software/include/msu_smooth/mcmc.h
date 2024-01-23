@@ -33,18 +33,19 @@ namespace NBandSmooth{
 		unsigned int NPars,NObs;
 		vector<CModelParameters> trace;
 		vector<CModelParameters> burntrace;
+		string trace_filename;
 		double stepsize;
-		void ClearTrace(); // erases trace info so one can start over.
-		void ClearBurnTrace();
-		void ClearTrace(CModelParameters *modpars); // doesn't start ath theta=0
-		void ClearBurnTrace(CModelParameters *modpars);
+		void ClearTrace(); // erases trace info so one can start over, resets at theta=0.
+		void PruneTrace(); // erases trace, except for last point
 		
 		void BurnInMetropolis(unsigned int Nburn);
 		void PerformMetropolisTrace(unsigned int Ntrace,unsigned int NSkip);
 		void BurnInLangevin(unsigned int Nburn);
 		void PerformLangevinTrace(unsigned int Ntrace,unsigned int NSkip);
 		void Langevin(unsigned int nsteps);
-		void WriteTrace(string filename);
+		void WriteTrace();
+		void ReadTrace();
+		void EvaluateTrace();
 		
 		void CalcLL(CModelParameters *modpars,double &LL);
 		void CalcLLPlusDerivatives(CModelParameters *modpars,double &LL,vector<double> &dLL_dtheta);

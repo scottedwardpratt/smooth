@@ -25,8 +25,9 @@ namespace NBandSmooth{
 		void TranslateTheta_to_X();
 		void TranslateX_to_Theta();
 		void Print();
-		unsigned int NModelPars;
+		void Copy(CModelParameters *mp);
 		void SetX(vector<double> &xset);
+		static unsigned int NModelPars;
 		static CPriorInfo *priorinfo;
 		static double GSCALE;
 	};

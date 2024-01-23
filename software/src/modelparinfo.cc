@@ -1,12 +1,12 @@
 #include "msu_smooth/modelparinfo.h"
 NBandSmooth::CPriorInfo* NBandSmooth::CModelParameters::priorinfo=NULL;
 double NBandSmooth::CModelParameters::GSCALE=sqrt(3.0);
+unsigned int NBandSmooth::CModelParameters::NModelPars=0;
 
 using namespace std;
 using namespace NBandSmooth;
 
 CModelParameters::CModelParameters(){
-	NModelPars=priorinfo->NModelPars;
 	X.resize(NModelPars);
 	Theta.resize(NModelPars);
 };
@@ -54,6 +54,7 @@ void CModelParameters::TranslateTheta_to_X(){
 void CModelParameters::Print(){
 	char message[200];
 	unsigned int ipar;
+	CLog::Info("--------------------------------------\n");
 	for(ipar=0;ipar<NModelPars;ipar++){
 		snprintf(message,200,"   %.24s (%.8s): x=%11.4e, theta=%11.4e\n",
 		priorinfo->parname[ipar].c_str(),priorinfo->type[ipar].c_str(),X[ipar],Theta[ipar]);
@@ -66,4 +67,9 @@ void CModelParameters::SetX(vector<double> &x){
 		X[ipar]=x[ipar];
 	}
 	TranslateX_to_Theta();
+}
+
+void CModelParameters::Copy(CModelParameters *mp){
+	X=mp->X;
+	Theta=mp->Theta;
 }
