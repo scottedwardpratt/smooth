@@ -6,12 +6,14 @@
 #include <vector>
 #include <array>
 #include <fstream>
+#include <Eigen/Dense>
 #include "msu_commonutils/parametermap.h"
 #include "msu_commonutils/misc.h"
 #include "msu_commonutils/constants.h"
 #include "msu_commonutils/randy.h"
 #include "msu_commonutils/log.h"
 #include "msu_smooth/master.h"
+
 
 using namespace std;
 using namespace NMSUPratt;
