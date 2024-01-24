@@ -37,6 +37,7 @@ namespace NBandSmooth{
 		vector<CModelParameters> burntrace;
 		string trace_filename;
 		double stepsize;
+		bool OPTIMIZESTEPS;
 		void ClearTrace(); // erases trace info so one can start over, resets at theta=0.
 		void PruneTrace(); // erases trace, except for last point
 		

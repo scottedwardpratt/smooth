@@ -15,6 +15,7 @@ CMCMC::CMCMC(CSmoothMaster *master_set){
 	NPars=master->NPars;
 	trace_filename=parmap->getS("MCMC_TRACE_FILENAME","mcmc_traces/trace.txt");
 	stepsize=parmap->getD("MCMC_METROPOLIS_STEPSIZE",0.05);
+	OPTIMIZESTEPS=parmap->getB("MCMC_OPTIMIZESTEPS",false);
 	ClearTrace();
 	for(unsigned int ipar=0;ipar<NPars;ipar++){
 		trace[0].Theta[ipar]=0;

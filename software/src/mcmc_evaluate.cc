@@ -1,3 +1,4 @@
+#include <complex>
 #include "msu_smooth/master.h"
 #include "msu_smooth/mcmc.h"
 #include "msu_commonutils/log.h"
@@ -9,15 +10,21 @@ void CMCMC::EvaluateTrace(){
 	unsigned int itrace,ipar,jpar,ntrace=trace.size();
 	Eigen::VectorXd thetabar;
 	Eigen::MatrixXd sigma2;
-	thetabar.resize(ntrace);
-	sigma2.resize(ntrace,ntrace);
+	Eigen::VectorXcd evals;
+	Eigen::MatrixXcd evecs;
+	thetabar.resize(NPars);
+	sigma2.resize(NPars,NPars);
+	evecs.resize(NPars,NPars);
 	thetabar.setZero();
 	sigma2.setZero();
+
+	
+	
 	
 	for(itrace=0;itrace<ntrace;itrace++){
 		for(ipar=0;ipar<NPars;ipar++){
 			thetabar(ipar)+=trace[itrace].Theta[ipar];
-			for(jpar=0;jpar<=ipar;jpar++){
+			for(jpar=0;jpar<NPars;jpar++){
 				sigma2(ipar,jpar)+=trace[itrace].Theta[ipar]*trace[itrace].Theta[jpar];
 			}
 		}
@@ -33,12 +40,53 @@ void CMCMC::EvaluateTrace(){
 	
 	CLog::Info("Sigma^2=\n");
 	for(ipar=0;ipar<NPars;ipar++){
-		for(jpar=0;jpar<=NPars;jpar++){
+		for(jpar=0;jpar<NPars;jpar++){
 			sigma2(ipar,jpar)=sigma2(ipar,jpar)-thetabar(ipar)*thetabar(jpar);
-			CLog::Info(to_string(sigma2(ipar,jpar))+" ");
+			//CLog::Info(to_string(sigma2(ipar,jpar))+" ");
 		}
-		CLog::Info("\n");
+		//CLog::Info("\n");
 	}
+	cout << sigma2 << endl;
+	
+	Eigen::EigenSolver<Eigen::MatrixXd> esolver(sigma2);
+	evals=esolver.eigenvalues();
+	evecs=esolver.eigenvectors();
+	Eigen::MatrixXcd sigma2test;
+	Eigen::VectorXcd th,r;
+	sigma2test.resize(NPars,NPars);
+	th.resize(NPars);
+	r.resize(NPars);
+	sigma2test.setZero();
+	unsigned int itest,ntest=10000000;
+	vector<double> evalnorm;
+	evalnorm.resize(NPars);
+	complex<double> eevv;
+	for(ipar=0;ipar<NPars;ipar++){
+		eevv=evals(ipar);
+		evalnorm[ipar]=sqrt(sqrt(real(eevv*conj(eevv))));
+	}
+	
+	printf("eigenvectors:\n");
+	cout << evecs << endl;
+	
+	for(itest=0;itest<ntest;itest++){
+		for(ipar=0;ipar<NPars;ipar++)
+			r(ipar)=evalnorm[ipar]*randy->ran_gauss();
+		th=evecs*r;
+		for(ipar=0;ipar<NPars;ipar++){
+			for(jpar=0;jpar<NPars;jpar++){
+				sigma2test(ipar,jpar)+=th(ipar)*th(jpar);
+			}
+		}
+	}
+	sigma2test=sigma2test/double(ntest);
+	
+	cout << sigma2test << endl;
+	
+	
+	
+	
+	
 	
 	
 	
