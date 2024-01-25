@@ -37,7 +37,6 @@ namespace NBandSmooth{
 		vector<CModelParameters> burntrace;
 		string trace_filename;
 		double stepsize;
-		bool OPTIMIZESTEPS;
 		void ClearTrace(); // erases trace info so one can start over, resets at theta=0.
 		void PruneTrace(); // erases trace, except for last point
 		
@@ -49,6 +48,14 @@ namespace NBandSmooth{
 		void WriteTrace();
 		void ReadTrace();
 		void EvaluateTrace();
+		
+		void OptimizeSteps();
+		bool OPTIMIZESTEPS;
+		Eigen::VectorXcd stepvec,stepvecprime,dTdTEigenVals;
+		Eigen::MatrixXd dThetadTheta;
+		Eigen::MatrixXcd dTdTEigenVecs;
+
+
 		
 		void CalcLL(CModelParameters *modpars,double &LL);
 		void CalcLLPlusDerivatives(CModelParameters *modpars,double &LL,vector<double> &dLL_dtheta);

@@ -22,6 +22,18 @@ CMCMC::CMCMC(CSmoothMaster *master_set){
 	}
 	trace[0].TranslateTheta_to_X();
 	llcalc=new CLLCalcSmooth(master);
+	
+	OPTIMIZESTEPS=false;
+	dThetadTheta.resize(NPars,NPars);
+	dTdTEigenVecs.resize(NPars,NPars);
+	dTdTEigenVals.resize(NPars);
+	stepvec.resize(NPars);
+	stepvecprime.resize(NPars);
+	dTdTEigenVecs.setZero();
+	for(unsigned int ipar=0;ipar<NPars;ipar++){
+		dTdTEigenVecs(ipar,ipar)=1.0;
+		dTdTEigenVals(ipar)=stepsize;
+	}
 }
 
 void CMCMC::ClearTrace(){
@@ -65,8 +77,21 @@ void CMCMC::PerformMetropolisTrace(unsigned int Ntrace,unsigned int NSkip){
 		newptr=&newmodpars;
 		llcalc->CalcLL(oldptr,oldLL);
 		for(iskip=0;iskip<NSkip;iskip++){
-			for(ipar=0;ipar<NPars;ipar++){
-				newptr->Theta[ipar]=oldptr->Theta[ipar]+stepsize*randy->ran_gauss();
+			
+			if(OPTIMIZESTEPS){
+				for(ipar=0;ipar<NPars;ipar++){
+					stepvecprime[ipar]=stepsize*randy->ran_gauss();
+				}
+				stepvec=dTdTEigenVecs*stepvecprime;
+				for(ipar=0;ipar<NPars;ipar++){
+					newptr->Theta[ipar]=oldptr->Theta[ipar]+real(stepvec(ipar));
+				}
+				
+			}
+			else{
+				for(ipar=0;ipar<NPars;ipar++){
+					newptr->Theta[ipar]=oldptr->Theta[ipar]+stepsize*randy->ran_gauss();
+				}
 			}
 			llcalc->CalcLL(newptr,newLL);
 			if(newLL>oldLL){
