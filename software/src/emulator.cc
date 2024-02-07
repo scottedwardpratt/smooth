@@ -91,7 +91,7 @@ void CSmoothEmulator::Tune(){
 		}
 	}
 	else{
-		TunePerfect();
+		TunePerfectMCMC();
 	}
 }
 
@@ -249,7 +249,7 @@ void CSmoothEmulator::TuneMCMC_withSigma(){
 		CLog::Info("success percentage="+to_string(double(success)*100.0/double(NMC))+", SigmaA="+to_string(SigmaA)+", logP/Ndof="+to_string(logP/double(Ndof))+",BestLogP/Ndof="+to_string(BestLogP/double(Ndof))+"\n");
 }
 
-void CSmoothEmulator::TunePerfect(){
+void CSmoothEmulator::TunePerfectMCMC(){
 	unsigned int ic,ic0,ntry=0,ntrymax=100000;
 	bool success=false;
 	double weight,warg;//sigmafact=1.0;
@@ -285,7 +285,7 @@ void CSmoothEmulator::TunePerfect(){
 		ntry+=1;
 	}
 	if(ntry>=ntrymax){
-		CLog::Fatal("TunePerfect Failed, SigmaA0="+to_string(SigmaA0)+"\n");
+		CLog::Fatal("TunePerfectMCMC Failed, SigmaA0="+to_string(SigmaA0)+"\n");
 	}
 	else{
 		for(ic=0;ic<smooth->NCoefficients;ic++){

@@ -39,7 +39,7 @@ namespace NBandSmooth{
 		bool TuneChooseMCMC,ConstrainA0,CutOffA,UseSigmaYReal,FirstTune;
 		vector<vector<double>> ASample;
 		vector<double> SigmaASample;
-		vector<double> A,ATrial;
+		vector<double> A,ATrial,Abest;
 		vector<vector<double>> ThetaTrain;
 
 		CSmoothEmulator(string observable_name_set);
@@ -53,7 +53,12 @@ namespace NBandSmooth{
 		void Tune();
 		void TuneMCMC();
 		void TuneMCMC_withSigma();
-		void TunePerfect();
+		void TunePerfectMCMC();
+		
+		void TuneExact();
+		void FindBestA();
+		void GenerateUncertaintyMatrices();
+		
 		double GetLog_AProb(vector<double> &AA,double SigmaA);
 
 		void SetA_Zero(vector<double> &A);
