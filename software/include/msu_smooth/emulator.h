@@ -30,7 +30,7 @@ namespace NBandSmooth{
 	public:
 		unsigned int iY; // labels observable from observable info
 		string observable_name;
-		Eigen::MatrixXd M,Minv;
+		Eigen::MatrixXd M,Minv,ExactVariance;
 		vector<vector<double>> Mtot;
 
 		double SigmaA0,SigmaAMin,SigmaA,SigmaATrial,MCStepSize,MCSigmaAStepSize,LAMBDA;

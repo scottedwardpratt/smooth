@@ -76,4 +76,26 @@ void CSmoothEmulator::TuneExact(){
 			Abest[a]-=beta(a,ic)*Abest[ic];
 		}
 	}
+	
+	// Now calculate arrays used for calculating uncertainty
+	
+	Eigen::MatrixXd Psi,D;
+	Psi.resize(NTrainingPts,NTrainingPts);
+	D.resize(NTrainingPts,NTrainingPts);
+	ExactVariance
+	Psi.setZero();
+	D.setZero();
+	for(a=0;a<NTrainingPts;a++){
+		for(b=0;b<NTrainingPts;a++){
+			if(a==b)
+				D(a,b)=1.0;
+			betaadotbetab=0.0;
+			for(ic=NTrainingPts;ic<NCoefficients;ic++){
+				betaadotbetab+=beta(a,ic)*beta(b,ic);
+			}
+			D(a,b)+=betaadotbetab;
+		}
+	}
+	Psi=-D.inverse();
+	
 }
