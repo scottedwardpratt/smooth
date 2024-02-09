@@ -41,6 +41,10 @@ namespace NBandSmooth{
 		vector<double> SigmaASample;
 		vector<double> A,ATrial,Abest;
 		vector<vector<double>> ThetaTrain;
+		vector<vector<double>> BetaDotBeta;
+		vector<vector<double>> Mdotbeta;
+		vector<vector<double>> H5,H6,H8;
+		Eigen::MatrixXd beta,Psi;
 
 		CSmoothEmulator(string observable_name_set);
 
@@ -77,6 +81,7 @@ namespace NBandSmooth{
 		void CalcYDYDTheta(vector<double> Theta,double &Y,vector<double> &dYdTheta,double &SigmaY);
 		void WriteCoefficients();
 		void ReadCoefficients();
+		void GetExactUncertainty(vector<double> &Theta_s,double &sigma);
 
 		void Init();
 
