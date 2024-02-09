@@ -195,21 +195,6 @@ w&=Q(\sigma)\prod_{c=1}^C P(A_c).
 One then keeps the step if the new weight exceeds the previous one, or if the ratio of the new weight to the old weight is greater than a random number between zero and unity. After some number of steps, $N_{\rm steps}$, one saves the configuration as a representative sample for the emulator. The disadvantage of this approach is that many steps may be needed to ensure that the samples are independent, and thus faithfully represent the variation in the emulator.
 \end{itemize}
 
-\section{Theoretical Basis of {\it Simplex Sampler}}\label{sec:simplextheory}
-
-Here, we imagine a spherically symmetric prior, e.g. one that is purely Gaussian, and where the parameters are scaled so that the prior distribution is invariant to rotations. If one believe the function were close to linear, a strategy would be to find $M=N+1$ points in parameter space placed far apart from another. One choice is the $N-$dimensional simplex. Examples are an equilateral triangle in two-dimensions or a tetrahedron in three dimensions. For a simplex, one places the $M=N+1$ training points at a uniform distance from the origin, $r$, with equal separation between each point. One can generate an $N-$dimensional simplex from an $N-1$ dimensional arrangement. In the $N-1$ dimensional arrangement, the points are arranged equidistant from one another using the coordinates $x_1\cdots x_{N}$. The points would all be placed at a radius $r_{N}$ from the origin in this system, and the separation would be $d$. In the $N-$dimensional system all these $N-1$ points had coordinate $x_N=-a$. The $(N+1)^{\rm th}$ point is then placed at position $x_1\cdots x_{N}=0$ and $x_{N+1}=Na$. This keeps the center of mass at zero. One then chooses $a$ such that the new point is equally separated from all the other points by the same distance $d$, 
-\begin{align*}\eqnumber
-d^2&=r_{N-1}^2+N^2a^2,\\
-a&=\sqrt{\frac{d^2}{N^2}-r_{N-1}^2}.
-\end{align*}
-Now, each of the $N$ points is located a distance $Na$ away from the center of the $N-$dimensional origin. This procedure can applied iteratively to generate the vertices of the simplex.
-
-One might also wish to use enough training points to uniquely determine the emulator in the case that the function is quadratic. There are $N(N+1)/2$ additional points, which is exactly the number of segments connecting the $N+1$ equally-spaced vertices of the  $N-$dimensional simplex. If placed at the midpoints of the segments, these points would be closer to the  origin than the vertices. One of the simplex options is to place these points at the midpoints, then double their radii while maintaining their direction. This would result in arrays of points at two different radii, with $N+1$ points positioned at the lower radius and $N(N+1)/2$ points being placed at the larger radius.
-
-Choosing the training points depends on prior expectation of the emulated function. The simplex choice for the first $M=N+1$ points seems logical. Even if another method, such as a Gaussian process emulator is to implemented, such methods are often based on first understanding the linear behavior. The simplex strategy would seem a good way to pick the first $N+1$ training points.
-
-One issue with the simplex is that the first set of $N+1$ training points would all be placed at the same radius. If the prior parameter distribution is uniform within an $N-$dimensional hyper cube, the training  points could be rather far from the corners in that space. Issues with such priors are discussed in the next section.
-
 \subsection{Exact Solution for Most Probable Coefficients}
 
 Here, we demonstrate how one can solve for the set of most probable coefficients, $A_{\vec{n}}$, given the the training values, $y_t(\vec{\theta}_t)$, where $\vec{\theta}_t$ are the points at which the emulator was trained. Again, we consider $C$ to be the number of training points and $C$ to be the number of coefficients. Given the coefficients, $\vec{A_c}$ for $c>C$, the first coefficients, $c=1\cdots M$ are found by solving the linear equations for $A_1\cdots A_M$. For shorthand, we refer to the $M\times M$ matrix $T$ as being the factors related to the expansion,
@@ -245,6 +230,7 @@ One next needs to minimize this for each coefficient, $A_{a>M}$. This gives
 After making the following definitions,
 \begin{eqnarray}
 \alpha_a&\equiv&\sum_{t=1}^M\tilde{T}^{-1}_{ab}y_t,\\
+\nonumber
 \beta_{ai}&\equiv& \sum_{t'=1}^M\tilde{T}_{at'}^{-1}T_{t'i},
 \end{eqnarray}
 the minimization condition becomes
@@ -305,6 +291,7 @@ P(\delta\vec{A})&\propto&
 \exp\left\{
 -\frac{1}{2\sigma^2}\left(\sum_a(\delta A_a)^2+\sum_i(\delta A_i)^2\right)
 \right\}\\
+\nonumber
 &=&\exp\left\{
 -\frac{1}{2\sigma^2}\sum_{ij}\left(\delta_{ij}+\beta_{ai}\beta_{aj}\right)\delta A_i\delta A_j
 \right\}.
@@ -350,10 +337,38 @@ Putting this all together, one has 8 terms all together.
 The individual terms are
 \begin{eqnarray}
 \sigma_1^2&=&T_j(\vec{\theta})T_j(\vec{\theta}),\\
+\nonumber
 \sigma_2^2&=&-T_a(\vec{\theta})\beta_{ai}T_i(\vec{\theta}),\\
-\sigma_3^2&=&\sigma_^2,\\
-\sigma_4^2
+\nonumber
+\sigma_3^2&=&\sigma_2^2,\\
+\nonumber
+\sigma_4^2&=&T_a(\vec{\theta})B_{ab}T_b(\vec{\theta}),\\
+\nonumber
+\sigma_5^2&=&T_i(\vec{\theta})B_{aa'}\psi_{a'b'}\beta_{b'j}T_j(\vec{\theta}),\\
+\nonumber
+\sigma_6^2&=&-T_a(\vec{\theta})B_{aa'}\psi_{a'b'}\beta_{b'j}T_j(\vec{\theta}),\\
+\nonumber
+\sigma_7^2&=&\sigma_6^2,\\
+\nonumber
+\sigma_8^2&=&T_a(\vec{\theta})B_{aa'}\psi_{a'b'}B_{b'b}T_b(\vec{\theta}).
 \end{eqnarray}
+
+
+
+\section{Theoretical Basis of {\it Simplex Sampler}}\label{sec:simplextheory}
+
+Here, we imagine a spherically symmetric prior, e.g. one that is purely Gaussian, and where the parameters are scaled so that the prior distribution is invariant to rotations. If one believe the function were close to linear, a strategy would be to find $M=N+1$ points in parameter space placed far apart from another. One choice is the $N-$dimensional simplex. Examples are an equilateral triangle in two-dimensions or a tetrahedron in three dimensions. For a simplex, one places the $M=N+1$ training points at a uniform distance from the origin, $r$, with equal separation between each point. One can generate an $N-$dimensional simplex from an $N-1$ dimensional arrangement. In the $N-1$ dimensional arrangement, the points are arranged equidistant from one another using the coordinates $x_1\cdots x_{N}$. The points would all be placed at a radius $r_{N}$ from the origin in this system, and the separation would be $d$. In the $N-$dimensional system all these $N-1$ points had coordinate $x_N=-a$. The $(N+1)^{\rm th}$ point is then placed at position $x_1\cdots x_{N}=0$ and $x_{N+1}=Na$. This keeps the center of mass at zero. One then chooses $a$ such that the new point is equally separated from all the other points by the same distance $d$, 
+\begin{align*}\eqnumber
+d^2&=r_{N-1}^2+N^2a^2,\\
+a&=\sqrt{\frac{d^2}{N^2}-r_{N-1}^2}.
+\end{align*}
+Now, each of the $N$ points is located a distance $Na$ away from the center of the $N-$dimensional origin. This procedure can applied iteratively to generate the vertices of the simplex.
+
+One might also wish to use enough training points to uniquely determine the emulator in the case that the function is quadratic. There are $N(N+1)/2$ additional points, which is exactly the number of segments connecting the $N+1$ equally-spaced vertices of the  $N-$dimensional simplex. If placed at the midpoints of the segments, these points would be closer to the  origin than the vertices. One of the simplex options is to place these points at the midpoints, then double their radii while maintaining their direction. This would result in arrays of points at two different radii, with $N+1$ points positioned at the lower radius and $N(N+1)/2$ points being placed at the larger radius.
+
+Choosing the training points depends on prior expectation of the emulated function. The simplex choice for the first $M=N+1$ points seems logical. Even if another method, such as a Gaussian process emulator is to implemented, such methods are often based on first understanding the linear behavior. The simplex strategy would seem a good way to pick the first $N+1$ training points.
+
+One issue with the simplex is that the first set of $N+1$ training points would all be placed at the same radius. If the prior parameter distribution is uniform within an $N-$dimensional hyper cube, the training  points could be rather far from the corners in that space. Issues with such priors are discussed in the next section.
 
 
 
