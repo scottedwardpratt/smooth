@@ -305,55 +305,68 @@ the fluctuation of the coefficients is
 \langle\delta A_i\delta A_j\rangle&=D^{-1}_{ij}.
 \end{eqnarray}
 Again, if there are many coefficients, inverting the matrix could be numerically costly. But one can realize that the inverse matrix should be of the form
-\begin{eqnarray}
-D^{-1}&=&\delta_{ij}+\sum_{ab}\psi_{ab}\beta_{ai}\beta_{bj},
+\begin{eqnarray}\label{eq:DinvDef}
+D^{-1}_{ij}&=&\delta_{ij}+\sum_{ab}\psi_{ab}\beta_{ai}\beta_{bj},
 \end{eqnarray}
 and solve for the $M\times M$ values of $\psi_{ab}$. This leads to
 \begin{eqnarray}
 D^{-1}_{ik}D_{kj}&=&
 \delta_{ij}+\sum_{ab}\beta_{ai}\beta_{bj}(\delta_{ab}+\psi_{ab})+\sum_{abc}\beta_{ai}\beta_{ak}\beta_{ck}\beta_{bj}\psi_{cb}.
 \end{eqnarray}
-This requires that
+For this to be satisfied for any pair of $i,j$,
 \begin{eqnarray}
-\delta_{ab}&=&-\psi_{ab}-\sum_{ci}\beta_{ai}B_{ac}\psi_{bc}.
+\delta_{ab}&=&-\psi_{ab}-\sum_cB_{ac}\psi_{bc}.
 \end{eqnarray}
 This gives
 \begin{eqnarray}
 \psi_{ab}&=&-Q^{-1}_{ab},\\
 \nonumber
-Q_{ab}&=&\delta_{ab}+\sum_i\beta_{ai}\beta_{bi}.
+Q_{ab}&=&\delta_{ab}+B_{ab}.
 \end{eqnarray}
 Finally, this gives
 \begin{eqnarray}
 \langle(\delta y)^2\rangle&=&
-\left\{T_i(\vec{\theta})-T_{a}(\vec{\theta})\beta_{ai}\right\}Q^{-1}_{ij}
+\left\{T_i(\vec{\theta})-T_{a}(\vec{\theta})\beta_{ai}\right\}D^{-1}_{ij}
 \left\{T_j(\vec{\theta})-T_b(\vec{\theta})\beta_{bj}\right\}.
 \end{eqnarray}
-Putting this all together, one has 8 terms all together.
+Inserting Eq. (\ref{eq:DinvDef}) and putting this all together, one has 8 terms all together.
 \begin{eqnarray}
 \sigma_E^2(\vec{\theta})&=&
 \sigma^2_1+\sigma_2^2+\sigma^2_3+\sigma^2_4+\sigma^2_5+\sigma_2^6+\sigma^2_7+\sigma^2_8.
 \end{eqnarray}
 The individual terms are
 \begin{eqnarray}
-\sigma_1^2&=&T_j(\vec{\theta})T_j(\vec{\theta}),\\
+\sigma_1^2&=&T_i(\vec{\theta})T_i(\vec{\theta}),\\
 \nonumber
-\sigma_2^2&=&-T_a(\vec{\theta})\beta_{ai}T_i(\vec{\theta}),\\
+\sigma_2^2&=&-T_a(\vec{\theta})\beta_{ai}T_i(\vec{\theta})=T_a(\vec{\theta})S_a(\vec{\theta}),\\
 \nonumber
 \sigma_3^2&=&\sigma_2^2,\\
 \nonumber
 \sigma_4^2&=&T_a(\vec{\theta})B_{ab}T_b(\vec{\theta}),\\
 \nonumber
-\sigma_5^2&=&T_i(\vec{\theta})B_{aa'}\psi_{a'b'}\beta_{b'j}T_j(\vec{\theta}),\\
+\sigma_5^2&=&T_i(\vec{\theta})\beta_{ai}\psi_{ab}\beta_{bj}T_j(\vec{\theta})=S_a(\vec{\theta})\psi_{ab}S_b(\vec{\theta}),\\
 \nonumber
-\sigma_6^2&=&-T_a(\vec{\theta})B_{aa'}\psi_{a'b'}\beta_{b'j}T_j(\vec{\theta}),\\
+\sigma_6^2&=&-T_a(\vec{\theta})B_{aa'}\psi_{a'b'}\beta_{b'j}T_j(\vec{\theta})=-T_a(\vec{\theta})B_{aa'}\psi_{a'b'}S_{b'}(\vec{\theta}),\\
 \nonumber
 \sigma_7^2&=&\sigma_6^2,\\
 \nonumber
 \sigma_8^2&=&T_a(\vec{\theta})B_{aa'}\psi_{a'b'}B_{b'b}T_b(\vec{\theta}).
 \end{eqnarray}
-
-
+Here, we have defined the quantity 
+\begin{eqnarray}
+S_a(\vec{\theta})&\equiv \beta_{ai}T_i(\vec{\theta}).
+\end{eqnarray}
+By first calculating $S_a(\vec{\theta})$, this allows one to avoid any sums over two indices $i$ and $j$. One can also avoid expedite the calculations of $\sigma_6^2$ and $\sigma_i^2$ by calculating and storing
+\begin{eqnarray}
+H^{(6)}_{ab}&=&B_{aa'}\psi_{a'b},\\
+H^{(8)}_{ab}&=&B_{aa'}\psi_{a'b'}B_{b'b}.
+\end{eqnarray}
+These quantities need be calculated only once as they do not depend on $\vec{\theta}$. One then has
+\begin{eqnarray}
+\sigma_6^2&=&-T_{a}(\vec{\theta})H^{(6)}_{ab}S_b(\vec{\theta}),\\
+\sigma_8^2&=&T_a(\vec{\theta})H^{(8)}_{ab}T_b(\vec{\theta}).
+\end{eqnarray}
+This avoids any $M^3$ or $M^4$ calculations. Thus, assuming $C>>M$, the largest numeric penalty in calculating $\sigma^2$ is in the $M\times (C-M)$ loop required to calculate $S_a(\vec{\theta})$ for all $a$. 
 
 \section{Theoretical Basis of {\it Simplex Sampler}}\label{sec:simplextheory}
 

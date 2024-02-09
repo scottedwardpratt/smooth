@@ -43,7 +43,7 @@ namespace NBandSmooth{
 		vector<vector<double>> ThetaTrain;
 		vector<vector<double>> BetaDotBeta;
 		vector<vector<double>> Mdotbeta;
-		vector<vector<double>> H5,H6,H8;
+		vector<vector<double>> H6,H8;
 		Eigen::MatrixXd beta,Psi;
 
 		CSmoothEmulator(string observable_name_set);

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.8.11)  4 OCT 2023 09:45
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.8.11)  9 FEB 2024 04:43
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -330,7 +330,7 @@ File: l3backend-pdftex.def 2023-01-16 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count287
 \l__pdf_internal_box=\box53
 )
-No file UserManual.aux.
+(./UserManual.aux)
 \openout1 = `UserManual.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 84.
@@ -351,6 +351,7 @@ LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 84.
 LaTeX Font Info:    ... okay on input line 84.
 LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 84.
 LaTeX Font Info:    ... okay on input line 84.
+
 (/usr/local/texlive/2023/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count288
@@ -391,22 +392,24 @@ Package color Info: Driver file: pdftex.def on input line 149.
 
 (/usr/local/texlive/2023/texmf-dist/tex/latex/graphics/mathcolor.ltx))
 Package hyperref Info: Link coloring ON on input line 84.
+
+(./UserManual.out) (./UserManual.out)
 \@outlinefile=\write4
 \openout4 = `UserManual.out'.
 
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
-<FRIB_logo.png, id=5, 105.996pt x 135.3858pt>
+<FRIB_logo.png, id=176, 105.996pt x 135.3858pt>
 File: FRIB_logo.png Graphic file (type png)
 <use FRIB_logo.png>
 Package pdftex.def Info: FRIB_logo.png  used on input line 112.
 (pdftex.def)             Requested size: 101.17645pt x 129.23346pt.
-<msu_logo.pdf, id=7, 266.9975pt x 57.21375pt>
+<msu_logo.pdf, id=178, 266.9975pt x 57.21375pt>
 File: msu_logo.pdf Graphic file (type pdf)
 <use msu_logo.pdf>
 Package pdftex.def Info: msu_logo.pdf  used on input line 115.
 (pdftex.def)             Requested size: 131.52861pt x 28.186pt.
-<BAND_logo.png, id=8, 224.17084pt x 97.02916pt>
+<BAND_logo.png, id=179, 224.17084pt x 97.02916pt>
 File: BAND_logo.png Graphic file (type png)
 <use BAND_logo.png>
 Package pdftex.def Info: BAND_logo.png  used on input line 119.
@@ -414,39 +417,36 @@ Package pdftex.def Info: BAND_logo.png  used on input line 119.
  [1
 
 {/usr/local/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./FRIB_
-logo.png> <./msu_logo.pdf> <./BAND_logo.png>]
-No file UserManual.toc.
-\tf@toc=\write5
-\openout5 = `UserManual.toc'.
-
-
-pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has 
-been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.130 \newpage
-               [1]
-LaTeX Font Info:    Trying to load font information for U+msa on input line 136
-.
+logo.png> <./msu_logo.pdf> <./BAND_logo.png>] (./UserManual.toc
+LaTeX Font Info:    Trying to load font information for U+msa on input line 3.
 
 (/usr/local/texlive/2023/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 136
-.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 3.
 
 (/usr/local/texlive/2023/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-) [2]
+)
+pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has 
+been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.29 ...berline {8.1}Overview}{22}{subsection.8.1}
+                                                  % [1])
+\tf@toc=\write5
+\openout5 = `UserManual.toc'.
+
+ [2] [3]
 (./installation.tex
 Overfull \hbox (12.81026pt too wide) in paragraph at lines 39--39
 []    \OT1/cmtt/m/n/12 /Users/CarlosSmith% git clone https://github.com/bandfra
 mework/bandframework.git[] 
  []
 
-[3{/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc
+[4{/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc
 }]
-<directorystructure.pdf, id=46, 1927.2pt x 1084.05pt>
+<directorystructure.pdf, id=261, 1927.2pt x 1084.05pt>
 File: directorystructure.pdf Graphic file (type pdf)
 <use directorystructure.pdf>
 Package pdftex.def Info: directorystructure.pdf  used on input line 70.
@@ -465,7 +465,7 @@ ned that the User would edit files in the \OT1/cmtt/m/n/12 SmoothEmulator/softw
 are/
  []
 
-[4] [5 <./directorystructure.pdf>]
+[5] [6 <./directorystructure.pdf>]
 Overfull \hbox (18.98526pt too wide) in paragraph at lines 87--87
 []    \OT1/cmtt/m/n/12 GITHOME_BAND/SmoothUtilities/software% cd ../GITHOME_BAN
 D/SmoothEmulator/software[] 
@@ -485,34 +485,27 @@ The di-rec-to-ries \OT1/cmtt/m/n/12 MY[]PROJECT/modelruns/run0/\OT1/cmr/m/n/12
 ,
  []
 
-[6]) [7] (./simplex.tex
+[7]) [8] (./simplex.tex
 Overfull \hbox (5.90099pt too wide) in paragraph at lines 12--15
 \OT1/cmr/m/n/12 pa-ram-e-ters are typ-i-cally stored in the file \OT1/cmtt/m/n/
 12 MY[]PROJECT/parameters/simplex[]parameters.txt\OT1/cmr/m/n/12 , where
  []
 
-[8] [9]
+[9] [10]
 Overfull \hbox (46.28143pt too wide) in paragraph at lines 72--73
 \OT1/cmtt/m/n/12 PARAMETER[]FILE[]NAME \OT1/cmr/m/n/12 is the name of the sim-p
 lex pa-ram-e-ter file, e.g. \OT1/cmtt/m/n/12 parameters/simplex[]parameters.txt
 \OT1/cmr/m/n/12 .
  []
 
-) [10] (./fullmodel.tex
-
-LaTeX Warning: Reference `sec:simplex' on page 11 undefined on input line 16.
-
-
-LaTeX Warning: Reference `sec:emulator' on page 11 undefined on input line 28.
-
-) [11] (./emulator.tex [12]
+) [11] (./fullmodel.tex) [12] (./emulator.tex [13]
 Overfull \hbox (41.20706pt too wide) in paragraph at lines 39--40
 \OT1/cmr/m/n/12 the com-mand line when run-ning \OT1/cmr/m/it/12 Smooth Em-u-la
 -tor\OT1/cmr/m/n/12 , but is typ-i-cally \OT1/cmtt/m/n/12 parameters/emulator[]
 parameters.txt\OT1/cmr/m/n/12 .
  []
 
-[13] [14]
+[14] [15]
 Overfull \hbox (28.46202pt too wide) in paragraph at lines 91--95
 \OT1/cmr/m/n/12 This would choose the train-ing in-for-ma-tion from the di-rec-
 to-ries \OT1/cmtt/m/n/12 run0,run1,run2,run3,run4,run13
@@ -524,13 +517,6 @@ Overfull \hbox (34.17355pt too wide) in paragraph at lines 91--95
 d in the di-rec-tory de-noted by the \OT1/cmtt/m/n/12 SmoothEmulator[]ModelRunD
 irName
  []
-
-
-LaTeX Warning: Reference `sec:pca' on page 15 undefined on input line 99.
-
-
-LaTeX Warning: Reference `subsec:modelparinfo' on page 15 undefined on input li
-ne 120.
 
 
 Overfull \hbox (14.04842pt too wide) in paragraph at lines 126--128
@@ -552,14 +538,14 @@ Overfull \hbox (62.65268pt too wide) in paragraph at lines 126--128
 bin/smoothy[]calcobs\OT1/cmr/m/n/12 .
  []
 
-[15]
+[16]
 Overfull \hbox (126.50659pt too wide) in paragraph at lines 161--162
 []\OT1/cmr/m/n/12 Here \OT1/cmtt/m/n/12 PARAMETERS/MY[]PARAMETERS.TXT \OT1/cmr/
 m/n/12 can be re-placed by the User, but is typ-i-cally \OT1/cmtt/m/n/12 parame
 ters/emulator[]parameters.txt\OT1/cmr/m/n/12 . 
  []
 
-[16]
+[17]
 Overfull \hbox (25.33952pt too wide) in paragraph at lines 167--169
 \OT1/cmr/m/n/12 er-ate pre-dic-tions for spec-i-fied val-ues of the pa-ram-e-te
 rs. The ex-e-cutable \OT1/cmtt/m/n/12 MY[]LOCAL/bin/smoothy[]calcobs\OT1/cmr/m/
@@ -578,37 +564,20 @@ Overfull \hbox (37.51027pt too wide) in paragraph at lines 200--200
 +/- " << SigmaY[iY] << endl;[] 
  []
 
-) [17] (./pca.tex [18]
+) [18] (./pca.tex [19]
 Overfull \hbox (18.84923pt too wide) in paragraph at lines 45--47
 []\OT1/cmr/m/n/12 The sec-ond sam-ple pro-gram reads the trans-for-ma-tion in-f
 or-ma-tion writ-ten by \OT1/cmtt/m/n/12 pca[]calctransformation\OT1/cmr/m/n/12 
 .
  []
 
-) [19] (./mcmc.tex) [20] (./tutorial.tex
-
-LaTeX Warning: Reference `sec:installation' on page 21 undefined on input line 
-20.
-
-
-LaTeX Warning: Reference `sec:installation' on page 21 undefined on input line 
-20.
-
-
-LaTeX Warning: Reference `sec:installation' on page 21 undefined on input line 
-20.
-
-
-LaTeX Warning: Reference `sec:installation' on page 21 undefined on input line 
-20.
-
-
+) [20] (./mcmc.tex) [21] (./tutorial.tex
 Overfull \hbox (115.91597pt too wide) in paragraph at lines 22--24
 \OT1/cmr/m/n/12 rec-tory onto their com-puter. The User needs to copy two di-re
 c-to-ries, \OT1/cmtt/m/n/12 GITHOME[]BAND/SmoothEmulator/templates/mylocal
  []
 
-[21]
+[22]
 Overfull \hbox (20.17534pt too wide) in paragraph at lines 42--43
 \OT1/cmtt/m/n/12 par2\OT1/cmr/m/n/12 , \OT1/cmtt/m/n/12 par3 \OT1/cmr/m/n/12 an
 d \OT1/cmtt/m/n/12 par4\OT1/cmr/m/n/12 . These names would nor-mally be more de
@@ -627,12 +596,7 @@ Overfull \hbox (0.46025pt too wide) in paragraph at lines 63--63
 irect output to screen[] 
  []
 
-[22] [23] [24]
-
-LaTeX Warning: Reference `sec:emulator' on page 25 undefined on input line 145.
-
-
-
+[23] [24] [25]
 Overfull \hbox (68.38528pt too wide) in paragraph at lines 179--179
 [] \OT1/cmtt/m/n/12 success percentage=30.900000, SigmaA=170.951454, logP/Ndof=
 -0.604220,BestLogP/Ndof=-0.482655[] 
@@ -776,7 +740,7 @@ Overfull \hbox (68.38528pt too wide) in paragraph at lines 179--179
 -0.800493,BestLogP/Ndof=-0.486518[] 
  []
 
-[25]
+[26]
 Overfull \hbox (25.48907pt too wide) in paragraph at lines 186--187
 \OT1/cmr/m/n/12 co-ef-fi-cients later. In this case, \OT1/cmtt/m/n/12 smoothy[]
 tune \OT1/cmr/m/n/12 cre-ated the di-rec-to-ries, \OT1/cmtt/m/n/12 MY[]PROJECT/
@@ -789,13 +753,13 @@ Overfull \hbox (24.68129pt too wide) in paragraph at lines 190--191
 e pro-gram, \OT1/cmtt/m/n/12 MY[]LOCAL/bin/smoothy[]calcobs
  []
 
-[26]
+[27]
 Overfull \hbox (5.479pt too wide) in paragraph at lines 241--243
 \OT1/cmr/m/n/12 gram based on this source code, and com-pile and link it by edi
 t-ing \OT1/cmtt/m/n/12 MY[]LOCAL/build/CMakeLists.txt\OT1/cmr/m/n/12 .
  []
 
-[27]
+[28]
 Overfull \hbox (136.31032pt too wide) in paragraph at lines 281--281
 []   \OT1/cmtt/m/n/12 CModelParameters *modpars=new CModelParameters(master.pri
 orinfo); // contains info about single point[] 
@@ -813,86 +777,62 @@ Overfull \hbox (9.1579pt too wide) in paragraph at lines 287--288
 OT1/cmr/m/n/12 , that stores the co-or-di-nates of the model-parameter
  []
 
-) [28] (./theory.tex
+) [29] (./theory.tex
 pdfTeX warning (ext4): destination with the same identifier (name{section.9}) h
 as been already used, duplicate ignored
 <to be read again> 
                    \relax 
 l.5 ...Underlying Theory of {\it Smooth Emulator}}
-                                                  \label{sec:theory} [29]
-
-LaTeX Warning: Reference `eq:emudef' on page 30 undefined on input line 38.
-
-
-LaTeX Warning: Reference `eq:emudef' on page 30 undefined on input line 42.
-
-[30] [31] [32] [33] [34] [35]
-
-LaTeX Warning: Reference `fig:onedim' on page 36 undefined on input line 253.
-
-
-LaTeX Warning: Reference `fig:onedim' on page 36 undefined on input line 253.
-
-<onepar2points/onepartest_Lambda2.pdf, id=271, 433.62pt x 361.35pt>
+                                                  \label{sec:theory} [30]
+[31] [32] [33] [34] [35] [36] [37] [38] [39] [40]
+<onepar2points/onepartest_Lambda2.pdf, id=513, 433.62pt x 361.35pt>
 File: onepar2points/onepartest_Lambda2.pdf Graphic file (type pdf)
 <use onepar2points/onepartest_Lambda2.pdf>
 Package pdftex.def Info: onepar2points/onepartest_Lambda2.pdf  used on input li
-ne 255.
+ne 430.
 (pdftex.def)             Requested size: 161.8885pt x 134.9049pt.
-<onepar2points/onepartest_Lambda4.pdf, id=272, 433.62pt x 361.35pt>
+<onepar2points/onepartest_Lambda4.pdf, id=514, 433.62pt x 361.35pt>
 File: onepar2points/onepartest_Lambda4.pdf Graphic file (type pdf)
 <use onepar2points/onepartest_Lambda4.pdf>
 Package pdftex.def Info: onepar2points/onepartest_Lambda4.pdf  used on input li
-ne 256.
+ne 431.
 (pdftex.def)             Requested size: 161.8885pt x 134.9049pt.
-<onepar3points/onepartest_Lambda2.pdf, id=273, 433.62pt x 361.35pt>
+<onepar3points/onepartest_Lambda2.pdf, id=515, 433.62pt x 361.35pt>
 File: onepar3points/onepartest_Lambda2.pdf Graphic file (type pdf)
 <use onepar3points/onepartest_Lambda2.pdf>
 Package pdftex.def Info: onepar3points/onepartest_Lambda2.pdf  used on input li
-ne 257.
+ne 432.
 (pdftex.def)             Requested size: 161.8885pt x 134.9049pt.
 
-Overfull \hbox (5.23758pt too wide) in paragraph at lines 255--259
+Overfull \hbox (5.23758pt too wide) in paragraph at lines 430--434
 [][]|  []|  [] 
  []
 
-[36]
-
-LaTeX Warning: Reference `fig:sixpars' on page 37 undefined on input line 262.
-
-
-LaTeX Warning: Reference `fig:sixpars' on page 37 undefined on input line 264.
-
-
-LaTeX Warning: Reference `fig:sixpars' on page 37 undefined on input line 264.
-
-
-LaTeX Warning: Reference `sec:simplex' on page 37 undefined on input line 264.
-
-<sixpars/NPars6_Lambda3_NTrain7.pdf, id=281, 433.62pt x 361.35pt>
+[41]
+<sixpars/NPars6_Lambda3_NTrain7.pdf, id=525, 433.62pt x 361.35pt>
 File: sixpars/NPars6_Lambda3_NTrain7.pdf Graphic file (type pdf)
 <use sixpars/NPars6_Lambda3_NTrain7.pdf>
 Package pdftex.def Info: sixpars/NPars6_Lambda3_NTrain7.pdf  used on input line
- 266.
+ 441.
 (pdftex.def)             Requested size: 161.8885pt x 134.9049pt.
-<sixpars/NPars6_Lambda6_NTrain7.pdf, id=282, 433.62pt x 361.35pt>
+<sixpars/NPars6_Lambda6_NTrain7.pdf, id=526, 433.62pt x 361.35pt>
 File: sixpars/NPars6_Lambda6_NTrain7.pdf Graphic file (type pdf)
 <use sixpars/NPars6_Lambda6_NTrain7.pdf>
 Package pdftex.def Info: sixpars/NPars6_Lambda6_NTrain7.pdf  used on input line
- 267.
+ 442.
 (pdftex.def)             Requested size: 161.8885pt x 134.9049pt.
-<sixpars/NPars6_Lambda3_NTrain28.pdf, id=283, 433.62pt x 361.35pt>
+<sixpars/NPars6_Lambda3_NTrain28.pdf, id=527, 433.62pt x 361.35pt>
 File: sixpars/NPars6_Lambda3_NTrain28.pdf Graphic file (type pdf)
 <use sixpars/NPars6_Lambda3_NTrain28.pdf>
 Package pdftex.def Info: sixpars/NPars6_Lambda3_NTrain28.pdf  used on input lin
-e 268.
+e 443.
 (pdftex.def)             Requested size: 161.8885pt x 134.9049pt.
 
-Overfull \hbox (5.23758pt too wide) in paragraph at lines 266--271
+Overfull \hbox (5.23758pt too wide) in paragraph at lines 441--446
 [][]|  []|  [] 
  []
 
-) [37 <./onepar2points/onepartest_Lambda2.pdf> <./onepar2points/onepartest_Lamb
+) [42 <./onepar2points/onepartest_Lambda2.pdf> <./onepar2points/onepartest_Lamb
 da4.pdf
 
 pdfTeX warning: pdflatex (file ./onepar2points/onepartest_Lambda4.pdf): PDF inc
@@ -901,7 +841,7 @@ lusion: multiple pdfs with page group included in a single page
 
 pdfTeX warning: pdflatex (file ./onepar3points/onepartest_Lambda2.pdf): PDF inc
 lusion: multiple pdfs with page group included in a single page
->] [38 <./sixpars/NPars6_Lambda3_NTrain7.pdf> <./sixpars/NPars6_Lambda6_NTrain7
+>] [43 <./sixpars/NPars6_Lambda3_NTrain7.pdf> <./sixpars/NPars6_Lambda6_NTrain7
 .pdf
 
 pdfTeX warning: pdflatex (file ./sixpars/NPars6_Lambda6_NTrain7.pdf): PDF inclu
@@ -911,29 +851,17 @@ sion: multiple pdfs with page group included in a single page
 pdfTeX warning: pdflatex (file ./sixpars/NPars6_Lambda3_NTrain28.pdf): PDF incl
 usion: multiple pdfs with page group included in a single page
 >] (./UserManual.aux)
-
-LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
-
-Package rerunfilecheck Warning: File `UserManual.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `UserManual.out':
-(rerunfilecheck)             Before: <no file>
-(rerunfilecheck)             After:  BE6E8E1C37353292DFCA1C4AB4B3055C;3438.
+Package rerunfilecheck Info: File `UserManual.out' has not changed.
+(rerunfilecheck)             Checksum: 474DFDABC136394D51B6399B5F293FDC;3548.
  ) 
 Here is how much of TeX's memory you used:
- 11684 strings out of 476025
- 189943 string characters out of 5790017
- 1867388 words of memory out of 5000000
- 31831 multiletter control sequences out of 15000+600000
+ 11773 strings out of 476025
+ 191161 string characters out of 5790017
+ 1868388 words of memory out of 5000000
+ 31877 multiletter control sequences out of 15000+600000
  522096 words of font info for 67 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,15n,76p,1590b,729s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,15n,76p,1590b,731s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbsy10.pf
 b></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmbsy
 6.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cmextra/c
@@ -954,10 +882,10 @@ i12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt
 10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt1
 2.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/cm-super/sfrm1200.
 pfb>
-Output written on UserManual.pdf (39 pages, 787560 bytes).
+Output written on UserManual.pdf (44 pages, 815858 bytes).
 PDF statistics:
- 616 PDF objects out of 1000 (max. 8388607)
- 373 compressed objects within 4 object streams
- 117 named destinations out of 1000 (max. 500000)
- 51 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 870 PDF objects out of 1000 (max. 8388607)
+ 619 compressed objects within 7 object streams
+ 152 named destinations out of 1000 (max. 500000)
+ 395 words of extra memory for PDF output out of 10000 (max. 10000000)
 

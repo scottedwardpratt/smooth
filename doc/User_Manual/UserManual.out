@@ -37,6 +37,7 @@
 \BOOKMARK [2][-]{subsection.9.1}{Mathematical\040Form\040of\040Smooth\040Emulator}{section.9}% 37
 \BOOKMARK [2][-]{subsection.9.2}{Alternate\040Forms}{section.9}% 38
 \BOOKMARK [2][-]{subsection.9.3}{Tuning\040the\040Emulator}{section.9}% 39
-\BOOKMARK [1][-]{section.10}{Theoretical\040Basis\040of\040Simplex\040Sampler}{}% 40
-\BOOKMARK [2][-]{subsection.10.1}{The\040Pernicious\040Nature\040of\040Step-Function\040Priors\040in\040High\040Dimension}{section.10}% 41
-\BOOKMARK [1][-]{section.11}{Tests\040of\040the\040Smooth\040Emulator\040using\040Simplex\040Sampler\040for\040Training}{}% 42
+\BOOKMARK [2][-]{subsection.9.4}{Exact\040Solution\040for\040Most\040Probable\040Coefficients}{section.9}% 40
+\BOOKMARK [1][-]{section.10}{Theoretical\040Basis\040of\040Simplex\040Sampler}{}% 41
+\BOOKMARK [2][-]{subsection.10.1}{The\040Pernicious\040Nature\040of\040Step-Function\040Priors\040in\040High\040Dimension}{section.10}% 42
+\BOOKMARK [1][-]{section.11}{Tests\040of\040the\040Smooth\040Emulator\040using\040Simplex\040Sampler\040for\040Training}{}% 43
