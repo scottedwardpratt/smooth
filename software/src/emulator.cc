@@ -20,7 +20,9 @@ CSmoothEmulator::CSmoothEmulator(string observable_name_set){
 	NASample=parmap->getI("SmoothEmulator_NASample",8);
 	MCStepSize=parmap->getD("SmoothEmulator_MCStepSize",0.01);
 	MCSigmaAStepSize=parmap->getD("SmoothEmulator_MCSigmaAStepSize",0.01);
-	TuneChooseMCMC=parmap->getB("SmoothEmulator_TuneChooseMCMC",true);
+	TuneChooseMCMC=parmap->getB("SmoothEmulator_TuneChooseMCMC",false);
+	TuneChooseMCMCPerfect=parmap->getB("SmoothEmulator_TuneChooseMCMCPerfect",false);
+	TuneChooseExact=parmap->getB("SmoothEmulator_TuneExact",true);
 	UseSigmaYReal=parmap->getB("SmoothEmulator_UseSigmaYRreal",false);
 	ConstrainA0=parmap->getB("SmoothEmulator_ConstrainA0",false);
 	CutOffA=parmap->getB("SmoothEmulator_CutoffA",false);
@@ -90,8 +92,14 @@ void CSmoothEmulator::Tune(){
 			TuneMCMC();
 		}
 	}
-	else{
+	else if(TuneChooseMCMCPerfect==true){
 		TunePerfectMCMC();
+	}
+	else if(TuneChooseExact){
+		TuneExact();
+	}
+	else{
+		CLog::Fatal("In CSmoothEmulator::Tune(), no tuning method specified\n");
 	}
 }
 

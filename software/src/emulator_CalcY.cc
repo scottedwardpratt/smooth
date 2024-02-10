@@ -9,16 +9,22 @@ void CSmoothEmulator::CalcY(CModelParameters *modpars,double &Y,double &SigmaY_e
 }
 
 void CSmoothEmulator::CalcY(vector<double> Theta,double &Y,double &SigmaY_emulator){
-	double y;
-	Y=SigmaY_emulator=0.0;
-	for(unsigned int isample=0;isample<NASample;isample++){
-		y=smooth->CalcY(ASample[isample],LAMBDA,Theta);
-		Y+=y;
-		SigmaY_emulator+=y*y;
+	if(TuneChooseExact){
+		Y=smooth->CalcY(AExact,LAMBDA,Theta);
+		GetExactUncertainty(Theta,SigmaY_emulator);
 	}
-	SigmaY_emulator=SigmaY_emulator/double(NASample);
-	Y=Y/double(NASample);
-	SigmaY_emulator=sqrt(fabs(SigmaY_emulator-Y*Y));
+	else{
+		double y;
+		Y=SigmaY_emulator=0.0;
+		for(unsigned int isample=0;isample<NASample;isample++){
+			y=smooth->CalcY(ASample[isample],LAMBDA,Theta);
+			Y+=y;
+			SigmaY_emulator+=y*y;
+		}
+		SigmaY_emulator=SigmaY_emulator/double(NASample);
+		Y=Y/double(NASample);
+		SigmaY_emulator=sqrt(fabs(SigmaY_emulator-Y*Y));
+	}
 }
 
 
@@ -27,30 +33,36 @@ void CSmoothEmulator::CalcYDYDTheta(CModelParameters *modpars,double &Y,vector<d
 }
 
 void CSmoothEmulator::CalcYDYDTheta(vector<double> Theta,double &Y,vector<double> &dYdTheta,double &SigmaY){
-	double y;
-	unsigned int ipar;
-	char dummy[200];
-	vector<double> dydtheta;
-	dYdTheta.resize(NPars);
-	dydtheta.resize(NPars);
-	for(ipar=0;ipar<NPars;ipar++){
-		dYdTheta[ipar]=0.0;
+	if(TuneChooseExact){
+		smooth->CalcYDYDTheta(AExact,LAMBDA,Theta,Y,dYdTheta);
+		GetExactUncertainty(Theta,SigmaY);
 	}
-	Y=SigmaY=0.0;
-	for(unsigned int isample=0;isample<NASample;isample++){
-		smooth->CalcYDYDTheta(ASample[isample],LAMBDA,Theta,y,dydtheta);
-		Y+=y/double(NASample);
-		SigmaY+=y*y/double(NASample);
+	else{
+		double y;
+		unsigned int ipar;
+		char dummy[200];
+		vector<double> dydtheta;
+		dYdTheta.resize(NPars);
+		dydtheta.resize(NPars);
 		for(ipar=0;ipar<NPars;ipar++){
-			dYdTheta[ipar]+=dydtheta[ipar]/double(NASample);
-			if(dYdTheta[ipar]!=dYdTheta[ipar]){
-				snprintf(dummy,200,"ipar=%u, y=%g, dydtheta=%g, LAMBDA=%g, Theta=%g\n",ipar,y,dydtheta[ipar],LAMBDA,Theta[ipar]);
-				CLog::Info(dummy);
-				CLog::Fatal("disaster in CalcYDYDTheta\n");
+			dYdTheta[ipar]=0.0;
+		}
+		Y=SigmaY=0.0;
+		for(unsigned int isample=0;isample<NASample;isample++){
+			smooth->CalcYDYDTheta(ASample[isample],LAMBDA,Theta,y,dydtheta);
+			Y+=y/double(NASample);
+			SigmaY+=y*y/double(NASample);
+			for(ipar=0;ipar<NPars;ipar++){
+				dYdTheta[ipar]+=dydtheta[ipar]/double(NASample);
+				if(dYdTheta[ipar]!=dYdTheta[ipar]){
+					snprintf(dummy,200,"ipar=%u, y=%g, dydtheta=%g, LAMBDA=%g, Theta=%g\n",ipar,y,dydtheta[ipar],LAMBDA,Theta[ipar]);
+					CLog::Info(dummy);
+					CLog::Fatal("disaster in CalcYDYDTheta\n");
+				}
 			}
 		}
+		SigmaY=sqrt(fabs(SigmaY-Y*Y));
 	}
-	SigmaY=sqrt(fabs(SigmaY-Y*Y));
 }
 
 

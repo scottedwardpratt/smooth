@@ -36,10 +36,10 @@ namespace NBandSmooth{
 		double SigmaA0,SigmaAMin,SigmaA,SigmaATrial,MCStepSize,MCSigmaAStepSize,LAMBDA;
 		unsigned int NMC;   // NMC is for generating independent samplings of A in Tune
 		unsigned int NASample;
-		bool TuneChooseMCMC,ConstrainA0,CutOffA,UseSigmaYReal,FirstTune;
+		bool TuneChooseMCMC,ConstrainA0,CutOffA,UseSigmaYReal,FirstTune,TuneChooseExact,TuneChooseMCMCPerfect;
 		vector<vector<double>> ASample;
 		vector<double> SigmaASample;
-		vector<double> A,ATrial,Abest;
+		vector<double> A,ATrial,AExact;
 		vector<vector<double>> ThetaTrain;
 		vector<vector<double>> BetaDotBeta;
 		vector<vector<double>> Mdotbeta;
@@ -85,6 +85,7 @@ namespace NBandSmooth{
 
 		void Init();
 
+		static 
 		static CSmoothMaster *smoothmaster;
 		static unsigned int NPars;
 		static CSmooth *smooth;

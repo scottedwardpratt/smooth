@@ -4,17 +4,19 @@ using namespace std;
 using namespace NBandSmooth;
 using namespace NMSUPratt;
 
-
 void CSmoothEmulator::TuneExact(){
 	unsigned int NCoefficients=smooth->NCoefficients;
 	unsigned int itrain,ic,a,b,c,aprime,bprime;
 	CalcMForTraining();
 	BetaDotBeta.resize(NTrainingPts);
 	Mdotbeta.resize(NTrainingPts);
+	H6.resize(NTrainingPts);
+	H8.resize(NTrainingPts);
 	Psi.resize(NTrainingPts,NTrainingPts);
 	for(a=0;a<NTrainingPts;a++){
 		BetaDotBeta[a].resize(NTrainingPts);
 		Mdotbeta[a].resize(NTrainingPts);
+		H6[a].resize(NTrainingPts);
 		H8[a].resize(NTrainingPts);
 	}
 	Eigen::VectorXd alpha,gamma,YTrain,delta;
@@ -29,7 +31,7 @@ void CSmoothEmulator::TuneExact(){
 	gamma.setZero();
 	C.setZero();
 	delta.setZero();
-	Abest.resize(NCoefficients);
+	AExact.resize(NCoefficients);
 	YTrain.resize(NTrainingPts);
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		YTrain[itrain]=smoothmaster->traininginfo->YTrain[iY][itrain];
@@ -69,18 +71,19 @@ void CSmoothEmulator::TuneExact(){
 			delta(b)+=BetaDotBeta[b][b]*alpha(a);
 		}
 	}
+
 	gamma=C.colPivHouseholderQr().solve(delta);
 	for(ic=NTrainingPts;ic<NCoefficients;ic++){
-		Abest[ic]=0.0;
+		AExact[ic]=0.0;
 		for(a=0;a<NTrainingPts;a++){
-			Abest[ic]+=gamma(a)*beta(a,ic);
+			AExact[ic]+=gamma(a)*beta(a,ic);
 		}
 	}
-	
+
 	for(a=0;a<NTrainingPts;a++){
-		Abest[a]=alpha(a);
+		AExact[a]=alpha(a);
 		for(ic=NTrainingPts;ic<NCoefficients;ic++){
-			Abest[a]-=beta(a,ic)*Abest[ic];
+			AExact[a]-=beta(a,ic)*AExact[ic];
 		}
 	}
 	
@@ -91,12 +94,13 @@ void CSmoothEmulator::TuneExact(){
 	D.resize(NTrainingPts,NTrainingPts);
 	D.setZero();
 	for(a=0;a<NTrainingPts;a++){
-		for(b=0;b<NTrainingPts;a++){
+		for(b=0;b<NTrainingPts;b++){
 			if(a==b)
 				D(a,b)=1.0;
 			D(a,b)+=BetaDotBeta[a][b];
 		}
 	}
+
 	Psi=-D.inverse();
 	for(a=0;a<NTrainingPts;a++){
 		for(b=0;b<NTrainingPts;b++){
@@ -110,7 +114,7 @@ void CSmoothEmulator::TuneExact(){
 			}
 		}
 	}	
-	
+
 }
 
 void CSmoothEmulator::GetExactUncertainty(vector<double> &Theta_s,double &sigma){
@@ -171,11 +175,11 @@ void CSmoothEmulator::GetExactUncertainty(vector<double> &Theta_s,double &sigma)
 			sigma2+=M_s(a)*H8[a][b]*M_s(b);
 		}
 	}
-	
-	if(sigma2<0.0){
-		CLog::Fatal("Inside CSmoothEmulator::GetExactUncertainty, sigma^2 is less than zero = "+to_string(sigma2)+"\n");
+	printf("---- sigma2=%g\n",sigma2);
+	if(sigma2<1.0E-8){
+		CLog::Info("Inside CSmoothEmulator::GetExactUncertainty, sigma^2 is less than zero = "+to_string(sigma2)+"\n");
 	}
-	sigma=sqrt(sigma2);	
+	sigma=sqrt(fabs(sigma2));	
 
 }
 
