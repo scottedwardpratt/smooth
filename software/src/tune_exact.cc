@@ -103,7 +103,7 @@ void CSmoothEmulator::GetExactQuantities(){
 	
 	// Now calculate arrays used for calculating uncertainty
 	
-	Eigen::MatrixXd Psi,D;
+	Eigen::MatrixXd D;
 	Psi.resize(NTrainingPts,NTrainingPts);
 	D.resize(NTrainingPts,NTrainingPts);
 	D.setZero();
@@ -188,8 +188,7 @@ void CSmoothEmulator::GetExactUncertainty(vector<double> &Theta_s,double &uncert
 			unc2+=M_s(a)*H8[a][b]*M_s(b);
 		}
 	}
-	printf("---- unc2=%g\n",unc2);
-	if(unc2<1.0E-8){
+	if(unc2<-1.0E-8){
 		CLog::Info("Inside CSmoothEmulator::GetExactUncertainty, sigma^2 is less than zero = "+to_string(unc2)+"\n");
 	}
 	uncertainty=sqrt(fabs(unc2));	
