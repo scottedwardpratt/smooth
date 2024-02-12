@@ -62,6 +62,7 @@ namespace NBandSmooth{
 		void TuneExact();
 		void FindBestA();
 		void GenerateUncertaintyMatrices();
+		void GetExactQuantities();
 		
 		double GetLog_AProb(vector<double> &AA,double SigmaA);
 
