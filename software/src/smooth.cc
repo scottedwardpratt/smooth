@@ -71,7 +71,6 @@ void CSmooth::InitArrays(){
 		ic+=1;
 	}
 
-
 	for(i[0]=0;i[0]<NPars;i[0]++){
 		for(i[1]=0;i[1]<=i[0];i[1]++){
 			dupfactor.push_back(0);

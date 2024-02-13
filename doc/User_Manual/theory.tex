@@ -207,7 +207,7 @@ Given the location of the training points, one knows $T_{ta}$. One can then solv
 
 The goal is to find the coefficients, $A_{a>M}$, that maximizes the probability,
 \begin{eqnarray}
-P(\vec{A})&=&\frac{1}{(2\pi\sigma^2)^{C/2}}\int dA_1\cdots dA_C \prod_{t=1}^M\delta(y_m(\vec{\theta}_t)-E(\vec{\theta}_t)
+P(\vec{A})&=&\frac{1}{(2\pi\sigma^2)^{C/2}}\int dA_1\cdots dA_C \prod_{t=1}^M\delta[y_m(\vec{\theta}_t)-E(\vec{\theta}_t)]
 \exp\left\{
 -\frac{1}{2\sigma^2}\sum_{b=1}^C A_b^2
 \right\}.

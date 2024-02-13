@@ -191,8 +191,48 @@ void CSmoothEmulator::GetExactUncertainty(vector<double> &Theta_s,double &uncert
 	if(unc2<-1.0E-8){
 		CLog::Info("Inside CSmoothEmulator::GetExactUncertainty, sigma^2 is less than zero = "+to_string(unc2)+"\n");
 	}
-	uncertainty=sqrt(fabs(unc2));	
+	uncertainty=SigmaA*sqrt(fabs(unc2));	
 
+}
+
+void CSmoothEmulator::GetExactAVariance(){
+	unsigned int ir,ic,ic0,NCoefficients=smooth->NCoefficients,MaxRank=smooth->MaxRank;
+	double A2sum=0.0;
+	vector<double> A2barByRank;
+	vector<int> DenByRank;
+	A2barByRank.resize(MaxRank+1);
+	DenByRank.resize(MaxRank+1);
+	for(ir=0;ir<=MaxRank;ir++){
+		A2barByRank[ir]=0.0;
+		DenByRank[ir]=0;
+	}
+	ic0=1;
+	if(ConstrainA0)
+		ic0=0;
+	for(ic=ic0;ic<NCoefficients;ic++){
+		A2sum+=AExact[ic]*AExact[ic];
+		ir=smooth->rank[ic];
+		A2barByRank[ir]+=AExact[ic]*AExact[ic];
+		DenByRank[ir]+=1;
+	}
+	
+	printf("howdy\n");
+
+	if(ConstrainA0){
+		SigmaA=sqrt(A2sum/double(NTrainingPts));
+	}
+	else{
+		SigmaA=sqrt(A2sum/double(NTrainingPts-1));
+	}
+	CLog::Info("SigmaA should be:"+to_string(SigmaA)+"\n");
+		
+	CLog::Info("Using LAMBDA="+to_string(LAMBDA)+"\n");
+	for(ir=0;ir<=MaxRank;ir++){
+		A2barByRank[ir]=A2barByRank[ir]/double(DenByRank[ir]);
+		CLog::Info("A2barByRank[rank="+to_string(ir)+"] = "+to_string(A2barByRank[ir])+"\n");
+	}
+
+	
 }
 
 

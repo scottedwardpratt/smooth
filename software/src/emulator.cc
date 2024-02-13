@@ -97,6 +97,7 @@ void CSmoothEmulator::Tune(){
 	}
 	else if(TuneChooseExact){
 		TuneExact();
+		GetExactAVariance();
 	}
 	else{
 		CLog::Fatal("In CSmoothEmulator::Tune(), no tuning method specified\n");

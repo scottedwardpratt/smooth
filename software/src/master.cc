@@ -77,8 +77,6 @@ CSmoothMaster::CSmoothMaster(CparameterMap *parmap_set){
 
 void CSmoothMaster::TuneAllY(){
 	for(unsigned int iY=0;iY<observableinfo->NObservables;iY++){
-		if(iY==3)
-			emulator[3]->A[0]=5.5;
 		emulator[iY]->Tune();
 	}
 }
@@ -99,8 +97,6 @@ void CSmoothMaster::TuneY(unsigned int iY){
 void CSmoothMaster::GenerateCoefficientSamples(){
 	for(unsigned int iY=0;iY<observableinfo->NObservables;iY++){
 		CLog::Info("Tuning Emulator for "+observableinfo->GetName(iY)+"\n");
-		if(iY==3)
-			emulator[3]->A[0]=5.5;
 		emulator[iY]->GenerateASamples();
 	}
 }
