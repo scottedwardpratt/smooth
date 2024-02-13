@@ -43,6 +43,7 @@ void CTrainingInfo::ReadTrainingInfo(string rundirname){
 		}
 		else{
 			snprintf(filename,300,"%s/run%u/obs.txt",rundirname.c_str(),ifile);
+			printf("filename=%s\n",filename);
 		}
 		fptr=fopen(filename,"r");
 		nsuccess=0;
@@ -73,6 +74,7 @@ void CTrainingInfo::ReadTrainingInfo(string rundirname){
 				nread+=1;
 			}
 		}while(!feof(fptr));
+		fclose(fptr);
 	}
 	if(nread!=priorinfo->NModelPars){
 		CLog::Fatal("Only read in "+to_string(nread)+" parameter values from "+string(filename)+". But there are "+to_string(priorinfo->NModelPars)+" parameters needed.\n");

@@ -216,7 +216,6 @@ void CSmoothEmulator::GetExactAVariance(){
 		DenByRank[ir]+=1;
 	}
 	
-	printf("howdy\n");
 
 	if(ConstrainA0){
 		SigmaA=sqrt(A2sum/double(NTrainingPts));
