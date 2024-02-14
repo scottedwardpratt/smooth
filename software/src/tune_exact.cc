@@ -29,6 +29,8 @@ void CSmoothEmulator::TuneExact(){
 	}
 	alpha=Minv*YTrain;
 	for(a=0;a<NTrainingPts;a++){
+		for(ic=0;ic<NTrainingPts;ic++)
+			beta(a,ic)=0.0;
 		for(ic=NTrainingPts;ic<NCoefficients;ic++){
 			beta(a,ic)=0.0;
 			for(b=0;b<NTrainingPts;b++){
@@ -52,7 +54,7 @@ void CSmoothEmulator::TuneExact(){
 	for(b=0;b<NTrainingPts;b++){
 		delta(b)=0.0;
 		for(a=0;a<NTrainingPts;a++){
-			delta(b)+=BetaDotBeta[b][b]*alpha(a);
+			delta(b)+=BetaDotBeta[b][a]*alpha(a);
 		}
 	}
 
@@ -218,10 +220,10 @@ void CSmoothEmulator::GetExactAVariance(){
 	
 
 	if(ConstrainA0){
-		SigmaA=sqrt(A2sum/double(NTrainingPts));
+		SigmaA=sqrt(A2sum/double(NCoefficients));
 	}
 	else{
-		SigmaA=sqrt(A2sum/double(NTrainingPts-1));
+		SigmaA=sqrt(A2sum/double(NCoefficients-1));
 	}
 	CLog::Info("SigmaA should be:"+to_string(SigmaA)+"\n");
 		
