@@ -8,6 +8,7 @@ void CSmoothEmulator::TuneExact(){
 	unsigned int NCoefficients=smooth->NCoefficients;
 	unsigned int itrain,ic,a,b,c;
 	CalcMForTraining();
+	
 	Psi.resize(NTrainingPts,NTrainingPts);
 	
 	Eigen::VectorXd alpha,gamma,YTrain,delta;
@@ -46,7 +47,7 @@ void CSmoothEmulator::TuneExact(){
 		for(c=0;c<NTrainingPts;c++){
 			C(b,c)+=BetaDotBeta[b][c];
 			for(a=0;a<NTrainingPts;a++){
-				C(b,c)+=BetaDotBeta[a][b]*BetaDotBeta[a][c];
+				C(b,c)+=BetaDotBeta[b][a]*BetaDotBeta[a][c];
 			}
 		}
 	}
@@ -57,8 +58,8 @@ void CSmoothEmulator::TuneExact(){
 			delta(b)+=BetaDotBeta[b][a]*alpha(a);
 		}
 	}
-
 	gamma=C.colPivHouseholderQr().solve(delta);
+	
 	for(ic=NTrainingPts;ic<NCoefficients;ic++){
 		AExact[ic]=0.0;
 		for(a=0;a<NTrainingPts;a++){
@@ -72,8 +73,6 @@ void CSmoothEmulator::TuneExact(){
 			AExact[a]-=beta(a,ic)*AExact[ic];
 		}
 	}
-	
-	
 
 }
 
@@ -144,6 +143,7 @@ void CSmoothEmulator::GetExactUncertainty(vector<double> &Theta_s,double &uncert
 	Mtot_sDotBeta.setZero();
 	
 	for(a=0;a<NTrainingPts;a++){
+		Mtot_s[a]=0.0;
 		M_s[a]=smooth->GetM(a,LAMBDA,Theta_s);
 	}
 	for(ic=NTrainingPts;ic<NCoefficients;ic++){
@@ -220,10 +220,10 @@ void CSmoothEmulator::GetExactAVariance(){
 	
 
 	if(ConstrainA0){
-		SigmaA=sqrt(A2sum/double(NCoefficients));
+		SigmaA=sqrt(A2sum/double(NTrainingPts));
 	}
 	else{
-		SigmaA=sqrt(A2sum/double(NCoefficients-1));
+		SigmaA=sqrt(A2sum/double(NTrainingPts-1));
 	}
 	CLog::Info("SigmaA should be:"+to_string(SigmaA)+"\n");
 		
