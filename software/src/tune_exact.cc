@@ -197,7 +197,7 @@ void CSmoothEmulator::GetExactUncertainty(vector<double> &Theta_s,double &uncert
 
 }
 
-void CSmoothEmulator::GetExactAVariance(){
+void CSmoothEmulator::GetExactSigmaA(){
 	unsigned int ir,ic,ic0,NCoefficients=smooth->NCoefficients,MaxRank=smooth->MaxRank;
 	double A2sum=0.0;
 	vector<double> A2barByRank;
@@ -218,6 +218,7 @@ void CSmoothEmulator::GetExactAVariance(){
 		DenByRank[ir]+=1;
 	}
 	
+	CLog::Info("---- LAMBDA="+to_string(LAMBDA)+" ----- \n");
 
 	if(ConstrainA0){
 		SigmaA=sqrt(A2sum/double(NTrainingPts));
@@ -226,12 +227,11 @@ void CSmoothEmulator::GetExactAVariance(){
 		SigmaA=sqrt(A2sum/double(NTrainingPts-1));
 	}
 	CLog::Info("SigmaA should be:"+to_string(SigmaA)+"\n");
-		
-	CLog::Info("Using LAMBDA="+to_string(LAMBDA)+"\n");
 	for(ir=0;ir<=MaxRank;ir++){
 		A2barByRank[ir]=A2barByRank[ir]/double(DenByRank[ir]);
-		CLog::Info("A2barByRank[rank="+to_string(ir)+"] = "+to_string(A2barByRank[ir])+", DenRank="+to_string(DenByRank[ir])+"\n");
+		//CLog::Info("A2barByRank[rank="+to_string(ir)+"] = "+to_string(A2barByRank[ir])+", DenRank="+to_string(DenByRank[ir])+"\n");
 	}
+	CLog::Info("A2bar[2]/A2bar[1]="+to_string(A2barByRank[2]/A2barByRank[1])+"\n");
 
 	
 }
@@ -240,7 +240,7 @@ void CSmoothEmulator::GetExactAVariance(){
 void CSmoothEmulator::CalcExactLogP(){
 	double Jacobian;
 	Jacobian=M.determinant();
-	logP=log(Jacobian)+NTrainingPts*log(SigmaA);
+	logP=-log(Jacobian)-NTrainingPts*log(SigmaA);
 	CLog::Info("logP="+to_string(logP)+"\n");
 }
 

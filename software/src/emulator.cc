@@ -97,7 +97,7 @@ void CSmoothEmulator::Tune(){
 	}
 	else if(TuneChooseExact){
 		TuneExact();
-		GetExactAVariance();
+		GetExactSigmaA();
 		CalcExactLogP();
 	}
 	else{
