@@ -142,6 +142,14 @@ vector<double> &SigmaY_emulator,vector<vector<double>> &dYdTheta){
 	}
 }
 
+void CSmoothMaster::CalcAllLogP(){
+	unsigned int NObservables=observableinfo->NObservables;
+	for(unsigned int iY=0;iY<NObservables;iY++){
+		emulator[iY]->CalcExactLogP();
+		CLog::Info("iY="+to_string(iY)+": logP="+to_string(emulator[iY]->logP)+"\n");
+	}
+}
+
 void CSmoothMaster::TestAtTrainingPts(){
 	char pchars[CLog::CHARLENGTH];
 	unsigned int itrain,iY;

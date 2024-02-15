@@ -43,7 +43,6 @@ void CTrainingInfo::ReadTrainingInfo(string rundirname){
 		}
 		else{
 			snprintf(filename,300,"%s/run%u/obs.txt",rundirname.c_str(),ifile);
-			printf("filename=%s\n",filename);
 		}
 		fptr=fopen(filename,"r");
 		nsuccess=0;

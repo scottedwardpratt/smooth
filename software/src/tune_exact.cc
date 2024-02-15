@@ -230,10 +230,18 @@ void CSmoothEmulator::GetExactAVariance(){
 	CLog::Info("Using LAMBDA="+to_string(LAMBDA)+"\n");
 	for(ir=0;ir<=MaxRank;ir++){
 		A2barByRank[ir]=A2barByRank[ir]/double(DenByRank[ir]);
-		CLog::Info("A2barByRank[rank="+to_string(ir)+"] = "+to_string(A2barByRank[ir])+"\n");
+		CLog::Info("A2barByRank[rank="+to_string(ir)+"] = "+to_string(A2barByRank[ir])+", DenRank="+to_string(DenByRank[ir])+"\n");
 	}
 
 	
+}
+
+
+void CSmoothEmulator::CalcExactLogP(){
+	double Jacobian;
+	Jacobian=M.determinant();
+	logP=log(Jacobian)+NTrainingPts*log(SigmaA);
+	CLog::Info("logP="+to_string(logP)+"\n");
 }
 
 

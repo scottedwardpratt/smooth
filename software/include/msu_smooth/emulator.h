@@ -33,7 +33,8 @@ namespace NBandSmooth{
 		Eigen::MatrixXd M,Minv,ExactVariance;
 		vector<vector<double>> Mtot;
 
-		double SigmaA0,SigmaAMin,SigmaA,SigmaATrial,MCStepSize,MCSigmaAStepSize,LAMBDA;
+		double SigmaA0,SigmaAMin,SigmaA,SigmaATrial,MCStepSize,MCSigmaAStepSize,LAMBDA,logP;
+
 		unsigned int NMC;   // NMC is for generating independent samplings of A in Tune
 		unsigned int NASample;
 		bool TuneChooseMCMC,ConstrainA0,CutOffA,UseSigmaYReal,FirstTune,TuneChooseExact,TuneChooseMCMCPerfect;
@@ -64,6 +65,7 @@ namespace NBandSmooth{
 		void GenerateUncertaintyMatrices();
 		void GetExactQuantities();
 		void GetExactAVariance();
+		void CalcExactLogP();
 		
 		double GetLog_AProb(vector<double> &AA,double SigmaA);
 
@@ -94,7 +96,6 @@ namespace NBandSmooth{
 		static CparameterMap *parmap;
 		static Crandy *randy;
 		static unsigned int NTrainingPts;
-
 
 	};
 

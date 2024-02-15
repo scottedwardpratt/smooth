@@ -77,7 +77,6 @@ void CSmoothEmulator::ReadCoefficients(){
 		AExact.resize(NCoefficients);
 		beta.resize(NTrainingPts,NCoefficients);
 		filename=dirname+"/AExact.txt";
-		printf("filename=%s\n",filename.c_str());
 		fptr=fopen(filename.c_str(),"r");
 		for(ic=0;ic<NCoefficients;ic++){
 			fscanf(fptr,"%lf\n",&AExact[ic]);
