@@ -216,7 +216,7 @@ double CSmooth::GetRFactor(double LAMBDA,vector<double> &theta){
 	return answer;
 }
 
-double CSmooth::GetM(unsigned int ic,double LAMBDA,vector<double> &theta){
+double CSmooth::GetT(unsigned int ic,double LAMBDA,vector<double> &theta){
 	unsigned int ir;
 	double answer,rfactor=1.0;
 	rfactor=GetRFactor(LAMBDA,theta);

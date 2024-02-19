@@ -324,11 +324,16 @@ This gives
 Q_{ab}&=&\delta_{ab}+B_{ab}.
 \end{eqnarray}
 Finally, this gives
-\begin{eqnarray}
+\begin{eqnarray}\label{eq:dy2}
 \langle(\delta y)^2\rangle&=&
 \left\{T_i(\vec{\theta})-T_{a}(\vec{\theta})\beta_{ai}\right\}D^{-1}_{ij}
 \left\{T_j(\vec{\theta})-T_b(\vec{\theta})\beta_{bj}\right\}.
 \end{eqnarray}
+One can look at the first term in Eq. (\ref{eq:dy2}), $(T_i(\vec{\theta})-T_{a}(\vec{\theta})\beta_{ai})$, and see that if $\theta$ is chosen to be one of the training points, that the resulting width will be zero. In that case, $T_{a}(\vec{\theta}_b)$ becomes the matrix element $T_{ab}$, and when multiplied by $\beta_{ai}=T^{-1}_{ab}T_{bi}$, becomes equal to $T_{ai}$. I.e.,
+\begin{eqnarray}
+T_a(\vec{\theta}_b)\beta_{ai}&=T_{ba}T^{-1}_{ac}T_{ci}=T_{bi}.
+\end{eqnarray}
+
 Inserting Eq. (\ref{eq:DinvDef}) and putting this all together, one has 8 terms all together.
 \begin{eqnarray}
 \sigma_E^2(\vec{\theta})&=&

@@ -28,14 +28,14 @@ void CSmoothEmulator::TuneExact(){
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		YTrain[itrain]=smoothmaster->traininginfo->YTrain[iY][itrain];
 	}
-	alpha=Minv*YTrain;
+	alpha=TtildeInv*YTrain;
 	for(a=0;a<NTrainingPts;a++){
 		for(ic=0;ic<NTrainingPts;ic++)
 			beta(a,ic)=0.0;
 		for(ic=NTrainingPts;ic<NCoefficients;ic++){
 			beta(a,ic)=0.0;
 			for(b=0;b<NTrainingPts;b++){
-				beta(a,ic)+=Minv(a,b)*Mtot[b][ic];
+				beta(a,ic)+=TtildeInv(a,b)*T[b][ic];
 			}
 		}
 	}
@@ -78,16 +78,14 @@ void CSmoothEmulator::TuneExact(){
 
 void CSmoothEmulator::GetExactQuantities(){
 	unsigned int NCoefficients=smooth->NCoefficients;
-	unsigned int ic,a,b,aprime,bprime;
+	unsigned int i,a,b,aprime,bprime;
 	
 	BetaDotBeta.resize(NTrainingPts);
-	Mdotbeta.resize(NTrainingPts);
 	H6.resize(NTrainingPts);
 	H8.resize(NTrainingPts);
 	
 	for(a=0;a<NTrainingPts;a++){
 		BetaDotBeta[a].resize(NTrainingPts);
-		Mdotbeta[a].resize(NTrainingPts);
 		H6[a].resize(NTrainingPts);
 		H8[a].resize(NTrainingPts);
 	}
@@ -95,9 +93,8 @@ void CSmoothEmulator::GetExactQuantities(){
 		for(b=0;b<NTrainingPts;b++){
 			BetaDotBeta[a][b]=0.0;
 			Mdotbeta[a][b]=0.0;
-			for(ic=NTrainingPts;ic<NCoefficients;ic++){
-				BetaDotBeta[a][b]+=beta(a,ic)*beta(b,ic);
-				Mdotbeta[a][b]+=Mtot[a][ic]*beta(b,ic);
+			for(i=NTrainingPts;i<NCoefficients;i++){
+				BetaDotBeta[a][b]+=beta(a,i)*beta(b,i);
 			}
 		}
 	}
@@ -133,61 +130,53 @@ void CSmoothEmulator::GetExactQuantities(){
 
 void CSmoothEmulator::GetExactUncertainty(vector<double> &Theta_s,double &uncertainty){
 	double unc2; // squared uncertainty
-	unsigned int ic,a,b,NCoefficients=smooth->NCoefficients;
-	Eigen::VectorXd Mtot_s,M_s,Mtot_sDotBeta;
-	M_s.resize(NTrainingPts);
-	Mtot_s.resize(NCoefficients);
-	M_s.setZero();
-	Mtot_s.setZero(NCoefficients);
-	Mtot_sDotBeta.resize(NTrainingPts);
-	Mtot_sDotBeta.setZero();
-	
-	for(a=0;a<NTrainingPts;a++){
-		Mtot_s[a]=0.0;
-		M_s[a]=smooth->GetM(a,LAMBDA,Theta_s);
-	}
-	for(ic=NTrainingPts;ic<NCoefficients;ic++){
-		Mtot_s[ic]=smooth->GetM(ic,LAMBDA,Theta_s);
+	unsigned int i,a,b,NCoefficients=smooth->NCoefficients;
+	Eigen::VectorXd T,S;
+	T.resize(NCoefficients);
+	S.resize(NTrainingPts);
+
+	for(i=0;i<NCoefficients;i++){
+		T(i)=smooth->GetT(i,LAMBDA,Theta_s);
 	}
 	
 	for(a=0;a<NTrainingPts;a++){
-		Mtot_sDotBeta(a)=0.0;
-		for(ic=NTrainingPts;ic<NCoefficients;ic++){
-			Mtot_sDotBeta(a)+=Mtot_s(ic)*beta(a,ic);
+		S(a)=0.0;
+		for(i=NTrainingPts;i<NCoefficients;i++){
+			S(a)+=beta(a,i)*T(i);
 		}
 	}
 
 	unc2=0.0;
 	// First term
-	for(ic=NTrainingPts;ic<NCoefficients;ic++){
-		unc2+=Mtot_s(ic)*Mtot_s(ic);
+	for(i=NTrainingPts;i<NCoefficients;i++){
+		unc2+=T(i)*T(i);
 	}
 	// Second  & third terms
 	for(a=0;a<NTrainingPts;a++){
-		unc2-=2*M_s(a)*Mtot_sDotBeta(a);
+		unc2-=2*T(a)*S(a);
 	}
 	// Fourth term
 	for(a=0;a<NTrainingPts;a++){
 		for(b=0;b<NTrainingPts;b++){
-			unc2+=M_s(a)*BetaDotBeta[a][b]*M_s(b);
+			unc2+=T(a)*BetaDotBeta[a][b]*T(b);
 		}
 	}
 	// Fifth term
 	for(a=0;a<NTrainingPts;a++){
 		for(b=0;b<NTrainingPts;b++){
-			unc2+=Mtot_sDotBeta(a)*Psi(a,b)*Mtot_sDotBeta(b);
+			unc2+=S(a)*Psi(a,b)*S(b);
 		}
 	}
 	// Sixth & seventh terms
 	for(a=0;a<NTrainingPts;a++){
 		for(b=0;b<NTrainingPts;b++){
-			unc2-=2*M_s(a)*H6[a][b]*Mtot_sDotBeta(b);
+			unc2-=2*T(a)*H6[a][b]*S(b);
 		}
 	}
 	/// 8th term
 	for(a=0;a<NTrainingPts;a++){
 		for(b=0;b<NTrainingPts;b++){
-			unc2+=M_s(a)*H8[a][b]*M_s(b);
+			unc2+=T(a)*H8[a][b]*T(b);
 		}
 	}
 	if(unc2<-1.0E-8){
@@ -237,10 +226,9 @@ void CSmoothEmulator::GetExactSigmaA(){
 	
 }
 
-
 void CSmoothEmulator::CalcExactLogP(){
 	double Jacobian;
-	Jacobian=M.determinant();
+	Jacobian=Ttilde.determinant();
 	logP=-log(Jacobian)-NTrainingPts*log(SigmaA);
 	CLog::Info("logP="+to_string(logP)+"\n");
 }

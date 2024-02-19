@@ -62,13 +62,13 @@ void CSmoothEmulator::Init(){
 	SetA_Zero(A);
 	ATrial.resize(smooth->NCoefficients);
 	SetA_Zero(ATrial);
-	M.resize(NTrainingPts,NTrainingPts);
-	Minv.resize(NTrainingPts,NTrainingPts);
-	Mtot.resize(NTrainingPts);
+	Ttilde.resize(NTrainingPts,NTrainingPts);
+	TtildeInv.resize(NTrainingPts,NTrainingPts);
+	T.resize(NTrainingPts);
 	for(unsigned int it=0;it<NTrainingPts;it++){
-		Mtot[it].resize(smooth->NCoefficients);
+		T[it].resize(smooth->NCoefficients);
 		for(unsigned int ic=0;ic<smooth->NCoefficients;ic++){
-			Mtot[it][ic]=0.0;
+			T[it][ic]=0.0;
 		}
 	}
 }
@@ -195,7 +195,7 @@ void CSmoothEmulator::TuneMCMC_withSigma(){
 	double logP,logPTrial;
 	logP=GetLog_AProb(*Aptr,SigmaA);
 	for(itrain=0;itrain<NTrainingPts;itrain++){
-		Y=smooth->CalcY_FromMtot(*Aptr,Mtot[itrain]);
+		Y=smooth->CalcY_FromMtot(*Aptr,T[itrain]);
 		logP-=0.5*(YTrain[itrain]-Y)*(YTrain[itrain]-Y)/(SigmaYTrain[itrain]*SigmaYTrain[itrain]);
 	}
 
@@ -213,7 +213,7 @@ void CSmoothEmulator::TuneMCMC_withSigma(){
 
 
 		for(itrain=0;itrain<NTrainingPts;itrain++){
-			Y=smooth->CalcY_FromMtot(*ATrialptr,Mtot[itrain]);
+			Y=smooth->CalcY_FromMtot(*ATrialptr,T[itrain]);
 			logPTrial-=0.5*(YTrain[itrain]-Y)*(YTrain[itrain]-Y)/(SigmaYTrain[itrain]*SigmaYTrain[itrain]);
 		}
 
@@ -307,18 +307,18 @@ void CSmoothEmulator::TunePerfectMCMC(){
 void CSmoothEmulator::CalcMForTraining(){
 	unsigned int itrain,ic;
 	for(itrain=0;itrain<NTrainingPts;itrain++){
-		for(ic=0;ic<NTrainingPts;ic++){
-			M(itrain,ic)=smooth->GetM(ic,LAMBDA,ThetaTrain[itrain]);
-		}
 		for(ic=0;ic<smooth->NCoefficients;ic++){
-			Mtot[itrain][ic]=smooth->GetM(ic,LAMBDA,ThetaTrain[itrain]);
+			T[itrain][ic]=smooth->GetT(ic,LAMBDA,ThetaTrain[itrain]);
+		}
+		for(ic=0;ic<NTrainingPts;ic++){
+			Ttilde(itrain,ic)=T[itrain][ic];
 		}
 	}
-	Minv=M.inverse();
+	TtildeInv=Ttilde.inverse();
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		for(ic=0;ic<NTrainingPts;ic++){
-			if(Minv(itrain,ic)!=Minv(itrain,ic)){
-				CLog::Fatal("Minv != Minv\n");
+			if(TtildeInv(itrain,ic)!=TtildeInv(itrain,ic)){
+				CLog::Fatal("TtildeInv != TtildeInv\n");
 			}
 		}
 	}
@@ -342,9 +342,9 @@ void CSmoothEmulator::CalcAFromTraining(vector<double> &AA){
 
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		//YTarget(itrain)=YTrain[itrain]-smooth->CalcY_Remainder(AA,LAMBDA,ThetaTrain[itrain],NTrainingPts);
-		YTarget(itrain)=YTrain[itrain]-smooth->CalcY_Remainder_FromMtot(AA,NTrainingPts,Mtot[itrain]);
+		YTarget(itrain)=YTrain[itrain]-smooth->CalcY_Remainder_FromMtot(AA,NTrainingPts,T[itrain]);
 	}
-	Ashort=Minv*YTarget;
+	Ashort=TtildeInv*YTarget;
 	for(itrain=0;itrain<NTrainingPts;itrain++)
 		AA[itrain]=Ashort(itrain);
 }
@@ -366,11 +366,11 @@ void CSmoothEmulator::OldCalcAFromTraining(vector<double> &AA){
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		YTarget(itrain)=YTrain[itrain]-smooth->CalcY_Remainder(AA,LAMBDA,ThetaTrain[itrain],NTrainingPts);
 		for(ic=0;ic<NTrainingPts;ic++){
-			M(itrain,ic)=smooth->GetM(ic,LAMBDA,ThetaTrain[itrain]);
+			Ttilde(itrain,ic)=smooth->GetT(ic,LAMBDA,ThetaTrain[itrain]);
 		}
 	}
-	//Ashort=M.colPivHouseholderQr().solve(YTarget);
-	Ashort=M.partialPivLu().solve(YTarget);
+	//Ashort=Ttilde.colPivHouseholderQr().solve(YTarget);
+	Ashort=Ttilde.partialPivLu().solve(YTarget);
 	for(itrain=0;itrain<NTrainingPts;itrain++)
 		AA[itrain]=Ashort(itrain);
 }
