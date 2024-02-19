@@ -231,7 +231,8 @@ void CSmoothEmulator::GetExactSigmaA(){
 		A2barByRank[ir]=A2barByRank[ir]/double(DenByRank[ir]);
 		//CLog::Info("A2barByRank[rank="+to_string(ir)+"] = "+to_string(A2barByRank[ir])+", DenRank="+to_string(DenByRank[ir])+"\n");
 	}
-	CLog::Info("A2bar[2]/A2bar[1]="+to_string(A2barByRank[2]/A2barByRank[1])+"\n");
+	A2barRatio=A2barByRank[2]/A2barByRank[1];
+	CLog::Info("A2bar[2]/A2bar[1]="+to_string(A2barRatio)+"\n");
 
 	
 }

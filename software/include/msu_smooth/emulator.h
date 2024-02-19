@@ -33,7 +33,8 @@ namespace NBandSmooth{
 		Eigen::MatrixXd M,Minv,ExactVariance;
 		vector<vector<double>> Mtot;
 
-		double SigmaA0,SigmaAMin,SigmaA,SigmaATrial,MCStepSize,MCSigmaAStepSize,LAMBDA,logP;
+		double SigmaA0,SigmaAMin,SigmaA,SigmaATrial,MCStepSize,MCSigmaAStepSize,LAMBDA;
+		double A2barRatio,logP;
 
 		unsigned int NMC;   // NMC is for generating independent samplings of A in Tune
 		unsigned int NASample;

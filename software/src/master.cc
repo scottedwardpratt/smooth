@@ -144,10 +144,21 @@ vector<double> &SigmaY_emulator,vector<vector<double>> &dYdTheta){
 
 void CSmoothMaster::CalcAllLogP(){
 	unsigned int NObservables=observableinfo->NObservables;
+	double logP,logPbar=0.0,A2barRatioBar=0.0,SigmaAbar=0.0;
 	for(unsigned int iY=0;iY<NObservables;iY++){
 		emulator[iY]->CalcExactLogP();
-		CLog::Info("iY="+to_string(iY)+": logP="+to_string(emulator[iY]->logP)+"\n");
+		logP=emulator[iY]->logP;
+		CLog::Info("iY="+to_string(iY)+": logP="+to_string(logP)+", A2Ratio="+to_string(emulator[iY]->A2barRatio)+"\n");
+		logPbar+=logP;
+		A2barRatioBar+=emulator[iY]->A2barRatio;
+		SigmaAbar+=emulator[iY]->SigmaA;
 	}
+	logPbar=logPbar/double(NObservables);
+	A2barRatioBar=A2barRatioBar/double(NObservables);
+	SigmaAbar=SigmaAbar/double(NObservables);
+	//CLog::Info("logPbar="+to_string(logPbar)+", A2barRatio="+to_string(A2barRatioBar)+"\n");
+	CLog::Info(to_string(emulator[0]->LAMBDA)+" "+to_string(logPbar)+" "+to_string(A2barRatioBar)
+		+" "+to_string(SigmaAbar)+"\n");
 }
 
 void CSmoothMaster::TestAtTrainingPts(){
@@ -195,3 +206,37 @@ void CSmoothMaster::TestAtTrainingPts(string obsname){
 		CLog::Info(pchars);
 	}
 }
+
+void CSmoothMaster::TestVsFakeModel(){
+	char pchars[CLog::CHARLENGTH];
+	unsigned int iY,ifake,nfake=100,ipar;
+	unsigned int NObservables=observableinfo->NObservables;
+	double Y,SigmaY_emulator,fakeY;
+	CModelParameters fakepars[nfake];
+	CLog::Info("--- TESTING VS FAKE MODEL ----\n");
+	FILE *fptr,*fptr_out;
+	string filename;
+	
+	fptr_out=fopen("fakedata/faketest.txt","w");
+	
+	
+	for(iY=0;iY<NObservables;iY++){
+		filename="fakedata/"+observableinfo->observable_name[iY]+".txt";
+		fptr=fopen(filename.c_str(),"r");
+		for(ifake=0;ifake<nfake;ifake++){
+			for(ipar=0;ipar<NPars;ipar++){
+				fscanf(fptr,"%lf",&fakepars[ifake].Theta[ipar]);
+			}
+			fscanf(fptr,"%lf",&fakeY);
+			CalcY(iY,&fakepars[ifake],Y,SigmaY_emulator);
+			snprintf(pchars,CLog::CHARLENGTH,
+			"Y[%u]=%10.3e =? %10.3e,    SigmaY_emulator=%12.5e\n",
+			iY,Y,fakeY,SigmaY_emulator);
+			fprintf(fptr_out,pchars,CLog::CHARLENGTH,
+			"%12.5e  %12.5e %12.5e\n",fakeY,Y,SigmaY_emulator);	
+		}
+		fclose(fptr);		
+	}
+	fclose(fptr_out);
+}
+
