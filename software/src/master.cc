@@ -217,12 +217,14 @@ void CSmoothMaster::TestVsFakeModel(){
 	FILE *fptr,*fptr_out;
 	string filename;
 	
-	fptr_out=fopen("fakedata/faketest.txt","w");
 	
 	
 	for(iY=0;iY<NObservables;iY++){
 		filename="fakedata/"+observableinfo->observable_name[iY]+".txt";
 		fptr=fopen(filename.c_str(),"r");
+		filename="fakedata/fake_"+observableinfo->observable_name[iY]+".txt";
+		fptr_out=fopen(filename.c_str(),"w");
+		
 		for(ifake=0;ifake<nfake;ifake++){
 			for(ipar=0;ipar<NPars;ipar++){
 				fscanf(fptr,"%lf",&fakepars[ifake].Theta[ipar]);
@@ -232,11 +234,10 @@ void CSmoothMaster::TestVsFakeModel(){
 			snprintf(pchars,CLog::CHARLENGTH,
 			"Y[%u]=%10.3e =? %10.3e,    SigmaY_emulator=%12.5e\n",
 			iY,Y,fakeY,SigmaY_emulator);
-			fprintf(fptr_out,pchars,CLog::CHARLENGTH,
-			"%12.5e  %12.5e %12.5e\n",fakeY,Y,SigmaY_emulator);	
+			fprintf(fptr_out,"%12.5e  %12.5e %12.5e\n",fakeY,Y,SigmaY_emulator);	
 		}
 		fclose(fptr);		
+		fclose(fptr_out);
 	}
-	fclose(fptr_out);
 }
 
