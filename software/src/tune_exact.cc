@@ -43,22 +43,17 @@ void CSmoothEmulator::TuneExact(){
 	GetExactQuantities();
 	
 	// Will solve for gamma where delta=C*gamma, but first find C
-	for(b=0;b<NTrainingPts;b++){
-		for(c=0;c<NTrainingPts;c++){
-			C(b,c)+=BetaDotBeta[b][c];
-			for(a=0;a<NTrainingPts;a++){
-				C(b,c)+=BetaDotBeta[b][a]*BetaDotBeta[a][c];
+	for(a=0;a<NTrainingPts;a++){
+		for(b=0;b<NTrainingPts;b++){
+			C(a,b)=0.0;
+			if(a==b)
+				C(a,b)=0.0;
+			for(c=0;c<NTrainingPts;c++){
+				C(a,b)+=BetaDotBeta[a][c]*BetaDotBeta[c][b];
 			}
 		}
 	}
-	
-	for(b=0;b<NTrainingPts;b++){
-		delta(b)=0.0;
-		for(a=0;a<NTrainingPts;a++){
-			delta(b)+=BetaDotBeta[b][a]*alpha(a);
-		}
-	}
-	gamma=C.colPivHouseholderQr().solve(delta);
+	gamma=C.colPivHouseholderQr().solve(alpha);
 	
 	for(ic=NTrainingPts;ic<NCoefficients;ic++){
 		AExact[ic]=0.0;
@@ -66,14 +61,14 @@ void CSmoothEmulator::TuneExact(){
 			AExact[ic]+=gamma(a)*beta(a,ic);
 		}
 	}
-
+	
 	for(a=0;a<NTrainingPts;a++){
 		AExact[a]=alpha(a);
 		for(ic=NTrainingPts;ic<NCoefficients;ic++){
 			AExact[a]-=beta(a,ic)*AExact[ic];
 		}
 	}
-
+	
 }
 
 void CSmoothEmulator::GetExactQuantities(){
@@ -84,15 +79,16 @@ void CSmoothEmulator::GetExactQuantities(){
 	H6.resize(NTrainingPts);
 	H8.resize(NTrainingPts);
 	
+	
 	for(a=0;a<NTrainingPts;a++){
 		BetaDotBeta[a].resize(NTrainingPts);
 		H6[a].resize(NTrainingPts);
 		H8[a].resize(NTrainingPts);
 	}
+	
 	for(a=0;a<NTrainingPts;a++){
 		for(b=0;b<NTrainingPts;b++){
 			BetaDotBeta[a][b]=0.0;
-			Mdotbeta[a][b]=0.0;
 			for(i=NTrainingPts;i<NCoefficients;i++){
 				BetaDotBeta[a][b]+=beta(a,i)*beta(b,i);
 			}
@@ -182,7 +178,7 @@ void CSmoothEmulator::GetExactUncertainty(vector<double> &Theta_s,double &uncert
 	if(unc2<-1.0E-8){
 		CLog::Info("Inside CSmoothEmulator::GetExactUncertainty, sigma^2 is less than zero = "+to_string(unc2)+"\n");
 	}
-	uncertainty=SigmaA*sqrt(fabs(unc2));	
+	uncertainty=SigmaA*sqrt(fabs(unc2));
 
 }
 

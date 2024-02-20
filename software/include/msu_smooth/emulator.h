@@ -44,7 +44,6 @@ namespace NBandSmooth{
 		vector<double> A,ATrial,AExact;
 		vector<vector<double>> ThetaTrain;
 		vector<vector<double>> BetaDotBeta;
-		vector<vector<double>> Mdotbeta;
 		vector<vector<double>> H6,H8;
 		Eigen::MatrixXd beta,Psi;
 

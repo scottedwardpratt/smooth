@@ -94,6 +94,8 @@ void CSmoothEmulator::ReadCoefficients(){
 		
 		GetExactQuantities();
 		
+		GetExactSigmaA();
+		
 	}
 	else{
 		for(isample=0;isample<NASample;isample++){

@@ -33,6 +33,7 @@ void CSimplexSampler::SetThetaSimplex(){
 	else{
 		CLog::Fatal("Inside CSimplexSampler::SetThetaSimplex, TrainType must be 1,2,3, or 4\n");
 	}
+	CLog::Info("NTrainingPts="+to_string(NTrainingPts)+"\n");
 }
 
 void CSimplexSampler::SetThetaType1(){
@@ -150,7 +151,7 @@ void CSimplexSampler::SetThetaType3(){
 	for(itrain=NPars+1;itrain<2*NPars+2;itrain++){
 		ThetaTrain[itrain].resize(NPars);
 		for(ipar=0;ipar<NPars;ipar++){
-			ThetaTrain[itrain][ipar]=-0.8*ThetaTrain[itrain-NPars-1][ipar];
+			ThetaTrain[itrain][ipar]=-0.8*ThetaTrain[itrain-NPars-1][ipar]+0.1*randy->ran();
 		}
 	}
 	

@@ -76,6 +76,7 @@ CSmoothMaster::CSmoothMaster(CparameterMap *parmap_set){
 }
 
 void CSmoothMaster::TuneAllY(){
+	printf("check aa\n");
 	for(unsigned int iY=0;iY<observableinfo->NObservables;iY++){
 		emulator[iY]->Tune();
 	}
@@ -220,6 +221,7 @@ void CSmoothMaster::TestVsFakeModel(){
 	
 	
 	for(iY=0;iY<NObservables;iY++){
+		printf("SigmaA[%d]=%g\n",iY,emulator[iY]->SigmaA);
 		filename="fakedata/"+observableinfo->observable_name[iY]+".txt";
 		fptr=fopen(filename.c_str(),"r");
 		filename="fakedata/fake_"+observableinfo->observable_name[iY]+".txt";
