@@ -16,16 +16,16 @@ CSmoothEmulator::CSmoothEmulator(string observable_name_set){
 	NTrainingPts=smoothmaster->traininginfo->NTrainingPts;
 
 	LAMBDA=parmap->getD("SmoothEmulator_LAMBDA",3.0);
-	NMC=parmap->getI("SmoothEmulator_NMC",10000);
-	NASample=parmap->getI("SmoothEmulator_NASample",8);
+	NMC=parmap->getI("SmoothEmulator_MCMC_NMC",10000);
+	NASample=parmap->getI("SmoothEmulator_MCMC_NASample",8);
 	MCStepSize=parmap->getD("SmoothEmulator_MCStepSize",0.01);
 	MCSigmaAStepSize=parmap->getD("SmoothEmulator_MCSigmaAStepSize",0.01);
 	TuneChooseMCMC=parmap->getB("SmoothEmulator_TuneChooseMCMC",false);
 	TuneChooseMCMCPerfect=parmap->getB("SmoothEmulator_TuneChooseMCMCPerfect",false);
 	TuneChooseExact=parmap->getB("SmoothEmulator_TuneExact",true);
-	UseSigmaYReal=parmap->getB("SmoothEmulator_UseSigmaYRreal",false);
+	UseSigmaY=parmap->getB("SmoothEmulator_MCMCUseSigmaY",false);
 	ConstrainA0=parmap->getB("SmoothEmulator_ConstrainA0",false);
-	CutOffA=parmap->getB("SmoothEmulator_CutoffA",false);
+	CutOffA=parmap->getB("SmoothEmulator_MCMC_CutoffA",false);
 	iY=smoothmaster->observableinfo->GetIPosition(observable_name);
 	SigmaA0=smoothmaster->observableinfo->SigmaA0[iY];
 	SigmaA=SigmaA0;
@@ -77,7 +77,7 @@ void CSmoothEmulator::Tune(){
 	//FirstTune=true;
 	CalcMForTraining();
 	if(TuneChooseMCMC==true){
-		if(UseSigmaYReal){
+		if(UseSigmaY){
 			if(FirstTune){
 				TuneMCMC();
 				FirstTune=false;
@@ -385,7 +385,7 @@ double CSmoothEmulator::GetLog_AProb(vector<double> &AA,double ASigmaA){
 	for(unsigned int ic=ic0;ic<smooth->NCoefficients;ic++){
 		answer-=0.5*AA[ic]*AA[ic]/(ASigmaA*ASigmaA);
 	}
-	if(!UseSigmaYReal){
+	if(!UseSigmaY){
 		if(ConstrainA0)
 			answer-=NTrainingPts*log(ASigmaA);
 		else

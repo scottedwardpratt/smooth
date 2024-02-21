@@ -11,18 +11,16 @@ void CSmoothEmulator::TuneExact(){
 	
 	Psi.resize(NTrainingPts,NTrainingPts);
 	
-	Eigen::VectorXd alpha,gamma,YTrain,delta;
+	Eigen::VectorXd alpha,gamma,YTrain;
 	Eigen::MatrixXd C;
 	alpha.resize(NCoefficients);
 	gamma.resize(NCoefficients);
 	beta.resize(NTrainingPts,NCoefficients);
 	C.resize(NTrainingPts,NTrainingPts);
-	delta.resize(NTrainingPts);
 	alpha.setZero();
 	beta.setZero();
 	gamma.setZero();
 	C.setZero();
-	delta.setZero();
 	AExact.resize(NCoefficients);
 	YTrain.resize(NTrainingPts);
 	for(itrain=0;itrain<NTrainingPts;itrain++){
@@ -42,12 +40,12 @@ void CSmoothEmulator::TuneExact(){
 	
 	GetExactQuantities();
 	
-	// Will solve for gamma where delta=C*gamma, but first find C
+	// Will solve for gamma, but first find C
 	for(a=0;a<NTrainingPts;a++){
 		for(b=0;b<NTrainingPts;b++){
 			C(a,b)=0.0;
 			if(a==b)
-				C(a,b)=0.0;
+				C(a,b)=1.0;
 			for(c=0;c<NTrainingPts;c++){
 				C(a,b)+=BetaDotBeta[a][c]*BetaDotBeta[c][b];
 			}

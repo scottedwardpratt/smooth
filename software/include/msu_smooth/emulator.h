@@ -38,7 +38,7 @@ namespace NBandSmooth{
 
 		unsigned int NMC;   // NMC is for generating independent samplings of A in Tune
 		unsigned int NASample;
-		bool TuneChooseMCMC,ConstrainA0,CutOffA,UseSigmaYReal,FirstTune,TuneChooseExact,TuneChooseMCMCPerfect;
+		bool TuneChooseMCMC,ConstrainA0,CutOffA,UseSigmaY,FirstTune,TuneChooseExact,TuneChooseMCMCPerfect;
 		vector<vector<double>> ASample;
 		vector<double> SigmaASample;
 		vector<double> A,ATrial,AExact;

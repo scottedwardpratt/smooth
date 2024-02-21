@@ -7,12 +7,17 @@ CSmoothMaster::CSmoothMaster(CparameterMap *parmap_set){
 	int ranseed=parmap->getI("RANDY_SEED",time(NULL));
 	randy=new Crandy(ranseed);
 	
+	printf("howdy a\n");
+	
 	string logfilename=parmap->getS("SmoothEmulator_LogFileName","Screen");
 	if(logfilename!="Screen"){
 		CLog::Init(logfilename);
 	}
+	
+	printf("howdy b\n");
 
 	string filename;
+	UsePCA=parmap->getB("SmoothEmulator_UsePCA",false);
 	if(UsePCA){
 		filename="Info/pca_info.txt";
 		CoefficientsDirName="coefficients_pca";
@@ -21,18 +26,24 @@ CSmoothMaster::CSmoothMaster(CparameterMap *parmap_set){
 		filename="Info/observable_info.txt";
 		CoefficientsDirName="coefficients";
 	}
+	printf("howdy bb, filename=%s\n",filename.c_str());
 	observableinfo=new CObservableInfo(filename);
+	
+	printf("howdy bbb\n");
 
 	ModelRunDirName=parmap->getS("SmoothEmulator_ModelRunDirName","modelruns");
+	
+	printf("howdy c\n");
 
 	filename="Info/modelpar_info.txt";
 	priorinfo=new CPriorInfo(filename);
 	NPars=priorinfo->NModelPars;
 	parmap->set("SmoothEmulator_NPars",NPars);
 	parmap->set("Smooth_NPars",NPars);
-	UsePCA=parmap->getB("SmoothEmulator_UsePCA",false);
 
 	string NTrainingStr = parmap->getS("SmoothEmulator_TrainingPts","1");
+	
+	printf("howdy f\n");
 	
 	vector<unsigned int> NTrainingList;
 	stringstream ss(NTrainingStr);
@@ -49,7 +60,6 @@ CSmoothMaster::CSmoothMaster(CparameterMap *parmap_set){
 			NTrainingList.push_back(i);
 		}
 		else {
-
 			NTrainingList.push_back(stoi(token));
 		}
 	}
@@ -68,6 +78,8 @@ CSmoothMaster::CSmoothMaster(CparameterMap *parmap_set){
 	CSmoothEmulator::smooth=smooth;
 	CSmoothEmulator::smoothmaster=this;
 	emulator.resize(observableinfo->NObservables);
+	
+	printf("howdy g\n");
 	
 	for(unsigned int i=0;i<observableinfo->NObservables;i++){
 		emulator[i]=new CSmoothEmulator(observableinfo->observable_name[i]);
