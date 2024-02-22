@@ -201,7 +201,7 @@ Here, we demonstrate how one can solve for the set of most probable coefficients
 \begin{eqnarray}
 E(\vec{\theta})&=&\sum_{i=1}^{N_{\rm coeff}}A_i\mathcal{T}_i(\vec{\theta}),
 \end{eqnarray}
-The functions $\mathcal{T}_i(\vec{\theta})$ reference the factors in Eq. (\ref{eq:defaultform}) if the default form is used. Evaluated at the $N_{\rm train}$ training points, we define a $N_{\rm coef}\times N_{\rm train}$ matrix,
+The functions $\mathcal{T}_i(\vec{\theta})$ reference the factors in Eq. (\ref{eq:defaultform}) if the default form is used. Evaluated at the $N_{\rm train}$ training points, we define a $N_{\rm train}\times N_{\rm coef}$ matrix,
 \begin{eqnarray}
 T_{ai}\equiv\mathcal{T}_i(\vec{\theta}_a),
 \end{eqnarray}
@@ -275,24 +275,21 @@ A_{i}&=&\sum_a\gamma_a \beta_{ai}.
 One can then solve for $\gamma_a$, which will require solving $N_{\rm train}$ simultaneous equations. For the sake of brevity, gall the indices labels, $a,b,c$ or $t$ will vary from $1-N_{\rm train}$ and those labeled $i,j$ will vary from $N_{\rm train}+1\cdots N_{\rm coef}$. One must minimize
 \begin{eqnarray}
 {\rm MIN}&=&\sum_i \left[\sum_a \gamma_a\beta_{ai}\right]^2
-+\sum_a\left[\left(\alpha_a-\sum_i\beta_{ai}\sum_b\gamma_b\beta_{bi}\right)\right]^2.
-\end{eqnarray}
-This then gives
-\begin{eqnarray}
-0&=&\sum_b \sum_i\beta_{ai}\beta_{bi}\gamma_b+\sum_{ij}\sum_{b,b'}\beta_{ai}\beta_{bi}\beta_{aj}\beta_{b'j}\gamma_{b'}
--\sum_i\beta_{ai}\sum_b\beta_{bi}\alpha_b.
-\end{eqnarray}
-Defining 
-\begin{eqnarray}
-B_{ab}&\equiv&\sum_i\beta_{ai}\beta_{bi},
-\end{eqnarray}
-finding the $N_{\rm train}$ values of $\gamma_b$ involves solving the set of $N_{\rm train}$ linear equations. Having $a,a',b\le N_{\rm train}$,
-\begin{eqnarray}
-B_{ab}\gamma_b+\sum_{a'b}B_{aa'}B_{a'b}\gamma_{b}&=&\sum_bB_{ab}\alpha_b,\\
++\sum_a\left[\left(\alpha_a-\sum_i\beta_{ai}\sum_b\gamma_b\beta_{bi}\right)\right]^2\\
 \nonumber
-(\delta_{ab}+B_{ab})\gamma_b&=&\alpha_a.
+&=&\sum_{ab}\gamma_aB_{ab}\gamma_b+\sum_a(\alpha_a-\sum_bB_{ab}\gamma_b)^2,
 \end{eqnarray}
-Thus, once one has run the full model $N_{\rm train}$ times at the training points, one can find $y_t$ and $T_{ai}$. Following the prescription above, one then finds $\alpha_a$ and $\beta_{ai}$, which then gives $B_{ab}$. One then solves for $\gamma_b$, which when inserted into Eq. (\ref{eq:AofGamma}) gives the coefficients $A_i$ for $i>N_{\rm train}$. To find the coefficients, $A_a$ for $a\le N_{\rm train}$, one then applies Eq. (\ref{eq:AofTAalphabeta}).
+where $B_{ab}$ is defined.
+\begin{eqnarray}
+B_{ab}&\equiv&\sum_i\beta_{ai}\beta_{bi}.
+\end{eqnarray}
+Setting the derivative w.r.t. $\gamma_a$ to zero,
+\begin{eqnarray}\label{eq:gammafind}
+0&=&\sum_bB_{ab}\gamma_b+\sum_{bc}B_{ab}B_{bc}\gamma_b-B_{ab}\alpha_b,\\
+\nonumber
+\alpha_a&=&\left(\delta_{ab}+B_{ab}\right)\gamma_b.
+\end{eqnarray}
+Thus, once one has run the full model $N_{\rm train}$ times at the training points, one can find $y_t$ and $T_{ai}$. Following the prescription above, one then finds $\alpha_a$ and $\beta_{ai}$, which then gives $B_{ab}$. One then solves Eq. (\ref{eq:gammafind}) for $\gamma_b$, which when inserted into Eq. (\ref{eq:AofGamma}) gives the coefficients $A_i$ for $i>N_{\rm train}$. To find the coefficients, $A_a$ for $a\le N_{\rm train}$, one then applies Eq. (\ref{eq:AofTAalphabeta}).
 
 Note that this algorithm never involves a double sum with both indices over all $N_{\rm coef}$. Nor does it involve any matrix manipulations, or linear equation solving involving matrices of $N_{\rm coef}\times N_{\rm coef}$. Assuming that the number of training points is no more than a few hundred, this algorithm should be rather quick.
 
@@ -329,7 +326,7 @@ P(\delta\vec{A})&\propto&
 \end{eqnarray}
 Defining
 \begin{eqnarray}
-D_{ij}&=&\delta_{ij}+\beta_i\beta_j,
+D_{ij}&=&\delta_{ij}+\sum_a\beta_{ai}\beta_{aj},
 \end{eqnarray}
 the fluctuation of the coefficients is
 \begin{eqnarray}
