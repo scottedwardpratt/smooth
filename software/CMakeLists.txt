@@ -12,9 +12,13 @@ find_package(Eigen3 REQUIRED)
 
 message("eigen3_include_dir is ${EIGEN3_INCLUDE_DIR}")
 
-include_directories(SYSTEM include ${GITHOME_BAND_SMOOTH}/software/include ${GITHOME_MSU_PRATT}/commonutils/software/include ${GSL_INCLUDE_DIR} $ENV{GSL_INCLUDE_DIR} ${EIGEN3_INCLUDE_DIR} $ENV{EIGEN3_INCLUDE_DIR})
+include_directories(SYSTEM include ${GITHOME_BAND_SMOOTH}/software/include ${GSL_INCLUDE_DIR} $ENV{GSL_INCLUDE_DIR} ${EIGEN3_INCLUDE_DIR} $ENV{EIGEN3_INCLUDE_DIR})
 
-file(GLOB smooth_src src/*.cc)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "lib")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "lib")
+
+file(GLOB smooth_src src/smooth/*.cc)
 add_library(smooth STATIC ${smooth_src})
+
+file(GLOB commonutils_src src/commonutils/*/*.cc src/commonutils/*/*/*.cc)
+add_library(msu_commonutils STATIC ${commonutils_src})
