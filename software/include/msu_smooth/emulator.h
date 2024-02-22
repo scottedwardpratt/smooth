@@ -6,12 +6,11 @@
 #include <cstdio>
 #include <vector>
 #include <Eigen/Dense>
-#include "msu_commonutils/parametermap.h"
-#include "msu_commonutils/misc.h"
-#include "msu_commonutils/randy.h"
-#include "msu_commonutils/constants.h"
+#include "msu_smoothutils/parametermap.h"
+#include "msu_smoothutils/misc.h"
+#include "msu_smoothutils/randy.h"
 #include "msu_smooth/smooth.h"
-#include "msu_commonutils/log.h"
+#include "msu_smoothutils/log.h"
 #include "msu_smooth/master.h"
 #include "msu_smooth/modelparinfo.h"
 #include "msu_smooth/observableinfo.h"
@@ -41,7 +40,7 @@ namespace NBandSmooth{
 		bool TuneChooseMCMC,ConstrainA0,CutOffA,UseSigmaY,FirstTune,TuneChooseExact,TuneChooseMCMCPerfect;
 		vector<vector<double>> ASample;
 		vector<double> SigmaASample;
-		vector<double> A,ATrial,AExact;
+		vector<double> A,ATrial,ABest;
 		vector<vector<double>> ThetaTrain;
 		vector<vector<double>> BetaDotBeta;
 		vector<vector<double>> H6,H8;
@@ -61,7 +60,6 @@ namespace NBandSmooth{
 		void TunePerfectMCMC();
 		
 		void TuneExact();
-		void FindBestA();
 		void GenerateUncertaintyMatrices();
 		void GetExactQuantities();
 		void GetExactSigmaA();

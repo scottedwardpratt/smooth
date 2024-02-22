@@ -7,11 +7,11 @@
 #include <vector>
 #include <array>
 #include <fstream>
-#include "msu_commonutils/parametermap.h"
-#include "msu_commonutils/misc.h"
-#include "msu_commonutils/randy.h"
-#include "msu_commonutils/log.h"
-//#include "msu_commonutils/constants.h"
+#include "msu_smoothutils/parametermap.h"
+#include "msu_smoothutils/misc.h"
+#include "msu_smoothutils/randy.h"
+#include "msu_smoothutils/log.h"
+//#include "msu_smoothutils/constants.h"
 //#include <list>
 //#include <iostream>
 //#include <Eigen/Dense>

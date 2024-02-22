@@ -4,8 +4,8 @@
 #include <cmath>
 #include <cstdio>
 #include <vector>
-#include "msu_commonutils/misc.h"
-#include "msu_commonutils/randy.h"
+#include "msu_smoothutils/misc.h"
+#include "msu_smoothutils/randy.h"
 #include "msu_smooth/emulator.h"
 #include "msu_smooth/smooth.h"
 using namespace NMSUPratt;

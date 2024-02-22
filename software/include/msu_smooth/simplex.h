@@ -6,10 +6,9 @@
 #include <vector>
 #include <array>
 #include <fstream>
-#include "msu_commonutils/parametermap.h"
-#include "msu_commonutils/misc.h"
-#include "msu_commonutils/randy.h"
-#include "msu_commonutils/constants.h"
+#include "msu_smoothutils/parametermap.h"
+#include "msu_smoothutils/misc.h"
+#include "msu_smoothutils/randy.h"
 #include <list>
 #include <iostream>
 #include <Eigen/Dense>

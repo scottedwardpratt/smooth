@@ -7,7 +7,7 @@
 #include <sys/types.h>
 #include <dirent.h>
 #include <filesystem>
-#include "msu_commonutils/parametermap.h"
+#include "msu_smoothutils/parametermap.h"
 #include "msu_smooth/master.h"
 using namespace NMSUPratt;
 namespace NBandSmooth{
