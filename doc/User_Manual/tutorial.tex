@@ -8,78 +8,94 @@ A template project directory is provided that the User may copy to their own spa
 
 This section describes the steps of how the User would
 \begin{enumerate}\itemsep=0pt
-\item Copy the required files from the template directory to the User's space, and compile the required programs.
+\item Copy the required files from the template directory to the User's space, and compile the main programs.
 \item Set up the information files describing the priors and observable names.
 \item Run {\it Simplex Sampler} to generate the model-parameter values at which the full model will be trained.
-\item Run an artificial full model to generate the observables for each of the full-model runs.
+\item Run a ``fake'' full model to generate the observables for each of the full-model runs.
 \item Tune {\it Smooth Emulator} and write the coefficients to file.
 \item Run a program that prompts the User for the coordinates of a point in parameter space, then returns the emulator prediction with its uncertainty.
 \end{enumerate}
 
-\subsection{Installation}
+\subsection{Installation and Compilation}
 After completing the necessary prerequisites listed in section \ref{sec:installation}[Installation] and following the steps outlined in section \ref{sec:installation}[Prerequisites] to install the required cmake, eigen, and gsl libraries, and setting the Home Environment Variable by creating the Home Directory as described in section \ref{sec:installation}[Making Home Directory and Setting Home Environment Variable], the user must proceed to clone the smooth and commonutils directories and compile the libraries, as explained in sections \ref{sec:installation}[Downloading] and [Compiling Libraries].
 
-Then, the user can establish a personalized project directory by duplicating the project\_template directory onto their computer. The User needs to copy two directories, {\tt GITHOME\_BAND\_SMOOTH/templates/mylocal} and {\tt GITHOME\_BAND\_SMOOTH/templates/myproject} to locations in their personal space. We will refer to the User's two new directories as {\tt MY\_LOCAL/} and {\tt MY\_PROJECT/}. For the purpose of this tutorial, the User must compile three programs. This requires first changing into the {\tt MY\_LOCAL/build/} directory and entering:
+Then, the user can establish a personalized project directory by duplicating the project\_template directory onto their computer. The User should copy the directories {\tt GITHOME\_BAND\_SMOOTH/templates/mylocal} and {\tt GITHOME\_BAND\_SMOOTH/templates/myproject} to a location in their personal space. We will refer to the User's two new directories as {\tt \$\{MY\_LOCAL\}/} and {\tt \$\{MY\_PROJECTS\}/}. For the purpose of this tutorial, the User must compile three main programs. This requires first changing into the {\tt \$\{MY\_LOCAL\}/main\_programs/} directory and entering:\\
 {\tt
 \begin{verbatim}
-   MY_LOCAL/build% cmake .
-   MY_LOCAL/build% make simplex
-   MY_LOCAL/build% make smoothy_tune
-   MY_LOCAL/build% make smoothy_calcobs
+   ${MY\_LOCAL}/main_programs% cmake .
+   ${MY\_LOCAL}/main_programs% make simplex
+   ${MY\_LOCAL}/main_programs% make smoothy_tune
+   ${MY\_LOCAL}/main_programs% make smoothy_calcobs
 \end{verbatim}
 }
+The reason these are compiled in the User's space, separate from the main libraries, is that the User may well wish to create their own main programs, and this arrangement allows the User to compile their own versions, while leaving the original programs from the templates directory unchanged. 
 
-\subsection{Creating Necessary Info Files}
-Before a User can run {\it Simplex Sampler} they must create information files that describe the model-parameter priors and list the observable names. Both files are in the {\tt MY\_PROJECT} directory. The first file is {\tt MY\_PROJECT/Info/prior\_info.txt}. For the purposes of this tutorial, a file already exists,
+For the purpose of the tutorial, there are also some ``fake'' models included in the distribution. For the User's project the fake model, which is very fast numerically, will be replaced by their own numerically intensive model. To compile the fake model used in the tutorial the User should change into the {\tt \$\{MY\_LOCAL\}/main\_programs/} directory and enter:
 {\tt
 \begin{verbatim}
-   par1 uniform      0.000      100.0
-   par2 uniform      0.000      100.0
-   par3 uniform      0.000      100.0
-   par4 uniform      0.000      100.0
+   ${MY\_LOCAL}/fakemodels% cmake .
+   ${MY\_LOCAL}/fakemodels% make fakerhic
+\end{verbatim}
+}
+This particular fake model has six model parameters and six observables, all with names in common use by the RHIC community. The output has absolutely no physical motivation, other than providing some arbitrary functions to emulate. The executable should appear in {\tt \$\{MY\_LOCAL\}/bin/}.
+
+\subsection{Creating Necessary Info Files}
+The User will run the software from the {\tt \$\{MY\_PROJECTS\}/} directory. Before a User can run {\it Simplex Sampler} they must create information files that describe the model-parameter priors and list the observable names. Both files are in the {\tt \$\{MY\_PROJECTS\}} directory. The first file is {\tt \$\{MY\_PROJECTS\}/Info/modelpar\_info.txt}. For the purposes of this tutorial, a file already exists,
+{\tt
+\begin{verbatim}
+   compressibility         uniform  150   300
+   etaovers                uniform  0.05  0.32
+   initial_flow            uniform  0.3   1.2
+   initial_screening       uniform  0.0   1.0
+   quenching_length        uniform  0.5   2.0
+   initial_epsilon         uniform  15.0  30.0
 \end{verbatim}
 }
 This implies that the model has four parameters. The names, without much inspiration, are {\tt par1}, {\tt par2}, {\tt par3} and {\tt par4}. These names would normally be more descriptive, e.g. {\tt NuclearCompressibility}. The second entry in each line is either {\tt uniform} or {\tt gaussian}. If the parameter is {\tt uniform}, the last two numbers represent the range of the uniform prior, $x_{\rm min}$ and $x_{\rm max}$. If the second entry is {\tt gaussian} the third entry represents the center of the Gaussian distribution and the fourth represents the width. For a real model, the User would replace this model with one appropriate for their own model.
 
-The second file is {\tt MY\_PROJECT/Info/observable\_info.txt}. This describes output values from the model. In the template the file is
+The second file is {\tt \$\{MY\_PROJECTS\}/Info/observable\_info.txt}. This describes output values from the model. In the template the file is
 {\tt
 \begin{verbatim}
-   length   meters   10.0
-   mass     kg       30.0
-   time     s        25.0
+   meanpt_pion    100      
+   meanpt_kaon    200      
+   meanpt_proton  300      
+   Rinv           1.0      
+   v2             0.2     
+   RAA            0.5
 \end{verbatim}
 }
-The first entry in each line simply provides the names of the observable which will be processed in the Bayesian analysis. The second lists the units, and is never used, but is included for reference. The third entry is only used by {\tt Smooth Emulator} during tuning. The spread, $\sigma_A$, describes the variance of the output due to a single term in the Taylor expansion. Because this is treated as a random variable, and varied from one sampling of the coefficients to another, one must have an initial choice for it before the MCMC procedures in the tuning can proceed. One simple needs to choose this value within a few factors of two from the optimized value. Otherwise, the initial burn-in stage of the MCMC might require more time to coverge in the right neighborhood. Once the burn-in of the MCMC procedure is completed, this parameter is not used. 
+The first entry in each line simply provides the names of the observable which will be processed in the Bayesian analysis.  The third entry is used by {\tt Smooth Emulator} during tuning, but only if a Monte Carlo method is used. The spread, $\sigma_A$, describes the variance of the output due to a single term in the Taylor expansion. Because this is treated as a random variable, and varied from one sampling of the coefficients to another, one must have an initial choice for it before the MCMC procedures in the tuning can proceed. One simply needs to choose this value within a few factors of two from the optimized value. Otherwise, the initial burn-in stage of the MCMC might require more time to coverge in the right neighborhood. Once the burn-in of the MCMC procedure is completed, this parameter is not used. If the analytical method is used for tuning (which is recommended) this parameter is irrelevant.
 
 \subsection{Running {\it Simplex Sampler}}
 
-Both {\it Simplex Sampler} and {\tt Smooth Emulator} have options. These are provided in parameter files. For this tutorial, the provided parameter file is {\tt MY\_PROJECT/parameters/simplex\_parameters.txt}. The provided file is
+Both {\it Simplex Sampler} and {\it Smooth Emulator} have options. These are provided in parameter files. For this tutorial, the provided parameter file is {\tt \$\{MY\_PROJECTS\}/parameters/simplex\_parameters.txt}. The provided file is
 {\tt
 \begin{verbatim}
    #Simplex_LogFileName    simplexlog.txt # comment out to direct output to screen
-   Simplex_TrainType       1              # Must be 1 or 2 or 3               
-   Simplex_RTrain          0.95           # Radius of simplex    
+   Simplex_TrainType       1              # Must be 1 or 2             
    Simplex_ModelRunDirName modelruns      # Directory with training pt. info
 \end{verbatim}
 }
-Because the first line is commented, the output of {\it Simplex Sampler} will be to the screen. Otherwise it would go to the specified file. By setting {\tt Simplex\_TrainType=1}, the sampler will choose $n+1$ training points, where $n=4$ is the number of model parameters. Each point corresponds to the vertices of an $n+1$ dimensional simplex. The parameter {\tt Simplex\_RTrain} sets the radius of the simplex, and needs to be less than one for a uniform distribution. The value of 0.95 ensures that the 5 training points are far from one another. Finally, the parameter {\tt Simplex\_ModelRunDirName} is set to ``{\tt modelruns}''. This informs {\tt Simplex Sampler} to write the coordinates of each training point and the corresponding observables in the directory {\tt MY\_PROJECT/modelruns/}. 
+Because the first line is commented, the output of {\it Simplex Sampler} will be to the screen. Otherwise it would go to the specified file. By setting {\tt Simplex\_TrainType=1}, the sampler will choose $n+1$ training points, where $n=4$ is the number of model parameters. Each point corresponds to the vertices of an $n+1$ dimensional simplex.  Finally, the parameter {\tt Simplex\_ModelRunDirName} is set to ``{\tt modelruns}''. This informs {\tt Simplex Sampler} to write the coordinates of each training point and the corresponding observables in the directory {\tt \$\{MY\_PROJECTS\}/rhic/modelruns/}. 
 
 Now the user can run {\tt Simplex Sampler}, which must be run from the project directory,
  {\tt
 \begin{verbatim}
-   ~/MY_PROJECT% MY_LOCAL/bin/simplex parameters/simplex_parameters.txt
+   ${MY_PROJECTS}/rhic% ${MY_LOCAL}/bin/simplex
 \end{verbatim}
 }
-If all goes, well there is no screen output. The programs writes information about the training points in the {\tt modelruns/} directory. Changing into that directory, there should now be five directories, corresponding to the training points at 5 places: {\tt modelruns/run0}, {\tt modelruns/run1}, {\tt modelruns/run2}, {\tt modelruns/run3}, and {\tt modelruns/run4}. Each directory has one text file describing the training points. For example, the {\tt modelruns/run0/mod\_parameters.txt} file is 
+If all goes, well there is no screen output. The programs writes information about the training points in the {\tt modelruns/} directory. Changing into that directory, there should now be five directories, corresponding to the training points at 5 places: {\tt modelruns/run0}, {\tt modelruns/run1}, {\tt modelruns/run2}, {\tt modelruns/run3}, and {\tt modelruns/run4}. Each directory has one text file describing the training points. For example, the {\tt modelruns/run0/mod\_parameters.txt} file might be 
 {\tt
 \begin{verbatim}
-   par1 18.3772
-   par2 31.7426
-   par3 37.0901
-   par4 40
+   compressibility 190.282
+   etaovers 0.14892
+   initial_flow 0.664958
+   initial_screening 0.426807
+   quenching_length 1.16036
+   initial_epsilon 21.7424
 \end{verbatim}
 }
-This describes the four model parameters, which will serve as the input for the first full model run. If one had set the parameter {\tt Simplex\_TrainType} to 2, there would be 15 sub-directories in {\tt modelruns/}. The next step will be to run the full model for the parameters in each directory. Thus for {\tt Simplex\_Traintype=1}, one would need 5 full-model runs, and for {\tt Simplex\_Traintype=2}, one would need to do 15 full-model runs. The corresponding observables will be written in the files {\tt modelruns/runI/obs.txt}
+This describes the six model parameters, which will serve as the input for the first full model run. If one had set the parameter {\tt Simplex\_TrainType} to 2, there would be 15 sub-directories in {\tt modelruns/}. The next step will be to run the full model for the parameters in each directory. Thus for {\tt Simplex\_Traintype=1}, one would need 5 full-model runs, and for {\tt Simplex\_Traintype=2}, one would need to do 15 full-model runs. The corresponding observables will be written in the files {\tt modelruns/runI/obs.txt}
 
 \subsection{Running the Fake Full Model}
 Once the training points have been generated, the user will input a Real full model based on the given structure, tailored to address their specific problem. For the tutorial, a fake model is provided. It reads the model-parameter values in each {\tt modelruns/runI/mod\_parameters.txt} file and writes the corresponding observables in {\tt modelruns/runI/obs.txt}. 
@@ -88,21 +104,21 @@ The fake model is a simple python script, which is enacted by entering the comma
 
 {\tt
 \begin{verbatim}
-   MY_PROJECT% python3 MY_LOCAL/fakemodel/templatemod.py
+   ${MY_PROJECTS}/rhic% ${MY_LOCAL}/bin/fakerhic
 \end{verbatim}
 }
 The output should appear as
 
 {\tt
 \begin{verbatim}
-   MY_PROJECT% python3 MY_LOCAL/fakemodel/templatemod.py
-   MY_PROJECT% Writing: length 10.871583624279312 1.0
-   MY_PROJECT% Writing: mass -48.906793378963606 1.0
-   MY_PROJECT% Writing: time -50.76565279455246 1.0
+   ${MY_PROJECTS}/rhic% python3 ${MY_LOCAL}/fakemodel/templatemod.py
+   ${MY_PROJECTS}/rhic% Writing: length 10.871583624279312 1.0
+   ${MY_PROJECTS}/rhic% Writing: mass -48.906793378963606 1.0
+   ${MY_PROJECTS}/rhic% Writing: time -50.76565279455246 1.0
 
-   MY_PROJECT% Writing: length -27.67701646408149 1.0
-   MY_PROJECT% Writing: mass -50.35567713223607 1.0
-   MY_PROJECT% Writing: time -34.04264570717603 1.0
+   ${MY_PROJECTS/rhic}% Writing: length -27.67701646408149 1.0
+   ${MY_PROJECTS}/rhic% Writing: mass -50.35567713223607 1.0
+   ${MY_PROJECTS}/rhic% Writing: time -34.04264570717603 1.0
    .
    .
 \end{verbatim}
@@ -112,14 +128,14 @@ Inspecting the {\tt modelruns/run0/obs.txt} file,
 {\tt
 \begin{verbatim}
    length 10.871583624279312 1.0
-   mass -48.906793378963606 1.0
-   time -50.76565279455246 1.0
+   mass  -48.906793378963606 1.0
+   time  -50.76565279455246  1.0
 \end{verbatim}
 }
 The second entry of each line is the value of the specified observable for that specific training point. The last entry is the random uncertainty associated with the full model. This is only relevant if the model has random fluctuations, meaning the re-running the model at the same point might result in different output. For this tutorial, the emulator will not consider such fluctuations (there is an emulator parameter that can be set to either consider the randomness or ignore it), so the third entry on each line is superfluous.
 
 \subsection{Running {\it Smooth Emulator}}
-To tune the emulator, the User will run {\tt MY\_LOCAL/bin/SmoothEmulator\_tune} which should have been compiled in the directions above. The User needs to edit one additional file a this point, the parameter file that sets numerous options for {\it Smooth Emulator}. For the template used in this tutorial, that file is
+To tune the emulator, the User will run {\tt \$\{MY\_LOCAL\}/bin/SmoothEmulator\_tune} which should have been compiled in the directions above. The User needs to edit one additional file a this point, the parameter file that sets numerous options for {\it Smooth Emulator}. For the template used in this tutorial, that file is
 
 {\tt
 \begin{verbatim}
@@ -148,7 +164,7 @@ Now, running {\tt smoothy\_tune}, produces the following output,
 
 {\tt
 \begin{verbatim}
-MY_PROJECT% MY_LOCAL/bin/smoothy_tune parameters/emulator_parameters.txt
+${MY_PROJECTS}/rhic% ${MY_LOCAL}/bin/smoothy_tune parameters/emulator_parameters.txt
  Tuning Emulator for length
  success percentage=30.900000, SigmaA=170.951454, logP/Ndof=-0.604220,BestLogP/Ndof=-0.482655
  success percentage=29.980000, SigmaA=842.098167, logP/Ndof=-0.731110,BestLogP/Ndof=-0.544052
@@ -183,15 +199,14 @@ If the success percentage above is small, much less than 50\%, then one may wish
 
 To represent the uncertainty, there were $N_{\rm sample}$ sets of coefficients generated by {\it Smooth Emulator}. In this case, the parameter {\tt SmoothEmulator\_NASample} was set to 8. As the Monte Carlo trace proceeds, after {\tt SmoothEmulator\_NMC} steps, the coefficients are stored, and an output line is generated as seen above. Thus there are 8 lines printed above for each observable.
 
-The program generates Taylor coefficients for $N_{\rm sample}$ samples and saves them in the {\tt coefficients} directory. Each observable has its own sub-directory with its name. Besides the coefficients, {\it Smooth Emulator} also produces a {\tt meta.txt} file in the same directory. It includes essential information like the observable's maximum rank and net number of model parameters. This file is used to access the coefficients later. In this case, {\tt smoothy\_tune} created the directories, {\tt MY\_PROJECT/coefficients/length},  {\tt MY\_PROJECT/coefficients/mass} and {\tt MY\_PROJECT/coefficients/time}. Within each of these sub-directories {\tt smoothy\_tune} created files {\tt meta.txt}, {\tt sample0.txt}, {\tt sample1.text} $\cdots$ {\tt sample7.txt}.
-
+The program generates Taylor coefficients which are saved in the {\tt coefficients} directory. Each observable has its own sub-directory with its name. Besides the coefficients, {\it Smooth Emulator} also produces a {\tt meta.txt} file in the same directory. It includes essential information like the observable's maximum rank and net number of model parameters. This file is used to access the coefficients later. In this case, {\tt smoothy\_tune} created the directories, {\tt coefficients/rhic/RAA}, {\tt coefficients/Rinv}, {\tt coefficients/menapt\_kaon}, {\tt coefficients/meanpt_pion}, {\tt coefficients/meanpt_proton} and {\tt coefficients/v2}. Within each of these sub-directories {\tt smoothy\_tune} created files {\tt meta.txt}, {\tt ABest.txt} and {\tt BetaBest.txt}. The number or parameters, the maximum rank of the Taylor expansion and the overall number of Taylor coefficients are give in {\tt meta.txt}. The file {\tt ABest.txt} lists the actual coefficients of the Taylor expansion, and {\tt BetaBest.txt} gives an array used to calculate the uncertainty. If one of the Monte Carlo methods is chosen, rather than the default, the file {BetaBest.txt} is replaced by several files, {\tt sample0.txt, sample1.txt}$\cdots$, which provide several samples of Taylor coefficients. For the tutorial, the parameter file {\tt parameters/emulator\_parameters.txt} has the parameters set to use apply analytic tuning rather than Monte Carlo tuning.
 
 \section{Generating Emulated Observables}
-Finally, now that the emulator is tuned, one may wish to generate emulated values for the observables for specified points in model-parameter space. A sample program, {\tt MY\_LOCAL/bin/smoothy\_calcobs} is provided to illustrate how this can be accomplished. If one invokes the executable, using the same parameters as those used by {\tt smoothy\_tune}, the User is prompted to enter the coordinates of a point in model-parameter space, after which {\tt smoothy\_calcobs} prints out the observables. In this case, for the case where {\tt par1=20}, {\tt par2=40}, {\tt par3=60} and {\tt par4=80},
+Finally, now that the emulator is tuned, one may wish to generate emulated values for the observables for specified points in model-parameter space. A sample program, {\tt \$\{MY\_LOCAL\}/bin/smoothy\_calcobs} is provided to illustrate how this can be accomplished. If one invokes the executable, using the same parameters as those used by {\tt smoothy\_tune}, the User is prompted to enter the coordinates of a point in model-parameter space, after which {\tt smoothy\_calcobs} prints out the observables. In this case, for the case where {\tt par1=20}, {\tt par2=40}, {\tt par3=60} and {\tt par4=80},
 
 {\tt
 \begin{verbatim}
-MY_PROJECT% MY_LOCAL/bin/smoothy_calcobs parameters/emulator_parameters.txt
+${MY_PROJECTS}/rhic% ${MY_LOCAL}/bin/smoothy_calcobs parameters/emulator_parameters.txt
 Prior Info
 #         ParameterName Type   Xmin_or_Xbar  Xmax_or_SigmaX
  0:            par1   uniform          0        100
@@ -216,7 +231,7 @@ One can test the emulator by entering the coordinates of training point. For exa
 
 {\tt
 \begin{verbatim}
-MY_PROJECT% MY_LOCAL/bin/smoothy_calcobs parameters/emulator_parameters.txt
+${MY_PROJECTS}/rhic% ${MY_LOCAL}/bin/smoothy_calcobs parameters/emulator_parameters.txt
 Prior Info
 #         ParameterName Type   Xmin_or_Xbar  Xmax_or_SigmaX
  0:            par1   uniform          0        100
@@ -236,9 +251,9 @@ mass = -7.8083 +/- 8.42937e-08
 time = -52.4031 +/- 1.16801e-06
 \end{verbatim}
 }
-Note that the uncertainties for the emulation are not effectivly zero, as each set of the 8 sets of coefficients provides an an emulator that exactly reproduces the training points.
+Note that the uncertainties for the emulation are not effectively zero, as each set of the 8 sets of coefficients provides an an emulator that exactly reproduces the training points.
 
-Of course, it is unlikely the User will wish to enter model parameters interactively as was done above. To incorporate {\tt Smooth Emulator} into other programs, the User should inspect the main program, {\tt MY\_LOCAL/main\_programs/smoothy\_calcobs\_main.cc}. The User can then design their own program based on this source code, and compile and link it by editing {\tt MY\_LOCAL/build/CMakeLists.txt}. By editing the CMake file, replacing the lines unique to {\tt smoothy\_calcobs}, one can easily compile new executables based on the User's main programs. To understand what might be involved, the source code in {\tt MY\_LOCAL/main\_programs/SmoothEmulator\_calcobs\_main.cc} is
+Of course, it is unlikely the User will wish to enter model parameters interactively as was done above. To incorporate {\tt Smooth Emulator} into other programs, the User should inspect the main programs, e.g. {\tt \$\{MY\_LOCAL\}/main\_programs/smoothy\_calcobs\_main.cc}. The User can then design their own program based on this source code, and compile and link it by editing {\tt \$\{MY\_LOCAL\}/main\_programs/CMakeLists.txt}. By editing the CMake file, replacing the lines unique to {\tt smoothy\_calcobs}, one can easily compile new executables based on the User's main programs. To understand what might be involved, the source code in {\tt \$\{MY\_LOCAL\}/main\_programs/SmoothEmulator\_calcobs\_main.cc} is
 {\tt
 \begin{verbatim}
 #include "msu_commonutils/parametermap.h"
