@@ -4,7 +4,7 @@
 #include "msu_smoothutils/log.h"
 using namespace std;
 using namespace NBandSmooth;
-using namespace NMSUPratt;
+using namespace NMSUUtils;
 
 void CMCMC::EvaluateTrace(){
 	unsigned int itrace,ipar,jpar,ntrace=trace.size();

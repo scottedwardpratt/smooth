@@ -1,7 +1,7 @@
 #include "msu_smooth/smooth.h"
 using namespace std;
 using namespace NBandSmooth;
-using namespace NMSUPratt;
+using namespace NMSUUtils;
 
 CSmooth::CSmooth(){
 	//

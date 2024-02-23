@@ -2,7 +2,7 @@
 using namespace std;
 
 using namespace NBandSmooth;
-using namespace NMSUPratt;
+using namespace NMSUUtils;
 
 void CSmoothEmulator::CalcY(CModelParameters *modpars,double &Y,double &SigmaY_emulator){
 	CalcY(modpars->Theta,Y,SigmaY_emulator);
@@ -26,7 +26,6 @@ void CSmoothEmulator::CalcY(vector<double> Theta,double &Y,double &SigmaY_emulat
 		SigmaY_emulator=sqrt(fabs(SigmaY_emulator-Y*Y));
 	}
 }
-
 
 void CSmoothEmulator::CalcYDYDTheta(CModelParameters *modpars,double &Y,vector<double> &dYdTheta,double &SigmaY){
 	CalcYDYDTheta(modpars->Theta,Y,dYdTheta,SigmaY);

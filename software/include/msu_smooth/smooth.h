@@ -13,7 +13,7 @@
 #include <list>
 
 using namespace std;
-using namespace NMSUPratt;
+using namespace NMSUUtils;
 
 namespace NBandSmooth{
 
@@ -34,9 +34,9 @@ namespace NBandSmooth{
 		void Copy(CSmooth *smooth);
 
 		double CalcY(vector<double> &A,double LAMBDA,vector<double> &theta);
-		double CalcY_FromMtot(vector<double> &A,vector<double> &Mtot);
+		double CalcY_FromT(vector<double> &A,vector<double> &T);
 		double CalcY_Remainder(vector<double> &A,double LAMBDA,vector<double> &theta,unsigned int NTrainingPts);
-		double CalcY_Remainder_FromMtot(vector<double> &A,unsigned int NTrainingPts,vector<double> &Mtot);
+		double CalcY_Remainder_FromT(vector<double> &A,unsigned int NTrainingPts,vector<double> &T);
 		double GetRFactor(double LAMBDA,vector<double> &theta);
 		double GetT(unsigned int ic,double LAMBDA,vector<double> &theta);
 		

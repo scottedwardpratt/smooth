@@ -4,7 +4,7 @@
 
 using namespace std;
 using namespace NBandSmooth;
-using namespace NMSUPratt;
+using namespace NMSUUtils;
 
 CSimplexSampler::CSimplexSampler(CparameterMap *parmap){
 	randy=new Crandy(123);
@@ -13,7 +13,6 @@ CSimplexSampler::CSimplexSampler(CparameterMap *parmap){
 		CLog::Init(logfilename);
 	}
 	TrainType=parmap->getI("Simplex_TrainType",1);
-	RTrain=parmap->getD("Simplex_RTrain",0.9);
 	string prior_info_filename="Info/modelpar_info.txt";
 	priorinfo=new CPriorInfo(prior_info_filename);
 	CModelParameters::priorinfo=priorinfo;
@@ -28,10 +27,8 @@ void CSimplexSampler::SetThetaSimplex(){
 		SetThetaType2();
 	else if(TrainType==3)
 		SetThetaType3();
-	else if(TrainType==4)
-		SetThetaType4();
 	else{
-		CLog::Fatal("Inside CSimplexSampler::SetThetaSimplex, TrainType must be 1,2,3, or 4\n");
+		CLog::Fatal("Inside CSimplexSampler::SetThetaSimplex, TrainType must be 1,2 or 3\n");
 	}
 	CLog::Info("NTrainingPts="+to_string(NTrainingPts)+"\n");
 }
@@ -59,22 +56,19 @@ void CSimplexSampler::SetThetaType1(){
 		R=z;
 	}
 
-	//double R2;
 	for(itrain=0;itrain<NTrainingPts;itrain++){
-		//R2=0.0;
 		for(ipar=0;ipar<NPars;ipar++){
 			ThetaTrain[itrain][ipar]*=(RTrain/R);
-			//R2+=ThetaTrain[itrain][ipar]*ThetaTrain[itrain][ipar];
 		}
-		//printf("R2=%g\n",R2);
 	}
 }
 
 void CSimplexSampler::SetThetaType2(){
 	unsigned int ipar,itrain,jtrain,N1,n;
-	double R,z,RTrain;
-	//RTrain=1.0-1.0/double(NPars+1);
-	RTrain=0.95;
+	double R,z,RTrain1,RTrain2;
+	RTrain2=1.0-1.0/double(NPars+1);
+	RTrain1=RTrain2/sqrt(2.0);
+	
 	NTrainingPts=NPars+1;
 	ThetaTrain.resize(NTrainingPts);
 	for(itrain=0;itrain<NTrainingPts;itrain++){
@@ -127,10 +121,10 @@ void CSimplexSampler::SetThetaType2(){
 		//double Rtest=0.0;
 		for(ipar=0;ipar<NPars;ipar++){
 			if(itrain<=NPars){
-				ThetaTrain[itrain][ipar]*=(0.8*RTrain/R1);
+				ThetaTrain[itrain][ipar]*=(0.8*RTrain1/R1);
 			}
 			else{
-				ThetaTrain[itrain][ipar]*=(RTrain/R2);
+				ThetaTrain[itrain][ipar]*=(RTrain2/R2);
 			}
 			//Rtest+=ThetaTrain[itrain][ipar]*ThetaTrain[itrain][ipar];
 		}
@@ -138,73 +132,12 @@ void CSimplexSampler::SetThetaType2(){
 }
 
 void CSimplexSampler::SetThetaType3(){
-	// This adds points at half-way points of all connections between pts. of simplex, then moves them outward
-	unsigned int ipar,itrain,jtrain,N1,n;
-	double R,Rprime,z,RTrain;
-	RTrain=0.9;
-	NTrainingPts=NPars+1;
-	ThetaTrain.resize(NTrainingPts);
-	for(itrain=0;itrain<NTrainingPts;itrain++){
-		ThetaTrain[itrain].resize(NPars);
-		for(ipar=0;ipar<NPars;ipar++)
-			ThetaTrain[itrain][ipar]=0.0;
-	}
-	R=1.0;
-	ThetaTrain[0][0]=-R;
-	ThetaTrain[1][0]=R;
-	for(itrain=2;itrain<NTrainingPts;itrain++){
-		z=R*itrain/sqrt(double(itrain*itrain)-1.0);
-		for(jtrain=0;jtrain<itrain;jtrain++){
-			ThetaTrain[jtrain][itrain-1]=-z/double(itrain);
-		}
-		ThetaTrain[itrain][itrain-1]=z;
-		R=z;
-	}
-
-	N1=NTrainingPts;
-	n=N1;
-	NTrainingPts+=N1*(N1-1)/2;
-	ThetaTrain.resize(NTrainingPts);
-	for(itrain=N1;itrain<NTrainingPts;itrain++){
-		ThetaTrain[itrain].resize(NPars);
-	}
-	for(itrain=1;itrain<N1;itrain++){
-		for(jtrain=0;jtrain<itrain;jtrain++){
-			for(ipar=0;ipar<NPars;ipar++){
-				ThetaTrain[n][ipar]=0.5*(ThetaTrain[itrain][ipar]+ThetaTrain[jtrain][ipar]);
-			}
-			n+=1;
-		}
-	}
-	Rprime=R*sqrt(double(NPars-1)/double(2*NPars));
-
-	// Scale
-	double R2;
-	for(itrain=0;itrain<N1;itrain++){
-		R2=0.0;
-		for(ipar=0;ipar<=NPars;ipar++){
-			ThetaTrain[itrain][ipar]*=0.5*(RTrain/R); //(double(NPars-1)/double(NPars))*(RTrain/R);
-			R2+=ThetaTrain[itrain][ipar]*ThetaTrain[itrain][ipar];
-		}
-		printf("Theta^2=%g\n",R2);
-	}
-	for(itrain=N1;itrain<NTrainingPts;itrain++){
-		R2=0.0;
-		for(ipar=0;ipar<=NPars;ipar++){
-			ThetaTrain[itrain][ipar]*=(RTrain/Rprime);
-			R2+=ThetaTrain[itrain][ipar]*ThetaTrain[itrain][ipar];
-		}
-		printf("Theta^2=%g\n",R2);
-	}
-	
-}
-
-void CSimplexSampler::SetThetaType4(){
-	CLog::Info("WARNING: Using Simplex_TrainType=4 sometimes bombs due to\nencountering non-invertible matrices when solving for coefficients\n");
+	CLog::Info("WARNING: Using Simplex_TrainType=3 sometimes bombs due to\nencountering non-invertible matrices when solving for coefficients\n");
 	unsigned int ipar,itrain,jtrain;
-	double R,z,RTrain;
+	double R,z,RTrain1,RTrain2;
 
-	RTrain=1.0-1.0/double(NPars+1);
+	RTrain2=1.0-1.0/double(NPars+1);
+	RTrain1=RTrain2/sqrt(2.0);
 	ThetaTrain.resize(2*NPars+3);
 
 	for(itrain=0;itrain<NPars+1;itrain++){
@@ -224,8 +157,13 @@ void CSimplexSampler::SetThetaType4(){
 		R=z;
 	}
 	for(itrain=0;itrain<NPars+1;itrain++){
+		R=0.0;
 		for(ipar=0;ipar<NPars;ipar++){
-			ThetaTrain[itrain][ipar]*=(RTrain/R);
+			R+=ThetaTrain[itrain][ipar]*ThetaTrain[itrain][ipar];
+		}
+		R=sqrt(R);
+		for(ipar=0;ipar<NPars;ipar++){
+			ThetaTrain[itrain][ipar]*=(RTrain1/R);
 		}
 	}
 
@@ -233,9 +171,16 @@ void CSimplexSampler::SetThetaType4(){
 	//make reflection points
 	for(itrain=NPars+1;itrain<2*NPars+2;itrain++){
 		ThetaTrain[itrain].resize(NPars);
+		R=0.0;
 		for(ipar=0;ipar<NPars;ipar++){
-			ThetaTrain[itrain][ipar]=-0.8*ThetaTrain[itrain-NPars-1][ipar]+0.1*randy->ran();
+			ThetaTrain[itrain][ipar]=-ThetaTrain[itrain-NPars-1][ipar];
+			R+=ThetaTrain[itrain][ipar]*ThetaTrain[itrain][ipar];
 		}
+		R=sqrt(R);
+		for(ipar=0;ipar<NPars;ipar++){
+			ThetaTrain[itrain][ipar]*=(RTrain2/R);
+		}
+		
 	}
 	
 	// Put last point at origin

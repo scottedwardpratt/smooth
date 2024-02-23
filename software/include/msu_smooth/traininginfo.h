@@ -19,7 +19,7 @@
 #include "msu_smooth/modelparinfo.h"
 #include "msu_smooth/observableinfo.h"
 #include "msu_smooth/priorinfo.h"
-using namespace NMSUPratt;
+using namespace NMSUUtils;
 
 namespace NBandSmooth{
 	class CSmoothMaster;

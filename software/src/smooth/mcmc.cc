@@ -2,7 +2,7 @@
 #include "msu_smooth/mcmc.h"
 using namespace std;
 using namespace NBandSmooth;
-using namespace NMSUPratt;
+using namespace NMSUUtils;
 
 CMCMC::CMCMC(){
 	//

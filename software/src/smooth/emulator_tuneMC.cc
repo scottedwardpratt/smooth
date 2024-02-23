@@ -2,7 +2,7 @@
 using namespace std;
 
 using namespace NBandSmooth;
-using namespace NMSUPratt;
+using namespace NMSUUtils;
 
 
 
@@ -96,7 +96,7 @@ void CSmoothEmulator::TuneMCMC_withSigma(){
 	double logP,logPTrial;
 	logP=GetLog_AProb(*Aptr,SigmaA);
 	for(itrain=0;itrain<NTrainingPts;itrain++){
-		Y=smooth->CalcY_FromMtot(*Aptr,T[itrain]);
+		Y=smooth->CalcY_FromT(*Aptr,T[itrain]);
 		logP-=0.5*(YTrain[itrain]-Y)*(YTrain[itrain]-Y)/(SigmaYTrain[itrain]*SigmaYTrain[itrain]);
 	}
 
@@ -114,7 +114,7 @@ void CSmoothEmulator::TuneMCMC_withSigma(){
 
 
 		for(itrain=0;itrain<NTrainingPts;itrain++){
-			Y=smooth->CalcY_FromMtot(*ATrialptr,T[itrain]);
+			Y=smooth->CalcY_FromT(*ATrialptr,T[itrain]);
 			logPTrial-=0.5*(YTrain[itrain]-Y)*(YTrain[itrain]-Y)/(SigmaYTrain[itrain]*SigmaYTrain[itrain]);
 		}
 
@@ -164,7 +164,7 @@ void CSmoothEmulator::TunePerfectMCMC(){
 	unsigned int ic,ic0,ntry=0,ntrymax=100000;
 	bool success=false;
 	double weight,warg;//sigmafact=1.0;
-	CalcMForTraining();
+	CalcTForTraining();
 	if(ConstrainA0){
 		ic0=0;
 	}
@@ -220,4 +220,3 @@ void CSmoothEmulator::GenerateASamples(){
 	SigmaAbar+=SigmaA;
 	NSigmaA+=1;
 }
-

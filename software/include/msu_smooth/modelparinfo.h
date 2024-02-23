@@ -11,7 +11,7 @@
 #include "msu_smoothutils/log.h"
 #include "msu_smooth/priorinfo.h"
 #include <Eigen/Dense>
-using namespace NMSUPratt;
+using namespace NMSUUtils;
 
 namespace NBandSmooth{
 

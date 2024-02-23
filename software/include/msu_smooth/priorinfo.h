@@ -15,7 +15,7 @@
 //#include <list>
 //#include <iostream>
 //#include <Eigen/Dense>
-//using namespace NMSUPratt;
+//using namespace NMSUUtils;
 
 namespace NBandSmooth{
 

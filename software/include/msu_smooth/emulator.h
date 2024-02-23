@@ -16,7 +16,7 @@
 #include "msu_smooth/observableinfo.h"
 #include "msu_smooth/priorinfo.h"
 #include "msu_smooth/traininginfo.h"
-using namespace NMSUPratt;
+using namespace NMSUUtils;
 
 namespace NBandSmooth{
 	class CSmoothMaster;
@@ -42,13 +42,13 @@ namespace NBandSmooth{
 		vector<double> SigmaASample;
 		vector<double> A,ATrial,ABest;
 		vector<vector<double>> ThetaTrain;
-		vector<vector<double>> BetaDotBeta;
+		vector<vector<double>> B;
 		vector<vector<double>> H6,H8;
 		Eigen::MatrixXd beta,Psi;
 
 		CSmoothEmulator(string observable_name_set);
 
-		void CalcMForTraining();
+		void CalcTForTraining();
 		void CalcAFromTraining(vector<double> &AA);
 		void OldCalcAFromTraining(vector<double> &AA);
 		void PrintA(vector<double> &Aprint);

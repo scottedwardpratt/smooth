@@ -3,7 +3,7 @@
 
 using namespace std;
 using namespace NBandSmooth;
-using namespace NMSUPratt;
+using namespace NMSUUtils;
 
 CPriorInfo::CPriorInfo(string parinfo_filename_set){
 	CModelParameters::priorinfo=this;

@@ -15,7 +15,7 @@
 
 
 using namespace std;
-using namespace NMSUPratt;
+using namespace NMSUUtils;
 using namespace NBandSmooth;
 
 namespace NBandSmooth{

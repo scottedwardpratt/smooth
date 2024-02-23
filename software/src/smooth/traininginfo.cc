@@ -2,7 +2,7 @@
 
 using namespace std;
 using namespace NBandSmooth;
-using namespace NMSUPratt;
+using namespace NMSUUtils;
 CSmoothMaster* CTrainingInfo::smoothmaster=NULL;
 
 

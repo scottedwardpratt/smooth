@@ -1,7 +1,7 @@
 #include "msu_smooth/smooth.h"
 using namespace std;
 using namespace NBandSmooth;
-using namespace NMSUPratt;
+using namespace NMSUUtils;
 
 double CSmooth::CalcY(vector<double> &A,double LAMBDA,vector<double> &theta){
 	unsigned int ic,ir;
@@ -35,20 +35,20 @@ double CSmooth::CalcY_Remainder(vector<double> &A,double LAMBDA,vector<double> &
 	return answer;
 }
 
-double CSmooth::CalcY_Remainder_FromMtot(vector<double> &A,unsigned int NTrainingPts,vector<double> &Mtot){
+double CSmooth::CalcY_Remainder_FromT(vector<double> &A,unsigned int NTrainingPts,vector<double> &T){
 	double answer=0.0;
 	unsigned int ic;
 	for(ic=NTrainingPts;ic<NCoefficients;ic++){
-		answer+=Mtot[ic]*A[ic];
+		answer+=T[ic]*A[ic];
 	}
 	return answer;
 }
 
-double CSmooth::CalcY_FromMtot(vector<double> &A,vector<double> &Mtot){
+double CSmooth::CalcY_FromT(vector<double> &A,vector<double> &T){
 	double answer=0.0;
 	unsigned int ic;
 	for(ic=0;ic<NCoefficients;ic++){
-		answer+=Mtot[ic]*A[ic];
+		answer+=T[ic]*A[ic];
 	}
 	return answer;
 }

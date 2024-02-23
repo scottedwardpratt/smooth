@@ -18,7 +18,7 @@
 #include "msu_smooth/observableinfo.h"
 #include "msu_smooth/priorinfo.h"
 #include "msu_smooth/traininginfo.h"
-using namespace NMSUPratt;
+using namespace NMSUUtils;
 
 namespace NBandSmooth{
 	class CSmoothEmulator;

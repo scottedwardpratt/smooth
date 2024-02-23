@@ -2,7 +2,7 @@
 using namespace std;
 
 using namespace NBandSmooth;
-using namespace NMSUPratt;
+using namespace NMSUUtils;
 
 unsigned int CSmoothEmulator::NPars=0;
 CSmooth *CSmoothEmulator::smooth=NULL;
@@ -15,7 +15,7 @@ CSmoothEmulator::CSmoothEmulator(string observable_name_set){
 	observable_name=observable_name_set;
 	NTrainingPts=smoothmaster->traininginfo->NTrainingPts;
 
-	LAMBDA=parmap->getD("SmoothEmulator_LAMBDA",3.0);
+	LAMBDA=parmap->getD("SmoothEmulator_LAMBDA",2.0);
 	NMC=parmap->getI("SmoothEmulator_MCMC_NMC",10000);
 	NASample=parmap->getI("SmoothEmulator_MCMC_NASample",8);
 	MCStepSize=parmap->getD("SmoothEmulator_MCStepSize",0.01);
@@ -77,7 +77,7 @@ void CSmoothEmulator::Init(){
 
 void CSmoothEmulator::Tune(){
 	//FirstTune=true;
-	CalcMForTraining();
+	CalcTForTraining();
 	if(TuneChooseMCMC==true){
 		if(UseSigmaY){
 			if(FirstTune){
@@ -107,7 +107,7 @@ void CSmoothEmulator::Tune(){
 	}
 }
 
-void CSmoothEmulator::CalcMForTraining(){
+void CSmoothEmulator::CalcTForTraining(){
 	unsigned int itrain,ic;
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		for(ic=0;ic<smooth->NCoefficients;ic++){
@@ -117,7 +117,14 @@ void CSmoothEmulator::CalcMForTraining(){
 			Ttilde(itrain,ic)=T[itrain][ic];
 		}
 	}
-	TtildeInv=Ttilde.inverse();
+	TtildeInv=Ttilde.inverse();	
+	
+	/* cout << "---------\n";
+	cout << Ttilde << endl;
+	double detTtilde=Ttilde.determinant();
+	CLog::Info("ln(determinant(Ttilde))="+to_string(log(detTtilde))+"\n");
+	cout << TtildeInv << endl; */
+	
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		for(ic=0;ic<NTrainingPts;ic++){
 			if(TtildeInv(itrain,ic)!=TtildeInv(itrain,ic)){
@@ -145,7 +152,7 @@ void CSmoothEmulator::CalcAFromTraining(vector<double> &AA){
 
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		//YTarget(itrain)=YTrain[itrain]-smooth->CalcY_Remainder(AA,LAMBDA,ThetaTrain[itrain],NTrainingPts);
-		YTarget(itrain)=YTrain[itrain]-smooth->CalcY_Remainder_FromMtot(AA,NTrainingPts,T[itrain]);
+		YTarget(itrain)=YTrain[itrain]-smooth->CalcY_Remainder_FromT(AA,NTrainingPts,T[itrain]);
 	}
 	Ashort=TtildeInv*YTarget;
 	for(itrain=0;itrain<NTrainingPts;itrain++)

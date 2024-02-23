@@ -2,7 +2,7 @@
 using namespace std;
 
 using namespace NBandSmooth;
-using namespace NMSUPratt;
+using namespace NMSUUtils;
 
 void CSmoothEmulator::PrintA(vector<double> &Aprint){
 	for(unsigned int ic=0;ic<smooth->NCoefficients;ic++){
@@ -31,7 +31,7 @@ void CSmoothEmulator::WriteCoefficients(){
 			fprintf(fptr,"%15.8e\n",ABest[ic]);
 		}
 		fclose(fptr);
-		filename=dirname+"/BetABest.txt";
+		filename=dirname+"/BetaBest.txt";
 		fptr=fopen(filename.c_str(),"w");
 		for(ic=0;ic<NCoefficients;ic++){
 			for(a=0;a<NTrainingPts;a++){
@@ -91,7 +91,7 @@ void CSmoothEmulator::ReadCoefficients(){
 			fscanf(fptr,"%lf\n",&ABest[ic]);
 		}
 		fclose(fptr);
-		filename=dirname+"/BetABest.txt";
+		filename=dirname+"/BetaBest.txt";
 		fptr=fopen(filename.c_str(),"r");
 		for(ic=0;ic<NCoefficients;ic++){
 			for(a=0;a<NTrainingPts;a++){

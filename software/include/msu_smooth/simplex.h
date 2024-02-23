@@ -17,7 +17,7 @@
 #include <algorithm>
 #include <random>
 
-using namespace NMSUPratt;
+using namespace NMSUUtils;
 
 namespace NBandSmooth{
 
@@ -25,7 +25,6 @@ namespace NBandSmooth{
 	public:
 		unsigned int NPars,NTrainingPts,TrainType;
 		vector<vector<double>> ThetaTrain;
-		double RTrain;
 		string ModelDirName;
 		CPriorInfo *priorinfo;
 		Crandy *randy;

@@ -2,13 +2,11 @@
 using namespace std;
 
 using namespace NBandSmooth;
-using namespace NMSUPratt;
+using namespace NMSUUtils;
 
 void CSmoothEmulator::TuneExact(){
 	unsigned int NCoefficients=smooth->NCoefficients;
 	unsigned int itrain,ic,a,b;
-	CalcMForTraining();
-	
 	Psi.resize(NTrainingPts,NTrainingPts);
 	
 	Eigen::VectorXd alpha,gamma,YTrain;
@@ -17,7 +15,6 @@ void CSmoothEmulator::TuneExact(){
 	gamma.resize(NCoefficients);
 	beta.resize(NTrainingPts,NCoefficients);
 	C.resize(NTrainingPts,NTrainingPts);
-	alpha.setZero();
 	beta.setZero();
 	gamma.setZero();
 	C.setZero();
@@ -28,10 +25,7 @@ void CSmoothEmulator::TuneExact(){
 	}
 	alpha=TtildeInv*YTrain;
 	for(a=0;a<NTrainingPts;a++){
-		for(ic=0;ic<NTrainingPts;ic++)
-			beta(a,ic)=0.0;
 		for(ic=NTrainingPts;ic<NCoefficients;ic++){
-			beta(a,ic)=0.0;
 			for(b=0;b<NTrainingPts;b++){
 				beta(a,ic)+=TtildeInv(a,b)*T[b][ic];
 			}
@@ -43,7 +37,7 @@ void CSmoothEmulator::TuneExact(){
 	// Will solve for gamma, but first find C
 	for(a=0;a<NTrainingPts;a++){
 		for(b=0;b<NTrainingPts;b++){
-			C(a,b)=BetaDotBeta[a][b];
+			C(a,b)=B[a][b];
 			if(a==b)
 				C(a,b)+=1.0;
 		}
@@ -70,22 +64,22 @@ void CSmoothEmulator::GetExactQuantities(){
 	unsigned int NCoefficients=smooth->NCoefficients;
 	unsigned int i,a,b,aprime,bprime;
 	
-	BetaDotBeta.resize(NTrainingPts);
+	B.resize(NTrainingPts);
 	H6.resize(NTrainingPts);
 	H8.resize(NTrainingPts);
 	
 	
 	for(a=0;a<NTrainingPts;a++){
-		BetaDotBeta[a].resize(NTrainingPts);
+		B[a].resize(NTrainingPts);
 		H6[a].resize(NTrainingPts);
 		H8[a].resize(NTrainingPts);
 	}
 	
 	for(a=0;a<NTrainingPts;a++){
 		for(b=0;b<NTrainingPts;b++){
-			BetaDotBeta[a][b]=0.0;
+			B[a][b]=0.0;
 			for(i=NTrainingPts;i<NCoefficients;i++){
-				BetaDotBeta[a][b]+=beta(a,i)*beta(b,i);
+				B[a][b]+=beta(a,i)*beta(b,i);
 			}
 		}
 	}
@@ -100,7 +94,7 @@ void CSmoothEmulator::GetExactQuantities(){
 		for(b=0;b<NTrainingPts;b++){
 			if(a==b)
 				D(a,b)=1.0;
-			D(a,b)+=BetaDotBeta[a][b];
+			D(a,b)+=B[a][b];
 		}
 	}
 
@@ -110,9 +104,9 @@ void CSmoothEmulator::GetExactQuantities(){
 			H6[a][b]=0.0;
 			H8[a][b]=0.0;
 			for(aprime=0;aprime<NTrainingPts;aprime++){
-				H6[a][b]+=BetaDotBeta[a][aprime]*Psi(aprime,b);
+				H6[a][b]+=B[a][aprime]*Psi(aprime,b);
 				for(bprime=0;bprime<NTrainingPts;bprime++){
-					H8[a][b]+=BetaDotBeta[a][aprime]*Psi(aprime,bprime)*BetaDotBeta[bprime][b];
+					H8[a][b]+=B[a][aprime]*Psi(aprime,bprime)*B[bprime][b];
 				}
 			}
 		}
@@ -149,7 +143,7 @@ void CSmoothEmulator::GetExactUncertainty(vector<double> &Theta_s,double &uncert
 	// Fourth term
 	for(a=0;a<NTrainingPts;a++){
 		for(b=0;b<NTrainingPts;b++){
-			unc2+=T(a)*BetaDotBeta[a][b]*T(b);
+			unc2+=T(a)*B[a][b]*T(b);
 		}
 	}
 	// Fifth term
@@ -198,7 +192,7 @@ void CSmoothEmulator::GetExactSigmaA(){
 		DenByRank[ir]+=1;
 	}
 	
-	CLog::Info("---- LAMBDA="+to_string(LAMBDA)+" ----- \n");
+	CLog::Info("----LAMBDA="+to_string(LAMBDA)+" ----- \n");
 
 	if(ConstrainA0){
 		SigmaA=sqrt(A2sum/double(NTrainingPts));

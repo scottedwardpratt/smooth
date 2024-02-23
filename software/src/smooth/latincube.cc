@@ -1,7 +1,7 @@
 #include "msu_smooth/simplex.h"
 using namespace std;
 using namespace NBandSmooth;
-using namespace NMSUPratt;
+using namespace NMSUUtils;
 
 void NAlternativeParameterSampling::GetParsLHC(unsigned int NRuns,unsigned int NPars,Crandy *randy,vector<vector<double>> &Theta){
 	unsigned int irun,ipar;
