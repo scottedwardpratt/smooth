@@ -255,7 +255,7 @@ int main(){
    NBandSmooth::CModelParameters *modpars=new NBandSmooth::CModelParameters(); // contains info about single point
    modpars->priorinfo=master.priorinfo;
    master.priorinfo->PrintInfo();
-   
+
    // Prompt user for model parameter values
    vector<double> X(modpars->NModelPars);
    for(unsigned int ipar=0;ipar<modpars->NModelPars;ipar++){
@@ -283,7 +283,9 @@ This illustrates how one can write a code that
 \item[a)] Reads the parameter file
 \item[b)] Creates a {\it master} emulator file (called master because it includes an emulator for each observable)
 \item[c)] Creates a model-parameters object, {\tt modpars}, that stores the coordinates of the model-parameter point
-\item[d)] Calculates the observables from the emulator
+\item[d)] Reads in the model parameters interactively
+\item[e)] Calculates the observables from the emulator
+\item[f)] Prints out the emulated observable and the uncertainty for for the emulator
 \end{itemize}
 
 
