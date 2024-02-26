@@ -18,12 +18,12 @@ CSmoothEmulator::CSmoothEmulator(string observable_name_set){
 	LAMBDA=parmap->getD("SmoothEmulator_LAMBDA",2.0);
 	NMC=parmap->getI("SmoothEmulator_MCMC_NMC",10000);
 	NASample=parmap->getI("SmoothEmulator_MCMC_NASample",8);
-	MCStepSize=parmap->getD("SmoothEmulator_MCStepSize",0.01);
-	MCSigmaAStepSize=parmap->getD("SmoothEmulator_MCSigmaAStepSize",0.01);
+	MCStepSize=parmap->getD("SmoothEmulator_MCMC_StepSize",0.01);
+	MCSigmaAStepSize=parmap->getD("SmoothEmulator_MCMC_SigmaAStepSize",0.01);
 	TuneChooseMCMC=parmap->getB("SmoothEmulator_TuneChooseMCMC",false);
 	TuneChooseMCMCPerfect=parmap->getB("SmoothEmulator_TuneChooseMCMCPerfect",false);
-	TuneChooseExact=parmap->getB("SmoothEmulator_TuneExact",true);
-	UseSigmaY=parmap->getB("SmoothEmulator_MCMCUseSigmaY",false);
+	TuneChooseExact=parmap->getB("SmoothEmulator_TuneChooseExact",true);
+	UseSigmaY=parmap->getB("SmoothEmulator_MCMC_UseSigmaY",false);
 	ConstrainA0=parmap->getB("SmoothEmulator_ConstrainA0",false);
 	CutOffA=parmap->getB("SmoothEmulator_MCMC_CutoffA",false);
 	iY=smoothmaster->observableinfo->GetIPosition(observable_name);
