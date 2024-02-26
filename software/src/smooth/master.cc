@@ -76,6 +76,7 @@ CSmoothMaster::CSmoothMaster(CparameterMap *parmap_set){
 
 void CSmoothMaster::TuneAllY(){
 	for(unsigned int iY=0;iY<observableinfo->NObservables;iY++){
+		CLog::Info("---- Tuning for "+observableinfo->observable_name[iY]+" ----\n");
 		emulator[iY]->Tune();
 	}
 }
@@ -156,8 +157,8 @@ void CSmoothMaster::CalcAllLogP(){
 	A2barRatioBar=A2barRatioBar/double(NObservables);
 	SigmaAbar=SigmaAbar/double(NObservables);
 	//CLog::Info("logPbar="+to_string(logPbar)+", A2barRatio="+to_string(A2barRatioBar)+"\n");
-	CLog::Info(to_string(emulator[0]->LAMBDA)+" "+to_string(logPbar)+" "+to_string(A2barRatioBar)
-		+" "+to_string(SigmaAbar)+"\n");
+	//CLog::Info(to_string(emulator[0]->LAMBDA)+" "+to_string(logPbar)+" "+to_string(A2barRatioBar)
+	//	+" "+to_string(SigmaAbar)+"\n");
 }
 
 void CSmoothMaster::TestAtTrainingPts(){
