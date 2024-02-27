@@ -111,6 +111,12 @@ void CSmoothMaster::CalcY(unsigned int iY,CModelParameters *modelpars,double &Y,
 	emulator[iY]->CalcY(modelpars,Y,SigmaY_emulator);
 }
 
+void CSmoothMaster::CalcYdYdTheta(string obsname,CModelParameters *modelpars,double &Y,
+double &SigmaY_emulator,vector<double> &dYdTheta){
+	unsigned int iY=observableinfo->GetIPosition(obsname);
+	emulator[iY]->CalcYDYDTheta(modelpars,Y,dYdTheta,SigmaY_emulator);
+}
+
 void CSmoothMaster::CalcYdYdTheta(unsigned int iY,CModelParameters *modelpars,double &Y,
 double &SigmaY_emulator,vector<double> &dYdTheta){
 	emulator[iY]->CalcYDYDTheta(modelpars,Y,dYdTheta,SigmaY_emulator);
@@ -207,35 +213,32 @@ void CSmoothMaster::TestAtTrainingPts(string obsname){
 	}
 }
 
-void CSmoothMaster::TestVsFakeModel(){
+void CSmoothMaster::TestVsRealModel(){
 	char pchars[CLog::CHARLENGTH];
-	unsigned int iY,ifake,nfake=100,ipar;
+	unsigned int iY,ireal,nreal=100,ipar;
 	unsigned int NObservables=observableinfo->NObservables;
-	double Y,SigmaY_emulator,fakeY;
-	CModelParameters fakepars[nfake];
-	CLog::Info("--- TESTING VS FAKE MODEL ----\n");
+	double Y,SigmaY_emulator,realY;
+	CModelParameters realpars[nreal];
+	CLog::Info("--- TESTING VS REAL MODEL ----\n");
 	FILE *fptr,*fptr_out;
 	string filename;
-	
-	
-	
 	for(iY=0;iY<NObservables;iY++){
 		printf("SigmaA[%d]=%g\n",iY,emulator[iY]->SigmaA);
-		filename="fakedata/"+observableinfo->observable_name[iY]+".txt";
+		filename="realdata/"+observableinfo->observable_name[iY]+".txt";
 		fptr=fopen(filename.c_str(),"r");
-		filename="fakedata/fake_"+observableinfo->observable_name[iY]+".txt";
+		filename="realdata/emulator_vs_real"+observableinfo->observable_name[iY]+".txt";
 		fptr_out=fopen(filename.c_str(),"w");
 		
-		for(ifake=0;ifake<nfake;ifake++){
+		for(ireal=0;ireal<nreal;ireal++){
 			for(ipar=0;ipar<NPars;ipar++){
-				fscanf(fptr,"%lf",&fakepars[ifake].Theta[ipar]);
+				fscanf(fptr,"%lf",&realpars[ireal].Theta[ipar]);
 			}
-			fscanf(fptr,"%lf",&fakeY);
-			CalcY(iY,&fakepars[ifake],Y,SigmaY_emulator);
+			fscanf(fptr,"%lf",&realY);
+			CalcY(iY,&realpars[ireal],Y,SigmaY_emulator);
 			snprintf(pchars,CLog::CHARLENGTH,
 			"Y[%u]=%10.3e =? %10.3e,    SigmaY_emulator=%12.5e\n",
-			iY,Y,fakeY,SigmaY_emulator);
-			fprintf(fptr_out,"%12.5e  %12.5e %12.5e\n",fakeY,Y,SigmaY_emulator);	
+			iY,Y,realY,SigmaY_emulator);
+			fprintf(fptr_out,"%12.5e  %12.5e %12.5e\n",realY,Y,SigmaY_emulator);	
 		}
 		fclose(fptr);		
 		fclose(fptr_out);

@@ -11,7 +11,7 @@ This section describes the steps of how the User would
 \item Copy the required files from the template directory to the User's space, and compile the main programs.
 \item Set up the information files describing the priors and observable names.
 \item Run {\it Simplex Sampler} to generate the model-parameter values at which the full model will be trained.
-\item Run a ``fake'' full model to generate the observables for each of the full-model runs.
+\item Run a ``real'' full model to generate the observables for each of the full-model runs.
 \item Tune {\it Smooth Emulator} and write the coefficients to file.
 \item Run a program that prompts the User for the coordinates of a point in parameter space, then returns the emulator prediction with its uncertainty.
 \end{enumerate}
@@ -30,14 +30,14 @@ Then, the user can establish a personalized project directory by duplicating the
 }
 The reason these are compiled in the User's space, separate from the main libraries, is that the User may well wish to create their own main programs, and this arrangement allows the User to compile their own versions, while leaving the original programs from the templates directory unchanged. 
 
-For the purpose of the tutorial, there are also some ``fake'' models included in the distribution. For the User's project the fake model, which is very fast numerically, will be replaced by their own numerically intensive model. To compile the fake model used in the tutorial the User should change into the {\tt \$\{MY\_LOCAL\}/main\_programs/} directory and enter:
+For the purpose of the tutorial, there are also some ``real'' models included in the distribution. For the User's project the real model, which is very fast numerically, will be replaced by their own numerically intensive model. To compile the real model used in the tutorial the User should change into the {\tt \$\{MY\_LOCAL\}/main\_programs/} directory and enter:
 {\tt
 \begin{verbatim}
-   ${MY\_LOCAL}/fakemodels% cmake .
-   ${MY\_LOCAL}/fakemodels% make fakerhic
+   ${MY\_LOCAL}/realmodels% cmake .
+   ${MY\_LOCAL}/realmodels% make realrhic
 \end{verbatim}
 }
-This particular fake model has six model parameters and six observables, all with names in common use by the RHIC community. The output has absolutely no physical motivation, other than providing some arbitrary functions to emulate. The executable should appear in {\tt \$\{MY\_LOCAL\}/bin/}.
+This particular real model has six model parameters and six observables, all with names in common use by the RHIC community. The output has absolutely no physical motivation, other than providing some arbitrary functions to emulate. The executable should appear in {\tt \$\{MY\_LOCAL\}/bin/}.
 
 \subsection{Creating Necessary Info Files}
 The User will run the software from the {\tt \$\{MY\_PROJECTS\}/} directory. Before a User can run {\it Simplex Sampler} they must create information files that describe the model-parameter priors and list the observable names. Both files are in the {\tt \$\{MY\_PROJECTS\}} directory. The first file is {\tt \$\{MY\_PROJECTS\}/Info/modelpar\_info.txt}. For the purposes of this tutorial, a file already exists,
@@ -98,11 +98,11 @@ If one had set {\tt Simplex\_TrainType}=1, only seven training points would have
 }
 This describes the six model parameters, which will serve as the input for the first full model run.  The next step will be to run the full model for the parameters in each directory. Thus for {\tt Simplex\_Traintype=1}, one would need 7 full-model runs, and for {\tt Simplex\_Traintype=2}, one would need to do 28 full-model runs. The corresponding observables will be written in the files {\tt modelruns/runI/obs.txt}
 
-\subsection{Running the Fake Full Model}
-Once the training points have been generated, the user will input a Real full model based on the given structure, tailored to address their specific problem. For the tutorial, a fake model is provided. It reads the model-parameter values in each {\tt modelruns/runI/mod\_parameters.txt} file and writes the corresponding observables in {\tt modelruns/runI/obs.txt}. The output should be as follows:
+\subsection{Running the Real Full Model}
+Once the training points have been generated, the user will input a Real full model based on the given structure, tailored to address their specific problem. For the tutorial, a real model is provided. It reads the model-parameter values in each {\tt modelruns/runI/mod\_parameters.txt} file and writes the corresponding observables in {\tt modelruns/runI/obs.txt}. The output should be as follows:
 {\tt
 \begin{verbatim}
-   ${MY_PROJECTS}/rhic% ${MY_LOCAL}/bin/fakerhic
+   ${MY_PROJECTS}/rhic% ${MY_LOCAL}/bin/realrhic
    NTraining Pts=28
    NPars=6
 \end{verbatim}

@@ -27,7 +27,7 @@ namespace NBandSmooth{
 		vector<string> parname,type; // type is gaussian or linear
 		vector<double> xmin, xmax;
 		map<string,unsigned int> name_map;
-		unsigned int GetIPosition(string par_name);  // finds position given name of observable
+		unsigned int GetIPosition(string par_name);  // finds position given name of parameter
 		string GetName(unsigned int iposition);
 		void PrintInfo();
 	};
