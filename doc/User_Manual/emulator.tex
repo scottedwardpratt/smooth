@@ -371,9 +371,10 @@ This object stores the information describing a single point in the model-parame
  void Copy(CModelParameters *mp);  // Copies from another object
  void SetX(vector<double> &xset);  // Sets model parameters from vector
 \end{verbatim}}
-The emulator software stores all model-parameter information in these objects.
+The emulator software stores all model-parameter information in these objects. There is a {\tt CTrainingInfo} object within {\tt CSmoothMaster} that stores a vector of 
 
-
+\item {\tt CObservableInfo}\\
+These objects are also fairly self-explanatory. 
 
 
 \end{document}

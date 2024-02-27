@@ -18,9 +18,9 @@ namespace NBandSmooth{
 	class CModelParameters{
 	public:
 		//has actual values of the parameter
+		CModelParameters();
 		vector<double> X;
 		vector<double> Theta;
-		CModelParameters();
 		void TranslateTheta_to_X();
 		void TranslateX_to_Theta();
 		void Print();
