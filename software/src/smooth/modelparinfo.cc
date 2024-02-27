@@ -4,6 +4,7 @@ double NBandSmooth::CModelParameters::GSCALE=sqrt(3.0);
 unsigned int NBandSmooth::CModelParameters::NModelPars=0;
 
 using namespace std;
+
 using namespace NBandSmooth;
 
 CModelParameters::CModelParameters(){
@@ -67,6 +68,13 @@ void CModelParameters::SetX(vector<double> &x){
 		X[ipar]=x[ipar];
 	}
 	TranslateX_to_Theta();
+}
+
+void CModelParameters::SetTheta(vector<double> &theta){
+	for(unsigned int ipar=0;ipar<NModelPars;ipar++){
+		Theta[ipar]=theta[ipar];
+	}
+	TranslateTheta_to_X();
 }
 
 void CModelParameters::Copy(CModelParameters *mp){
