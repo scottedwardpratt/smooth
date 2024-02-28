@@ -53,11 +53,11 @@ void CModelParameters::TranslateTheta_to_X(){
 }
 
 void CModelParameters::Print(){
-	char message[200];
+	char message[CLog::CHARLENGTH];
 	unsigned int ipar;
 	CLog::Info("--------------------------------------\n");
 	for(ipar=0;ipar<NModelPars;ipar++){
-		snprintf(message,200,"   %.24s (%.8s): x=%11.4e, theta=%11.4e\n",
+		snprintf(message,CLog::CHARLENGTH," %24s (%8s): x=%11.4e, theta=%11.4e\n",
 		priorinfo->parname[ipar].c_str(),priorinfo->type[ipar].c_str(),X[ipar],Theta[ipar]);
 		CLog::Info(message);
 	}

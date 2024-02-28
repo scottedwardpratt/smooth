@@ -33,22 +33,20 @@ namespace NBandSmooth{
 		CMCMC(CSmoothMaster *master);
 		unsigned int NPars,NObs;
 		vector<CModelParameters> trace;
-		vector<CModelParameters> burntrace;
 		string trace_filename;
+		bool langevin;
 		double stepsize;
 		void ClearTrace(); // erases trace info so one can start over, resets at theta=0.
 		void PruneTrace(); // erases trace, except for last point
 		
-		void BurnInMetropolis(unsigned int Nburn);
-		void PerformMetropolisTrace(unsigned int Ntrace,unsigned int NSkip);
-		void BurnInLangevin(unsigned int Nburn);
-		void PerformLangevinTrace(unsigned int Ntrace,unsigned int NSkip);
-		void Langevin(unsigned int nsteps);
+		void PerformTrace(unsigned int Ntrace,unsigned int Nskip);
+		void PerformMetropolisTrace(unsigned int Ntrace,unsigned int Nskip);
+		void PerformLangevinTrace(unsigned int Ntrace,unsigned int Nskip);
 		void WriteTrace();
 		void ReadTrace();
 		void EvaluateTrace();
 		
-		void OptimizeSteps();
+		//void OptimizeSteps();
 		bool OPTIMIZESTEPS;
 		Eigen::VectorXcd stepvec,stepvecprime,dTdTEigenVals;
 		Eigen::MatrixXd dThetadTheta;

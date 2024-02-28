@@ -1,5 +1,7 @@
 #include "msu_smooth/master.h"
 #include "msu_smooth/mcmc.h"
+#include "msu_smoothutils/misc.h"
+
 using namespace std;
 using namespace NBandSmooth;
 using namespace NMSUUtils;
@@ -14,8 +16,12 @@ CMCMC::CMCMC(CSmoothMaster *master_set){
 	randy=master->randy;
 	NPars=master->NPars;
 	trace_filename=parmap->getS("MCMC_TRACE_FILENAME","mcmc_traces/trace.txt");
-	stepsize=parmap->getD("MCMC_METROPOLIS_STEPSIZE",0.05);
 	OPTIMIZESTEPS=parmap->getB("MCMC_OPTIMIZESTEPS",false);
+	langevin=parmap->getB("MCMC_LANGEVIN",false);
+	if(langevin)
+		stepsize=parmap->getD("MCMC_LANGEVIN_STEPSIZE",0.01);
+	else
+		stepsize=parmap->getD("MCMC_METROPOLIS_STEPSIZE",0.05);
 	ClearTrace();
 	for(unsigned int ipar=0;ipar<NPars;ipar++){
 		trace[0].Theta[ipar]=0;
@@ -55,29 +61,53 @@ void CMCMC::PruneTrace(){
 	trace[0].TranslateTheta_to_X();
 }
 
-//void CMCMC::BurnInMetropolis(unsigned int Nburn){
-//	for(unsigned int iburn=0;iburn<Nburn;iburn++){
-//		Metropolis(NSkip);
-//	}
-//}
+void CMCMC::PerformTrace(unsigned int Ntrace,unsigned int Nskip){
+	if(langevin)
+		PerformLangevinTrace(Ntrace,Nskip);
+	else
+		PerformMetropolisTrace(Ntrace,Nskip);
+}
 
-void CMCMC::PerformMetropolisTrace(unsigned int Ntrace,unsigned int NSkip){
-	unsigned int nsuccess=0;
+void CMCMC::PerformMetropolisTrace(unsigned int Ntrace,unsigned int Nskip){
+	unsigned long long int nsuccess=0;
 	unsigned int itrace,iskip,ipar,it0;
-	double oldLL,newLL,X;
+	double oldLL,newLL,X,bestLL;
 	CModelParameters *oldptr,*newptr;
-	CModelParameters newmodpars;
+	CModelParameters originalmodpars;
 	it0=trace.size();
 	if(trace.size()==0){
 		CLog::Fatal("Inside MCMC::PerformMetropolis, no initial point!\n");
 	}
+	
+	it0=trace.size();
 	trace.resize(trace.size()+Ntrace);
+	if(it0==0){
+		originalmodpars.X.resize(NPars);
+		originalmodpars.priorinfo=master->priorinfo;
+		oldptr=&originalmodpars;
+		for(ipar=0;ipar<NPars;ipar++){
+			originalmodpars.Theta[ipar]=0.2;
+		}
+		oldptr->TranslateTheta_to_X();
+	}
+	else{
+		oldptr=&trace[it0-1];
+		oldptr->TranslateTheta_to_X();
+	}
+	
+	llcalc->CalcLL(oldptr,oldLL);
+	bestLL=oldLL;
+	printf("bestLL at beginning is %g\n",bestLL);
+	NMSUUtils::Misc::Pause();
+	
 	for(itrace=it0;itrace<it0+Ntrace;itrace++){
-		oldptr=&trace[trace.size()-1];
-		newptr=&newmodpars;
-		llcalc->CalcLL(oldptr,oldLL);
-		for(iskip=0;iskip<NSkip;iskip++){
-			
+		for(iskip=0;iskip<Nskip;iskip++){
+			if(itrace!=0)
+				oldptr=&trace[itrace-1];
+			else
+				oldptr=&originalmodpars;
+			newptr=&trace[itrace];
+				
 			if(OPTIMIZESTEPS){
 				for(ipar=0;ipar<NPars;ipar++){
 					stepvecprime[ipar]=stepsize*randy->ran_gauss();
@@ -86,42 +116,53 @@ void CMCMC::PerformMetropolisTrace(unsigned int Ntrace,unsigned int NSkip){
 				for(ipar=0;ipar<NPars;ipar++){
 					newptr->Theta[ipar]=oldptr->Theta[ipar]+real(stepvec(ipar));
 				}
-				
 			}
 			else{
 				for(ipar=0;ipar<NPars;ipar++){
 					newptr->Theta[ipar]=oldptr->Theta[ipar]+stepsize*randy->ran_gauss();
 				}
 			}
+			
 			llcalc->CalcLL(newptr,newLL);
+			
+			if(newLL>bestLL){
+				newptr->TranslateTheta_to_X();
+				bestLL=newLL;
+				newptr->Print();
+				printf("bestLL=%g\n",bestLL);
+			}
+			
 			if(newLL>oldLL){
 				oldptr->Copy(newptr);
 				oldLL=newLL;
 				nsuccess+=1;
 			}
-			if(newLL<oldLL){
+			else{
 				X=newLL-oldLL;
-				if(X<-50)
-					X=-50;
-				if(exp(X)>randy->ran()){
-					oldptr->Copy(newptr);
-					oldLL=newLL;
-					nsuccess+=1;
+				if(X>-30.0){
+					if(exp(X)>randy->ran()){
+						oldptr->Copy(newptr);
+						oldLL=newLL;
+						nsuccess+=1;
+					}
 				}
 			}
 		}
 		trace[itrace].TranslateTheta_to_X();
 		trace[itrace].Copy(oldptr);
+		if(Ntrace>10 && ((itrace+1)*10)%Ntrace==0){
+			CLog::Info("finished "+to_string(lrint(100*double(itrace+1)/double(Ntrace)))+"%\n");
+		}
 	}
-	CLog::Info("Metropolis success percentage="+to_string(100.0*double(nsuccess)/(double(Ntrace)*double(NSkip)))+"\n");
+	CLog::Info("Metropolis success percentage="+to_string(100.0*double(nsuccess)/(double(Ntrace)*double(Nskip)))+"\n");
 }
 
-void CMCMC::PerformLangevinTrace(unsigned int Ntrace,unsigned int NSkip){
+void CMCMC::PerformLangevinTrace(unsigned int Ntrace,unsigned int Nskip){
 	unsigned int itrace,iskip,ipar;
 	bool inside;
-	double LL,ss,sqstep,dLLdTheta2;
+	double LL,ss,sqstep,dLLdTheta2,bestLL=-1.0E99;
 	vector<double> dLLdTheta,dTheta;
-	CModelParameters *oldmodpars,*newmodpars,*modpars;
+	CModelParameters *oldptr,*newmodpars,*modpars;
 	if(trace.size()==0){
 		CLog::Fatal("Inside MCMC::PerformMetropolis, no initial point!\n");
 	}
@@ -129,13 +170,18 @@ void CMCMC::PerformLangevinTrace(unsigned int Ntrace,unsigned int NSkip){
 	dTheta.resize(NPars);
 	
 	for(itrace=0;itrace<Ntrace;itrace++){
-		oldmodpars=&trace[trace.size()-1];
+		oldptr=&trace[trace.size()-1];
 		newmodpars=new CModelParameters();
-		for(iskip=0;iskip<NSkip;iskip++){
+		for(iskip=0;iskip<Nskip;iskip++){
 			//double oldLL=LL;
-			llcalc->CalcLLPlusDerivatives(oldmodpars,LL,dLLdTheta);
+			llcalc->CalcLLPlusDerivatives(oldptr,LL,dLLdTheta);
+			if(LL>bestLL){
+				bestLL=LL;
+				oldptr->Print();
+				printf("bestLL=%g\n",bestLL);
+			}
 			//double LLa,LLb,dLL;
-			//llcalc->CalcLL(oldmodpars,LLa);
+			//llcalc->CalcLL(oldptr,LLa);
 			/*
 			if(LL<oldLL){
 				printf("wrong way, oldLL=%g, LL=%g, dTheta=\n",oldLL,LL);
@@ -151,19 +197,22 @@ void CMCMC::PerformLangevinTrace(unsigned int Ntrace,unsigned int NSkip){
 				dLLdTheta2+=dLLdTheta[ipar]*dLLdTheta[ipar];
 			}
 			ss=stepsize/sqrt(dLLdTheta2);
+			//printf("ss=%g\n",ss);
 			sqstep=sqrt(2.0*ss);
 			for(ipar=0;ipar<NPars;ipar++){
 				dTheta[ipar]=ss*dLLdTheta[ipar]+sqstep*randy->ran_gauss();
+				//printf("%9.6f ",dTheta[ipar]);
 				if(dTheta[ipar]!=dTheta[ipar]){
-					oldmodpars->Print();
+					oldptr->Print();
 					CLog::Fatal("disaster in PerformLangevinTrace\n");
 				}
-				newmodpars->Theta[ipar]=oldmodpars->Theta[ipar]+dTheta[ipar];
+				newmodpars->Theta[ipar]=oldptr->Theta[ipar]+dTheta[ipar];
 				if(fabs(newmodpars->Theta[ipar])>1.0){
 					inside=false;
 					//ipar=NPars;
 				}
 			}
+			//printf("\n");
 			
 			if(inside){
 				/*
@@ -178,15 +227,18 @@ void CMCMC::PerformLangevinTrace(unsigned int Ntrace,unsigned int NSkip){
 				printf("dLL=%g =? %g\n",dLL,LLb-LLa);
 				Misc::Pause();
 				*/
-				*oldmodpars=*newmodpars;
+				*oldptr=*newmodpars;
 			}
 		}
 		modpars=new CModelParameters();
-		*modpars=*oldmodpars;
+		*modpars=*oldptr;
 		modpars->TranslateTheta_to_X();
 		trace.push_back(*modpars);
 		//CLog::Info("finished for itrace"+to_string(itrace)+"\n");
 		delete newmodpars;
+		if(Ntrace>10 && ((itrace+1)*10)%Ntrace==0){
+			CLog::Info("finished "+to_string(lrint(100*double(itrace+1)/double(Ntrace)))+"%\n");
+		}
 	}
 	
 }

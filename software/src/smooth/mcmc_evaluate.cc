@@ -35,11 +35,10 @@ void CMCMC::EvaluateTrace(){
 		thetabar[ipar]=thetabar[ipar]/double(ntrace);
 	}
 	
-	CLog::Info("<theta>=");
-	for(ipar=0;ipar<NPars;ipar++){
-		CLog::Info(to_string(thetabar[ipar])+" ");
-	}
-	CLog::Info("\n");
+	CModelParameters modpars;
+	modpars.priorinfo=master->priorinfo;
+	modpars.SetTheta(thetabar);
+	modpars.Print();
 	
 	CLog::Info("Sigma^2=\n");
 	for(ipar=0;ipar<NPars;ipar++){
@@ -61,8 +60,10 @@ void CMCMC::EvaluateTrace(){
 	r.resize(NPars);
 	vector<double> evalnorm;
 	evalnorm.resize(NPars);
+	CLog::Info("EigenValues for Sigma:\n");
 	for(ipar=0;ipar<NPars;ipar++){
 		evalnorm[ipar]=sqrt(fabs(real(evals(ipar))));
+		CLog::Info(to_string(evalnorm[ipar])+" \n");
 	}
 	
 	printf("eigenvectors:\n");

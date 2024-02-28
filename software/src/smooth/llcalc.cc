@@ -59,7 +59,7 @@ void CLLCalcSmooth::CalcLL(CModelParameters *modpars,double &LL){
 	LL=0.0;
 	for(ipar=0;ipar<NPars;ipar++){
 		if(modpars->priorinfo->type[ipar]=="uniform" && fabs(modpars->Theta[ipar])>1.0){
-			LL=-1.0E100;
+			LL=-1.0E99;
 			insidebounds=false;
 		}
 	}
