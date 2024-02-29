@@ -85,8 +85,6 @@ If the prior is {\tt uniform} the two following numbers provide the minimum and 
 \end{verbatim}}
 \vspace*{-16pt}
  \hspace*{28pt}$\vdots$\\
- \vspace*{-16pt}
- \hspace*{28pt}$\vdots$\\
 The first number is the calculated value of the observable, and the second is the random error. This is only the random error, i.e. that which represents that if the model were rerun at the same training point, the value might be different. This should only be non-zero if the full-model has some Monte Carlo feature. For example, the full model might involve simulating a small number of events. Other types of uncertainty are accounted for by including them into the experimental uncertainty.
 
 Once the emulator is tuned and before it is applied to a Markov Chain investigation of the likelihood, the software needs know the experimental measurement and uncertainty. That information must be entered in the {\tt Info/experimental\_info.txt} file. The file should have the format:
@@ -161,7 +159,7 @@ This gives the directory in which the training data from the full model runs is 
 \item {\bf SmoothEmulator\_TrainingPts}\\
 This lists which full-model training runs SmoothEmulator will use to train the emulator. This provides the User with the flexibility to use some subset for training, as may be the case when testing the accuracy. The default is ``1''. An example the User might enter could be\\
 {\tt ~SmoothEmulator\_TrainingPts  0-4,13,15}\\
-This would choose the training information from the directories {\tt run0,run1,run2,run3,run4,run13} and {\tt run15}, which would be found in the directory denoted by the {\tt SmoothEmulator\_ModelRunDirName} parameter.
+This would choose the training information from the directories {\tt run0,run1,run2,run3,run4},\\{\tt run13} and {\tt run15}, which would be found in the directory denoted by the\\{\tt SmoothEmulator\_ModelRunDirName} parameter.
 
 \item {\bf SmoothEmulator\_UsePCA}\\
 By default, this is set to {\tt false}. If one wishes to emulate the PCA observables, i.e. those that are linear combinations of the real observables, this should be set to true. One must then be sure to have run the pca decomposition programs first. For more, see Sec. \ref{sec:pca}. 
@@ -203,7 +201,7 @@ Here $\sigma_{A0}$ is the initial guess for the spread. This can safeguard again
 
 \subsection{Running {\it Smooth Emulator} Programs}
 
-The source code for several {\it Smooth Emulator} main programs can be found in the {\tt \$\{MY\_LOCAL\}/main\_programs/} directory. They are separated from the bulk of the software, which is in the {\tt \$\{GITHOME\_BAND\}/SmoothEmulator/software/} directory. The main programs are designed so that the User can easily copy and edit them to create versions that might be more appropriate to the User's specific needs. When compiled, from the {\tt \$\{MY\_LOCAL\}/main\_programs/} directory, the executables appear in the {\tt \$\{MY\_LOCAL\}/bin/} directory. 
+The source code for several {\it Smooth Emulator} main programs can be found in the \\{\tt \$\{MY\_LOCAL\}/main\_programs/} directory. They are separated from the bulk of the software, which is in the {\tt \$\{GITHOME\_BAND\}/SmoothEmulator/software/} directory. The main programs are designed so that the User can easily copy and edit them to create versions that might be more appropriate to the User's specific needs. When compiled, from the {\tt \$\{MY\_LOCAL\}/main\_programs/} directory, the executables appear in the {\tt \$\{MY\_LOCAL\}/bin/} directory. 
 
 To begin, we consider the source code {\tt \$\{MY\_LOCAL\}main\_programs/smoothy\_tune\_main.cc}. Once compiled the corresponding executable is {\tt \$\{MY\_LOCAL\}/bin/smoothy\_tune}. The source code for {\tt smoothy\_tune} is:
 {\tt
@@ -236,7 +234,7 @@ The executable {\tt smoothy\_tune} should now appear in the {\tt \$\{MY\_LOCAL\}
   ~/MY_PROJECT % smoothy_tune
 \end{verbatim}
 }
-This should read in all the necessary information, tune the emulators for all the observables and write the Taylor-expansion coefficients to file.  The optimum coefficients are stored in the file {\tt coefficients/OBS\_NAME/ABest.txt}, where {\tt OBS\_NAME} is the observable name. If a Monte Carlo tuning method was applied, there are several sets of coefficients stored,  {\tt coefficients/OBS\_NAME/sampleI.txt}, where $0\le I<N_{\rm sample}$. Along with the coefficients, in the same directory {\it Smooth Emulator} writes a file for each observable. These files are named {\tt coefficients/OBS\_NAME/meta.txt}.  This file provides information, such as the maximum rank and net number of model parameters, to make it possible to read the coefficients later on. For the non-Monte-Carlo method,  files {\tt coefficients/OBS\_NAME/BetaBest.txt} are stored for later use in calculating the uncertainties.
+This should read in all the necessary information, tune the emulators for all the observables and write the Taylor-expansion coefficients to file.  The optimum coefficients are stored in the file {\tt coefficients/OBS\_NAME/ABest.txt}, where {\tt OBS\_NAME} is the observable name. If a Monte Carlo tuning method was applied, there are several sets of coefficients stored,\\{\tt coefficients/OBS\_NAME/sampleI.txt}, where $0\le I<N_{\rm sample}$. Along with the coefficients, in the same directory {\it Smooth Emulator} writes a file for each observable. These files are named {\tt coefficients/OBS\_NAME/meta.txt}.  This file provides information, such as the maximum rank and net number of model parameters, to make it possible to read the coefficients later on. For the non-Monte-Carlo method,  files {\tt coefficients/OBS\_NAME/BetaBest.txt} are stored for later use in calculating the uncertainties.
 
 Similarly, there is a code {\tt \$\{MY\_LOCAL\}/main\_programs/smoothy\_calcobs\_main.cc}, which provides an example of how one might read the coefficients and generate predictions for the emulator at specified points in parameter space:
 {\tt
@@ -248,8 +246,10 @@ int main(){
   NBandSmooth::CSmoothMaster master(parmap);
   // Read in coefficients
   master.ReadCoefficientsAllY();
-  // Create a CModelParameters object to store information about a single point in parameter space
-  NBandSmooth::CModelParameters *modpars=new NBandSmooth::CModelParameters(); // contains info about single point
+  // Create a CModelParameters object to store information
+    // about a single point in parameter space
+  NBandSmooth::CModelParameters *modpars=new NBandSmooth::CModelParameters();
+     // contains info about single point
   modpars->priorinfo=master.priorinfo;
   master.priorinfo->PrintInfo(); // print info about priors
   // Prompt user for model parameter values
@@ -289,21 +289,21 @@ Tune all observables, $Y$.
 Tunes one observable, by observable name.
 \item {\tt TuneY(unsigned int iY)}\\
 Tune one observable, referenced by index.
-\item {\tt CalcAllY(CModelParameters *modelpars,vector<double> \&Y,vector<double> \&SigmaY\_emulator)}\\
+\item {\tt CalcAllY(CModelParameters *modelpars,vector<double> \&Y,\\vector<double> \&SigmaY\_emulator)}\\
 Calculates all observables. CModelParameters object stores information about a single point in model-parameter space. Object described further below.
-\item {\tt CalcY(unsigned int iY,CModelParameters *modelpars,double \&Y,double \&SigmaY\_emulator)}\\
+\item {\tt CalcY(unsigned int iY,CModelParameters *modelpars,double \&Y,\\double \&SigmaY\_emulator)}\\
 Calculates observable referenced by index.
-\item {\tt CalcY(string obsname,CModelParameters *modelpars,double \&Y,double \&SigmaY\_emulator)}\\
+\item {\tt CalcY(string obsname,CModelParameters *modelpars,double \&Y,\\double \&SigmaY\_emulator)}\\
 Calculates observable referenced by observable name.
-\item {\tt CalcAllYdYdTheta(CModelParameters *modelpars,vector<double> \&Y,
+\item {\tt CalcAllYdYdTheta(CModelParameters *modelpars,vector<double> \&Y,\\
 vector<double> \&SigmaY\_emulator,vector<vector<double>> \&dYdTheta)}\\
 Also calculates derivatives w.r.t. $\vec{\theta}$. Especially useful for some Markov chain searches in parameter space, e.g. Langevin approaches.
-\item {\tt CalcYdYdTheta(string obsname,CModelParameters *modelpars,double \&Y,double \&SigmaY\_emulator,vector<double> \&dYdTheta)}\\
+\item {\tt CalcYdYdTheta(string obsname,CModelParameters *modelpars,double \&Y,\\double \&SigmaY\_emulator,vector<double> \&dYdTheta)}\\
 Same, but for one observable referenced by observable name.
-\item {\tt CalcYdYdTheta(unsigned int iY,CModelParameters *modelpars,double \&Y,double \&SigmaY\_emulator,vector<double> \&dYdTheta)}\\
+\item {\tt CalcYdYdTheta(unsigned int iY,CModelParameters *modelpars,double \&Y,\\double \&SigmaY\_emulator,vector<double> \&dYdTheta)}\\
 Same, but by index.
 \item {\tt CalcAllLogP()}\\
-Prints technical information the User may find helpful in evaluating whether the choice of $\Lambda$ is reasonable. For each observable, it calculates the ratio of the r.m.s. coefficients of rank-two to those of rank-one. One would roughly expect the ratio to be unity if $\Lambda$ is appropriate, but from testing the measure is so noisy that it is not useful on a observable-by-observable basis. It also calculates the probability for the optimum coefficient set. This would be maximized for best choices of $\Lambda$, but again is highly sensitive to fluctuations. Thus this information is not recommended for actual tuning $\Lambda$. The {\tt logP} value is also used as a weight for the MCMC procedure.
+Prints technical information the User may find helpful in evaluating whether the choice of $\Lambda$ is reasonable. For each observable, it calculates the ratio of the r.m.s. coefficients of rank-two to those of rank-one. One would roughly expect the ratio to be unity if $\Lambda$ is appropriate, but from testing the measure is so noisy that it is not useful on a observable-by-observable basis. It also calculates the probability for the optimum coefficient set. This would be maximized for best choices of $\Lambda$, but again is highly sensitive to fluctuations. Thus this information is not recommended for actual tuning $\Lambda$. 
 \item {\tt TestAtTrainingPts()}\\
 Compares emulator predictions to real model at training points. Observables should match and uncertainties should vanish.
 \item {\tt TestAtTrainingPts(string obsname)}\\
@@ -343,21 +343,26 @@ Within the main program one may also wish to apply or access other objects with 
 \item {\tt CparameterMap}\\
 This object stores the emulator parameters described above. It is a simple inheritization of a map, linking string labels to values of various types. The object can read a parameter list from a file, e.g.\\
 {\tt
+\begin{verbatim}
  CparameterMap parmap;
- parmap.ReadParsFromFile("parameters/emulator_parameters.txt"}
-}
+ parmap.ReadParsFromFile("parameters/emulator_parameters.txt")
+\end{verbatim}}
 The argument can be either a C++ string or a character array. The CSmoothMaster constructor takes a pointer to a CparameterMap object as a argument. If one wishes to print the parameters, the function is {\tt parmap.PrintPars()}. To set a parameter within a program, {\tt parmap.set(string,value)}, where {\tt value} can be any of several types, e.g. bool, double, an integer, long long integer, string, $\cdots$. To retrieve a value from the map, the commands are {\tt getB, getI, getLongI, getS, getD}, $\cdots$, for {\tt bool, int, long long int} $\cdots$ types. For example, 
-{\tt\verbatim{ 
+{\tt
+\begin{verbatim}
  parmap.getD("SmoothEmulator_LAMBDA",2.0);
-}}
+\end{verbatim}}
 would retrieve the value of $\Lambda$, and if the map did not include {\tt SmoothEmulator\_LAMBDA}, it would return a default value of 2.0.
 
 \item {\tt CPriorInfo}\\
-This object stores information about the prior. The {\tt CSmoothMaster} object includes such an object, and automatically, during its construction, the {\tt CSmoothMaster} object reads in the {\tt Info/modelpar\_info.txt} file and creates the object. The functionalities of potential interest might be addressed from a main program via:
-{\tt\begin{verbatim}
+This object stores information about the prior. The {\tt CSmoothMaster} object includes such an object, and automatically, during its construction, the {\tt CSmoothMaster} object reads in the {\tt Info/modelpar\_info.txt} file and creates the object. The functionalities of potential interest might be addressed from a main program via:\\
+{\tt
+\begin{verbatim}
  smoothmaster.priorinfo.PrintInfo();  // prints out the parameter priors
- unsigned int ipar=smoothmaster.priorinfo.GetIPosition(PARAMETER_NAME);  // finds position given name of parameter (string)
- string parname=smoothmaster.priorinfo.GetName(I); // finds name given position {\tt I} (unsigned int)
+ unsigned int ipar=smoothmaster.priorinfo.GetIPosition(PARAMETER_NAME);
+   // finds position given name of parameter (string)
+ string parname=smoothmaster.priorinfo.GetName(I);
+   // finds name given position {\tt I} (unsigned int)
 \end{verbatim}}
 
 \item {\tt CModelParameters}\\
@@ -374,7 +379,32 @@ This object stores the information describing a single point in the model-parame
 The emulator software stores all model-parameter information in these objects. There is a {\tt CTrainingInfo} object within {\tt CSmoothMaster} that stores a vector of 
 
 \item {\tt CObservableInfo}\\
-These objects are also fairly self-explanatory. 
+This object stores general information about all the observables, including their experimental value and experimental uncertainty. The object does not store observable information as calculated by the emulator. These objects are also fairly self-explanatory and the functionality can be ascertained by looking at some of the lines in the header file. 
+{\tt
+\begin{verbatim}
+ unsigned int NObservables;
+ vector<string> observable_name;
+ vector<double> SigmaA0;
+   // initial guess for spread of coefficients (only used for MC tuning methods)
+ map<string,unsigned int> name_map;
+ unsigned int GetIPosition(string obsname);
+   // finds position given name of observable
+ string GetName(unsigned int iposition);
+   // finds name give position
+ void ReadObservableInfo(string filename);
+   // reads information about observable, either from
+   //Info/observable_info.txt o Info/pca_info.txt 
+ void ReadExperimentalInfo(string filename);
+   // reads experimental measurement and uncertainty (used in MCMC)
+ vector<double> YExp,SigmaExp;
+   // experimental measurement information
+ void PrintInfo();
+\end{verbatim}}
 
+There is such an object in the {\tt CSmoothMaster} class. For example, to print the information about the observables from a main program, one would include the line:\\
+ {\tt master->observableinfo->PrintInfo();}
+
+
+\end{itemize}
 
 \end{document}

@@ -13,7 +13,7 @@ CLLCalc::CLLCalc(CSmoothMaster *master_set){
 	NPars=master->NPars;
 	priorinfo=master->priorinfo;
 	obsinfo=master->observableinfo;
-	obsinfo->ReadExperimentalInfo("Info/experimental_info.txt"); // might want to change this later to be more flexible
+	obsinfo->ReadExperimentalInfo("Info/experimental_info.txt"); 
 	NObs=obsinfo->NObservables;
 	Y.resize(NObs);
 	dYdTheta.resize(NObs);
@@ -22,7 +22,7 @@ CLLCalc::CLLCalc(CSmoothMaster *master_set){
 	for(unsigned int iy=0;iy<NObs;iy++){
 		dYdTheta[iy].resize(NPars);
 	}	
-	bestLL=-1.0E100;
+	bestLL=-1000000;
 }
 
 CLLCalcSmooth::CLLCalcSmooth(CSmoothMaster *master_set){
@@ -38,7 +38,8 @@ CLLCalcSmooth::CLLCalcSmooth(CSmoothMaster *master_set){
 	SigmaY_emulator.resize(NObs);
 	for(unsigned int iy=0;iy<NObs;iy++){
 		dYdTheta[iy].resize(NPars);
-	}	
+	}
+	bestLL=-1000000;
 }
 
 void CLLCalc::CalcLL(CModelParameters *modpars,double &LL){
