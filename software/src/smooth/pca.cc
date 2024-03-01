@@ -4,12 +4,12 @@ using namespace std;
 using namespace NBandSmooth;
 using namespace NMSUUtils;
 
-PCA::PCA(string filename){
-	CparameterMap *parmap=new CparameterMap();
-	parmap->ReadParsFromFile(filename);
-
-	observable_info=new CObservableInfo("Info/observable_info.txt");
+PCA::PCA(CparameterMap *parmapset){
+	parmap=parmapset;
+	string command="mkdir -p PCA_Info";
+	system(command.c_str());
 	
+	observable_info=new CObservableInfo("Info/observable_info.txt");
 	observable_info->ReadExperimentalInfo("Info/experimental_info.txt");
 	
 	modelruns_dirname=parmap->getS("SmoothEmulator_ModelRunDirName","modelruns");
@@ -20,7 +20,7 @@ PCA::PCA(string filename){
 
 	while(getline(ss, token, ',')) {
 		size_t pos = token.find("-");
-		if (pos != string::npos) {
+		if (pos != string::npos){
 
 			unsigned int start = stoi(token.substr(0, pos));
 			unsigned int end = stoi(token.substr(pos+1));
@@ -29,7 +29,6 @@ PCA::PCA(string filename){
 				NTrainingList.push_back(i);
 		}
 		else {
-
 			NTrainingList.push_back(stoi(token));
 		}
 	}
@@ -86,7 +85,6 @@ void PCA::CalcTransformationInfo(){
 	
 	A = new Eigen::MatrixXd(Nobs,Nobs);
 	A->setZero();
-	
 	for(iy=0;iy<Nobs;iy++){
 		for(jy=0;jy<Nobs;jy++){
 			for(irun=0;irun<nruns;irun++){
@@ -94,13 +92,14 @@ void PCA::CalcTransformationInfo(){
 			}
 		}
 	}
-	
-	// Write Transformation Info
 				
 	Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> es(*A);
 	eigvals = es.eigenvalues();
 	eigvecs = es.eigenvectors();
-
+	delete A;
+	
+	
+	// Write Transformation Info
 	ofstream PCAInfoFile("PCA_Info/transformation_info.txt");
 	
 	if (PCAInfoFile.is_open()){
@@ -127,9 +126,7 @@ void PCA::CalcTransformationInfo(){
 		}
 	}
 	PCAInfoFile.close();
-	
-	delete A;
-	
+
 	// Write PCA Observables for Training Pts
 	
 	vector<vector<double>> Z;
@@ -148,11 +145,11 @@ void PCA::CalcTransformationInfo(){
 				Z[irun][iz]+=eigvecs(iz,iy)*Ytilde[irun][iy];
 			}
 		}
-		snprintf(filename,300,"%s/run%u/pca_obs.txt",modelruns_dirname.c_str(),NTrainingList[irun]);
+		snprintf(filename,300,"%s/run%u/obs_pca.txt",modelruns_dirname.c_str(),NTrainingList[irun]);
 		fptr=fopen(filename,"w");
 		for(iz=0;iz<Nobs;iz++){
 			pcaname="z"+to_string(iz);
-			fprintf(fptr,"%s  %g  0.0z\n",pcaname.c_str(),Z[irun][iz]);	
+			fprintf(fptr,"%s  %g  0.0\n",pcaname.c_str(),Z[irun][iz]);	
 		}
 		fclose(fptr);
 	}
@@ -160,7 +157,7 @@ void PCA::CalcTransformationInfo(){
 	// Write Info File for PCA
 	
 	double SA0Zsquared,SA0Y,SA0Z;
-	fptr=fopen("Info/pca_info.txt","w");
+	fptr=fopen("PCA_Info/observable_info.txt","w");
 	for(iz=0;iz<Nobs;iz++){
 		SA0Zsquared=0.0;
 		for(iy=0;iy<Nobs;iy++){
@@ -195,73 +192,35 @@ void PCA::CalcTransformationInfo(){
 }
 
 void PCA::ReadTransformationInfo(){
-	char dummy[200];
+	char dummy[2000];
 	unsigned int iy,jy;
 	FILE *fptr=fopen("PCA_Info/transformation_info.txt","r");
-	fgets(dummy,200,fptr);
+	fgets(dummy,2000,fptr);
 	fscanf(fptr,"%u %u",&Nobs,&nruns);
 	Ybar.resize(Nobs);
 	SigmaY.resize(Nobs);
 	eigvals.resize(Nobs);
 	eigvecs.resize(Nobs,Nobs);
-	
+	fscanf(fptr,"%s",dummy);
 	for(iy=0;iy<Nobs;iy++){
 		fscanf(fptr,"%lf ",&Ybar[iy]);
 	}
-	fgets(dummy,200,fptr);
-	fgets(dummy,200,fptr);
+	fscanf(fptr,"%s",dummy);
 	for(iy=0;iy<Nobs;iy++){
 		fscanf(fptr,"%lf ",&SigmaY[iy]);
 	}
-	fgets(dummy,200,fptr);
-	fgets(dummy,200,fptr);
+	fscanf(fptr,"%s",dummy);
 	for(iy=0;iy<Nobs;iy++){
 		fscanf(fptr,"%lf",&eigvals(iy));
 	}
-	fgets(dummy,200,fptr);
-	fgets(dummy,200,fptr);
+	fscanf(fptr,"%s",dummy);
 	for(iy=0;iy<Nobs;iy++){
 		for(jy=0;jy<Nobs;jy++){
 			fscanf(fptr,"%lf ",&eigvecs(iy,jy));
 		}
 	}
 	fclose(fptr);
-	
 }
-
-void PCA::WriteTransformationInfo(){
-	unsigned int ifile;
-
-	string command="rm -r -f PCA_Info/run*";
-	system(command.c_str());
-
-	for (unsigned int irun = 0; irun < nruns; irun++) {
-		string filename;
-		FILE *fptr;
-
-		Eigen::VectorXd obsVec(Nobs);
-
-		for (size_t i = 0; i < Y[0].size(); i++){
-			obsVec(i) = Y[irun][i];
-		}
-
-		Eigen::VectorXd PCAVec(Y[0].size());
-
-		PCAVec = eigvecs * obsVec;
-		
-		ifile=NTrainingList[irun];
-
-		filename=modelruns_dirname+"/run"+to_string(ifile)+"/obs_pca.txt";
-		fptr=fopen(filename.c_str(),"w");
-
-		for(size_t i = 0; i < Y[0].size(); i++){
-			string obsname = "pca" + to_string(i);
-			fprintf(fptr,"%s %s %g\n","dummy" ,obsname.c_str(),PCAVec(i));
-		}
-		fclose(fptr);
-	}
-}
-
 
 void PCA::TransformZtoY(vector<double> &Z,vector<double> &SigmaZ_emulator,
 vector<double> &Y,vector<double> &SigmaY_emulator){

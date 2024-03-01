@@ -84,6 +84,6 @@ void CObservableInfo::ReadExperimentalInfo(string filename){
 void CObservableInfo::PrintInfo(){
 	CLog::Info("Observable    \n");
 	for(unsigned int i=0;i<NObservables;i++){
-		CLog::Info(observable_name[i]+"\n");
+		CLog::Info(observable_name[i]+" "+to_string(SigmaA0[i])+"\n");
 	}
 }

@@ -15,7 +15,8 @@ namespace NBandSmooth{
 	class PCA{
 	public:
 
-		PCA(string parameter_filename);
+		PCA(CparameterMap *parmap_set);
+		CparameterMap *parmap;
 		unsigned int nruns,Nobs;
 		Eigen::MatrixXd eigvecs;
 		Eigen::VectorXd eigvals;
