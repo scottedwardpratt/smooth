@@ -9,6 +9,7 @@ using namespace NMSUUtils;
 void CMCMC::EvaluateTrace(){
 	unsigned int itrace,ipar,jpar,ntrace=trace.size();
 	vector<double> thetabar;
+	FILE *fptr;
 	string SigmaString;
 	char cc[CLog::CHARLENGTH];
 	Eigen::MatrixXd sigma2;
@@ -40,7 +41,11 @@ void CMCMC::EvaluateTrace(){
 	modpars.SetTheta(thetabar);
 	modpars.Print();
 	
-	CLog::Info("Sigma^2=\n");
+	string command="mkdir -p mcmc_trace";
+	system(command.c_str());
+	modpars.Write("mcmc_trace/xbar_thetabar.txt");
+	
+	fptr=fopen("mcmc_trace/sigma2.txt","w");
 	for(ipar=0;ipar<NPars;ipar++){
 		SigmaString.clear();
 		for(jpar=0;jpar<NPars;jpar++){
@@ -49,24 +54,23 @@ void CMCMC::EvaluateTrace(){
 			SigmaString=SigmaString+cc;
 		}
 		SigmaString=SigmaString+"\n";
-		CLog::Info(SigmaString);
+		fprintf(fptr,"%s",SigmaString.c_str());
 	}
+	fclose(fptr);
 	
 	Eigen::EigenSolver<Eigen::MatrixXd> esolver(sigma2);
 	evals=esolver.eigenvalues();
 	evecs=esolver.eigenvectors();
-	Eigen::VectorXcd th,r;
-	th.resize(NPars);
-	r.resize(NPars);
 	vector<double> evalnorm;
 	evalnorm.resize(NPars);
-	CLog::Info("EigenValues for Sigma:\n");
+	fptr=fopen("mcmc_trace/sigma2_eigenvals.txt","w");
 	for(ipar=0;ipar<NPars;ipar++){
 		evalnorm[ipar]=sqrt(fabs(real(evals(ipar))));
-		CLog::Info(to_string(evalnorm[ipar])+" \n");
+		fprintf(fptr,"%15.8e\n",evalnorm[ipar]);
 	}
+	fclose(fptr);
 	
-	printf("eigenvectors:\n");
+	fptr=fopen("mcmc_trace/sigma2_eigenvecs.txt","w");
 	for(ipar=0;ipar<NPars;ipar++){
 		SigmaString.clear();
 		for(jpar=0;jpar<NPars;jpar++){
@@ -74,6 +78,7 @@ void CMCMC::EvaluateTrace(){
 			SigmaString+=cc;
 		}
 		SigmaString+="\n";
-		CLog::Info(SigmaString);
-	}	
+		fprintf(fptr,"%s",SigmaString.c_str());
+	}
+	fclose(fptr);
 }

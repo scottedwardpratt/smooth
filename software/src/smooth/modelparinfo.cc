@@ -63,6 +63,21 @@ void CModelParameters::Print(){
 	}
 }
 
+void CModelParameters::Write(string filename){
+	unsigned int ipar;
+	string command;
+	command="mkdir -p mcmc_trace";
+	system(command.c_str());
+	filename="mcmc_trace/XbarThetabar.txt";
+	FILE *fptr=fopen(filename.c_str(),"w");
+	fprintf(fptr,"#   parname        X      Theta\n");
+	for(ipar=0;ipar<NModelPars;ipar++){
+		fprintf(fptr,"%24s %12.5e, theta=%12.5e\n",
+		priorinfo->parname[ipar].c_str(),X[ipar],Theta[ipar]);
+	}
+	fclose(fptr);
+}
+
 void CModelParameters::SetX(vector<double> &x){
 	for(unsigned int ipar=0;ipar<NModelPars;ipar++){
 		X[ipar]=x[ipar];

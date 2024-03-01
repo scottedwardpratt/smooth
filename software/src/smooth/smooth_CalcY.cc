@@ -70,7 +70,7 @@ void CSmooth::CalcYDYDTheta(vector<double> &A,double LAMBDA,vector<double> &thet
 	remainder[0]=1.0;
 	for(ic=0;ic<NCoefficients;ic++){
 		r=rank[ic];
-		prefactor= A[ic]*sqrt(double(dupfactor[ic])/double(factorial[r]));
+		prefactor=A[ic]*sqrt(double(dupfactor[ic])/double(factorial[r]));
 		for(n=1;n<=r;n++){
 			ir=r-n;
 			ipar=IPar[ic][ir];

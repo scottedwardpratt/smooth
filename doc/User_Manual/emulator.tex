@@ -43,10 +43,10 @@ Before training the emulator, one must first run the full model at a given set o
 \item A file listing the names of observables and an estimate of the variance of each observable throughout the model-parameter space, $\sigma_A$. This file is named {\tt Info/observable\_info.txt}, where the path is relative to the project directory. The file might look like
 {\tt
 \begin{verbatim}
- obsname1  12.3  
- obsname2  23.4 
- obsname3  34.5
- obsname4  45.6  
+ obsname1  SigmaA1_init
+ obsname2  SigmaA2_init
+ obsname3  SigmaA3_init
+ obsname4  SigmaA4_init 
 \end{verbatim}}
 \vspace*{-16pt}
  \hspace*{28pt}$\vdots$\\
@@ -97,8 +97,6 @@ Once the emulator is tuned and before it is applied to a Markov Chain investigat
 \end{verbatim}}
 \vspace*{-16pt}
  \hspace*{28pt}$\vdots$\\
- \vspace*{-16pt}
- \hspace*{28pt}$\vdots$\\
 The first number is the measured value and the second is the experimentally reported uncertainty. The third number is the uncertainty inherent to the theory, due to missing physics. For example, even if a model has all the parameters set to the exact value, e.g. some parameter of the standard value, the full-model can't be expected to exactly reproduce a correct measurement given that some physics is likely missing from the full model. For the MCMC software, the relevant uncertainty incorporates both, and only the combination of both, added in quadrature, affects the outcome. We emphasize that this last file is not needed to train and tune the emulator. It is needed once one performs the MCMC search of parameter space. 
 
 
@@ -106,7 +104,7 @@ The first number is the measured value and the second is the experimentally repo
 
 \subsection{{\it Smooth Emulator} Parameters (not model parameters!)}
 
-{\it Smooth Emulator} requires a parameter file. This can be located anywhere, as it will be specified on the command line when running {\it Smooth Emulator}, but is typically {\tt parameters/emulator\_parameters.txt}. The parameter file is simply a list, of parameter names followed by values. 
+{\it Smooth Emulator} requires a parameter file. This can be located anywhere, as it will be specified on the command line when running {\it Smooth Emulator}, but is typically\\{\tt parameters/emulator\_parameters.txt}. The parameter file is simply a list, of parameter names followed by values. 
 
 {\tt
 \begin{verbatim}
@@ -124,7 +122,8 @@ The first number is the measured value and the second is the experimentally repo
   SmoothEmulator_MCMC_NASample 8  # No. of coefficient samples
   SmoothEmulator_MCMC_StepSize 0.01
   SmoothEmulator_TuneChooseMCMCPerfect false #
-  SmoothEmulator_MCMC_UseSigmaY false # Emulator only fits training data to within model random error
+  SmoothEmulator_MCMC_UseSigmaY false # Emulator only fits training data to within
+  # model random error
   SmoothEmulator_MCMC_CutoffA false # Used only if SigmaA constrained by SigmaA0
   SmoothEmulator_MCMC_SigmaAStepSize 1.0  #
   SmoothEmulator_MCMC_NMC 20000  # Steps between samples 
@@ -373,6 +372,7 @@ This object stores the information describing a single point in the model-parame
  void TranslateTheta_to_X();  // Given Theta, fill out X
  void TranslateX_to_Theta(); // Given X, fill out Theta
  void Print();    // Prints parameters
+ void Write(string filename);    // Writes parameters
  void Copy(CModelParameters *mp);  // Copies from another object
  void SetX(vector<double> &xset);  // Sets model parameters from vector
 \end{verbatim}}

@@ -24,6 +24,7 @@ namespace NBandSmooth{
 		void TranslateTheta_to_X();
 		void TranslateX_to_Theta();
 		void Print();
+		void Write(string filename);
 		void Copy(CModelParameters *mp);
 		void SetX(vector<double> &xset);
 		void SetTheta(vector<double> &thetaset);

@@ -59,7 +59,7 @@ void CObservableInfo::ReadObservableInfo(string filename){
 
 void CObservableInfo::ReadExperimentalInfo(string filename){
 	char dummy[120];
-	double sig0,Y0;
+	double Y0,sig_theory,sig_exp;
 	unsigned int iY,NObsRead=0;
 	YExp.resize(NObservables);
 	SigmaExp.resize(NObservables);
@@ -67,10 +67,10 @@ void CObservableInfo::ReadExperimentalInfo(string filename){
 	do{
 		fscanf(fptr,"%s",dummy);
 		if(!feof(fptr)){
-			fscanf(fptr,"%lf %lf",&Y0,&sig0);
+			fscanf(fptr,"%lf %lf %lf",&Y0,&sig_exp,&sig_theory);
 			iY=GetIPosition(string(dummy));
 			YExp[iY]=Y0;
-			SigmaExp[iY]=sig0;
+			SigmaExp[iY]=sqrt(sig_exp*sig_exp+sig_theory*sig_theory);
 			NObsRead+=1;
 		}
 	}while(!feof(fptr));
