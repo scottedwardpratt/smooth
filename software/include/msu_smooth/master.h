@@ -11,6 +11,7 @@
 #include "msu_smoothutils/parametermap.h"
 #include "msu_smoothutils/misc.h"
 #include "msu_smoothutils/randy.h"
+#include "msu_smooth/pca.h"
 #include "msu_smooth/emulator.h"
 #include "msu_smooth/modelparinfo.h"
 #include "msu_smooth/smooth.h"
@@ -18,6 +19,7 @@
 #include "msu_smooth/observableinfo.h"
 #include "msu_smooth/priorinfo.h"
 #include "msu_smooth/traininginfo.h"
+
 using namespace NMSUUtils;
 
 namespace NBandSmooth{
@@ -41,6 +43,8 @@ namespace NBandSmooth{
 		CSmooth *smooth;
 		string ModelRunDirName,CoefficientsDirName;
 		bool UsePCA;
+		vector<bool> pca_ignore;
+		double pca_minvariance;
 
 		void ReadTrainingInfo();
 		void GenerateCoefficientSamples();

@@ -8,16 +8,16 @@
 #include <dirent.h>
 #include <filesystem>
 #include "msu_smoothutils/parametermap.h"
-#include "msu_smooth/master.h"
+#include "msu_smooth/observableinfo.h"
 using namespace NMSUUtils;
 namespace NBandSmooth{
 	
-	class PCA{
+	class CPCA{
 	public:
 
-		PCA(CparameterMap *parmap_set);
+		CPCA(CparameterMap *parmap_set);
 		CparameterMap *parmap;
-		unsigned int nruns,Nobs;
+		unsigned int nruns,NObs;
 		Eigen::MatrixXd eigvecs;
 		Eigen::VectorXd eigvals;
 		vector<vector<double>> Y;

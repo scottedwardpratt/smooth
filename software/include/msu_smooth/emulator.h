@@ -38,6 +38,7 @@ namespace NBandSmooth{
 		unsigned int NMC;   // NMC is for generating independent samplings of A in Tune
 		unsigned int NASample;
 		bool TuneChooseMCMC,ConstrainA0,CutOffA,UseSigmaY,FirstTune,TuneChooseExact,TuneChooseMCMCPerfect;
+		bool pca_ignore;
 		vector<vector<double>> ASample;
 		vector<double> SigmaASample;
 		vector<double> A,ATrial,ABest;
@@ -46,7 +47,7 @@ namespace NBandSmooth{
 		vector<vector<double>> H6,H8;
 		Eigen::MatrixXd beta,Psi;
 
-		CSmoothEmulator(string observable_name_set);
+		CSmoothEmulator(string observable_name_set,bool pca_ignore_set);
 
 		void CalcTForTraining();
 		void CalcAFromTraining(vector<double> &AA);

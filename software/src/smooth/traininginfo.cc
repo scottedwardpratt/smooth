@@ -39,7 +39,7 @@ void CTrainingInfo::ReadTrainingInfo(string rundirname){
 	for(itrain=0;itrain<NTrainingList.size();itrain++){
 		ifile=NTrainingList[itrain];
 		if(smoothmaster->UsePCA){
-			snprintf(filename,300,"%s/run%u/obs_PCA.txt",rundirname.c_str(),ifile);
+			snprintf(filename,300,"%s/run%u/obs_pca.txt",rundirname.c_str(),ifile);
 		}
 		else{
 			snprintf(filename,300,"%s/run%u/obs.txt",rundirname.c_str(),ifile);
@@ -58,6 +58,7 @@ void CTrainingInfo::ReadTrainingInfo(string rundirname){
 		}while(!feof(fptr));
 	}
 	fclose(fptr);
+	
 	if(nsuccess!=smoothmaster->observableinfo->NObservables)
 		CLog::Fatal("In CTrainingInfo::ReadTrainInfo, only read in "+to_string(nsuccess)+" observables from file "+string(filename)+"\n");
 

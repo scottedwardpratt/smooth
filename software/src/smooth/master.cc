@@ -3,6 +3,9 @@ using namespace std;
 using namespace NBandSmooth;
 
 CSmoothMaster::CSmoothMaster(CparameterMap *parmap_set){
+	unsigned int NObs;
+	unsigned int iZ;
+	CPCA *pca;
 	parmap=parmap_set;
 	int ranseed=parmap->getI("RANDY_SEED",time(NULL));
 	randy=new Crandy(ranseed);
@@ -15,14 +18,16 @@ CSmoothMaster::CSmoothMaster(CparameterMap *parmap_set){
 	string filename;
 	UsePCA=parmap->getB("SmoothEmulator_UsePCA",false);
 	if(UsePCA){
-		filename="Info/pca_info.txt";
+		filename="PCA_Info/observable_info.txt";
 		CoefficientsDirName="coefficients_pca";
+		pca=new CPCA(parmap);
 	}
 	else{
 		filename="Info/observable_info.txt";
 		CoefficientsDirName="coefficients";
 	}
 	observableinfo=new CObservableInfo(filename);
+	NObs=observableinfo->NObservables;
 	
 	ModelRunDirName=parmap->getS("SmoothEmulator_ModelRunDirName","modelruns");
 	
@@ -66,18 +71,41 @@ CSmoothMaster::CSmoothMaster(CparameterMap *parmap_set){
 	CSmoothEmulator::NTrainingPts=NTrainingList.size();
 	CSmoothEmulator::smooth=smooth;
 	CSmoothEmulator::smoothmaster=this;
-	emulator.resize(observableinfo->NObservables);
+	emulator.resize(NObs);
 	
-	for(unsigned int i=0;i<observableinfo->NObservables;i++){
-		emulator[i]=new CSmoothEmulator(observableinfo->observable_name[i]);
+	pca_ignore.resize(NObs);
+	if(UsePCA){
+		pca->ReadTransformationInfo();
+		pca_minvariance=parmap->getD("SmoothEmulator_PCAMinVariance",0.0);
+		for(iZ=0;iZ<NObs;iZ++)
+			pca_ignore[iZ]=false;
+		for(iZ=0;iZ<NObs;iZ++){
+			if(pca->eigvals(iZ)<pca_minvariance)
+				pca_ignore[iZ]=true;
+			else
+				pca_ignore[iZ]=false;
+		}
+		delete pca;
 	}
+	else{
+		for(iZ=0;iZ<NObs;iZ++)
+			pca_ignore[iZ]=false;
+	}
+	for(unsigned int iy=0;iy<NObs;iy++){
+		if(!UsePCA || !pca_ignore[iy]){
+			emulator[iy]=new CSmoothEmulator(observableinfo->observable_name[iy],pca_ignore[iy]);
+		}
+	}
+
 
 }
 
 void CSmoothMaster::TuneAllY(){
 	for(unsigned int iY=0;iY<observableinfo->NObservables;iY++){
-		CLog::Info("---- Tuning for "+observableinfo->observable_name[iY]+" ----\n");
-		emulator[iY]->Tune();
+		if((UsePCA && !pca_ignore[iY]) || !UsePCA){
+			CLog::Info("---- Tuning for "+observableinfo->observable_name[iY]+" ----\n");
+			emulator[iY]->Tune();
+		}
 	}
 }
 
@@ -223,7 +251,8 @@ void CSmoothMaster::TestVsRealModel(){
 	FILE *fptr,*fptr_out;
 	string filename;
 	for(iY=0;iY<NObservables;iY++){
-		printf("SigmaA[%d]=%g\n",iY,emulator[iY]->SigmaA);
+		snprintf(pchars,CLog::CHARLENGTH,"SigmaA[%d]=%g\n",iY,emulator[iY]->SigmaA);
+		CLog::Info(pchars);
 		filename="realdata/"+observableinfo->observable_name[iY]+".txt";
 		fptr=fopen(filename.c_str(),"r");
 		filename="realdata/emulator_vs_real"+observableinfo->observable_name[iY]+".txt";
