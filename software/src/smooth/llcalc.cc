@@ -4,6 +4,8 @@ using namespace std;
 using namespace NBandSmooth;
 using namespace NMSUUtils;
 
+CPriorInfo *CLLCalc::priorinfo=NULL;
+
 CLLCalc::CLLCalc(){
 	bestLL=-1.0E100;
 }
@@ -23,6 +25,7 @@ CLLCalc::CLLCalc(CSmoothMaster *master_set){
 		dYdTheta[iy].resize(NPars);
 	}	
 	bestLL=-1000000;
+	priorinfo=master_set->priorinfo;
 }
 
 CLLCalcSmooth::CLLCalcSmooth(CSmoothMaster *master_set){
@@ -40,32 +43,33 @@ CLLCalcSmooth::CLLCalcSmooth(CSmoothMaster *master_set){
 		dYdTheta[iy].resize(NPars);
 	}
 	bestLL=-1000000;
+	priorinfo=master_set->priorinfo;
 }
 
-void CLLCalc::CalcLL(CModelParameters *modpars,double &LL){
-	(void) modpars;
+void CLLCalc::CalcLL(vector<double> &theta,double &LL){
+	(void) theta;
 	(void) LL;
 }
 
-void CLLCalc::CalcLLPlusDerivatives(CModelParameters *modpars,double &LL,vector<double> &dLL_dtheta){
-	(void) modpars;
+void CLLCalc::CalcLLPlusDerivatives(vector<double> &theta,double &LL,vector<double> &dLL_dtheta){
+	(void) theta;
 	(void) LL;
 	(void) dLL_dtheta;
 }
 
-void CLLCalcSmooth::CalcLL(CModelParameters *modpars,double &LL){
+void CLLCalcSmooth::CalcLL(vector<double> &theta,double &LL){
 	unsigned int iy,ipar;
 	double sigma2;
 	bool insidebounds=true;
 	LL=0.0;
 	for(ipar=0;ipar<NPars;ipar++){
-		if(modpars->priorinfo->type[ipar]=="uniform" && fabs(modpars->Theta[ipar])>1.0){
+		if(priorinfo->type[ipar]=="uniform" && fabs(theta[ipar])>1.0){
 			LL=-1.0E99;
 			insidebounds=false;
 		}
 	}
 	if(insidebounds){
-		master->CalcAllY(modpars,Y,SigmaY_emulator);
+		master->CalcAllY(theta,Y,SigmaY_emulator);
 		for(iy=0;iy<NObs;iy++){
 			sigma2=SigmaY_emulator[iy]*SigmaY_emulator[iy]+obsinfo->SigmaExp[iy]*obsinfo->SigmaExp[iy];
 			LL-=0.5*pow(Y[iy]-obsinfo->YExp[iy],2)/sigma2;
@@ -94,7 +98,7 @@ void CLLCalcSmooth::CalcLL(CModelParameters *modpars,double &LL){
 	//Misc::Pause();
 }
 
-void CLLCalcSmooth::CalcLLPlusDerivatives(CModelParameters *modpars,double &LL,vector<double> &dLL_dTheta){
+void CLLCalcSmooth::CalcLLPlusDerivatives(vector<double> &theta,double &LL,vector<double> &dLL_dTheta){
 	unsigned int iy,ipar;
 	double sigma2,delY;
 	vector<vector<double>> dYdTheta;
@@ -104,7 +108,7 @@ void CLLCalcSmooth::CalcLLPlusDerivatives(CModelParameters *modpars,double &LL,v
 		for(ipar=0;ipar<NPars;ipar++)
 			dYdTheta[iy][ipar]=0.0;
 	}
-	master->CalcAllYdYdTheta(modpars,Y,SigmaY_emulator,dYdTheta);
+	master->CalcAllYdYdTheta(theta,Y,SigmaY_emulator,dYdTheta);
 	LL=0.0;
 	for(ipar=0;ipar<NPars;ipar++)
 		dLL_dTheta[ipar]=0.0;

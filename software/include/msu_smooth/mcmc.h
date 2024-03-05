@@ -32,7 +32,7 @@ namespace NBandSmooth{
 		CMCMC();
 		CMCMC(CSmoothMaster *master);
 		unsigned int NPars,NObs;
-		vector<CModelParameters> trace;
+		vector<vector<double>> trace;
 		string trace_filename;
 		bool langevin;
 		double stepsize;
@@ -54,9 +54,10 @@ namespace NBandSmooth{
 
 
 		
-		void CalcLL(CModelParameters *modpars,double &LL);
-		void CalcLLPlusDerivatives(CModelParameters *modpars,double &LL,vector<double> &dLL_dtheta);
+		void CalcLL(vector<double> &theta,double &LL);
+		void CalcLLPlusDerivatives(vector<double> &theta,double &LL,vector<double> &dLL_dtheta);
 		CLLCalcSmooth *llcalc;
+		static CPriorInfo *priorinfo;
 	};
 	
 	class CLLCalc{
@@ -68,17 +69,17 @@ namespace NBandSmooth{
 		vector<double> Y,SigmaY,SigmaY_emulator;
 		vector<vector<double>> dYdTheta;
 		CObservableInfo *obsinfo;
-		CPriorInfo *priorinfo;
 		CSmoothMaster *master;
-		virtual void CalcLL(CModelParameters *modpars,double &LL);
-		virtual void CalcLLPlusDerivatives(CModelParameters *modpars,double &LL,vector<double> &dLL_dtheta);
+		virtual void CalcLL(vector<double> &theta,double &LL);
+		virtual void CalcLLPlusDerivatives(vector<double> &theta,double &LL,vector<double> &dLL_dtheta);
+		static CPriorInfo *priorinfo;
 	};
 	
 	class CLLCalcSmooth : public CLLCalc{
 	public:
 		CLLCalcSmooth(CSmoothMaster *master);
-		void CalcLL(CModelParameters *modpars,double &LL);
-		void CalcLLPlusDerivatives(CModelParameters *modpars,double &LL,vector<double> &dLL_dtheta);
+		void CalcLL(vector<double> &theta,double &LL);
+		void CalcLLPlusDerivatives(vector<double> &theta,double &LL,vector<double> &dLL_dtheta);
 	};
 
 };

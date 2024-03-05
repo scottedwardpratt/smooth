@@ -139,6 +139,10 @@ void CSmoothMaster::CalcY(unsigned int iY,CModelParameters *modelpars,double &Y,
 	emulator[iY]->CalcY(modelpars,Y,SigmaY_emulator);
 }
 
+void CSmoothMaster::CalcY(unsigned int iY,vector<double> &theta,double &Y,double &SigmaY_emulator){
+	emulator[iY]->CalcY(theta,Y,SigmaY_emulator);
+}
+
 void CSmoothMaster::CalcYdYdTheta(string obsname,CModelParameters *modelpars,double &Y,
 double &SigmaY_emulator,vector<double> &dYdTheta){
 	unsigned int iY=observableinfo->GetIPosition(obsname);
@@ -150,9 +154,19 @@ double &SigmaY_emulator,vector<double> &dYdTheta){
 	emulator[iY]->CalcYDYDTheta(modelpars,Y,dYdTheta,SigmaY_emulator);
 }
 
+void CSmoothMaster::CalcYdYdTheta(unsigned int iY,vector<double> &theta,double &Y,
+double &SigmaY_emulator,vector<double> &dYdTheta){
+	emulator[iY]->CalcYDYDTheta(theta,Y,dYdTheta,SigmaY_emulator);
+}
+
 void CSmoothMaster::CalcY(string obsname,CModelParameters *modelpars,double &Y,double &SigmaY_emulator){
 	unsigned int iY=observableinfo->GetIPosition(obsname);
 	emulator[iY]->CalcY(modelpars,Y,SigmaY_emulator);
+}
+
+void CSmoothMaster::CalcY(string obsname,vector<double> &theta,double &Y,double &SigmaY_emulator){
+	unsigned int iY=observableinfo->GetIPosition(obsname);
+	emulator[iY]->CalcY(theta,Y,SigmaY_emulator);
 }
 
 void CSmoothMaster::CalcAllY(CModelParameters *modelpars,vector<double> &Y,vector<double> &SigmaY_emulator){
@@ -164,6 +178,15 @@ void CSmoothMaster::CalcAllY(CModelParameters *modelpars,vector<double> &Y,vecto
 	}
 }
 
+void CSmoothMaster::CalcAllY(vector<double> &theta,vector<double> &Y,vector<double> &SigmaY_emulator){
+	unsigned int NObservables=observableinfo->NObservables;
+	Y.resize(NObservables);
+	SigmaY_emulator.resize(NObservables);
+	for(unsigned int iY=0;iY<NObservables;iY++){
+		CalcY(iY,theta,Y[iY],SigmaY_emulator[iY]);
+	}
+}
+
 void CSmoothMaster::CalcAllYdYdTheta(CModelParameters *modelpars,vector<double> &Y,
 vector<double> &SigmaY_emulator,vector<vector<double>> &dYdTheta){
 	unsigned int NObservables=observableinfo->NObservables;
@@ -172,6 +195,18 @@ vector<double> &SigmaY_emulator,vector<vector<double>> &dYdTheta){
 	SigmaY_emulator.resize(NObservables);
 	for(unsigned int iY=0;iY<NObservables;iY++){
 		CalcYdYdTheta(iY,modelpars,Y[iY],SigmaY_emulator[iY],dYdTheta[iY]);
+		dYdTheta.resize(NPars);
+	}
+}
+
+void CSmoothMaster::CalcAllYdYdTheta(vector<double> &theta,vector<double> &Y,
+vector<double> &SigmaY_emulator,vector<vector<double>> &dYdTheta){
+	unsigned int NObservables=observableinfo->NObservables;
+	Y.resize(NObservables);
+	dYdTheta.resize(NObservables);
+	SigmaY_emulator.resize(NObservables);
+	for(unsigned int iY=0;iY<NObservables;iY++){
+		CalcYdYdTheta(iY,theta,Y[iY],SigmaY_emulator[iY],dYdTheta[iY]);
 		dYdTheta.resize(NPars);
 	}
 }

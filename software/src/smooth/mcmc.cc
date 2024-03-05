@@ -6,12 +6,16 @@ using namespace std;
 using namespace NBandSmooth;
 using namespace NMSUUtils;
 
+CPriorInfo *CMCMC::priorinfo=NULL;
+
 CMCMC::CMCMC(){
 	//
 }
 
 CMCMC::CMCMC(CSmoothMaster *master_set){
 	master=master_set;
+	priorinfo=master->priorinfo;
+	CLLCalc::priorinfo=priorinfo;
 	parmap=master->parmap;
 	randy=master->randy;
 	NPars=master->NPars;
@@ -24,9 +28,8 @@ CMCMC::CMCMC(CSmoothMaster *master_set){
 		stepsize=parmap->getD("MCMC_METROPOLIS_STEPSIZE",0.05);
 	ClearTrace();
 	for(unsigned int ipar=0;ipar<NPars;ipar++){
-		trace[0].Theta[ipar]=0.0;
+		trace[0][ipar]=0.0;
 	}
-	trace[0].TranslateTheta_to_X();
 	llcalc=new CLLCalcSmooth(master);
 	
 	OPTIMIZESTEPS=false;
@@ -43,22 +46,22 @@ CMCMC::CMCMC(CSmoothMaster *master_set){
 }
 
 void CMCMC::ClearTrace(){
-	CModelParameters *modpars=new CModelParameters();
 	trace.clear();
-	trace.push_back(*modpars);
 	for(unsigned int ipar=0;ipar<NPars;ipar++){
-		trace[0].Theta[ipar]=0;
+		trace[0].clear();
 	}
-	trace[0].TranslateTheta_to_X();
+	trace.clear();
+	vector<double> theta0;
+	theta0.resize(NPars);
+	trace.push_back(theta0);
 }
 
 // erases trace, but keeps last point
 void CMCMC::PruneTrace(){
-	CModelParameters modpars;
-	modpars=trace[trace.size()-1];
+	vector<double> theta0;
+	theta0=trace[trace.size()-1];
 	trace.clear();
-	trace.push_back(modpars);
-	trace[0].TranslateTheta_to_X();
+	trace.push_back(theta0);
 }
 
 void CMCMC::PerformTrace(unsigned int Ntrace,unsigned int Nskip){
@@ -72,30 +75,31 @@ void CMCMC::PerformMetropolisTrace(unsigned int Ntrace,unsigned int Nskip){
 	unsigned long long int nsuccess=0;
 	unsigned int itrace,iskip,ipar,it0;
 	double oldLL,newLL,X,bestLL;
-	CModelParameters *oldptr,*newptr;
-	CModelParameters oldmodpars;
+	vector<double> *oldptr,*newptr;
+	vector<double> oldtheta,newtheta,thetacopy;
+	oldtheta.resize(NPars);
+	newtheta.resize(NPars);
+	OPTIMIZESTEPS=false;
+	
+	
 	it0=trace.size();
 	if(trace.size()==0){
 		CLog::Fatal("Inside MCMC::PerformMetropolis, no initial point!\n");
 	}
-	OPTIMIZESTEPS=false;
+
 	
 	it0=trace.size();
 	trace.resize(trace.size()+Ntrace);
 	if(it0==0){
-		oldmodpars.X.resize(NPars);
-		oldmodpars.priorinfo=master->priorinfo;
 		oldptr=&oldmodpars;
 		for(ipar=0;ipar<NPars;ipar++){
 			oldmodpars.Theta[ipar]=0.0;
 		}
-		oldptr->TranslateTheta_to_X();
 	}
 	else{
 		oldmodpars.Copy(&trace[it0-1]);
 	}
 	oldptr=&oldmodpars;
-	oldptr->TranslateTheta_to_X();
 	
 	llcalc->CalcLL(oldptr,oldLL);
 	//oldLL=0.0;
@@ -158,12 +162,12 @@ void CMCMC::PerformMetropolisTrace(unsigned int Ntrace,unsigned int Nskip){
 	CLog::Info("Metropolis success percentage="+to_string(100.0*double(nsuccess)/(double(Ntrace)*double(Nskip)))+"\n");
 }
 
-void CMCMC::PerformLangevinTrace(unsigned int Ntrace,unsigned int Nskip){
+/*(void CMCMC::PerformLangevinTrace(unsigned int Ntrace,unsigned int Nskip){
 	unsigned int itrace,iskip,ipar;
 	bool inside;
 	double LL,ss,sqstep,dLLdTheta2,bestLL=-1.0E99;
 	vector<double> dLLdTheta,dTheta;
-	CModelParameters *oldptr,*newmodpars,*modpars;
+	vector<double> *oldptr,*newmodpars,*modpars;
 	if(trace.size()==0){
 		CLog::Fatal("Inside MCMC::PerformMetropolis, no initial point!\n");
 	}
@@ -217,6 +221,7 @@ void CMCMC::PerformLangevinTrace(unsigned int Ntrace,unsigned int Nskip){
 	CLog::Info("At end of trace: best LL="+to_string(bestLL)+"\n");
 	
 }
+*/
 
 void CMCMC::WriteTrace(){
 	unsigned int itrace,ipar,ntrace=trace.size();

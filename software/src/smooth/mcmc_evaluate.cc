@@ -25,9 +25,9 @@ void CMCMC::EvaluateTrace(){
 	
 	for(itrace=0;itrace<ntrace;itrace++){
 		for(ipar=0;ipar<NPars;ipar++){
-			thetabar[ipar]+=trace[itrace].Theta[ipar];
+			thetabar[ipar]+=trace[itrace][ipar];
 			for(jpar=0;jpar<NPars;jpar++){
-				sigma2(ipar,jpar)+=trace[itrace].Theta[ipar]*trace[itrace].Theta[jpar];
+				sigma2(ipar,jpar)+=trace[itrace][ipar]*trace[itrace][jpar];
 			}
 		}
 	}

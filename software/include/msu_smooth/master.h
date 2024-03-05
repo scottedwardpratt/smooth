@@ -54,14 +54,23 @@ namespace NBandSmooth{
 		void SetThetaTrain();
 		
 		void CalcAllY(CModelParameters *modelpars,vector<double> &Y,vector<double> &SigmaY_emulator);
+		void CalcAllY(vector<double> &theta,vector<double> &Y,vector<double> &SigmaY_emulator);
 		void CalcY(unsigned int iY,CModelParameters *modelpars,double &Y,double &SigmaY_emulator);
+		void CalcY(unsigned int iY,vector<double> &theta,double &Y,double &SigmaY_emulator);
 		void CalcY(string obsname,CModelParameters *modelpars,double &Y,double &SigmaY_emulator);
+		void CalcY(string obsname,vector<double> &theta,double &Y,double &SigmaY_emulator);
 		
 		void CalcAllYdYdTheta(CModelParameters *modelpars,vector<double> &Y,
 		vector<double> &SigmaY_emulator,vector<vector<double>> &dYdTheta);
+		void CalcAllYdYdTheta(vector<double> &theta,vector<double> &Y,
+		vector<double> &SigmaY_emulator,vector<vector<double>> &dYdTheta);
 		void CalcYdYdTheta(string obsname,CModelParameters *modelpars,double &Y,
 		double &SigmaY_emulator,vector<double> &dYdTheta);
+		void CalcYdYdTheta(string obsname,vector<double> &theta,double &Y,
+		double &SigmaY_emulator,vector<double> &dYdTheta);
 		void CalcYdYdTheta(unsigned int iY,CModelParameters *modelpars,double &Y,
+		double &SigmaY_emulator,vector<double> &dYdTheta);
+		void CalcYdYdTheta(unsigned int iY,vector<double> &theta,double &Y,
 		double &SigmaY_emulator,vector<double> &dYdTheta);
 		
 		void CalcAllLogP();
