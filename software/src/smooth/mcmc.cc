@@ -27,9 +27,6 @@ CMCMC::CMCMC(CSmoothMaster *master_set){
 	else
 		stepsize=parmap->getD("MCMC_METROPOLIS_STEPSIZE",0.05);
 	ClearTrace();
-	for(unsigned int ipar=0;ipar<NPars;ipar++){
-		trace[0][ipar]=0.0;
-	}
 	llcalc=new CLLCalcSmooth(master);
 	
 	OPTIMIZESTEPS=false;
@@ -45,29 +42,30 @@ CMCMC::CMCMC(CSmoothMaster *master_set){
 	}
 }
 
-void CMCMC::ClearTrace(){
-	trace.clear();
-	for(unsigned int ipar=0;ipar<NPars;ipar++){
-		trace[0].clear();
+void CMCMC::ClearTrace(){ // clears trace but adds back first point with theta=0
+	for(unsigned int itrace=0;itrace<trace.size();itrace++){
+		trace[itrace].clear();
 	}
 	trace.clear();
-	vector<double> theta0;
-	theta0.resize(NPars);
-	trace.push_back(theta0);
+	trace.resize(1);
+	trace[0].resize(NPars);
+	for(unsigned int ipar=0;ipar<NPars;ipar++){
+		trace[0][ipar]=0.0;
+	}
 }
 
 // erases trace, but keeps last point
 void CMCMC::PruneTrace(){
 	vector<double> theta0;
 	theta0=trace[trace.size()-1];
-	trace.clear();
+	ClearTrace();
 	trace.push_back(theta0);
 }
 
 void CMCMC::PerformTrace(unsigned int Ntrace,unsigned int Nskip){
-	if(langevin)
-		PerformLangevinTrace(Ntrace,Nskip);
-	else
+	//if(langevin)
+	//	PerformLangevinTrace(Ntrace,Nskip);
+	//else
 		PerformMetropolisTrace(Ntrace,Nskip);
 }
 
@@ -75,33 +73,27 @@ void CMCMC::PerformMetropolisTrace(unsigned int Ntrace,unsigned int Nskip){
 	unsigned long long int nsuccess=0;
 	unsigned int itrace,iskip,ipar,it0;
 	double oldLL,newLL,X,bestLL;
-	vector<double> *oldptr,*newptr;
-	vector<double> oldtheta,newtheta,thetacopy;
+	vector<double> oldtheta,newtheta;
 	oldtheta.resize(NPars);
 	newtheta.resize(NPars);
 	OPTIMIZESTEPS=false;
-	
+	vector<double> besttheta;
+	besttheta.resize(NPars);
 	
 	it0=trace.size();
 	if(trace.size()==0){
 		CLog::Fatal("Inside MCMC::PerformMetropolis, no initial point!\n");
 	}
-
-	
-	it0=trace.size();
 	trace.resize(trace.size()+Ntrace);
 	if(it0==0){
-		oldptr=&oldmodpars;
 		for(ipar=0;ipar<NPars;ipar++){
-			oldmodpars.Theta[ipar]=0.0;
+			oldtheta[ipar]=0.2;
 		}
 	}
 	else{
-		oldmodpars.Copy(&trace[it0-1]);
+		oldtheta=trace[it0-1];
 	}
-	oldptr=&oldmodpars;
-	
-	llcalc->CalcLL(oldptr,oldLL);
+	llcalc->CalcLL(oldtheta,oldLL);
 	//oldLL=0.0;
 	//for(ipar=0;ipar<NPars;ipar++)
 	//	oldLL-=pow(oldptr->Theta[ipar]-0.2,2);
@@ -110,34 +102,31 @@ void CMCMC::PerformMetropolisTrace(unsigned int Ntrace,unsigned int Nskip){
 	
 	for(itrace=it0;itrace<it0+Ntrace;itrace++){
 		for(iskip=0;iskip<Nskip;iskip++){
-			newptr=&trace[itrace];
-				
 			if(OPTIMIZESTEPS){
 				for(ipar=0;ipar<NPars;ipar++){
 					stepvecprime[ipar]=stepsize*randy->ran_gauss();
 				}
 				stepvec=dTdTEigenVecs*stepvecprime;
 				for(ipar=0;ipar<NPars;ipar++){
-					newptr->Theta[ipar]=oldptr->Theta[ipar]+real(stepvec(ipar));
+					newtheta[ipar]=oldtheta[ipar]+real(stepvec(ipar));
 				}
 			}
 			else{
 				for(ipar=0;ipar<NPars;ipar++){
-					newptr->Theta[ipar]=oldptr->Theta[ipar]+stepsize*randy->ran_gauss();
+					newtheta[ipar]=oldtheta[ipar]+stepsize*randy->ran_gauss();
 				}
 			}
 			
-			llcalc->CalcLL(newptr,newLL);
-			//newLL=0.0;
-			//for(ipar=0;ipar<NPars;ipar++)
-			//	newLL-=10*pow(newptr->Theta[ipar]-0.2,2);
-			
+			llcalc->CalcLL(newtheta,newLL);
 			if(newLL>bestLL){
 				bestLL=newLL;
+				for(ipar=0;ipar<NPars;ipar++)
+					besttheta[ipar]=newtheta[ipar];
 			}
 			
 			if(newLL>oldLL){
-				oldptr->Copy(newptr);
+				for(ipar=0;ipar<NPars;ipar++)
+					oldtheta[ipar]=newtheta[ipar];
 				oldLL=newLL;
 				nsuccess+=1;
 			}
@@ -145,21 +134,27 @@ void CMCMC::PerformMetropolisTrace(unsigned int Ntrace,unsigned int Nskip){
 				X=newLL-oldLL;
 				if(X>-30.0){
 					if(exp(X)>randy->ran()){
-						oldptr->Copy(newptr);
+						for(ipar=0;ipar<NPars;ipar++)
+							oldtheta[ipar]=newtheta[ipar];
 						oldLL=newLL;
 						nsuccess+=1;
 					}
 				}
 			}
 		}
-		oldptr->TranslateTheta_to_X();
-		trace[itrace].Copy(oldptr);
+		trace[itrace].resize(NPars);
+		for(ipar=0;ipar<NPars;ipar++){
+			trace[itrace][ipar]=oldtheta[ipar];
+		}
 		if(Ntrace>10 && ((itrace+1)*10)%Ntrace==0){
 			CLog::Info("finished "+to_string(lrint(100*double(itrace+1)/double(Ntrace)))+"%\n");
 		}
 	}
-	CLog::Info("At end of trace, best LL="+to_string(bestLL)+"\n");
-	CLog::Info("Metropolis success percentage="+to_string(100.0*double(nsuccess)/(double(Ntrace)*double(Nskip)))+"\n");
+	CLog::Info("At end of trace, best LL="+to_string(bestLL)+"\nBest Theta=\n");
+	for(ipar=0;ipar<NPars;ipar++){
+		CLog::Info(to_string(besttheta[ipar])+"  ");
+	}
+	CLog::Info("\nMetropolis success percentage="+to_string(100.0*double(nsuccess)/(double(Ntrace)*double(Nskip)))+"\n");
 }
 
 /*(void CMCMC::PerformLangevinTrace(unsigned int Ntrace,unsigned int Nskip){
@@ -230,7 +225,7 @@ void CMCMC::WriteTrace(){
 	fptr=fopen(trace_filename.c_str(),"w");
 	for(itrace=0;itrace<ntrace;itrace++){
 		for(ipar=0;ipar<NPars;ipar++){
-			fprintf(fptr,"%8.5f ",trace[itrace].Theta[ipar]);
+			fprintf(fptr,"%8.5f ",trace[itrace][ipar]);
 		}
 		fprintf(fptr,"\n");
 	}
@@ -238,24 +233,26 @@ void CMCMC::WriteTrace(){
 }
 
 void CMCMC::ReadTrace(){
-	unsigned int ipar;
-	double thetaread;
-	CModelParameters *modpars;
+	ClearTrace();
+	unsigned int ipar,itrace=0;
+	vector<double> thetaread;
+	thetaread.resize(NPars);
 	FILE *fptr;
 	fptr=fopen(trace_filename.c_str(),"r");
 	while(!feof(fptr)){
 		for(ipar=0;ipar<NPars;ipar++){
-			fscanf(fptr,"%lf",&thetaread);
-			if(ipar==0 && !feof(fptr)){
-				modpars=new CModelParameters();
-				modpars->TranslateTheta_to_X();
-				trace.push_back(*modpars);
-			}
-			if(!feof(fptr)){
-				modpars->Theta[ipar]=thetaread;
-			}
+			fscanf(fptr,"%lf",&thetaread[ipar]);
 		}
+		if(!feof(fptr)){
+			if(itrace!=0){
+				trace.resize(trace.size()+1);
+			}
+			for(ipar=0;ipar<NPars;ipar++)
+				trace[itrace][ipar]=thetaread[ipar];
+		}
+		itrace+=1;
 	}
 	fclose(fptr);
 	CLog::Info("read in "+to_string(trace.size())+" trace elements\n");
 }
+

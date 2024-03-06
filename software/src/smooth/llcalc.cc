@@ -75,27 +75,11 @@ void CLLCalcSmooth::CalcLL(vector<double> &theta,double &LL){
 			LL-=0.5*pow(Y[iy]-obsinfo->YExp[iy],2)/sigma2;
 		}
 		for(ipar=0;ipar<NPars;ipar++){
-			if(modpars->priorinfo->type[ipar]=="gaussian"){
-				LL-=0.5*pow(modpars->Theta[ipar]*modpars->GSCALE,2);
+			if(priorinfo->type[ipar]=="gaussian"){
+				LL-=0.5*pow(theta[ipar]*CModelParameters::GSCALE,2);
 			}
 		}
 	}
-	/*
-	if(LL>bestLL){
-		bestLL=LL;
-		CLog::Info("-------------------------------\n");
-		CLog::Info("Theta=");
-		for(ipar=0;ipar<NPars;ipar++){
-			CLog::Info(to_string(modpars->Theta[ipar])+" ");
-		}
-		CLog::Info("\nY = ");
-		for(iy=0;iy<NObs;iy++){
-			CLog::Info(to_string(Y[iy])+"=?"+to_string(obsinfo->YExp[iy])+" ");
-		}
-		CLog::Info("\nbestLL="+to_string(bestLL)+"\n");
-	}
-	*/
-	//Misc::Pause();
 }
 
 void CLLCalcSmooth::CalcLLPlusDerivatives(vector<double> &theta,double &LL,vector<double> &dLL_dTheta){
@@ -121,9 +105,9 @@ void CLLCalcSmooth::CalcLLPlusDerivatives(vector<double> &theta,double &LL,vecto
 		}
 	}
 	for(ipar=0;ipar<NPars;ipar++){
-		if(modpars->priorinfo->type[ipar]=="gaussian"){
-			LL-=0.5*pow(modpars->Theta[ipar]*modpars->GSCALE,2);
-			dLL_dTheta[ipar]-=modpars->Theta[ipar]*pow(modpars->GSCALE,2);
+		if(priorinfo->type[ipar]=="gaussian"){
+			LL-=0.5*pow(theta[ipar]*CModelParameters::GSCALE,2);
+			dLL_dTheta[ipar]-=theta[ipar]*pow(CModelParameters::GSCALE,2);
 		}
 	}
 	/*

@@ -187,7 +187,6 @@ void CSimplexSampler::SetThetaType3(){
 	ThetaTrain[2*NPars+2].resize(NPars);
 	for(ipar=0;ipar<NPars;ipar++){
 		ThetaTrain[2*NPars+2][ipar]=0.0;
-		//printf("ThetaTrain[%u]=%g\n",2*NPars+2,ThetaTrain[2*NPars+2][ipar]);
 	}
 	NTrainingPts=2*NPars+3;
 

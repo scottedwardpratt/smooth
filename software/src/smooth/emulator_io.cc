@@ -5,7 +5,7 @@ using namespace NBandSmooth;
 using namespace NMSUUtils;
 
 void CSmoothEmulator::PrintA(vector<double> &Aprint){
-	if(pca_ignore){
+	if(!pca_ignore){
 		for(unsigned int ic=0;ic<smooth->NCoefficients;ic++){
 			CLog::Info(to_string(ic)+": "+to_string(Aprint[ic])+"\n");
 		}
@@ -13,7 +13,7 @@ void CSmoothEmulator::PrintA(vector<double> &Aprint){
 }
 
 void CSmoothEmulator::WriteCoefficients(){
-	if(pca_ignore){
+	if(!pca_ignore){
 		unsigned int NCoefficients=smooth->NCoefficients;
 		unsigned int isample,ic,a;
 		FILE *fptr;
@@ -31,14 +31,14 @@ void CSmoothEmulator::WriteCoefficients(){
 			filename=dirname+"/ABest.txt";
 			fptr=fopen(filename.c_str(),"w");
 			for(ic=0;ic<smooth->NCoefficients;ic++){
-				fprintf(fptr,"%15.8e\n",ABest[ic]);
+				fprintf(fptr,"%18.12e\n",ABest[ic]);
 			}
 			fclose(fptr);
 			filename=dirname+"/BetaBest.txt";
 			fptr=fopen(filename.c_str(),"w");
 			for(ic=0;ic<NCoefficients;ic++){
 				for(a=0;a<NTrainingPts;a++){
-					fprintf(fptr,"%16.10e ",beta(a,ic));
+					fprintf(fptr,"%18.12e ",beta(a,ic));
 				}
 				fprintf(fptr,"\n");
 			}
@@ -52,7 +52,7 @@ void CSmoothEmulator::WriteCoefficients(){
 				filename=dirname+"/sample"+to_string(isample)+".txt";
 				fptr=fopen(filename.c_str(),"w");
 				for(ic=0;ic<smooth->NCoefficients;ic++){
-					fprintf(fptr,"%15.8e\n",ASample[isample][ic]);
+					fprintf(fptr,"%18.12e\n",ASample[isample][ic]);
 					ABest[ic]+=ASample[isample][ic]/double(NASample);
 				}
 				fclose(fptr);
@@ -60,7 +60,7 @@ void CSmoothEmulator::WriteCoefficients(){
 			filename=dirname+"/ABest.txt";
 			fptr=fopen(filename.c_str(),"w");
 			for(ic=0;ic<smooth->NCoefficients;ic++){
-				fprintf(fptr,"%15.8e\n",ABest[ic]);
+				fprintf(fptr,"%18.12e\n",ABest[ic]);
 			}
 			fclose(fptr);
 		}
@@ -68,7 +68,7 @@ void CSmoothEmulator::WriteCoefficients(){
 }
 
 void CSmoothEmulator::ReadCoefficients(){
-	if(pca_ignore){
+	if(!pca_ignore){
 		unsigned int isample,ic,a,NPars_test,MaxRank_test,NC_test;
 		unsigned int NCoefficients=smooth->NCoefficients;
 		double betaread;

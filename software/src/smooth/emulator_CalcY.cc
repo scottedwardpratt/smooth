@@ -8,7 +8,7 @@ void CSmoothEmulator::CalcY(CModelParameters *modpars,double &Y,double &SigmaY_e
 	CalcY(modpars->Theta,Y,SigmaY_emulator);
 }
 
-void CSmoothEmulator::CalcY(vector<double> Theta,double &Y,double &SigmaY_emulator){
+void CSmoothEmulator::CalcY(vector<double> &Theta,double &Y,double &SigmaY_emulator){
 	if(pca_ignore){
 		Y=0.0;
 		SigmaY_emulator=0.0;
@@ -46,7 +46,7 @@ void CSmoothEmulator::CalcYDYDTheta(CModelParameters *modpars,double &Y,vector<d
 	}
 }
 
-void CSmoothEmulator::CalcYDYDTheta(vector<double> Theta,double &Y,vector<double> &dYdTheta,double &SigmaY_emulator){
+void CSmoothEmulator::CalcYDYDTheta(vector<double> &Theta,double &Y,vector<double> &dYdTheta,double &SigmaY_emulator){
 	if(pca_ignore){
 		Y=0.0;
 		dYdTheta.resize(NPars);
