@@ -33,7 +33,12 @@ CLLCalcSmooth::CLLCalcSmooth(CSmoothMaster *master_set){
 	NPars=master->NPars;
 	priorinfo=master->priorinfo;
 	obsinfo=master->observableinfo;
-	obsinfo->ReadExperimentalInfo("Info/experimental_info.txt"); // might want to change this later to be more flexible
+	if(master->UsePCA){
+		obsinfo->ReadExperimentalInfo("PCA_Info/experimental_info.txt"); // might want to change this later to be more flexible
+	}
+	else{
+		obsinfo->ReadExperimentalInfo("Info/experimental_info.txt"); // might want to change this later to be more flexible
+	}
 	NObs=obsinfo->NObservables;
 	Y.resize(NObs);
 	dYdTheta.resize(NObs);
