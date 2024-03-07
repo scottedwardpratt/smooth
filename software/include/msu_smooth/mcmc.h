@@ -36,6 +36,9 @@ namespace NBandSmooth{
 		string trace_filename;
 		bool langevin;
 		double stepsize;
+		
+		
+		
 		void ClearTrace(); // erases trace info so one can start over, resets at theta=0.
 		void PruneTrace(); // erases trace, except for last point
 		
@@ -52,8 +55,6 @@ namespace NBandSmooth{
 		Eigen::MatrixXd dThetadTheta;
 		Eigen::MatrixXcd dTdTEigenVecs;
 
-
-		
 		void CalcLL(vector<double> &theta,double &LL);
 		void CalcLLPlusDerivatives(vector<double> &theta,double &LL,vector<double> &dLL_dtheta);
 		CLLCalcSmooth *llcalc;
