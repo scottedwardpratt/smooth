@@ -12,8 +12,8 @@ void CMCMC::EvaluateTrace(){
 	CPCA *pca=NULL;
 	if(UsePCA){
 			pca=new CPCA(master->parmap);
+			pca->ReadTransformationInfo();
 	}
-	pca->ReadTransformationInfo();
 	NObs=master->observableinfo->NObservables;
 	vector<double> thetabar,YRMS;
 	FILE *fptr;
@@ -40,6 +40,7 @@ void CMCMC::EvaluateTrace(){
 	Ybar.resize(NObs);
 	YRMS.resize(NObs);
 	SigmaYEmulator.resize(NObs);
+
 	if(UsePCA){
 		Z.resize(NObs);
 		Zbar.resize(NObs);
@@ -88,6 +89,41 @@ void CMCMC::EvaluateTrace(){
 			}
 		}
 	}
+	
+	for(ipar=0;ipar<NPars;ipar++){
+		thetabar[ipar]=thetabar[ipar]/double(ntrace);
+		for(jpar=0;jpar<NPars;jpar++){
+			CovThetaTheta(ipar,jpar)=CovThetaTheta(ipar,jpar)/double(ntrace);
+		}
+		for(iobs=0;iobs<NObs;iobs++){
+			CovThetaY(ipar,iobs)=CovThetaY(ipar,iobs)/double(ntrace);
+		}
+	}
+	
+	for(iobs=0;iobs<NObs;iobs++){
+		Ybar[iobs]=Ybar[iobs]/double(ntrace);
+		if(UsePCA)
+			Zbar[iobs]=Zbar[iobs]/double(ntrace);
+		for(jobs=0;jobs<NObs;jobs++){
+			CovYY(iobs,jobs)=CovYY(iobs,jobs)/double(ntrace);
+		}
+	}
+	
+	for(ipar=0;ipar<NPars;ipar++){
+		for(jpar=0;jpar<NPars;jpar++){
+			CovThetaTheta(ipar,jpar)=CovThetaTheta(ipar,jpar)-thetabar[ipar]*thetabar[jpar];
+		}
+		for(iobs=0;iobs<NObs;iobs++){
+			CovThetaY(ipar,iobs)=CovThetaY(ipar,iobs)-thetabar[ipar]*Ybar[iobs];
+		}
+	}
+	
+	for(iobs=0;iobs<NObs;iobs++){
+		for(jobs=0;jobs<NObs;jobs++){
+			CovYY(iobs,jobs)=CovYY(iobs,jobs)-Ybar[iobs]*Ybar[jobs];
+		}
+	}
+	
 	for(iobs=0;iobs<NObs;iobs++){
 		YRMS[iobs]=0.0;
 		for(ipar=0;ipar<NPars;ipar++){
@@ -106,18 +142,7 @@ void CMCMC::EvaluateTrace(){
 			RP(ipar,iobs)=CovThetaY(ipar,iobs)*YRMS[iobs]/sigmatot2;
 		}
 	}
-	
-	CovThetaTheta=CovThetaTheta/double(ntrace);
-	CovThetaY=CovThetaY/double(ntrace);
-	CovYY=CovYY/double(ntrace);
-	for(ipar=0;ipar<NPars;ipar++){
-		thetabar[ipar]=thetabar[ipar]/double(ntrace);
-	}
-	for(iobs=0;iobs<NObs;iobs++){
-		Ybar[iobs]=Ybar[iobs]/double(ntrace);
-		if(UsePCA)
-			Zbar[iobs]=Zbar[iobs]/double(ntrace);
-	}
+
 	
 	// Write output
 	
@@ -157,14 +182,14 @@ void CMCMC::EvaluateTrace(){
 	evecs=esolver.eigenvectors();
 	vector<double> evalnorm;
 	evalnorm.resize(NPars);
-	fptr=fopen("mcmc_trace/sigma2_eigenvals.txt","w");
+	fptr=fopen("mcmc_trace/CovThetaTheta_eigenvals.txt","w");
 	for(ipar=0;ipar<NPars;ipar++){
 		evalnorm[ipar]=sqrt(fabs(real(evals(ipar))));
 		fprintf(fptr,"%15.8e\n",evalnorm[ipar]);
 	}
 	fclose(fptr);
 	
-	fptr=fopen("mcmc_trace/sigma2_eigenvecs.txt","w");
+	fptr=fopen("mcmc_trace/CovThetaTheta_eigenvecs.txt","w");
 	for(ipar=0;ipar<NPars;ipar++){
 		SigmaString.clear();
 		for(jpar=0;jpar<NPars;jpar++){
@@ -175,8 +200,6 @@ void CMCMC::EvaluateTrace(){
 		fprintf(fptr,"%s",SigmaString.c_str());
 	}
 	fclose(fptr);
-	
-	
 		
 	
 }
