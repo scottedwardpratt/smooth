@@ -19,7 +19,7 @@ void CMCMC::EvaluateTrace(){
 	FILE *fptr;
 	string SigmaString;
 	char cc[CLog::CHARLENGTH];
-	Eigen::MatrixXd CovThetaTheta,CovThetaY,CovYY,dYdTheta,RP;
+	Eigen::MatrixXd CovThetaTheta,CovThetaY,CovYY,CovThetaThetaInv,dYdTheta,RP;
 	vector<double> Y,Ybar,Z,Zbar,SigmaYEmulator,SigmaZEmulator;
 	double sigmatot2;
 	Eigen::VectorXcd evals;
@@ -27,6 +27,7 @@ void CMCMC::EvaluateTrace(){
 	unsigned int iobs,jobs;
 	thetabar.resize(NPars);
 	CovThetaTheta.resize(NPars,NPars);
+	CovThetaThetaInv.resize(NPars,NPars);
 	CovThetaY.resize(NPars,NObs);
 	dYdTheta.resize(NPars,NObs);
 	evecs.resize(NPars,NPars);
@@ -99,6 +100,7 @@ void CMCMC::EvaluateTrace(){
 			CovThetaY(ipar,iobs)=CovThetaY(ipar,iobs)/double(ntrace);
 		}
 	}
+	CovThetaThetaInv=CovThetaTheta.inverse();
 	
 	for(iobs=0;iobs<NObs;iobs++){
 		Ybar[iobs]=Ybar[iobs]/double(ntrace);
@@ -124,23 +126,38 @@ void CMCMC::EvaluateTrace(){
 		}
 	}
 	
+	cout << "<<ThetaTheta>>\n";
+	cout << CovThetaTheta << endl;
+	cout << "<<ThetaTheta>>^-1\n";
+	cout << CovThetaThetaInv << endl;
+	cout << "<<ThetaY>>\n";
+	cout << CovThetaY << endl;
+	cout << "<<YY>>\n";
+	cout << CovYY << endl;
+	
 	for(iobs=0;iobs<NObs;iobs++){
 		YRMS[iobs]=0.0;
 		for(ipar=0;ipar<NPars;ipar++){
 			dYdTheta(iobs,ipar)=0.0;
 			for(jpar=0;jpar<NPars;jpar++){
-				dYdTheta(iobs,ipar)+=CovThetaY(jpar,iobs)*CovThetaTheta(ipar,jpar);
+				dYdTheta(iobs,ipar)+=CovThetaY(jpar,iobs)*CovThetaThetaInv(ipar,jpar);
 			}
+		}
+		for(ipar=0;ipar<NPars;ipar++){
 			YRMS[iobs]+=dYdTheta(iobs,ipar)*dYdTheta(iobs,ipar);
 		}
 		YRMS[iobs]=sqrt(YRMS[iobs]);
+		printf("YRMS[%u]=%g\n",iobs,YRMS[iobs]);
 	}
 	for(iobs=0;iobs<NObs;iobs++){
 		sigmatot2=master->observableinfo->SigmaExp[iobs]*master->observableinfo->SigmaExp[iobs]
 			+SigmaYEmulator[iobs]*SigmaYEmulator[iobs];
+		printf("sigmatot2[%u]=%g\n",iobs,sigmatot2);
 		for(ipar=0;ipar<NPars;ipar++){
 			RP(ipar,iobs)=CovThetaY(ipar,iobs)*YRMS[iobs]/sigmatot2;
+			printf("%12.5e ",RP(ipar,iobs));
 		}
+		printf("\n");
 	}
 
 	
