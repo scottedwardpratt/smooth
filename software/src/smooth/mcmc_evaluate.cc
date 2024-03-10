@@ -125,7 +125,7 @@ void CMCMC::EvaluateTrace(){
 			CovYY(iobs,jobs)=CovYY(iobs,jobs)-Ybar[iobs]*Ybar[jobs];
 		}
 	}
-	
+	/*
 	cout << "<<ThetaTheta>>\n";
 	cout << CovThetaTheta << endl;
 	cout << "<<ThetaTheta>>^-1\n";
@@ -134,6 +134,7 @@ void CMCMC::EvaluateTrace(){
 	cout << CovThetaY << endl;
 	cout << "<<YY>>\n";
 	cout << CovYY << endl;
+	*/
 	
 	for(iobs=0;iobs<NObs;iobs++){
 		YRMS[iobs]=0.0;
@@ -147,17 +148,13 @@ void CMCMC::EvaluateTrace(){
 			YRMS[iobs]+=dYdTheta(iobs,ipar)*dYdTheta(iobs,ipar);
 		}
 		YRMS[iobs]=sqrt(YRMS[iobs]);
-		printf("YRMS[%u]=%g\n",iobs,YRMS[iobs]);
 	}
 	for(iobs=0;iobs<NObs;iobs++){
 		sigmatot2=master->observableinfo->SigmaExp[iobs]*master->observableinfo->SigmaExp[iobs]
 			+SigmaYEmulator[iobs]*SigmaYEmulator[iobs];
-		printf("sigmatot2[%u]=%g\n",iobs,sigmatot2);
 		for(ipar=0;ipar<NPars;ipar++){
 			RP(ipar,iobs)=CovThetaY(ipar,iobs)*YRMS[iobs]/sigmatot2;
-			printf("%12.5e ",RP(ipar,iobs));
 		}
-		printf("\n");
 	}
 
 	
