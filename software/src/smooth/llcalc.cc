@@ -78,6 +78,7 @@ void CLLCalcSmooth::CalcLL(vector<double> &theta,double &LL){
 		for(iy=0;iy<NObs;iy++){
 			sigma2=SigmaY_emulator[iy]*SigmaY_emulator[iy]+obsinfo->SigmaExp[iy]*obsinfo->SigmaExp[iy];
 			LL-=0.5*pow(Y[iy]-obsinfo->YExp[iy],2)/sigma2;
+			LL-=0.5*log(sigma2);
 		}
 		for(ipar=0;ipar<NPars;ipar++){
 			if(priorinfo->type[ipar]=="gaussian"){
@@ -105,6 +106,7 @@ void CLLCalcSmooth::CalcLLPlusDerivatives(vector<double> &theta,double &LL,vecto
 		sigma2=SigmaY_emulator[iy]*SigmaY_emulator[iy]+obsinfo->SigmaExp[iy]*obsinfo->SigmaExp[iy];
 		delY=Y[iy]-obsinfo->YExp[iy];
 		LL-=0.5*delY*delY/sigma2;
+		LL-=0.5*log(sigma2);
 		for(ipar=0;ipar<NPars;ipar++){
 			dLL_dTheta[ipar]-=delY*dYdTheta[iy][ipar]/sigma2;
 		}
