@@ -20,6 +20,8 @@ CMCMC::CMCMC(CSmoothMaster *master_set){
 	randy=master->randy;
 	NPars=master->NPars;
 	trace_filename=parmap->getS("MCMC_TRACE_FILENAME","mcmc_trace/trace.txt");
+	string command="mkdir -p mcmc_trace";
+	system(command.c_str());
 	OPTIMIZESTEPS=parmap->getB("MCMC_OPTIMIZESTEPS",false);
 	langevin=parmap->getB("MCMC_LANGEVIN",false);
 	if(langevin)

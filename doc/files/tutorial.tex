@@ -51,7 +51,7 @@ The User will run the software from the {\tt \$\{MY\_PROJECTS\}/} directory. Bef
 }
 This implies that the model has four parameters. The names, without much inspiration, are {\tt par1}, {\tt par2}, {\tt par3} and {\tt par4}. These names would normally be more descriptive, e.g. {\tt NuclearCompressibility}. The second entry in each line is either {\tt uniform} or {\tt gaussian}. If the parameter is {\tt uniform}, the last two numbers represent the range of the uniform prior, $x_{\rm min}$ and $x_{\rm max}$. If the second entry is {\tt gaussian} the third entry represents the center of the Gaussian distribution and the fourth represents the width. For a full model, the User would replace this model with one appropriate for their own model.
 
-The second file is {\tt \$\{MY\_PROJECTS\}/Info/observable\_info.txt}. This describes output values from the model. In the template the file is
+The second file is {\tt \$\{MY\_PROJECTS\}/Info/observable\_info.txt}. This describes output values from the model. In the template, the provided file is
 {\tt
 \begin{verbatim}
    meanpt_pion    100      
@@ -288,7 +288,7 @@ The above illustrates how one can write a code that
 
 \subsection{Exploring the Posterior via Markov-Chain Monte-Carlo}
 
-Given the experimental information, which is stored in project directory in {\tt Info/experimental\_info.txt}, one can then use the tuned emulator to explore the posterior likelihood through MCMC, which works via a Metropolis algorithm. The file {\tt Info/experimental\_info.txt} has in the template is:
+Given the experimental information, which is stored in project directory in {\tt Info/experimental\_info.txt}, one can then use the tuned emulator to explore the posterior likelihood through MCMC, which works via a Metropolis algorithm. The file {\tt Info/experimental\_info.txt} provided in the template is:
 {\tt
 \begin{verbatim}
 meanpt_pion     492     30   0.0
