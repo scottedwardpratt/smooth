@@ -3,7 +3,7 @@
 \setcounter{section}{5}
 \section{Emulating Principal Components}\label{sec:pca}
 
-{\bf This section is incomplete, and the PCA software is not yet fully tested.}
+{\bf User Beware: the PCA software is not yet fully tested.}
 
 \subsection{Overview}
 
@@ -27,20 +27,21 @@ ${MY_LOCAL}/main_programs% make pca_calctransformation
 \end{verbatim}}
 Before running one needs to have set up the usual files defining the training points, e.g. running {\it Simplex Sampler}, and running the full model at the training points. One can now run the program that creates files containing all the observable information, but translated into PCA components:
 {\tt\begin{verbatim}
-${MY_PROJECT}% pca_calctransformation
+${MY_PROJECT}% ${MY_LOCAL}/bin/pca_calctransformation
 \end{verbatim}}
 One can check the directory {\tt \$\{MY\_PROJECT\}/PCA\_Info/} to make sure that one sees the files\\{\tt experimental\_info.txt}, {\tt observable\_info.txt} and {\tt transformation\_info.txt}. The latter file includes the transformation information so that one can readily translate from the nominal observables to the PCA components.
 
 Before performing the tuning, one needs to edit the {\tt parameters/emulator\_parameters.txt} file and change the parameter {\tt SmoothEmulator\_UsePCA} to {\tt true}. The output when tuning the emulator should look something like:
 {\tt\begin{verbatim}
-${MY_PROJECT}% smoothy_tune
+${MY_PROJECT}% ${MY_LOCAL}/bin/smoothy_tune
  ---- Tuning for z0 ----
  ---- Tuning for z1 ----
  ---- Tuning for z2 ----
  ---- Tuning for z3 ----
  ---- Tuning for z4 ----
 \end{verbatim}} \vspace*{-16pt}
-\hspace*{352pt}$\vdots$
+\hspace*{35pt}$\vdots$
+
 The Taylor-expansion coefficients for the PCA observables are in the directory {\tt \$\{MY\_PROJECT\}/coefficients\_pca/}. 
 
 Another example program for PCA analysis is {\tt \$\{MY\_LOCAL\}/main\_programs/pca\_readinfo\_calcy\_main.cc}:
@@ -82,7 +83,7 @@ ${MY_LOCAL}/main_programs% make pca_readinfo_calcy
 \end{verbatim}}
 Running the program:
 {\tt\begin{verbatim}
-${MY_PROJECT}% pca_readinfo_calcy
+${MY_PROJECT}% ${MY_LOCAL}/bin/pca_readinfo_calcy
  ---- Start with these values of Z ----
 Z[0]=0
 Z[1]=1
@@ -114,9 +115,14 @@ The PCA programs uses parameter that are prefixed with {\bf SmoothEmulator}. One
 \item {\bf SmoothEmultor\_UsePCA}\\
 If one wishes to emulate the PCA observables, i.e. those that are linear combinations of the real observables, this should be set to true. One must then be sure to have run the PCA decomposition programs first. 
 \item {\bf SmoothEmulator\_ModelRunDirName} and {\bf SmoothEmulator\_TrainingPts} should be set the same as used by {\it Smooth Emulator}.
+\item {\bf SmoothEmulator\_PCAMinVariance}\\
+This tells the emulator to not emulate PCA observables where the corresponding eigen value to the $\langle \delta Y_a/\sigma_a\delta Y_b/\sigma_b\rangle$ matrix are below this amount. For such variables the emulated value of $Z_a$ is simply set to zero.
 \end{enumerate}
 
 \subsection{Performing MCMC search with PCA components}
+Once the parameter {\tt SmoothEmultor\_UsePCA} is set to {\tt true} and the parameter\\{\tt SmoothEmulator\_PCAMinVariance} is set to be greater than zero, the MCMC procedure should work in the MCMC programs. Both these parameters are set in the {\tt Info/emulator\_parameters.txt} file. For example, if {\tt SmoothEmulator\_PCAMinVariance} is set to 0.01, then the emulator will not bother emulating any PCA observable where, in the training set, $\langle\delta Z_a\delta Z_a\rangle$ is less than 0.01. Given that the PCA variables are scaled by their uncertainties, this then ignores PCA observables that vary less than one percent of their uncertanty.
+
+The User should be warned again that all this functionality is not yet fully tested.
 
 
 \end{document} 

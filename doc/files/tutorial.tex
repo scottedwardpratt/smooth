@@ -11,7 +11,7 @@ This section describes the steps of how the User would
 \item Copy the required files from the template directory to the User's space, and compile the main programs.
 \item Set up the information files describing the priors and observable names.
 \item Run {\it Simplex Sampler} to generate the model-parameter values at which the full model will be trained.
-\item Run a ``real'' full model to generate the observables for each of the full-model runs.
+\item Run a full model to generate the observables for each of the full-model runs.
 \item Tune {\it Smooth Emulator} and write the coefficients to file.
 \item Run a program that prompts the User for the coordinates of a point in parameter space, then returns the emulator prediction with its uncertainty.
 \end{enumerate}
@@ -28,14 +28,14 @@ Then, the user can establish a personalized project directory by duplicating the
 }
 Several executables should now appear in {\tt \$\{MY\_LOCAL\}/bin/}, {\tt simplex, smoothy\_tune, mcmc} and others. The User might find in convenient to add {\tt \$\{MY\_LOCAL\}/bin} to their path. The reason these are compiled in the User's space, separate from the main libraries, is that the User may well wish to create their own main programs, and this arrangement allows the User to compile their own versions, while leaving the original programs from the templates directory unchanged. 
 
-For the purpose of the tutorial, there are also some ``real'' models included in the distribution. For the User's project the ``real'' model, which is very fast numerically, will be replaced by their own numerically intensive ``really real'' model. To compile the real model used in the tutorial the User should change into the {\tt \$\{MY\_LOCAL\}/main\_programs/} directory and enter:
+For the purpose of the tutorial, there are also some fake full models included in the distribution. For the User's project the fake full model, which is very fast numerically, will be replaced by their own numerically intensive real full model. To compile the fake full model used in the tutorial the User should change into the {\tt \$\{MY\_LOCAL\}/main\_programs/} directory and enter:
 {\tt
 \begin{verbatim}
-   ${MY_LOCAL}/realmodels% cmake .
-   ${MY_LOCAL}/realmodels% make realrhic
+   ${MY_LOCAL}/fakemodels% cmake .
+   ${MY_LOCAL}/fakemodels% make
 \end{verbatim}
 }
-This particular real model has six model parameters and six observables, all with names in common use by the RHIC community. The output has absolutely no physical motivation, other than providing some arbitrary functions to emulate. The executable should appear in {\tt \$\{MY\_LOCAL\}/bin/}.
+This particular fake full model has six model parameters and six observables, all with names in common use by the RHIC community. The output has absolutely no physical motivation, other than providing some arbitrary functions to emulate. The executable should appear in {\tt \$\{MY\_LOCAL\}/bin/}.
 
 \subsection{Creating Necessary Info Files}
 The User will run the software from the {\tt \$\{MY\_PROJECTS\}/} directory. Before a User can run {\it Simplex Sampler} they must create information files that describe the model-parameter priors and list the observable names. Both files are in the {\tt \$\{MY\_PROJECTS\}} directory. The first file is {\tt \$\{MY\_PROJECTS\}/Info/modelpar\_info.txt}. For the purposes of this tutorial, a file already exists,
@@ -49,7 +49,7 @@ The User will run the software from the {\tt \$\{MY\_PROJECTS\}/} directory. Bef
    initial_epsilon         uniform  15.0  30.0
 \end{verbatim}
 }
-This implies that the model has four parameters. The names, without much inspiration, are {\tt par1}, {\tt par2}, {\tt par3} and {\tt par4}. These names would normally be more descriptive, e.g. {\tt NuclearCompressibility}. The second entry in each line is either {\tt uniform} or {\tt gaussian}. If the parameter is {\tt uniform}, the last two numbers represent the range of the uniform prior, $x_{\rm min}$ and $x_{\rm max}$. If the second entry is {\tt gaussian} the third entry represents the center of the Gaussian distribution and the fourth represents the width. For a real model, the User would replace this model with one appropriate for their own model.
+This implies that the model has four parameters. The names, without much inspiration, are {\tt par1}, {\tt par2}, {\tt par3} and {\tt par4}. These names would normally be more descriptive, e.g. {\tt NuclearCompressibility}. The second entry in each line is either {\tt uniform} or {\tt gaussian}. If the parameter is {\tt uniform}, the last two numbers represent the range of the uniform prior, $x_{\rm min}$ and $x_{\rm max}$. If the second entry is {\tt gaussian} the third entry represents the center of the Gaussian distribution and the fourth represents the width. For a full model, the User would replace this model with one appropriate for their own model.
 
 The second file is {\tt \$\{MY\_PROJECTS\}/Info/observable\_info.txt}. This describes output values from the model. In the template the file is
 {\tt
@@ -96,11 +96,11 @@ If one had set {\tt Simplex\_TrainType}=1, only seven training points would have
 }
 This describes the six model parameters, which will serve as the input for the first full model run.  The next step will be to run the full model for the parameters in each directory. Thus for {\tt Simplex\_Traintype=1}, one would need 7 full-model runs, and for {\tt Simplex\_Traintype=2}, one would need to do 28 full-model runs. The corresponding observables will be written in the files {\tt modelruns/runI/obs.txt}
 
-\subsection{Running the Real Full Model}
-Once the training points have been generated, the user will input a Real full model based on the given structure, tailored to address their specific problem. For the tutorial, a real model is provided. It reads the model-parameter values in each {\tt modelruns/runI/mod\_parameters.txt} file and writes the corresponding observables in {\tt modelruns/runI/obs.txt}. The output should be as follows:
+\subsection{Running the Fake Full Model}
+Once the training points have been generated, the user will run a full model based on the given structure, tailored to address their specific problem. For the tutorial, a fake full model is provided. It reads the model-parameter values in each {\tt modelruns/runI/mod\_parameters.txt} file and writes the corresponding observables in {\tt modelruns/runI/obs.txt}. The output should be as follows:
 {\tt
 \begin{verbatim}
-   ${MY_PROJECTS}/rhic% ${MY_LOCAL}/bin/realrhic
+   ${MY_PROJECTS}/rhic% ${MY_LOCAL}/bin/fakerhic
    NTraining Pts=28
    NPars=6
 \end{verbatim}

@@ -35,7 +35,7 @@ The software requires downloading the BAND framework software repository into so
 The User needs to set an environmental variable, {\tt GITHOME\_BAND\_SMOOTH}, to the full path of the directory where the software is located, e.g. 
 {\tt
 \begin{verbatim}
-    % export GITHOME_BAND_SMOOTH="/Users/CarlosSmith/bandframework/software/SmoothEmulator"
+  % export GITHOME_BAND_SMOOTH="/Users/CarlosSmith/bandframework/software/SmoothEmulator"
 \end{verbatim}
 }
 It is recommended to copy this command into the user's {\tt .bashrc} (or equivalent) file to avoid re-defining it each time one needs to recompile. Throughout the manual the phrase {\tt GITHOME\_BAND\_SMOOTH} will refer to this directory. 
@@ -43,20 +43,20 @@ It is recommended to copy this command into the user's {\tt .bashrc} (or equival
 The User needs to create a project directory from which the User would perform most projects. This is easiest accomplished by copying a template from the {\it Smooth} distribution,
 {\tt
 \begin{verbatim}
-    % cp -r GITHOME_BAND_SMOOTH/templates/myproject MY_PROJECT
+    % cp -r GITHOME_BAND_SMOOTH/templates/myproject ${MY_PROJECT}
 \end{verbatim}
 }
-Hence forth, {\tt MY\_PROJECT} will refer to the directory, including the path, from which the User will perform most of the analysis. The User may wish to have several such directories. These directories should be outside the main distribution, i.e. outside the {\tt bandframework/} path. 
+Hence forth, {\tt \$\{MY\_PROJECT\}} is a name chosen by the User, and will refer to the directory, including the path, from which the User will perform most of the analysis. The User may wish to have several such directories. Any time a new analysis is performed with new parameters, and if the User wishes to save the previous analysis, a new {\tt \$\{MY\_PROJECT\}} directory should be created. These directories should be outside the main distribution, i.e. outside the {\tt bandframework/} path so that the User's work does not interfere with the repository. 
 
 Although the main source code, include files and libraries are all located in the software directory, the main programs and executables are not. The motivation for this decision is to allow the User to easily modify their own versions of the main programs. These tend to be very short programs. For that reason their is a separate directory to store the main programs and their executables. The User can easily set this up by copying a template directory,
 {\tt 
 \begin{verbatim}
-    % cp -r GITHOME_BAND_SMOOTH/templates/mylocal MY_LOCAL
+    % cp -r GITHOME_BAND_SMOOTH/templates/mylocal ${MY_LOCAL}
 \end{verbatim}
 }
-Here {\tt MY\_LOCAL} will hence forth refer to the path of this directory. This directory should be outside the main distribution, i.e. outside the {\tt bandframework/} path. 
+Here {\tt \$\{MY\_LOCAL\}} will hence forth refer to the path of this directory. This directory should be outside the main distribution, i.e. outside the {\tt bandframework/} path. 
 
-For the remainder of this manual, {\tt GITHOME\_BAND\_SMOOTH}, {\tt MY\_LOCAL} and {\tt MY\_PROJECT} will be used to denote the location of these directories.
+For the remainder of this manual, {\tt \$\{GITHOME\_BAND\_SMOOTH\}}, {\tt \$\{MY\_LOCAL\}} and {\tt \$\{MY\_PROJECT\}} will be used to denote the location of these directories.
 
 \subsection{Directory and File Structure}
 
@@ -65,7 +65,7 @@ For the remainder of this manual, {\tt GITHOME\_BAND\_SMOOTH}, {\tt MY\_LOCAL} a
 \caption{{\bf The directory structure}: The User clones two repositories into some location, which will be referred to as {\tt GITHOME\_BAND}. The User can then copy two template directories into the User's choices of locations outside the path of the BAND repositories. The name of those two directories will be referred to as {\tt MY\_LOCAL}, which will contain the main programs and executables, and {\tt MY\_PROJECT} which contains the data files related to a given project. The programs are designed to be run from within the {\tt MY\_PROJECT/} directory.}
 \end{figure}
 
-Once compiled, the libraries in the {\tt commonutils/} directory are used for a variety of tasks. These libaries are not particularly designed for {\it Smooth Emulator} or {\it Simplex Sampler}. The {\tt SmoothEmulator/} directory contains codes that are used to create libraries specific to the sampler and emulator. The executables are stored in {\tt MY\_LOCAL/bin}. The short main program source files are located in {\tt MY\_LOCAL/main\_programs/}. It is not envisioned that the User would edit files in the {\tt SmoothEmulator/software/} directory, but that the User may well wish to create custom versions of the short main programs in {\tt MY\_LOCAL/main\_programs/}. The main programs are compiled using the CMake files in {\tt MY\_LOCAL/build/}. The User may find it convenient to add {\tt MY\_LOCAL/bin/} to their path.
+Once compiled, the libraries in the {\tt commonutils/} directory are used for a variety of tasks. These libaries are not particularly designed for {\it Smooth Emulator} or {\it Simplex Sampler}. The {\tt SmoothEmulator/} directory contains codes that are used to create libraries specific to the sampler and emulator. The executables are stored in {\tt MY\_LOCAL/bin}. The short main program source files are located in {\tt MY\_LOCAL/main\_programs/}. It is not envisioned that the User would edit files in the {\tt SmoothEmulator/software/} directory, but that the User may well wish to create custom versions of the short main programs in {\tt MY\_LOCAL/main\_programs/}. The main programs are compiled using the CMake files in {\tt MY\_LOCAL/main\_programs/}. The User may find it convenient to add {\tt MY\_LOCAL/bin/} to their path.
 
 \subsection{Compiling Libraries }
 
@@ -77,7 +77,7 @@ First, change into software directories, then create the makefiles with cmake, t
     GITHOME_BAND_SMOOTH/software% make
 \end{verbatim}
 }
-There seems to be a common problem that {\tt cmake} misreports the path the {\tt Eigen} installation. If the User should get an error stating that the Eigen header files cannot be found, the User can set one of the following environmental variables,
+There seems to be a common problem that {\tt cmake} misreports the path of the {\tt Eigen} installation. If the User should get an error stating that the Eigen header files cannot be found, the User can set one of the following environmental variables,
 {\tt 
 \begin{verbatim}
     % export EIGEN3_INCLUDE_DIR=/usr/local/include/eigen3
@@ -87,18 +87,18 @@ The final arguments may need to be changed depending on the User's location of t
 
 At this point all the libraries are built, but this does not include the main programs. The main programs are short, and are located in a separate location, as they are meant to serve as examples which the User might copy and edit at will.
 
-Finally, compile the main programs. Below, this illustrates how to build the programs used for generating training points with Simplex and for tuning the emulator with Smoothy:
+Finally, compile the main programs. Below, this illustrates how to compile the programs used for generating training points with Simplex and for tuning the emulator with Smoothy:
 {\tt
 \begin{verbatim}
-    % cd MY_LOCAL/build
-    MY_LOCAL/build% cmake .
-    MY_LOCAL/build% make simplex
-    MY_LOCAL/build% make smoothy_tune
+    % cd MY_LOCAL/main_programs
+    MY_LOCAL/main_programs% cmake .
+    MY_LOCAL/main_programs% make simplex
+    MY_LOCAL/main_programs% make smoothy_tune
     .
     .
 \end{verbatim}
 }
-Other source codes for main programs can be found in {\tt MY\_LOCAL/main\_programs/}. If you build your own main programs (probably using these as examples), you can edit the {\tt CMakeList.txt} file in {\tt GITHOME\_BAND\_SMOOTH/local/build}, using the existing entries as an example. The executables should appear in {\tt MY\_LOCAL/bin/}. 
+Other source codes for main programs can be found in {\tt MY\_LOCAL/main\_programs/}. If you build your own main programs (probably using these as examples), you can edit the {\tt CMakeList.txt} file in {\tt GITHOME\_BAND\_SMOOTH/local/main\_programs}, using the existing entries as an example. The executables should appear in {\tt MY\_LOCAL/bin/}. 
 
 \subsection{The Project Directory}
 

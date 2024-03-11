@@ -25,7 +25,7 @@ where $\sigma_A$ is varied to maximize the overall probability given the constra
 By setting parameters, as described below, {\it Smooth Emulator} can tuned one of three different ways
 \begin{itemize}\itemsep=0pt
 \item[a)] Find the optimum set of coefficients. If evaluated a the training points, the emulator will exactly produce the full model. when it predicts the observable at a new $\vec{\theta}$ it provides an uncertainty.
-\item[b)] If a Monte Carlo tuning method is chosen, the emulator finds a predetermined number of sets of coefficients, where each set of coefficients provides a function that exactly reproduces the real model at the training points. The User sets the number of sets of coefficients, typically of order $N_{\rm sample}\approx 10$, in the parameter file. Away from the training points, the uncertainty of the emulator is represented by the spread of the values amongst the $N_{\rm sample}$ predictions.
+\item[b)] If a Monte Carlo tuning method is chosen, the emulator finds a predetermined number of sets of coefficients, where each set of coefficients provides a function that exactly reproduces the full model at the training points. The User sets the number of sets of coefficients, typically of order $N_{\rm sample}\approx 10$, in the parameter file. Away from the training points, the uncertainty of the emulator is represented by the spread of the values amongst the $N_{\rm sample}$ predictions.
 \item[c)] The third mode also provides $N_{\rm sample}$ predictions, but rather than exactly reproducing the training values the emulator merely comes close to the training points with a distribution $\sim e^{-\Delta y^2/2\sigma_y^2}$, where $\sigma_y$ represents the random error of the full model. This mode should be chosen if the full model has significant random error, and especially if the training points are close to one another.
 \end{itemize}
 Method (a) is by far the quickest, and will probably be used the most often. 
@@ -187,7 +187,7 @@ This is the size of the MCMC stepsize in $\theta$ space. MCMC approaches are mos
 If there are a small number of model parameters, perhaps less than a half dozen, then rather than performing a Markov Chain one can choose the coefficients by a keep-or-reject method. The advantage of this approach is that $N_{\rm sample}$ coefficients are perfectly independent. The disadvantage is that the the percentage of ``keeps'' falls rapidly with an increasing number of parameters. For larger numbers of parameters it is usually more efficient to set this to its default, {\tt false}. 
 
 \item {\bf SmoothEmulator\_MCMC\_UseSigmaY}\\
-If the real model has significant random noise, the emulator should not be constrained to exactly reproduce the observables at the training points. This is tuning type (c) above. 
+If the full model has significant random noise, the emulator should not be constrained to exactly reproduce the observables at the training points. This is tuning type (c) above. 
 
 \item {\bf SmoothEmulator\_MCMC\_CutoffA}\\
 This applies an additional multiplicative weight to the weight for $A$ above:
@@ -304,13 +304,13 @@ Same, but by index.
 \item {\tt CalcAllLogP()}\\
 Prints technical information the User may find helpful in evaluating whether the choice of $\Lambda$ is reasonable. For each observable, it calculates the ratio of the r.m.s. coefficients of rank-two to those of rank-one. One would roughly expect the ratio to be unity if $\Lambda$ is appropriate, but from testing the measure is so noisy that it is not useful on a observable-by-observable basis. It also calculates the probability for the optimum coefficient set. This would be maximized for best choices of $\Lambda$, but again is highly sensitive to fluctuations. Thus this information is not recommended for actual tuning $\Lambda$. 
 \item {\tt TestAtTrainingPts()}\\
-Compares emulator predictions to real model at training points. Observables should match and uncertainties should vanish.
+Compares emulator predictions to full model calculations at training points. Observables should match and uncertainties should vanish.
 \item {\tt TestAtTrainingPts(string obsname)}\\
 Same but for a single observable referenced by observable name.
 \item {\tt TestAtTrainingPts(unsigned int iY)}\\
 Same but for a single observable referenced by index.
-\item {\tt TestVsRealModel()}\\
-This is useful for comparing emulator to model evaluated at points not used for training. For the real model, make a sub-directory within the project directory called {\tt realdata/}. Within that subdirectory, for each observable create a file called {\tt OBSNAME.txt}, where {\tt OBSNAME} is the name for each observable. Each file should have the format
+\item {\tt TestVsFullModel()}\\
+This is useful for comparing emulator to model evaluated at points not used for training. For the full model, make a sub-directory within the project directory called {\tt fullmodeltestdata/}. Within that subdirectory, for each observable create a file called {\tt OBSNAME.txt}, where {\tt OBSNAME} is the name for each observable. Each file should have the format
 {\tt
 \begin{verbatim}
 X_1  X_2  ...  X_N  Y
@@ -319,7 +319,7 @@ X_1  X_2  ...  X_N  Y
 \end{verbatim}}
 \hspace*{36pt}$\vdots$
 
-Each line describes a point in parameter space and the observable calculated by the full model. {\tt master.TestVsRealModel()} will calculate the emulated value at each $\vec{X}$ and compare the full-model value to the emulator value. It will also give the uncertainty. If the uncertainty is well represented, 68 \% of the emulated values should be within the uncertainty.
+Each line describes a point in parameter space and the observable calculated by the full model. {\tt master.TestVsFullModel()} will calculate the emulated value at each $\vec{X}$ and compare the full-model value to the emulator value. It will also give the uncertainty. If the uncertainty is well represented, 68 \% of the emulated values should be within the uncertainty.
 
 \item {\tt WriteCoefficientsAllY()}\\
 Writes the Taylor coefficients for all observables.

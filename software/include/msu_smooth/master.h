@@ -77,7 +77,7 @@ namespace NBandSmooth{
 		void TestAtTrainingPts();
 		void TestAtTrainingPts(string obsname);
 		void TestAtTrainingPts(unsigned int iY);
-		void TestVsRealModel();
+		void TestVsFullModel();
 		void WriteCoefficientsAllY();
 		void WriteCoefficients(string obsname);
 		void WriteCoefficients(unsigned int iY);

@@ -276,7 +276,7 @@ void CSmoothMaster::TestAtTrainingPts(string obsname){
 	}
 }
 
-void CSmoothMaster::TestVsRealModel(){
+void CSmoothMaster::TestVsFullModel(){
 	char pchars[CLog::CHARLENGTH];
 	unsigned int iY,ireal,nreal=100,ipar;
 	unsigned int NObservables=observableinfo->NObservables;
@@ -288,9 +288,9 @@ void CSmoothMaster::TestVsRealModel(){
 	for(iY=0;iY<NObservables;iY++){
 		snprintf(pchars,CLog::CHARLENGTH,"SigmaA[%d]=%g\n",iY,emulator[iY]->SigmaA);
 		CLog::Info(pchars);
-		filename="realdata/"+observableinfo->observable_name[iY]+".txt";
+		filename="fullmodel_testdata/"+observableinfo->observable_name[iY]+".txt";
 		fptr=fopen(filename.c_str(),"r");
-		filename="realdata/emulator_vs_real"+observableinfo->observable_name[iY]+".txt";
+		filename="fullmodel_testdata/fullmodel_"+observableinfo->observable_name[iY]+".txt";
 		fptr_out=fopen(filename.c_str(),"w");
 		
 		for(ireal=0;ireal<nreal;ireal++){

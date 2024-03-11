@@ -46,11 +46,8 @@ The first column is the model-parameter name, and the last three parameters desc
  Depending on the number of parameters, $n$, the program creates a simplex in $n$ dimensions. This simplex's vertices will be used to generate $N_{\rm train}=n+1$ training points. These points will be scaled by different values so the training points aren't in the same radius. This results in the minimum number of required points for linear fits. Thus, if the model is perfectly linear, this option provides perfect emulation. 
  \subsubsection{Type 2}
 
- Depending on the number of parameters, the program first creates a simplex in $n$ dimensions. This simplex's vertices will be used to generate new training points there and along the edges. These points will be scaled to be in different radii from the center. This results in the minimum number of required points for quadratic fits. The net number of training points is then $N_{\rm train}=n+1+n(n+1)/2$. Thus, if the model is perfectly quadratic, this option provides perfect emulation.
+ Depending on the number of parameters, the program first creates a simplex in $n$ dimensions. This simplex's vertices will be used to generate new training points there and along the edges. These points will be scaled to be in different radii from the center. This results in the minimum number of required points for quadratic fits. The net number of training points is then $N_{\rm train}=n+1+n(n+1)/2$.  Thus, if the model is perfectly quadratic, this option provides perfect emulation. Rather arbitrarily, the points generated from the midpoints of the original simplex pairs are all pushed out to a large radius, and those from the original simplex are brought somewhat inward.
  
-\subsubsection{Type 3}
-This training type creates two different simplexes, both centered at the origin. The second simplex is a reflection of the first. The 2-dimensional visualization of this would look like the ``Star of David''.  Finally, one extra training point is added at the origin. The net number of training points is $N_{\rm train}=2n+3$.
-
 \subsection{Running Simplex to Generate Training Points}
 
 To run {\it Simplex Sampler}, first make sure the program is compiled. To compile the programs, change into the {MY\_LOCAL/main\_programs/} directory and enter the following command,
@@ -76,5 +73,11 @@ Simplex will read parameters from the {\tt ./parameters/simplex\_parameters.txt}
 \end{verbatim}
 }
 At this point, it is up to the User to run their full model at each training point and create a file {\tt runI/obs.txt}, which stores values of the observables at those training points as calculated by the full model. 
+
+\subsection{Replacing {\it Simplex Sampler} with Other Choices of Training Points}
+
+If the User desires to use their own procedure for training points, or if the User wishes to augment the {\it Simplex Sampler} points with additional training points, the User can write their own files {\tt runI/mod\_parameters.txt}. The emulator should work fine, though the User should remember that when training the emulator (see Sec. \ref{sec:emulator}) the emulator parameter describing with {\tt runI} directories to apply should be modified.
+
+There is one warning to be issued when choosing training points for tuning {\it Smooth Emulator}. When solving for the Taylor coefficients, the emulator uses the factor of those coefficients (products of $\theta_i$) in the linear algebra routine. However, if those coefficients are not linearly independent, the solution becomes undetermined. For example, if two of the training points were exactly the same, it would fail. 
 
 \end{document}
