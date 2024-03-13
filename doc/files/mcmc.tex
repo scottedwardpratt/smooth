@@ -18,7 +18,7 @@ The first number is the measured value and the second is the experimentally repo
 The log-likelihood, $LL$, for the MCMC generation is assumed to be of a simple form. Summing over the observables $I$,
 \begin{eqnarray*}
 \sigma_{I,{\rm tot}}^{2}&=&\sigma_{I,{\rm exp}}^2+\sigma_{I,{\rm theory}}^2+\sigma_{I,{\rm emulator}}^2,\\
-LL&=&-\sum_{I}\frac{(Y_{I,{\rm exp}}-Y_{I,{\rm emu}})^{2}}{2\sigma_{I,{\rm tot}}^{2}}+\log(\sigma_{I,{\rm tot}}).
+LL&=&-\sum_{I}\frac{(Y_{I,{\rm exp}}-Y_{I,{\rm emu}})^{2}}{2\sigma_{I,{\rm tot}}^{2}}-\ln(\sigma_{I,{\rm tot}}).
 \end{eqnarray*}
 
 The main program that runs the mcmc code is {\tt\$\{MY\_LOCAL\}/main\_programs/mcmc\_main.cc}. To compile the program:
