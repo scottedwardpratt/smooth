@@ -181,12 +181,9 @@ To get an idea of how one might build one's own main program to access the capab
 #include "msu_smooth/master.h"
 #include "msu_smoothutils/log.h"
 using namespace std;
-using namespace  NBandSmooth;
-using namespace NMSUUtils;
 int main(){
-	CparameterMap *parmap=new CparameterMap();
-	parmap->ReadParsFromFile("parameters/emulator_parameters.txt");
-	CSmoothMaster master(parmap);	
+	NMSUUtilsCparameterMap *parmap=new CparameterMap();
+	NBandSmooth::CSmoothMaster master(parmap);	
 	master.ReadTrainingInfo();
 	master.TuneAllY();
 	master.WriteCoefficientsAllY();
@@ -284,7 +281,6 @@ Of course, it is unlikely the User will wish to enter model parameters interacti
 using namespace std;
 int main(){
    NMSUUtils::CparameterMap *parmap=new CparameterMap();
-   parmap->ReadParsFromFile("parameters/emulator_parameters.txt");
    NBandSmooth::CSmoothMaster master(parmap);
    master.ReadCoefficientsAllY();
    NBandSmooth::CModelParameters *modpars=new NBandSmooth::CModelParameters(); // contains info about single point
