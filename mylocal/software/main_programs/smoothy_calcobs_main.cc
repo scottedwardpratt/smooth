@@ -11,6 +11,14 @@ int main(){
 	modpars->priorinfo=master.priorinfo;
 	master.priorinfo->PrintInfo();
 	
+	// Prompt user for model parameter values
+	vector<double> X(modpars->NModelPars);
+	for(unsigned int ipar=0;ipar<modpars->NModelPars;ipar++){
+		cout << "Enter value for " << master.priorinfo->GetName(ipar) << ":\n";
+		cin >> X[ipar];
+	}
+	modpars->SetX(X);
+	
 	//  Calc Observables
 	NBandSmooth::CObservableInfo *obsinfo=master.observableinfo;
 	vector<double> Y(obsinfo->NObservables);

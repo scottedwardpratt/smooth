@@ -52,7 +52,7 @@ void CMCMC::ClearTrace(){ // clears trace but adds back first point with theta=0
 	trace.resize(1);
 	trace[0].resize(NPars);
 	for(unsigned int ipar=0;ipar<NPars;ipar++){
-		trace[0][ipar]=0.2;
+		trace[0][ipar]=0.0;
 	}
 }
 

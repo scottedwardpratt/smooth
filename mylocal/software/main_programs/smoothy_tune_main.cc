@@ -16,10 +16,6 @@ int main(){
 	
 	master.TuneAllY();
 	
-	//master.CalcAllLogP();
-	
-	//master.TestAtTrainingPts();
-	
 	master.WriteCoefficientsAllY();
 
 	return 0;
