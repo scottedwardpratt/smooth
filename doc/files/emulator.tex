@@ -208,9 +208,8 @@ To begin, we consider the source code {\tt \$\{MY\_LOCAL\}main\_programs/smoothy
 {\tt
 \begin{verbatim}
 int main(){
-  // First create CSmoothMaster object based on parameters file
+  // First create CSmoothMaster
   CparameterMap *parmap=new CparameterMap();
-  parmap->ReadParsFromFile("parameters/emulator_parameters.txt");
   CSmoothMaster master(parmap); 
   // Read in Training Info
   master.ReadTrainingInfo(); 
@@ -243,7 +242,6 @@ Similarly, there is a code {\tt \$\{MY\_LOCAL\}/main\_programs/smoothy\_calcobs\
 int main(){
   // Create Smooth Master Object
   NMSUUtils::CparameterMap *parmap=new CparameterMap();
-  parmap->ReadParsFromFile("parameters/emulator_parameters.txt");
   NBandSmooth::CSmoothMaster master(parmap);
   // Read in coefficients
   master.ReadCoefficientsAllY();
