@@ -57,11 +57,6 @@ add_executable(smoothy_calcobs ${MAIN_PROGRAM_DIR}/smoothy_calcobs_main.cc)
 add_dependencies(smoothy_calcobs extern_smooth)
 target_link_libraries(smoothy_calcobs ${GITHOME_BAND_SMOOTH}/software/lib/libsmooth.a ${GITHOME_BAND_SMOOTH}/software/lib/libmsu_smoothutils.a   ${EIGEN3_LIBRARY})
 #################################################
-set(SOURCE_FILES ${MAIN_PROGRAM_DIR}/smoothy_test_main.cc)
-add_executable(smoothy_test ${MAIN_PROGRAM_DIR}/smoothy_test_main.cc)
-add_dependencies(smoothy_test extern_smooth)
-target_link_libraries(smoothy_test ${GITHOME_BAND_SMOOTH}/software/lib/libsmooth.a ${GITHOME_BAND_SMOOTH}/software/lib/libmsu_smoothutils.a   ${EIGEN3_LIBRARY})
-#################################################
 set(SOURCE_FILES ${MAIN_PROGRAM_DIR}/mcmc_main.cc)
 add_executable(mcmc ${MAIN_PROGRAM_DIR}/mcmc_main.cc)
 add_dependencies(mcmc extern_smooth)

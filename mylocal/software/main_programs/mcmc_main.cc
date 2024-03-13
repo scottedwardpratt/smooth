@@ -2,17 +2,11 @@
 #include "msu_smooth/master.h"
 #include "msu_smoothutils/log.h"
 #include "msu_smooth/mcmc.h"
-
 using namespace std;
-using namespace NMSUUtils;
-using namespace NBandSmooth;
-
 int main(){
-	CparameterMap *parmap=new CparameterMap();
-	parmap->ReadParsFromFile(string("parameters/emulator_parameters.txt"));
-	parmap->ReadParsFromFile(string("parameters/mcmc_parameters.txt"));
-	CSmoothMaster master(parmap);	
-	CMCMC mcmc(&master);
+	NMSUUtils::CparameterMap *parmap=new CparameterMap();
+	NBandSmooth::CSmoothMaster master(parmap);	
+	NBandSmooth::CMCMC mcmc(&master);
 	master.ReadCoefficientsAllY();
 	master.ReadTrainingInfo();
 	//master.TestAtTrainingPts();

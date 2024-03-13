@@ -3,20 +3,12 @@
 #include "msu_smoothutils/log.h"
 
 using namespace std;
-using namespace  NBandSmooth;
-using namespace NMSUUtils;
-
 int main(){
-	CparameterMap *parmap=new CparameterMap();
+	NMSUUtils::CparameterMap *parmap=new CparameterMap();
 	parmap->ReadParsFromFile("parameters/emulator_parameters.txt");
-
-	CSmoothMaster master(parmap);
-	
+	NBandSmooth::CSmoothMaster master(parmap);
 	master.ReadTrainingInfo();
-	
 	master.TuneAllY();
-	
 	master.WriteCoefficientsAllY();
-
 	return 0;
 }

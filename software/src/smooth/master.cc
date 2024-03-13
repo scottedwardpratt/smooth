@@ -7,6 +7,7 @@ CSmoothMaster::CSmoothMaster(CparameterMap *parmap_set){
 	unsigned int iZ;
 	CPCA *pca=NULL;
 	parmap=parmap_set;
+	parmap->ReadParsFromFile("parameters/emulator_parameters.txt");
 	int ranseed=parmap->getI("RANDY_SEED",time(NULL));
 	randy=new Crandy(ranseed);
 	
