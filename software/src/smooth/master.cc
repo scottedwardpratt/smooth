@@ -234,13 +234,13 @@ void CSmoothMaster::TestAtTrainingPts(){
 	unsigned int itrain,iY;
 	unsigned int NObservables=observableinfo->NObservables;
 	double Y,SigmaY_emulator;
-	CLog::Info("--- TESTING AT TRAINING POINTS ----\n");
+	CLog::Info("--- Y_train     Y_emulator    Sigma_emulator ----\n");
 	for(itrain=0;itrain<traininginfo->NTrainingPts;itrain++){
 		CLog::Info("------ itrain="+to_string(itrain)+" --------\n");
 		for(iY=0;iY<NObservables;iY++){
 			CalcY(iY,traininginfo->modelpars[itrain],Y,SigmaY_emulator);
 			snprintf(pchars,CLog::CHARLENGTH,
-			"Y[%u]=%10.3e =? %10.3e,    SigmaY_emulator=%12.5e\n",iY,Y,traininginfo->YTrain[iY][itrain],SigmaY_emulator);
+			"Y[%u]=%10.3e =? %10.3e  +/- %12.5e\n",iY,Y,traininginfo->YTrain[iY][itrain],SigmaY_emulator);
 			CLog::Info(pchars);
 		}
 	}
@@ -250,12 +250,12 @@ void CSmoothMaster::TestAtTrainingPts(unsigned int iY){
 	char pchars[CLog::CHARLENGTH];
 	unsigned int itrain;
 	double Y,SigmaY_emulator;
-	CLog::Info("--- TESTING AT TRAINING POINTS ----\n");
+	CLog::Info("--- Y_train     Y_emulator    Sigma_emulator ----\n");
 	for(itrain=0;itrain<traininginfo->NTrainingPts;itrain++){
 		CLog::Info("------ itrain="+to_string(itrain)+" --------\n");
 		CalcY(iY,traininginfo->modelpars[itrain],Y,SigmaY_emulator);
 		snprintf(pchars,CLog::CHARLENGTH,
-		"Y[%u]=%10.3e =? %10.3e,    SigmaY=%12.5e\n",iY,Y,traininginfo->YTrain[iY][itrain],SigmaY_emulator);
+		"Y[%u]=%10.3e =? %10.3e  +/- %12.5e\n",iY,Y,traininginfo->YTrain[iY][itrain],SigmaY_emulator);
 		CLog::Info(pchars);
 	}
 }
@@ -277,16 +277,14 @@ void CSmoothMaster::TestAtTrainingPts(string obsname){
 
 void CSmoothMaster::TestVsFullModel(){
 	char pchars[CLog::CHARLENGTH];
-	unsigned int iY,ipar;
+	unsigned int iY,ipar,nfit=0,ntest=0;
 	unsigned int NObservables=observableinfo->NObservables;
 	double Y,SigmaY_emulator,realY;
 	vector<double> testtheta;
-	CLog::Info("--- TESTING VS REAL MODEL ----\n");
 	FILE *fptr,*fptr_out;
 	string filename;
 	for(iY=0;iY<NObservables;iY++){
-		//snprintf(pchars,CLog::CHARLENGTH,"SigmaA[%d]=%g\n",iY,emulator[iY]->SigmaA);
-		//CLog::Info(pchars);
+		nfit=ntest=0;
 		filename="fullmodel_testdata/"+observableinfo->observable_name[iY]+".txt";
 		fptr=fopen(filename.c_str(),"r");
 		filename="fullmodel_testdata/YvsY_"+observableinfo->observable_name[iY]+".txt";
@@ -299,15 +297,19 @@ void CSmoothMaster::TestVsFullModel(){
 			}
 			fscanf(fptr,"%lf",&realY);
 			if(!feof(fptr)){
+				ntest+=1;
 				CalcY(iY,testtheta,Y,SigmaY_emulator);
 				snprintf(pchars,CLog::CHARLENGTH,
 				"Y[%u]=%10.3e =? %10.3e,    SigmaY_emulator=%12.5e\n",
 				iY,Y,realY,SigmaY_emulator);
 				fprintf(fptr_out,"%12.5e  %12.5e %12.5e\n",realY,Y,SigmaY_emulator);
+				if(fabs(Y-realY)<SigmaY_emulator)
+					nfit+=1;
 			}	
 		}while(!feof(fptr));
 		fclose(fptr);		
 		fclose(fptr_out);
+		CLog::Info(observableinfo->observable_name[iY]+": "+to_string(nfit)+" out of "+to_string(ntest)+" points within 1 sigma\n");
 	}
 }
 

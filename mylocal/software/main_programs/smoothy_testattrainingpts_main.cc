@@ -8,7 +8,6 @@ int main(){
 	parmap->ReadParsFromFile("parameters/emulator_parameters.txt");
 	
 	NBandSmooth::CSmoothMaster master(parmap);
-	master.randy->reset(-time(NULL));
 	
 	master.ReadCoefficientsAllY();
 	
@@ -16,7 +15,5 @@ int main(){
 	
 	master.TestAtTrainingPts();
 	
-	master.TestVsFullModel();
-
 	return 0;
 }

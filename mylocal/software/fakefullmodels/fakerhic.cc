@@ -32,7 +32,7 @@ void CalcY(vector<double> &xmin,vector<double> &xmax,vector<double> &x,vector<do
 	t[0]=0.8*theta[0]+0.6*theta[1];
 	t[1]=0.71*theta[0]-0.5*theta[1]+0.5*theta[4];
 	t[2]=-0.6*theta[2]+0.8*theta[3];
-	t[3]=0.71*theta[4]+0.71*theta[5];
+	t[3]=0.71*theta[3]+0.71*theta[2];
 	t[4]=0.4*theta[0]-0.4*theta[1]+0.4*theta[2]-0.4*theta[3]+0.4*theta[4]-0.4*theta[5];
 	t[5]=-0.8*theta[5]-0.4*theta[5]+0.4*theta[0];
 	
@@ -66,6 +66,7 @@ void CalcY(vector<double> &xmin,vector<double> &xmax,vector<double> &x,vector<do
 
 int main(){
 	string filename;
+	FILE *fptr;
 	char dummy[200];
 	unsigned int itrain,iobs,ipar,NTrain;
 	vector<double> theta,xtrue,Ytrain,Ytrue,xtrain,SigmaY,Y,X;
@@ -87,8 +88,7 @@ int main(){
 		}
 	}while(existence);
 	CLog::Info("NTraining Pts="+to_string(NTrain)+"\n");
-	
-	FILE *fptr;
+	CLog::Info("NPars="+to_string(NPars)+"\n");
 	xtrue.resize(NPars);
 	Ytrue.resize(NObs);
 	Y.resize(NObs);
@@ -96,14 +96,16 @@ int main(){
 	
 	xtrain.resize(NPars);
 	Ytrain.resize(NObs);
-	CLog::Info("NPars="+to_string(NPars)+"\n");
-	SigmaY[0]=150.0;
-	SigmaY[1]=200.0;
-	SigmaY[2]=250.0;
-	SigmaY[3]=1.0;
+	
+	// Observable uncertainties
+	SigmaY[0]=100.0;
+	SigmaY[1]=150.0;
+	SigmaY[2]=200.0;
+	SigmaY[3]=1.5;
 	SigmaY[4]=0.5;
 	SigmaY[5]=0.5;
 
+	// read in modelpar_info and set experimental value to theta=0.2
 	fptr=fopen("Info/modelpar_info.txt","r");
 	fgets(dummy,200,fptr);
 	for(ipar=0;ipar<NPars;ipar++){
@@ -111,18 +113,15 @@ int main(){
 		xtrue[ipar]=0.4*xmin[ipar]+0.6*xmax[ipar];
 	}
 	fclose(fptr);
-	
 	CalcY(xmin,xmax,xtrue,Ytrue,&randy);
-	
 	fptr=fopen("Info/experimental_info.txt","w");
 	for(iobs=0;iobs<NObs;iobs++){
-		SigmaY[iobs]=SigmaY[iobs]/5.0;
 		fprintf(fptr,"%s\t%g\t%g 0.0\n",
-		obsname[iobs].c_str(),Ytrue[iobs],SigmaY[iobs]);
+		obsname[iobs].c_str(),Ytrue[iobs],SigmaY[iobs]/5.0);
 	}
 	fclose(fptr);
 	
-
+	// Write observable info for every training point
 	for(itrain=0;itrain<NTrain;itrain++){
 		filename="modelruns/run"+to_string(itrain)+"/mod_parameters.txt";
 		fptr=fopen(filename.c_str(),"r");
@@ -152,6 +151,9 @@ int main(){
 		randy.reset(itest);
 		for(ipar=0;ipar<NPars;ipar++){
 			theta[ipar]=-1.0+2.0*randy.ran();
+			if(itest==0){
+				theta[ipar]=0.2;
+			}
 			X[ipar]=xmin[ipar]+0.5*(theta[ipar]+1.0)*(xmax[ipar]-xmin[ipar]);
 		}
 		CalcY(xmin,xmax,X,Y,&randy);
