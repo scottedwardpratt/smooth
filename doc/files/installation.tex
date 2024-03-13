@@ -35,7 +35,7 @@ The software requires downloading the BAND framework software repository into so
 The User needs to set an environmental variable, {\tt GITHOME\_BAND\_SMOOTH}, to the full path of the directory where the software is located, e.g. 
 {\tt
 \begin{verbatim}
-  % export GITHOME_BAND_SMOOTH="/Users/CarlosSmith/bandframework/software/SmoothEmulator"
+  % export GITHOME_SMOOTH="/Users/CarlosSmith/bandframework/software/SmoothEmulator"
 \end{verbatim}
 }
 It is recommended to copy this command into the user's {\tt .bashrc} (or equivalent) file to avoid re-defining it each time one needs to recompile. Throughout the manual the phrase {\tt \$\{GITHOME\_BAND\_SMOOTH\}} will refer to this directory. 
@@ -43,7 +43,7 @@ It is recommended to copy this command into the user's {\tt .bashrc} (or equival
 The User needs to create a project directory from which the User would perform most projects. This is easiest accomplished by copying a template from the {\it Smooth} distribution,
 {\tt
 \begin{verbatim}
-    % cp -r ${GITHOME_BAND_SMOOTH}/templates/myproject ${MY_PROJECT}
+    % cp -r ${GITHOME_SMOOTH}/templates/myproject ${MY_PROJECT}
 \end{verbatim}
 }
 Hence forth, {\tt \$\{MY\_PROJECT\}} is a name chosen by the User, and will refer to the directory, including the path, from which the User will perform most of the analysis. The User may wish to have several such directories. Any time a new analysis is performed with new parameters, and if the User wishes to save the previous analysis, a new {\tt \$\{MY\_PROJECT\}} directory should be created. These directories should be outside the main distribution, i.e. outside the {\tt bandframework/} path so that the User's work does not interfere with the repository. 
@@ -51,7 +51,7 @@ Hence forth, {\tt \$\{MY\_PROJECT\}} is a name chosen by the User, and will refe
 Although the main source code, include files and libraries are all located in the software directory, the main programs and executables are not. The motivation for this decision is to allow the User to easily modify their own versions of the main programs. These tend to be very short programs. For that reason their is a separate directory to store the main programs and their executables. The User can easily set this up by copying a template directory,
 {\tt 
 \begin{verbatim}
-    % cp -r ${GITHOME_BAND_SMOOTH}/templates/mylocal ${MY_LOCAL}
+    % cp -r ${GITHOME_SMOOTH}/templates/mylocal ${MY_LOCAL}
 \end{verbatim}
 }
 Here {\tt \$\{MY\_LOCAL\}} will hence forth refer to the path of this directory. This directory should be outside the main distribution, i.e. outside the {\tt bandframework/} path. 
@@ -72,9 +72,9 @@ Once compiled, the libraries in the {\tt commonutils/} directory are used for a 
 First, change into software directories, then create the makefiles with cmake, then compile them.
 {\tt 
 \begin{verbatim}
-    % cd ${GITHOME_BAND_SMOOTH}/software
-    ${GITHOME_BAND_SMOOTH}/software% cmake .
-    ${GITHOME_BAND_SMOOTH}/software% make
+    % cd ${GITHOME_SMOOTH}/software
+    ${GITHOME_SMOOTH}/software% cmake .
+    ${GITHOME_SMOOTH}/software% make
 \end{verbatim}
 }
 There seems to be a common problem that {\tt cmake} misreports the path of the {\tt Eigen} installation. If the User should get an error stating that the Eigen header files cannot be found, the User can set one of the following environmental variables,
