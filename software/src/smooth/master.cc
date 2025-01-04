@@ -277,6 +277,7 @@ void CSmoothMaster::TestAtTrainingPts(string obsname){
 }
 
 void CSmoothMaster::TestVsFullModel(){
+	printf("check check a\n");
 	char pchars[CLog::CHARLENGTH];
 	unsigned int iY,ipar,nfit=0,ntest=0;
 	unsigned int NObservables=observableinfo->NObservables;
@@ -286,9 +287,9 @@ void CSmoothMaster::TestVsFullModel(){
 	string filename;
 	for(iY=0;iY<NObservables;iY++){
 		nfit=ntest=0;
-		filename="fullmodel_testdata/"+observableinfo->observable_name[iY]+".txt";
+		filename="smooth_data/fullmodel_testdata/"+observableinfo->observable_name[iY]+".txt";
 		fptr=fopen(filename.c_str(),"r");
-		filename="fullmodel_testdata/YvsY_"+observableinfo->observable_name[iY]+".txt";
+		filename="smooth_data/fullmodel_testdata/YvsY_"+observableinfo->observable_name[iY]+".txt";
 		fptr_out=fopen(filename.c_str(),"w");
 		
 		testtheta.resize(NPars);
