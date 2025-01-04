@@ -2,20 +2,13 @@
 #include "msu_smooth/master.h"
 #include "msu_smoothutils/log.h"
 #include "msu_smooth/mcmc.h"
-
 using namespace std;
-using namespace NMSUUtils;
-using namespace NBandSmooth;
-
 int main(){
-	CparameterMap *parmap=new CparameterMap();
-	parmap->ReadParsFromFile(string("parameters/emulator_parameters.txt"));
-	parmap->ReadParsFromFile(string("parameters/mcmc_parameters.txt"));
-	CSmoothMaster master(parmap);	
-	CMCMC mcmc(&master);
-	master.ReadCoefficientsAllY();
-	master.ReadTrainingInfo();
-	//master.TestAtTrainingPts();
+	NBandSmooth::CSmoothMaster master;
+	master.TuneAllY();
+	//master.ReadTrainingInfo();
+	NMSUUtils::CparameterMap *parmap=master.parmap;
+	NBandSmooth::CMCMC mcmc(&master);
 	
 	unsigned int Nburn=parmap->getI("MCMC_NBURN",1000);  // Steps for burn in
 	unsigned int Ntrace=parmap->getI("MCMC_NTRACE",1000); // Record this many points
@@ -27,6 +20,7 @@ int main(){
 	mcmc.PruneTrace(); // Throws away all but last point
 	mcmc.PerformTrace(Ntrace,Nskip);
 	mcmc.WriteTrace();
+	mcmc.WriteXTrace();
 	mcmc.EvaluateTrace();
 
 	return 0;

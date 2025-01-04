@@ -4,10 +4,10 @@ using namespace std;
 using namespace NBandSmooth;
 using namespace NMSUUtils;
 
+bool CLLCalc::IGNORE_EMULATOR_ERROR=false;
 CPriorInfo *CLLCalc::priorinfo=NULL;
 
 CLLCalc::CLLCalc(){
-	bestLL=-1.0E100;
 }
 
 CLLCalc::CLLCalc(CSmoothMaster *master_set){
@@ -24,7 +24,6 @@ CLLCalc::CLLCalc(CSmoothMaster *master_set){
 	for(unsigned int iy=0;iy<NObs;iy++){
 		dYdTheta[iy].resize(NPars);
 	}	
-	bestLL=-1000000;
 	priorinfo=master_set->priorinfo;
 }
 
@@ -47,7 +46,6 @@ CLLCalcSmooth::CLLCalcSmooth(CSmoothMaster *master_set){
 	for(unsigned int iy=0;iy<NObs;iy++){
 		dYdTheta[iy].resize(NPars);
 	}
-	bestLL=-1000000;
 	priorinfo=master_set->priorinfo;
 }
 
@@ -74,9 +72,16 @@ void CLLCalcSmooth::CalcLL(vector<double> &theta,double &LL){
 		}
 	}
 	if(insidebounds){
-		master->CalcAllY(theta,Y,SigmaY_emulator);
+		if(IGNORE_EMULATOR_ERROR){
+			master->CalcAllYOnly(theta,Y);
+		}
+		else
+			master->CalcAllY(theta,Y,SigmaY_emulator);
 		for(iy=0;iy<NObs;iy++){
-			sigma2=SigmaY_emulator[iy]*SigmaY_emulator[iy]+obsinfo->SigmaExp[iy]*obsinfo->SigmaExp[iy];
+			sigma2=obsinfo->SigmaExp[iy]*obsinfo->SigmaExp[iy];
+			if(!IGNORE_EMULATOR_ERROR){
+				sigma2+=SigmaY_emulator[iy]*SigmaY_emulator[iy];
+			}
 			LL-=0.5*pow(Y[iy]-obsinfo->YExp[iy],2)/sigma2;
 			LL-=0.5*log(sigma2);
 		}
@@ -117,21 +122,6 @@ void CLLCalcSmooth::CalcLLPlusDerivatives(vector<double> &theta,double &LL,vecto
 			dLL_dTheta[ipar]-=theta[ipar]*pow(CModelParameters::GSCALE,2);
 		}
 	}
-	/*
-	if(LL>bestLL){
-		bestLL=LL;
-		CLog::Info("-------------------------------\n");
-		CLog::Info("Theta=");
-		for(ipar=0;ipar<NPars;ipar++){
-			CLog::Info(to_string(modpars->Theta[ipar])+" ");
-		}
-		CLog::Info("\nY = ");
-		for(iy=0;iy<NObs;iy++){
-			CLog::Info(to_string(Y[iy])+"=?"+to_string(obsinfo->YExp[iy])+" ");
-		}
-		CLog::Info("\nbestLL="+to_string(bestLL)+"\n");
-	}
-	*/
 	
 	
 }

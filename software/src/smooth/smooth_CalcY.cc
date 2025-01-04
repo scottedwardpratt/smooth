@@ -11,7 +11,8 @@ double CSmooth::CalcY(vector<double> &A,double LAMBDA,vector<double> &theta){
 	for(ic=0;ic<NCoefficients;ic++){
 		term=A[ic]*sqrt(double(dupfactor[ic])/double(factorial[rank[ic]]));
 		for(ir=0;ir<rank[ic];ir++){
-			term*=theta[IPar[ic][ir]]/LAMBDA;
+			unsigned int ipar=IPar[ic][ir];
+			term*=theta[ipar]/LAMBDA;
 		}
 		answer+=term;
 	}
@@ -151,4 +152,3 @@ void CSmooth::CalcYDYDTheta(vector<double> &A,double LAMBDA,vector<double> &thet
 	Y*=rfactor;
 }
 */
-

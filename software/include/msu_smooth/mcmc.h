@@ -33,11 +33,9 @@ namespace NBandSmooth{
 		CMCMC(CSmoothMaster *master);
 		unsigned int NPars,NObs;
 		vector<vector<double>> trace;
-		string trace_filename;
+		string trace_filename,Xtrace_filename;
 		bool langevin;
 		double stepsize;
-		
-		
 		
 		void ClearTrace(); // erases trace info so one can start over, resets at theta=0.
 		void PruneTrace(); // erases trace, except for last point
@@ -46,11 +44,13 @@ namespace NBandSmooth{
 		void PerformMetropolisTrace(unsigned int Ntrace,unsigned int Nskip);
 		void PerformLangevinTrace(unsigned int Ntrace,unsigned int Nskip);
 		void WriteTrace();
+		void WriteXTrace();
 		void ReadTrace();
 		void EvaluateTrace();
 		
 		//void OptimizeSteps();
 		bool OPTIMIZESTEPS;
+		bool IGNORE_EMULATOR_ERROR;
 		Eigen::VectorXcd stepvec,stepvecprime,dTdTEigenVals;
 		Eigen::MatrixXd dThetadTheta;
 		Eigen::MatrixXcd dTdTEigenVecs;
@@ -63,7 +63,6 @@ namespace NBandSmooth{
 	
 	class CLLCalc{
 	public:
-		double bestLL;
 		CLLCalc();
 		CLLCalc(CSmoothMaster *master);
 		unsigned int NPars,NObs;
@@ -74,6 +73,7 @@ namespace NBandSmooth{
 		virtual void CalcLL(vector<double> &theta,double &LL);
 		virtual void CalcLLPlusDerivatives(vector<double> &theta,double &LL,vector<double> &dLL_dtheta);
 		static CPriorInfo *priorinfo;
+		static bool IGNORE_EMULATOR_ERROR;
 	};
 	
 	class CLLCalcSmooth : public CLLCalc{

@@ -2,12 +2,12 @@
 using namespace std;
 using namespace NBandSmooth;
 
-CSmoothMaster::CSmoothMaster(CparameterMap *parmap_set){
+CSmoothMaster::CSmoothMaster(){
 	unsigned int NObs;
 	unsigned int iZ;
 	CPCA *pca=NULL;
-	parmap=parmap_set;
-	parmap->ReadParsFromFile("parameters/emulator_parameters.txt");
+	parmap=new CparameterMap;
+	parmap->ReadParsFromFile("smooth_data/smooth_parameters/emulator_parameters.txt");
 	int ranseed=parmap->getI("RANDY_SEED",time(NULL));
 	randy=new Crandy(ranseed);
 	
@@ -15,61 +15,40 @@ CSmoothMaster::CSmoothMaster(CparameterMap *parmap_set){
 	if(logfilename!="Screen"){
 		CLog::Init(logfilename);
 	}
-	
+	SmoothEmulator_TrainingFormat=parmap->getS("SmoothEmulator_TrainingFormat","training_format_smooth");
 	string filename;
 	UsePCA=parmap->getB("SmoothEmulator_UsePCA",false);
 	if(UsePCA){
-		filename="PCA_Info/observable_info.txt";
+		filename="smooth_data/PCA_Info/observable_info.txt";
 		CoefficientsDirName="coefficients_pca";
-		pca=new CPCA(parmap);
+		pca=new CPCA();
 	}
 	else{
-		filename="Info/observable_info.txt";
+		filename="smooth_data/Info/observable_info.txt";
 		CoefficientsDirName="coefficients";
 	}
 	observableinfo=new CObservableInfo(filename);
 	NObs=observableinfo->NObservables;
 	
 	ModelRunDirName=parmap->getS("SmoothEmulator_ModelRunDirName","modelruns");
+	TrainingThetasFileName=parmap->getS("SmoothEmulator_TrainingThetasFilename","TrainingThetas.txt");
+	TrainingObsFileName=parmap->getS("SmoothEmulator_TrainingObsFilename","TrainingObs.txt");
 	
-	filename="Info/modelpar_info.txt";
+	filename="smooth_data/Info/modelpar_info.txt";
 	priorinfo=new CPriorInfo(filename);
 	NPars=priorinfo->NModelPars;
 	parmap->set("SmoothEmulator_NPars",NPars);
 	parmap->set("Smooth_NPars",NPars);
-
-	string NTrainingStr = parmap->getS("SmoothEmulator_TrainingPts","1");
-	
-	vector<unsigned int> NTrainingList;
-	stringstream ss(NTrainingStr);
-	string token;
-
-	while(getline(ss, token, ',')) {
-		size_t pos = token.find("-");
-		if (pos != string::npos) {
-
-			unsigned int start = stoi(token.substr(0, pos));
-			unsigned int end = stoi(token.substr(pos+1));
-
-			for (unsigned int i = start; i <= end; i++)
-			NTrainingList.push_back(i);
-		}
-		else {
-			NTrainingList.push_back(stoi(token));
-		}
-	}
-
 	CTrainingInfo::smoothmaster=this;
-	traininginfo = new CTrainingInfo(NTrainingList,observableinfo,priorinfo);
-
-	smooth=new CSmooth(parmap);
+	traininginfo = new CTrainingInfo(observableinfo,priorinfo);
+	unsigned int maxrank=parmap->getI("SmoothEmulator_MAXRANK",4);
+	smooth=new CSmooth(NPars,maxrank);
 
 	CSmoothEmulator::NPars=NPars;
 	CSmoothEmulator::smooth=smooth;
 	CSmoothEmulator::smoothmaster=this;
 	CSmoothEmulator::parmap=parmap;
 	CSmoothEmulator::randy=randy;
-	CSmoothEmulator::NTrainingPts=NTrainingList.size();
 	CSmoothEmulator::smooth=smooth;
 	emulator.resize(NObs);
 	
@@ -96,51 +75,41 @@ CSmoothMaster::CSmoothMaster(CparameterMap *parmap_set){
 			emulator[iy]=new CSmoothEmulator(observableinfo->observable_name[iy],pca_ignore[iy]);
 		}
 	}
-
-
+	ReadTrainingInfo();
+	
 }
 
 void CSmoothMaster::TuneAllY(){
 	for(unsigned int iY=0;iY<observableinfo->NObservables;iY++){
 		if((UsePCA && !pca_ignore[iY]) || !UsePCA){
-			CLog::Info("---- Tuning for "+observableinfo->observable_name[iY]+" ----\n");
+			//CLog::Info("---- Tuning for "+observableinfo->observable_name[iY]+" ----\n");
 			emulator[iY]->Tune();
 		}
 	}
 }
-
+	
 void CSmoothMaster::TuneY(string obsname){
 	unsigned int iY=observableinfo->GetIPosition(obsname);
-	if(iY==3)
-		emulator[3]->A[0]=5.5;
 	emulator[iY]->Tune();
 }
 
 void CSmoothMaster::TuneY(unsigned int iY){
-	if(iY==3)
-		emulator[3]->A[0]=5.5;
 	emulator[iY]->Tune();
 }
 
-void CSmoothMaster::GenerateCoefficientSamples(){
+/*void CSmoothMaster::GenerateCoefficientSamples(){
 	for(unsigned int iY=0;iY<observableinfo->NObservables;iY++){
 		CLog::Info("Tuning Emulator for "+observableinfo->GetName(iY)+"\n");
 		emulator[iY]->GenerateASamples();
 	}
-}
-
-void CSmoothMaster::SetThetaTrain(){
-	for(unsigned int iY=0;iY<observableinfo->NObservables;iY++){
-		emulator[iY]->SetThetaTrain();
-	}
-}
+}*/
 
 void CSmoothMaster::CalcY(unsigned int iY,CModelParameters *modelpars,double &Y,double &SigmaY_emulator){
-	emulator[iY]->CalcY(modelpars,Y,SigmaY_emulator);
+	emulator[iY]->CalcYAndUncertainty(modelpars->Theta,Y,SigmaY_emulator);
 }
 
 void CSmoothMaster::CalcY(unsigned int iY,vector<double> &theta,double &Y,double &SigmaY_emulator){
-	emulator[iY]->CalcY(theta,Y,SigmaY_emulator);
+	emulator[iY]->CalcYAndUncertainty(theta,Y,SigmaY_emulator);
 }
 
 void CSmoothMaster::CalcYdYdTheta(string obsname,CModelParameters *modelpars,double &Y,
@@ -161,12 +130,12 @@ double &SigmaY_emulator,vector<double> &dYdTheta){
 
 void CSmoothMaster::CalcY(string obsname,CModelParameters *modelpars,double &Y,double &SigmaY_emulator){
 	unsigned int iY=observableinfo->GetIPosition(obsname);
-	emulator[iY]->CalcY(modelpars,Y,SigmaY_emulator);
+	emulator[iY]->CalcYAndUncertainty(modelpars->Theta,Y,SigmaY_emulator);
 }
 
 void CSmoothMaster::CalcY(string obsname,vector<double> &theta,double &Y,double &SigmaY_emulator){
 	unsigned int iY=observableinfo->GetIPosition(obsname);
-	emulator[iY]->CalcY(theta,Y,SigmaY_emulator);
+	emulator[iY]->CalcYAndUncertainty(theta,Y,SigmaY_emulator);
 }
 
 void CSmoothMaster::CalcAllY(CModelParameters *modelpars,vector<double> &Y,vector<double> &SigmaY_emulator){
@@ -184,6 +153,65 @@ void CSmoothMaster::CalcAllY(vector<double> &theta,vector<double> &Y,vector<doub
 	SigmaY_emulator.resize(NObservables);
 	for(unsigned int iY=0;iY<NObservables;iY++){
 		CalcY(iY,theta,Y[iY],SigmaY_emulator[iY]);
+	}
+}
+
+double CSmoothMaster::GetYOnly(string obsname,CModelParameters *modelpars){
+	unsigned int iY=observableinfo->GetIPosition(obsname);
+	return emulator[iY]->GetYOnly(modelpars);
+}
+
+double CSmoothMaster::GetYOnly(unsigned int iY,CModelParameters *modelpars){
+	return emulator[iY]->GetYOnly(modelpars);
+}
+
+double CSmoothMaster::GetYOnly(string obsname,vector<double> &theta){
+	unsigned int iY=observableinfo->GetIPosition(obsname);
+	return emulator[iY]->GetYOnly(theta);
+}
+
+double CSmoothMaster::GetYOnly(unsigned int iY,vector<double> &theta){
+	return emulator[iY]->GetYOnly(theta);
+}
+
+double CSmoothMaster::GetYOnly(int iY,vector<double> theta){
+	return emulator[iY]->GetYOnly(theta);
+}
+
+double CSmoothMaster::GetYOnlyPython(int DiY,vector<double> theta){
+	unsigned int iY=DiY;
+	if(iY>=0 && iY<observableinfo->NObservables)
+		return emulator[iY]->GetYOnly(theta);
+	else
+		return 0.0;
+}
+
+double CSmoothMaster::GetUncertainty(string obsname,vector<double> &theta){
+	unsigned int iY=observableinfo->GetIPosition(obsname);
+	return emulator[iY]->GetUncertainty(theta);
+}
+
+double CSmoothMaster::GetUncertainty(unsigned int iY,vector<double> &theta){
+	return emulator[iY]->GetUncertainty(theta);
+}
+
+double CSmoothMaster::GetUncertainty(int iY,vector<double> theta){
+	return emulator[iY]->GetUncertainty(theta);
+}
+
+void CSmoothMaster::CalcAllYOnly(CModelParameters *modelpars,vector<double> &Y){
+	unsigned int NObservables=observableinfo->NObservables;
+	Y.resize(NObservables);
+	for(unsigned int iY=0;iY<NObservables;iY++){
+		Y[iY]=emulator[iY]->GetYOnly(modelpars);
+	}
+}
+
+void CSmoothMaster::CalcAllYOnly(vector<double> &theta,vector<double> &Y){
+	unsigned int NObservables=observableinfo->NObservables;
+	Y.resize(NObservables);
+	for(unsigned int iY=0;iY<NObservables;iY++){
+		Y[iY]=emulator[iY]->GetYOnly(theta);
 	}
 }
 
@@ -241,7 +269,7 @@ void CSmoothMaster::TestAtTrainingPts(){
 		for(iY=0;iY<NObservables;iY++){
 			CalcY(iY,traininginfo->modelpars[itrain],Y,SigmaY_emulator);
 			snprintf(pchars,CLog::CHARLENGTH,
-			"Y[%u]=%10.3e =? %10.3e  +/- %12.5e\n",iY,Y,traininginfo->YTrain[iY][itrain],SigmaY_emulator);
+			"Y[%u]=%10.3e =? %10.3e  +/- %12.5e\n",iY,traininginfo->YTrain[iY][itrain],Y,SigmaY_emulator);
 			CLog::Info(pchars);
 		}
 	}
@@ -256,7 +284,7 @@ void CSmoothMaster::TestAtTrainingPts(unsigned int iY){
 		CLog::Info("------ itrain="+to_string(itrain)+" --------\n");
 		CalcY(iY,traininginfo->modelpars[itrain],Y,SigmaY_emulator);
 		snprintf(pchars,CLog::CHARLENGTH,
-		"Y[%u]=%10.3e =? %10.3e  +/- %12.5e\n",iY,Y,traininginfo->YTrain[iY][itrain],SigmaY_emulator);
+		"Y[%u]=%10.3e =? %10.3e  +/- %12.5e\n",iY,traininginfo->YTrain[iY][itrain],Y,SigmaY_emulator);
 		CLog::Info(pchars);
 	}
 }
@@ -271,13 +299,12 @@ void CSmoothMaster::TestAtTrainingPts(string obsname){
 		CLog::Info("------ itrain="+to_string(itrain)+" --------\n");
 		CalcY(iY,traininginfo->modelpars[itrain],Y,SigmaY_emulator);
 		snprintf(pchars,CLog::CHARLENGTH,
-		"Y[%u]=%10.3e =? %10.3e,    SigmaY=%12.5e\n",iY,Y,traininginfo->YTrain[iY][itrain],SigmaY_emulator);
+		"Y[%u]=%10.3e =? %10.3e,    SigmaY=%12.5e\n",iY,traininginfo->YTrain[iY][itrain],Y,SigmaY_emulator);
 		CLog::Info(pchars);
 	}
 }
 
-void CSmoothMaster::TestVsFullModel(){
-	printf("check check a\n");
+void CSmoothMaster::TestVsFullModelAlt(){
 	char pchars[CLog::CHARLENGTH];
 	unsigned int iY,ipar,nfit=0,ntest=0;
 	unsigned int NObservables=observableinfo->NObservables;
@@ -285,9 +312,11 @@ void CSmoothMaster::TestVsFullModel(){
 	vector<double> testtheta;
 	FILE *fptr,*fptr_out;
 	string filename;
+	fitpercentage=0.0;
 	for(iY=0;iY<NObservables;iY++){
 		nfit=ntest=0;
 		filename="smooth_data/fullmodel_testdata/"+observableinfo->observable_name[iY]+".txt";
+		printf("filename=%s\n",filename.c_str());
 		fptr=fopen(filename.c_str(),"r");
 		filename="smooth_data/fullmodel_testdata/YvsY_"+observableinfo->observable_name[iY]+".txt";
 		fptr_out=fopen(filename.c_str(),"w");
@@ -312,6 +341,146 @@ void CSmoothMaster::TestVsFullModel(){
 		fclose(fptr);		
 		fclose(fptr_out);
 		CLog::Info(observableinfo->observable_name[iY]+": "+to_string(nfit)+" out of "+to_string(ntest)+" points within 1 sigma\n");
+		fitpercentage+=100.0*double(nfit)/double(ntest);
+	}
+	fitpercentage=fitpercentage/double(NObservables);
+}
+
+void CSmoothMaster::TestVsFullModel(){
+	string TestListStr = parmap->getS("SmoothEmulator_TestPts","1");
+	
+	vector<unsigned int> TestList;
+	stringstream ss(TestListStr);
+	string token;
+
+	while(getline(ss, token, ',')) {
+		size_t pos = token.find("-");
+		if (pos != string::npos) {
+
+			unsigned int start = stoi(token.substr(0, pos));
+			unsigned int end = stoi(token.substr(pos+1));
+
+			for (unsigned int i = start; i <= end; i++)
+			TestList.push_back(i);
+		}
+		else {
+			TestList.push_back(stoi(token));
+		}
+	}
+	
+	unsigned int ntestpts=TestList.size();
+	char obsnamechars[200],modparnamechars[200];
+	string obsname,modparname;
+	unsigned int iY,iread,itest,ipar,nfit;
+	unsigned int NObservables=observableinfo->NObservables;
+	double Y,SigmaY_emulator,realY,realSigmaY;
+	double Xread,SigmaXRead;
+	CModelParameters testpars;
+	FILE *fptr,*fptr_out;
+	string filename;
+	for(iY=0;iY<NObservables;iY++){
+		filename="smooth_data/fullmodel_testdata/YvsY_"+observableinfo->observable_name[iY]+".txt";
+		fptr_out=fopen(filename.c_str(),"w");
+		nfit=0;
+		
+		//CLog::Info("Writing test_vs_full_model results to "+filename+"\n");
+		
+		for(itest=0;itest<ntestpts;itest++){
+			filename="smooth_data/modelruns/run"+to_string(TestList[itest])+"/mod_parameters.txt";
+			fptr=fopen(filename.c_str(),"r");
+			for(iread=0;iread<NPars;iread++){
+				fscanf(fptr,"%s %lf %lf",modparnamechars,&Xread,&SigmaXRead);
+				modparname=string(modparnamechars);
+				ipar=priorinfo->GetIPosition(modparname);
+				testpars.X[ipar]=Xread;
+			}
+			fclose(fptr);
+			testpars.TranslateX_to_Theta();
+			CalcY(iY,testpars.Theta,Y,SigmaY_emulator);
+			
+			filename="smooth_data/modelruns/run"+to_string(TestList[itest])+"/obs.txt";
+			fptr=fopen(filename.c_str(),"r");
+			iread=-1;
+			do{
+				iread+=1;
+				fscanf(fptr,"%s %lf %lf",obsnamechars,&realY,&realSigmaY);
+				obsname=string(obsnamechars);
+				
+			}while(iread<observableinfo->NObservables && obsname!=observableinfo->observable_name[iY]);
+			fclose(fptr);
+			if(fabs(Y-realY)<SigmaY_emulator)
+				nfit+=1;
+			if(obsname!=observableinfo->observable_name[iY])
+				CLog::Fatal("cannot find obsname amongst observales, obsname="+obsname+"\n");
+			
+			fprintf(fptr_out,"%lf %lf %lf\n",realY,Y,SigmaY_emulator);
+			
+		}
+		fclose(fptr_out);
+		CLog::Info(observableinfo->observable_name[iY]+": "+to_string(nfit)+" out of "+to_string(ntestpts)+" points within 1 sigma\n");
 	}
 }
+
+vector<double> CSmoothMaster::GetThetaFromX(vector<double> X){
+	double sigmax,xbar;
+	unsigned int ipar;
+	vector<double> Theta;
+	Theta.resize(X.size());
+
+	for(ipar=0;ipar<CModelParameters::NModelPars;ipar++){
+		if(priorinfo->type[ipar]=="uniform"){
+			Theta[ipar]=-1+2*((X[ipar]-priorinfo->xmin[ipar])/(priorinfo->xmax[ipar]-priorinfo->xmin[ipar]));
+		}
+		else if(priorinfo->type[ipar]=="gaussian"){
+			xbar=priorinfo->xmin[ipar];
+			sigmax=priorinfo->xmax[ipar];
+			Theta[ipar]=(X[ipar]-xbar)/(sigmax*CModelParameters::GSCALE);
+		}
+		else{
+			CLog::Fatal("Cannot translate X to Theta because type = "+priorinfo->type[ipar]+" is not recognized\n");
+		}
+	}
+	return Theta;
+		
+}
+
+vector<double> CSmoothMaster::GetXFromTheta(vector<double> Theta){
+	double sigmax,xbar;
+	unsigned int ipar;
+	vector<double> X;
+	X.resize(Theta.size());
+
+	for(ipar=0;ipar<CModelParameters::NModelPars;ipar++){
+		if(priorinfo->type[ipar]=="uniform"){
+			X[ipar]=priorinfo->xmin[ipar]+0.5*(1.0+Theta[ipar])*(priorinfo->xmax[ipar]-priorinfo->xmin[ipar]);
+		}
+		else if(priorinfo->type[ipar]=="gaussian"){
+			xbar=priorinfo->xmin[ipar];
+			sigmax=priorinfo->xmax[ipar];
+			X[ipar]=xbar+CModelParameters::GSCALE*sigmax*Theta[ipar];
+		}
+		else{
+			CLog::Fatal("Cannot translate Theta to X because type = "+priorinfo->type[ipar]+" is not recognized\n");
+		}
+	}
+	return X;
+	
+}
+
+vector<double> CSmoothMaster::GetYSigmaPython(int DiY,vector<double> theta){
+	unsigned int iY=DiY;
+	double Y,SigmaY_emulator;
+	if(iY>=0 && iY<observableinfo->NObservables)
+		emulator[iY]->CalcYAndUncertainty(theta,Y,SigmaY_emulator);
+	else{
+		Y=SigmaY_emulator=0.0;
+	}
+	vector<double> YSigma;
+	YSigma.resize(2);
+	YSigma[0]=Y;
+	YSigma[1]=SigmaY_emulator;
+	return YSigma;		
+}
+
+
 

@@ -1,8 +1,7 @@
 cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
 set(CMAKE_VERBOSE_MAKEFILE on)
 project(smooth_mainprograms CXX)
-#set(GITHOME_BAND_SMOOTH $ENV{GITHOME_BAND_SMOOTH})
-set(GITHOME_BAND_SMOOTH "$ENV{PWD}/../..")
+set(GITHOME_BAND_SMOOTH $ENV{GITHOME_BAND_SMOOTH})
 set (MAIN_PROGRAM_DIR "main_programs")
 set (FAKEFULLMODEL_DIR "fakefullmodels")
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY "$ENV{PWD}/../bin")
@@ -10,7 +9,7 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY "$ENV{PWD}/../bin")
 add_custom_target(extern_smooth COMMAND make WORKING_DIRECTORY ${GITHOME_BAND_SMOOTH}/software)
 
 message("Will Compile with " ${CMAKE_CXX_COMPILER})
-message("For different compiler enter: cmake -D YOUR_PREFERRED_COMPILER .")
+message("For different compiler enter: cmake -D CMAKE_CXX_COMPILER=YOUR_PREFERRED_COMPILER .")
 set(CMAKE_CXX_FLAGS "-W -Wall -march=native -std=c++17 -O2")
 set(CMAKE_MODULE_PATH "${MAIN_PROGRAM_DIR}/cmake")
 find_package(Eigen3 REQUIRED)
@@ -32,10 +31,20 @@ add_executable(smoothy_tune ${MAIN_PROGRAM_DIR}/smoothy_tune_main.cc)
 add_dependencies(smoothy_tune extern_smooth)
 target_link_libraries(smoothy_tune ${GITHOME_BAND_SMOOTH}/software/lib/libsmooth.a  ${GITHOME_BAND_SMOOTH}/software/lib/libmsu_smoothutils.a   ${EIGEN3_LIBRARY})
 #################################################
-set(SOURCE_FILES ${MAIN_PROGRAM_DIR}/smoothy_train_test_main.cc)
-add_executable(smoothy_train_test ${MAIN_PROGRAM_DIR}/smoothy_train_test_main.cc)
-add_dependencies(smoothy_train_test extern_smooth)
-target_link_libraries(smoothy_train_test ${GITHOME_BAND_SMOOTH}/software/lib/libsmooth.a  ${GITHOME_BAND_SMOOTH}/software/lib/libmsu_smoothutils.a   ${EIGEN3_LIBRARY})
+set(SOURCE_FILES ${MAIN_PROGRAM_DIR}/smoothy_testvsfullmodel_main.cc)
+add_executable(smoothy_testvsfullmodel ${MAIN_PROGRAM_DIR}/smoothy_testvsfullmodel_main.cc)
+add_dependencies(smoothy_testvsfullmodel extern_smooth)
+target_link_libraries(smoothy_testvsfullmodel ${GITHOME_BAND_SMOOTH}/software/lib/libsmooth.a  ${GITHOME_BAND_SMOOTH}/software/lib/libmsu_smoothutils.a   ${EIGEN3_LIBRARY})
+#################################################
+set(SOURCE_FILES ${MAIN_PROGRAM_DIR}/smoothy_testvsfullmodelalt_main.cc)
+add_executable(smoothy_testvsfullmodelalt ${MAIN_PROGRAM_DIR}/smoothy_testvsfullmodelalt_main.cc)
+add_dependencies(smoothy_testvsfullmodelalt extern_smooth)
+target_link_libraries(smoothy_testvsfullmodelalt ${GITHOME_BAND_SMOOTH}/software/lib/libsmooth.a  ${GITHOME_BAND_SMOOTH}/software/lib/libmsu_smoothutils.a   ${EIGEN3_LIBRARY})
+#################################################
+set(SOURCE_FILES ${MAIN_PROGRAM_DIR}/smoothy_vslambda_main.cc)
+add_executable(smoothy_vslambda ${MAIN_PROGRAM_DIR}/smoothy_vslambda_main.cc)
+add_dependencies(smoothy_vslambda extern_smooth)
+target_link_libraries(smoothy_vslambda ${GITHOME_BAND_SMOOTH}/software/lib/libsmooth.a  ${GITHOME_BAND_SMOOTH}/software/lib/libmsu_smoothutils.a   ${EIGEN3_LIBRARY})
 #################################################
 set(SOURCE_FILES ${MAIN_PROGRAM_DIR}/pca_calctransformation_main.cc)
 add_executable(pca_calctransformation ${MAIN_PROGRAM_DIR}/pca_calctransformation_main.cc)
@@ -52,10 +61,10 @@ add_executable(smoothy_calcobs ${MAIN_PROGRAM_DIR}/smoothy_calcobs_main.cc)
 add_dependencies(smoothy_calcobs extern_smooth)
 target_link_libraries(smoothy_calcobs ${GITHOME_BAND_SMOOTH}/software/lib/libsmooth.a ${GITHOME_BAND_SMOOTH}/software/lib/libmsu_smoothutils.a   ${EIGEN3_LIBRARY})
 #################################################
-set(SOURCE_FILES ${MAIN_PROGRAM_DIR}/smoothy_test_main.cc)
-add_executable(smoothy_test ${MAIN_PROGRAM_DIR}/smoothy_test_main.cc)
-add_dependencies(smoothy_test extern_smooth)
-target_link_libraries(smoothy_test ${GITHOME_BAND_SMOOTH}/software/lib/libsmooth.a ${GITHOME_BAND_SMOOTH}/software/lib/libmsu_smoothutils.a   ${EIGEN3_LIBRARY})
+set(SOURCE_FILES ${MAIN_PROGRAM_DIR}/smoothy_surmise_calcobs_main.cc)
+add_executable(smoothy_surmise_calcobs ${MAIN_PROGRAM_DIR}/smoothy_surmise_calcobs_main.cc)
+add_dependencies(smoothy_surmise_calcobs extern_smooth)
+target_link_libraries(smoothy_surmise_calcobs ${GITHOME_BAND_SMOOTH}/software/lib/libsmooth.a ${GITHOME_BAND_SMOOTH}/software/lib/libmsu_smoothutils.a   ${EIGEN3_LIBRARY})
 #################################################
 set(SOURCE_FILES ${MAIN_PROGRAM_DIR}/mcmc_main.cc)
 add_executable(mcmc ${MAIN_PROGRAM_DIR}/mcmc_main.cc)
@@ -70,8 +79,8 @@ target_link_libraries(mcmc ${GITHOME_BAND_SMOOTH}/software/lib/libsmooth.a ${GIT
 set(SOURCE_FILES ${FAKEFULLMODEL_DIR}/fakesmooth.cc)
 add_executable(fakesmooth ${FAKEFULLMODEL_DIR}/fakesmooth.cc)
 add_dependencies(fakesmooth extern_smooth)
-target_link_libraries(fakesmooth ${GITHOME_BAND_SMOOTH}/software/lib/libmsu_smoothutils.a
-${GITHOME_BAND_SMOOTH}/software/lib/libsmooth.a ${EIGEN3_LIBRARY})
+target_link_libraries(fakesmooth 
+${GITHOME_BAND_SMOOTH}/software/lib/libsmooth.a ${GITHOME_BAND_SMOOTH}/software/lib/libmsu_smoothutils.a ${EIGEN3_LIBRARY})
 #################################################
 # fakerhic
 #################################################

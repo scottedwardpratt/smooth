@@ -4,9 +4,9 @@ using namespace std;
 using namespace NBandSmooth;
 using namespace NMSUUtils;
 
-CPCA::CPCA(CparameterMap *parmapset){
-	parmap=parmapset;
-	parmap->ReadParsFromFile("parameters/emulator_parameters.txt");
+CPCA::CPCA(){
+	parmap=new CparameterMap;
+	parmap->ReadParsFromFile("smooth_parameters/emulator_parameters.txt");
 	string command="mkdir -p PCA_Info";
 	system(command.c_str());
 	
@@ -63,11 +63,12 @@ void CPCA::CalcTransformationInfo(){
 	}
 	
 	for(irun=0;irun<nruns;irun++){
-		snprintf(filename,300,"%s/run%u/obs.txt",modelruns_dirname.c_str(),NTrainingList[irun]);
+		snprintf(filename,300,"smooth_data/%s/run%u/obs.txt",modelruns_dirname.c_str(),NTrainingList[irun]);
 		fptr=fopen(filename,"r");
 		while(!feof(fptr)){
-			fscanf(fptr,"%s %lf %lf",obs_name, &y, &sigmay);
+			fscanf(fptr,"%s",obs_name);
 			if(!feof(fptr)){
+				fscanf(fptr,"%lf %lf",&y, &sigmay);
 				iy=observable_info->GetIPosition(obs_name);
 				Y[irun][iy]=y;
 				Ybar[iy]+=y/double(nruns);
@@ -145,7 +146,7 @@ void CPCA::CalcTransformationInfo(){
 				Z[irun][iz]+=eigvecs(iz,iy)*Ytilde[irun][iy];
 			}
 		}
-		snprintf(filename,300,"%s/run%u/obs_pca.txt",modelruns_dirname.c_str(),NTrainingList[irun]);
+		snprintf(filename,300,"smooth_data/%s/run%u/obs_pca.txt",modelruns_dirname.c_str(),NTrainingList[irun]);
 		fptr=fopen(filename,"w");
 		for(iz=0;iz<NObs;iz++){
 			pcaname="z"+to_string(iz);
@@ -156,17 +157,10 @@ void CPCA::CalcTransformationInfo(){
 	
 	// Write Info File for PCA
 	
-	double SA0Zsquared,SA0Y,SA0Z;
 	fptr=fopen("PCA_Info/observable_info.txt","w");
 	for(iz=0;iz<NObs;iz++){
-		SA0Zsquared=0.0;
-		for(iy=0;iy<NObs;iy++){
-			SA0Y=observable_info->SigmaA0[iy];
-			SA0Zsquared+=SA0Y*SA0Y*eigvecs(iz,iy)*eigvecs(iz,iy);
-		}
-		SA0Z=sqrt(SA0Zsquared);
 		pcaname="z"+to_string(iz);
-		fprintf(fptr,"%s %g\n",pcaname.c_str(),SA0Z);
+		fprintf(fptr,"%s\n",pcaname.c_str());
 	}
 	fclose(fptr);
 	

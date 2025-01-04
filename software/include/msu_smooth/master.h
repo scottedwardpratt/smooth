@@ -32,7 +32,7 @@ namespace NBandSmooth{
 	class CSmoothMaster{
 	public:
 		unsigned int TrainType;
-		CSmoothMaster(CparameterMap *parmap_set);
+		CSmoothMaster();
 		CparameterMap *parmap;
 		unsigned int NPars;
 		vector<CSmoothEmulator *> emulator;
@@ -41,24 +41,46 @@ namespace NBandSmooth{
 		CPriorInfo *priorinfo;
 		Crandy *randy;
 		CSmooth *smooth;
-		string ModelRunDirName,CoefficientsDirName;
+		string ModelRunDirName,CoefficientsDirName,TrainingThetasFileName,TrainingObsFileName;
 		bool UsePCA;
+		string SmoothEmulator_TrainingFormat;
 		vector<bool> pca_ignore;
-		double pca_minvariance;
+		double pca_minvariance,fitpercentage;
+		
+		int GetNPars(){
+			return NPars;
+		}
+		int GetNObs(){
+			return observableinfo->NObservables;
+		}
 
 		void ReadTrainingInfo();
-		void GenerateCoefficientSamples();
+		//void GenerateCoefficientSamples();
 		void TuneAllY(); // tune all observables
 		void TuneY(string obsname); // tune one observable
 		void TuneY(unsigned int iY); // tune one observable
-		void SetThetaTrain();
 		
 		void CalcAllY(CModelParameters *modelpars,vector<double> &Y,vector<double> &SigmaY_emulator);
 		void CalcAllY(vector<double> &theta,vector<double> &Y,vector<double> &SigmaY_emulator);
+		void CalcAllYOnly(CModelParameters *modelpars,vector<double> &Y);
+		void CalcAllYOnly(vector<double> &theta,vector<double> &Y);
+		
+		
 		void CalcY(unsigned int iY,CModelParameters *modelpars,double &Y,double &SigmaY_emulator);
 		void CalcY(unsigned int iY,vector<double> &theta,double &Y,double &SigmaY_emulator);
 		void CalcY(string obsname,CModelParameters *modelpars,double &Y,double &SigmaY_emulator);
 		void CalcY(string obsname,vector<double> &theta,double &Y,double &SigmaY_emulator);
+		double GetUncertainty(string obsname,vector<double> &theta);
+		double GetUncertainty(unsigned int iY,vector<double> &theta);
+		double GetUncertainty(int iY,vector<double> theta);
+		
+		double GetYOnly(unsigned int iY,CModelParameters *modelpars);
+		double GetYOnly(unsigned int iY,vector<double> &theta);
+		double GetYOnly(string obsname,CModelParameters *modelpars);
+		double GetYOnly(string obsname,vector<double> &theta);
+		double GetYOnly(int iY,vector<double> theta);
+		double GetYOnlyPython(int DiY,vector<double> theta);
+		vector<double> GetYSigmaPython(int DiY,vector<double> theta);
 		
 		void CalcAllYdYdTheta(CModelParameters *modelpars,vector<double> &Y,
 		vector<double> &SigmaY_emulator,vector<vector<double>> &dYdTheta);
@@ -77,6 +99,7 @@ namespace NBandSmooth{
 		void TestAtTrainingPts();
 		void TestAtTrainingPts(string obsname);
 		void TestAtTrainingPts(unsigned int iY);
+		void TestVsFullModelAlt();
 		void TestVsFullModel();
 		void WriteCoefficientsAllY();
 		void WriteCoefficients(string obsname);
@@ -84,9 +107,14 @@ namespace NBandSmooth{
 		void ReadCoefficientsAllY();
 		void ReadCoefficients(string obsname);
 		void ReadCoefficients(unsigned int iY);
+		
+		vector<double> GetXFromTheta(vector<double> Theta);
+		vector<double> GetThetaFromX(vector<double> X);
 
 	};
 
 };
+
+//#include "msu_smooth/smoothbind.h"
 
 #endif

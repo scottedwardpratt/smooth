@@ -2,11 +2,12 @@
 #define __TRAININGINFO_H__
 #include <cstdlib>
 #include <cmath>
-
 #include <cstdio>
 #include <vector>
 #include <array>
 #include <fstream>
+#include <filesystem>
+
 #include "msu_smoothutils/parametermap.h"
 #include "msu_smoothutils/misc.h"
 #include "msu_smoothutils/randy.h"
@@ -28,12 +29,13 @@ namespace NBandSmooth{
 	public:
 		CObservableInfo *observableinfo;
 		CPriorInfo *priorinfo;
-		CTrainingInfo(vector<unsigned int> NTrainingList, CObservableInfo *observableinfo,CPriorInfo *priorinfo);
+		CTrainingInfo(CObservableInfo *observableinfo,CPriorInfo *priorinfo);
 		unsigned int NTrainingPts,NObservables;
 		vector<unsigned int> NTrainingList;
 		vector<vector<double>> YTrain,SigmaYTrain;
 		vector<CModelParameters *> modelpars;
-		void ReadTrainingInfo(string rundirname);
+		void ReadTrainingInfoSmoothFormat();
+		void ReadTrainingInfoSurmiseFormat();
 		static CSmoothMaster *smoothmaster;
 	};
 

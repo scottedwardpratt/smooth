@@ -3,8 +3,12 @@ using namespace std;
 using namespace NBandSmooth;
 
 void CSmoothMaster::ReadTrainingInfo(){
-	traininginfo->ReadTrainingInfo(ModelRunDirName);
-	SetThetaTrain();
+	if(SmoothEmulator_TrainingFormat == "training_format_smooth"){
+		traininginfo->ReadTrainingInfoSmoothFormat();
+	}
+	else if(SmoothEmulator_TrainingFormat == "training_format_surmise"){
+		traininginfo->ReadTrainingInfoSurmiseFormat();
+	}
 }
 
 void CSmoothMaster::WriteCoefficientsAllY(){

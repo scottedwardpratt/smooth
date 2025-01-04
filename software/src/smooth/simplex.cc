@@ -6,18 +6,18 @@ using namespace std;
 using namespace NBandSmooth;
 using namespace NMSUUtils;
 
-CSimplexSampler::CSimplexSampler(CparameterMap *parmap){
+CSimplexSampler::CSimplexSampler(){
+	CparameterMap parmap;
 	randy=new Crandy(123);
-	parmap->ReadParsFromFile("parameters/simplex_parameters.txt");
-	string logfilename=parmap->getS("Simplex_LogFileName","Screen");
+	parmap.ReadParsFromFile("smooth_data/smooth_parameters/simplex_parameters.txt");
+	string logfilename=parmap.getS("Simplex_LogFileName","Screen");
 	if(logfilename!="Screen"){
 		CLog::Init(logfilename);
 	}
-	TrainType=parmap->getI("Simplex_TrainType",1);
-	string prior_info_filename="Info/modelpar_info.txt";
+	TrainType=parmap.getI("Simplex_TrainType",1);
+	string prior_info_filename="smooth_data/Info/modelpar_info.txt";
 	priorinfo=new CPriorInfo(prior_info_filename);
 	CModelParameters::priorinfo=priorinfo;
-	ModelDirName=parmap->getS("Simplex_ModelRunDirName","modelruns");
 	NPars=priorinfo->NModelPars;
 }
 
@@ -26,10 +26,8 @@ void CSimplexSampler::SetThetaSimplex(){
 		SetThetaType1();
 	else if(TrainType==2)
 		SetThetaType2();
-	else if(TrainType==3)
-		SetThetaType3();
 	else{
-		CLog::Fatal("Inside CSimplexSampler::SetThetaSimplex, TrainType must be 1,2 or 3\n");
+		CLog::Fatal("Inside CSimplexSampler::SetThetaSimplex, TrainType must be 1 or 2\n");
 	}
 	CLog::Info("NTrainingPts="+to_string(NTrainingPts)+"\n");
 }
@@ -65,6 +63,7 @@ void CSimplexSampler::SetThetaType1(){
 }
 
 void CSimplexSampler::SetThetaType2(){
+	bool SCALE_TO_CUBE=false;
 	unsigned int ipar,itrain,jtrain,N1,n;
 	double R,z,RTrain1,RTrain2;
 	RTrain2=1.0-1.0/double(NPars+1);
@@ -88,6 +87,7 @@ void CSimplexSampler::SetThetaType2(){
 		ThetaTrain[itrain][itrain-1]=z;
 		R=z;
 	}
+	
 	N1=NTrainingPts;
 	n=N1;
 	NTrainingPts+=N1*(N1-1)/2;
@@ -126,67 +126,27 @@ void CSimplexSampler::SetThetaType2(){
 			}
 		}
 	}
-}
-
-void CSimplexSampler::SetThetaType3(){
-	CLog::Info("WARNING: Using Simplex_TrainType=3 sometimes bombs due to\nencountering non-invertible matrices when solving for coefficients\n");
-	unsigned int ipar,itrain,jtrain;
-	double R,z,RTrain1,RTrain2;
-
-	RTrain2=1.0-1.0/double(NPars+1);
-	RTrain1=RTrain2/sqrt(2.0);
-	ThetaTrain.resize(2*NPars+3);
-
-	for(itrain=0;itrain<NPars+1;itrain++){
-		ThetaTrain[itrain].resize(NPars);
-		for(ipar=0;ipar<NPars;ipar++)
-			ThetaTrain[itrain][ipar]=0.0;
-	}
-	R=1.0;
-	ThetaTrain[0][0]=-R;
-	ThetaTrain[1][0]=R;
-	for(itrain=2;itrain<NPars+1;itrain++){
-		z=R*itrain/sqrt(double(itrain*itrain)-1.0);
-		for(jtrain=0;jtrain<itrain;jtrain++){
-			ThetaTrain[jtrain][itrain-1]=-z/double(itrain);
-		}
-		ThetaTrain[itrain][itrain-1]=z;
-		R=z;
-	}
-	for(itrain=0;itrain<NPars+1;itrain++){
-		R=0.0;
-		for(ipar=0;ipar<NPars;ipar++){
-			R+=ThetaTrain[itrain][ipar]*ThetaTrain[itrain][ipar];
-		}
-		R=sqrt(R);
-		for(ipar=0;ipar<NPars;ipar++){
-			ThetaTrain[itrain][ipar]*=(RTrain1/R);
-		}
-	}
-
-
-	//make reflection points
-	for(itrain=NPars+1;itrain<2*NPars+2;itrain++){
-		ThetaTrain[itrain].resize(NPars);
-		R=0.0;
-		for(ipar=0;ipar<NPars;ipar++){
-			ThetaTrain[itrain][ipar]=-ThetaTrain[itrain-NPars-1][ipar];
-			R+=ThetaTrain[itrain][ipar]*ThetaTrain[itrain][ipar];
-		}
-		R=sqrt(R);
-		for(ipar=0;ipar<NPars;ipar++){
-			ThetaTrain[itrain][ipar]*=(RTrain2/R);
-		}
-		
-	}
+//	for(itrain=0;itrain<=NPars;itrain++){
+	//	for(ipar=0;ipar<NPars;ipar++){
+		//	ThetaTrain[itrain][ipar]*=-1.0;
+		//}
+	//}
 	
-	// Put last point at origin
-	ThetaTrain[2*NPars+2].resize(NPars);
-	for(ipar=0;ipar<NPars;ipar++){
-		ThetaTrain[2*NPars+2][ipar]=0.0;
+	
+	if(SCALE_TO_CUBE){
+		double Rmax=0.95,BiggestTheta;
+		for(itrain=NPars+1;itrain<NTrainingPts;itrain++){
+			BiggestTheta=0.0;
+			for(ipar=0;ipar<NPars;ipar++){
+				if(fabs(ThetaTrain[itrain][ipar])>BiggestTheta)
+					BiggestTheta=fabs(ThetaTrain[itrain][ipar]);
+			}
+			for(ipar=0;ipar<NPars;ipar++){
+				ThetaTrain[itrain][ipar]=ThetaTrain[itrain][ipar]*Rmax/BiggestTheta;
+			}	
+			CLog::Info("Rmax/BiggestTheta="+to_string(Rmax/BiggestTheta)+"\n");			
+		}
 	}
-	NTrainingPts=2*NPars+3;
-
 }
 
 void CSimplexSampler::WriteModelPars(){
@@ -203,9 +163,7 @@ void CSimplexSampler::WriteModelPars(){
 		modelparameters[itrain]->TranslateTheta_to_X();
 	}
 	for(itrain=0;itrain<NTrainingPts;itrain++){
-		//command="rm -r -f "+ModelDirName+"/run"+to_string(itrain)+"/mod_parameters.txt";
-		//system(command.c_str());
-		dirname=ModelDirName+"/run"+to_string(itrain);
+		dirname="smooth_data/modelruns/run"+to_string(itrain);
 		command="mkdir -p "+dirname;
 		system(command.c_str());
 		filename=dirname+"/mod_parameters.txt";

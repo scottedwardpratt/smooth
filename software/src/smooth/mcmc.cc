@@ -17,7 +17,7 @@ CMCMC::CMCMC(CSmoothMaster *master_set){
 	priorinfo=master->priorinfo;
 	CLLCalc::priorinfo=priorinfo;
 	parmap=master->parmap;
-	parmap->ReadParsFromFile("parameters/mcmc_parameters.txt");
+	parmap->ReadParsFromFile("smooth_data/smooth_parameters/mcmc_parameters.txt");
 	string logfilename=parmap->getS("MCMC_LogFileName","Screen");
 	if(logfilename!="Screen"){
 		CLog::Init(logfilename);
@@ -25,9 +25,12 @@ CMCMC::CMCMC(CSmoothMaster *master_set){
 	randy=master->randy;
 	NPars=master->NPars;
 	trace_filename=parmap->getS("MCMC_TRACE_FILENAME","mcmc_trace/trace.txt");
-	string command="mkdir -p mcmc_trace";
+	Xtrace_filename=parmap->getS("MCMC_TRACE_FILENAME","mcmc_trace/Xtrace.txt");
+	string command="mkdir -p smooth_data/mcmc_trace";
 	system(command.c_str());
 	OPTIMIZESTEPS=parmap->getB("MCMC_OPTIMIZESTEPS",false);
+	IGNORE_EMULATOR_ERROR=parmap->getB("MCMC_IGNORE_EMULATOR_ERROR",false);
+	CLLCalc::IGNORE_EMULATOR_ERROR=IGNORE_EMULATOR_ERROR;
 	langevin=parmap->getB("MCMC_LANGEVIN",false);
 	if(langevin)
 		stepsize=parmap->getD("MCMC_LANGEVIN_STEPSIZE",0.01);
@@ -229,11 +232,31 @@ void CMCMC::PerformMetropolisTrace(unsigned int Ntrace,unsigned int Nskip){
 void CMCMC::WriteTrace(){
 	unsigned int itrace,ipar,ntrace=trace.size();
 	FILE *fptr;
-	CLog::Info("writing, ntrace = "+to_string(ntrace)+"\n");
-	fptr=fopen(trace_filename.c_str(),"w");
+	CLog::Info("writing Theta values, ntrace = "+to_string(ntrace)+"\n");
+	fptr=fopen(("smooth_data/"+trace_filename).c_str(),"w");
 	for(itrace=0;itrace<ntrace;itrace++){
 		for(ipar=0;ipar<NPars;ipar++){
 			fprintf(fptr,"%8.5f ",trace[itrace][ipar]);
+		}
+		fprintf(fptr,"\n");
+	}
+	fclose(fptr);
+}
+
+void CMCMC::WriteXTrace(){
+	CModelParameters modpars;
+	
+	unsigned int itrace,ipar,ntrace=trace.size();
+	FILE *fptr;
+	CLog::Info("writing X values, ntrace = "+to_string(ntrace)+"\n");
+	fptr=fopen(("smooth_data/"+Xtrace_filename).c_str(),"w");
+	for(itrace=0;itrace<ntrace;itrace++){
+		for(ipar=0;ipar<NPars;ipar++){
+			modpars.Theta[ipar]=trace[itrace][ipar];
+		}
+		modpars.TranslateTheta_to_X();
+		for(ipar=0;ipar<NPars;ipar++){
+			fprintf(fptr,"%8.5f ",modpars.X[ipar]);
 		}
 		fprintf(fptr,"\n");
 	}
