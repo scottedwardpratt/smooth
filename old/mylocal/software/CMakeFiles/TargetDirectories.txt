@@ -1,0 +1,13 @@
+/Users/scottpratt/git/smooth/mylocal/software/CMakeFiles/extern_smooth.dir
+/Users/scottpratt/git/smooth/mylocal/software/CMakeFiles/simplex.dir
+/Users/scottpratt/git/smooth/mylocal/software/CMakeFiles/smoothy_tune.dir
+/Users/scottpratt/git/smooth/mylocal/software/CMakeFiles/smoothy_testattrainingpts.dir
+/Users/scottpratt/git/smooth/mylocal/software/CMakeFiles/smoothy_testvsfullmodel.dir
+/Users/scottpratt/git/smooth/mylocal/software/CMakeFiles/pca_calctransformation.dir
+/Users/scottpratt/git/smooth/mylocal/software/CMakeFiles/pca_readinfo_calcy.dir
+/Users/scottpratt/git/smooth/mylocal/software/CMakeFiles/smoothy_calcobs.dir
+/Users/scottpratt/git/smooth/mylocal/software/CMakeFiles/mcmc.dir
+/Users/scottpratt/git/smooth/mylocal/software/CMakeFiles/fakesmooth.dir
+/Users/scottpratt/git/smooth/mylocal/software/CMakeFiles/fakerhic.dir
+/Users/scottpratt/git/smooth/mylocal/software/CMakeFiles/edit_cache.dir
+/Users/scottpratt/git/smooth/mylocal/software/CMakeFiles/rebuild_cache.dir

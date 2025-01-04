@@ -1,0 +1,4 @@
+/Users/scottpratt/git/smooth/software/CMakeFiles/smooth.dir
+/Users/scottpratt/git/smooth/software/CMakeFiles/msu_smoothutils.dir
+/Users/scottpratt/git/smooth/software/CMakeFiles/edit_cache.dir
+/Users/scottpratt/git/smooth/software/CMakeFiles/rebuild_cache.dir

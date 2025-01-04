@@ -1,0 +1,2 @@
+/Library/Developer/CommandLineTools/usr/bin/ar qc lib/libmsu_smoothutils.a CMakeFiles/msu_smoothutils.dir/src/smoothutils/Log/log.cc.o CMakeFiles/msu_smoothutils.dir/src/smoothutils/Misc/misc.cc.o CMakeFiles/msu_smoothutils.dir/src/smoothutils/NumMath/randy.cc.o CMakeFiles/msu_smoothutils.dir/src/smoothutils/ParameterMap/parametermap.cc.o
+/Library/Developer/CommandLineTools/usr/bin/ranlib lib/libmsu_smoothutils.a
