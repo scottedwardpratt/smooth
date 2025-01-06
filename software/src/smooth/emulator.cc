@@ -59,11 +59,10 @@ void CSmoothEmulator::CalcBTTrain(){
 				}
 			}
 		}
-		
-		if(!FixSigmaA)
+		if(!FixSigmaA){
+			Binv=B.inverse();
 			CalcSigmaA();  // note this ignores effect of model randomness(SigmaYTrain) in setting SigmaA
-		//printf("---- SigmaA=%g\n",SigmaA);
-	
+		}
 		for(a=0;a<NTrainingPts;a++){
 			B(a,a)+=pow(smoothmaster->traininginfo->SigmaYTrain[iY][a]/SigmaA,2);
 		}

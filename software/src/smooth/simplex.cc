@@ -43,6 +43,7 @@ void CSimplexSampler::SetThetaType1(){
 		for(ipar=0;ipar<NPars;ipar++)
 			ThetaTrain[itrain][ipar]=0.0;
 	}
+	
 	R=1.0;
 	ThetaTrain[0][0]=-R;
 	ThetaTrain[1][0]=R;
@@ -60,6 +61,20 @@ void CSimplexSampler::SetThetaType1(){
 			ThetaTrain[itrain][ipar]*=(RTrain/R);
 		}
 	}
+	
+	/*
+	double Rdiff2;
+	for(itrain=1;itrain<NTrainingPts;itrain++){
+		for(jtrain=0;jtrain<itrain;jtrain++){
+			Rdiff2=0.0;
+			for(ipar=0;ipar<NPars;ipar++){
+				Rdiff2+=pow(ThetaTrain[itrain][ipar]-ThetaTrain[jtrain][ipar],2);
+			}
+			printf("Rdiff2=%g\n",Rdiff2);
+		}
+	}
+	*/
+	
 }
 
 void CSimplexSampler::SetThetaType2(){
@@ -147,6 +162,28 @@ void CSimplexSampler::SetThetaType2(){
 			CLog::Info("Rmax/BiggestTheta="+to_string(Rmax/BiggestTheta)+"\n");			
 		}
 	}
+	/*
+	double Rdiff2;
+	for(itrain=1;itrain<=NPars;itrain++){
+		for(jtrain=0;jtrain<itrain;jtrain++){
+			Rdiff2=0.0;
+			for(ipar=0;ipar<NPars;ipar++){
+				Rdiff2+=pow(ThetaTrain[itrain][ipar]-ThetaTrain[jtrain][ipar],2);
+			}
+			printf("%u,%u: Rdiff2=%g\n",itrain,jtrain,Rdiff2);
+		}
+	}
+	
+	double thetabar;
+	for(ipar=0;ipar<NPars;ipar++){
+		thetabar=0.0;
+		for(itrain=0;itrain<NTrainingPts;itrain++){
+			thetabar+=ThetaTrain[itrain][ipar];
+		}
+		printf("ipar=%u: thetabar=%g\n",ipar,thetabar);
+	}
+	*/
+	
 }
 
 void CSimplexSampler::WriteModelPars(){
@@ -174,5 +211,5 @@ void CSimplexSampler::WriteModelPars(){
 		}
 		fclose(fptr);
 	}
-
+	
 }

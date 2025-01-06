@@ -147,6 +147,7 @@ void CTrainingInfo::ReadTrainingInfoSmoothFormat(){
 	if(nread!=priorinfo->NModelPars){
 		CLog::Fatal("Only read in "+to_string(nread)+" parameter values from "+string(filename)+". But there are "+to_string(priorinfo->NModelPars)+" parameters needed.\n");
 	}
+	
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		modelpars[itrain]->TranslateX_to_Theta();
 	}

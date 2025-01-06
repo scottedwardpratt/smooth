@@ -12,18 +12,19 @@ void CSmoothEmulator::SetSigmaA(double sigmaAset){
 
 void CSmoothEmulator::CalcSigmaA(){
 	int a,b;
-	/*
+	
 	double sigmaA2=0.0;
 	for(a=0;a<int(NTrainingPts);a++){
-	for(b=0;b<int(NTrainingPts);b++){
-	sigmaA2+=smoothmaster->traininginfo->YTrain[iY][a]
-	*Binv(a,b)*smoothmaster->traininginfo->YTrain[iY][b];
-	}
+		for(b=0;b<int(NTrainingPts);b++){
+			sigmaA2+=smoothmaster->traininginfo->YTrain[iY][a]
+				*Binv(a,b)*smoothmaster->traininginfo->YTrain[iY][b];
+		}
 	}
 	sigmaA2=sigmaA2/double(NTrainingPts);
 	SigmaA=sqrt(sigmaA2);
+	
 	//CLog::Info("SigmaA="+to_string(SigmaA)+"\n");
-	*/
+	
 	
 	/*
 	double TrB,SumB;
@@ -45,46 +46,7 @@ void CSmoothEmulator::CalcSigmaA(){
 	SigmaA=(ysquared-ybar*ybar)/(TrB-SumB/double(NTrainingPts*NTrainingPts));
 	SigmaA=sqrt(SigmaA);
 	//CLog::Info("SigmaA="+to_string(SigmaA)+"\n");
-	*/
 	
-	
-	double TrB,SumB;
-	TrB=SumB=0.0;
-	for(a=0;a<int(NTrainingPts);a++){
-		for(b=0;b<int(NTrainingPts);b++){
-			SumB+=B(a,b);
-		}
-		TrB+=B(a,a);
-	}
-	double ysquared,Ya,ybar;
-	ysquared=ybar=0.0;
-	for(a=0;a<int(NTrainingPts);a++){
-		Ya=smoothmaster->traininginfo->YTrain[iY][a];
-		ysquared+=Ya*Ya;
-		ybar+=Ya;
-	}
-	ybar=ybar/double(NTrainingPts);
-	SigmaA=ysquared/TrB;
-	SigmaA=sqrt(SigmaA);
-	//CLog::Info("SigmaA="+to_string(SigmaA)+"\n");
-	
-
-}
-
-void CSmoothEmulator::GetSigmaA123(double &sig1,double &sig2,double &sig3){
-	int a,b;
-	
-	double sigmaA2=0.0;
-	for(a=0;a<int(NTrainingPts);a++){
-	for(b=0;b<int(NTrainingPts);b++){
-	sigmaA2+=smoothmaster->traininginfo->YTrain[iY][a]
-	*Binv(a,b)*smoothmaster->traininginfo->YTrain[iY][b];
-	}
-	}
-	sigmaA2=sigmaA2/double(NTrainingPts);
-	SigmaA=sqrt(sigmaA2);
-	sig1=SigmaA;
-	//CLog::Info("SigmaA="+to_string(SigmaA)+"\n");
 	
 	double TrB,SumB;
 	TrB=SumB=0.0;
@@ -100,6 +62,45 @@ void CSmoothEmulator::GetSigmaA123(double &sig1,double &sig2,double &sig3){
 	Ya=smoothmaster->traininginfo->YTrain[iY][a];
 	ysquared+=Ya*Ya;
 	ybar+=Ya;
+	}
+	ybar=ybar/double(NTrainingPts);
+	SigmaA=ysquared/TrB;
+	SigmaA=sqrt(SigmaA);
+	//CLog::Info("SigmaA="+to_string(SigmaA)+"\n");
+	*/
+	
+
+}
+
+void CSmoothEmulator::GetSigmaA123(double &sig1,double &sig2,double &sig3){
+	int a,b;
+	
+	double sigmaA2=0.0;
+	for(a=0;a<int(NTrainingPts);a++){
+		for(b=0;b<int(NTrainingPts);b++){
+			sigmaA2+=smoothmaster->traininginfo->YTrain[iY][a]
+				*Binv(a,b)*smoothmaster->traininginfo->YTrain[iY][b];
+		}
+	}
+	sigmaA2=sigmaA2/double(NTrainingPts);
+	SigmaA=sqrt(sigmaA2);
+	sig1=SigmaA;
+	//CLog::Info("SigmaA="+to_string(SigmaA)+"\n");
+	
+	double TrB,SumB;
+	TrB=SumB=0.0;
+	for(a=0;a<int(NTrainingPts);a++){
+		for(b=0;b<int(NTrainingPts);b++){
+			SumB+=B(a,b);
+		}
+		TrB+=B(a,a);
+	}
+	double ysquared,Ya,ybar;
+	ysquared=ybar=0.0;
+	for(a=0;a<int(NTrainingPts);a++){
+		Ya=smoothmaster->traininginfo->YTrain[iY][a];
+		ysquared+=Ya*Ya;
+		ybar+=Ya;
 	}
 	ybar=ybar/double(NTrainingPts);
 	SigmaA=(ysquared-ybar*ybar)/(TrB-SumB/double(NTrainingPts*NTrainingPts));
@@ -137,54 +138,88 @@ void CSmoothEmulator::CalcExactLogP(){
 			exparg-=0.5*smoothmaster->traininginfo->YTrain[iY][a]*Binv(a,b)*smoothmaster->traininginfo->YTrain[iY][b];
 		}
 	}
-	//printf("exparg^1/2=%g\n",sqrt(fabs(exparg)));
 	exparg=exparg/(SigmaA*SigmaA);
 	double detB=B.determinant();
-	logP=0.5*log(fabs(detB))-NTrainingPts*log(SigmaA)+exparg;
+	logP=-0.5*log(fabs(detB))-NTrainingPts*log(SigmaA)+exparg;
+	printf("logP=%g, |B|=%g\n",logP,detB);
 	
 }
 
-void CSmoothEmulator::CalcSigmaLambda(){
+void CSmoothEmulator::CalcSigmaLambda(double &LambdaGuess){
 	int a,alpha,beta;
-	double B,ybar=0.0;
+	double B,ybar;
+	vector<vector<double>> dTheta;
+	vector<double> dy;
 	Eigen::MatrixXd TT,TTinv;
-	Eigen::VectorXd M,TYbar,x;
+	Eigen::VectorXd M,Thetabar,TY;
+	dy.resize(NTrainingPts);
+	dTheta.resize(NTrainingPts);
+	Thetabar.resize(NTrainingPts);
+	for(a=0;a<int(NTrainingPts);a++){
+		dTheta[a].resize(NPars);
+		for(alpha=0;alpha<int(NPars);alpha++)
+			dTheta[a][alpha]=0.0;
+	}
+	
+	ybar=0.0;
+	for(a=0;a<int(NTrainingPts);a++){
+		dy[a]=smoothmaster->traininginfo->YTrain[iY][a];
+		ybar+=dy[a];
+	}
+	ybar=ybar/double(NTrainingPts);
+	for(a=0;a<int(NTrainingPts);a++)
+		dy[a]-=ybar;
+	
+	for(alpha=0;alpha<int(NPars);alpha++){
+		Thetabar[alpha]=0.0;
+		for(a=0;a<int(NTrainingPts);a++){
+			dTheta[a][alpha]=smoothmaster->traininginfo->modelpars[a]->Theta[alpha];
+			Thetabar[alpha]+=dTheta[a][alpha];
+		}
+		Thetabar[alpha]=Thetabar[alpha]/double(NTrainingPts);
+		for(a=0;a<int(NTrainingPts);a++){
+			dTheta[a][alpha]-=Thetabar[alpha];
+		}
+	}
+	
 	TT.resize(NPars,NPars);
 	TTinv.resize(NPars,NPars);
 	M.resize(NPars);
-	TYbar.resize(NPars);
+	TY.resize(NPars);
 	TT.setZero();
-	for(a=0;a<int(NTrainingPts);a++){
-		ybar+=smoothmaster->traininginfo->YTrain[iY][a];
-		for(alpha=0;alpha<int(NPars);alpha++){
-			for(beta=0;beta<int(NPars);beta++){
-				TT(alpha,beta)+=smoothmaster->traininginfo->modelpars[a]->Theta[alpha]*smoothmaster->traininginfo->modelpars[a]->Theta[beta];
+	
+	
+	for(alpha=0;alpha<int(NPars);alpha++){
+		TY(alpha)=0.0;
+		for(a=0;a<int(NTrainingPts);a++){
+			TY(alpha)+=dy[a]*dTheta[a][alpha];
+		}
+		for(beta=0;beta<int(NPars);beta++){
+			TT(alpha,beta)=0.0;
+			for(a=0;a<int(NTrainingPts);a++){
+				TT(alpha,beta)+=dTheta[a][alpha]*dTheta[a][beta];
 			}
 		}
 	}
-	TT=TT/((1.0/double(NTrainingPts))-1.0);
-	ybar=ybar/double(NTrainingPts);
+
 	TTinv=TT.inverse();
-	for(alpha=0;alpha<int(NPars);alpha++){
-		TYbar[alpha]=0.0;
-		for(a=0;a<int(NTrainingPts);a++)
-			TYbar[alpha]+=ybar*smoothmaster->traininginfo->modelpars[a]->Theta[alpha];
-	}
-	M=TTinv*TYbar;
+	M=TTinv*TY;
+	
 	B=ybar;
+	for(alpha=0;alpha<int(NPars);alpha++){
+		B-=Thetabar[alpha]*M(alpha);
+	}
+	
+	double residual=0.0,yguess;
 	for(a=0;a<int(NTrainingPts);a++){
+		yguess=B;
 		for(alpha=0;alpha<int(NPars);alpha++){
-			B-=(1.0/double(NTrainingPts))*smoothmaster->traininginfo->modelpars[a]->Theta[alpha]*M(alpha);
+			yguess+=M(alpha)*smoothmaster->traininginfo->modelpars[a]->Theta[alpha];
 		}
+		residual+=pow(yguess-smoothmaster->traininginfo->YTrain[iY][a],2);
 	}
-	printf("b=%g, M=(",B);
-	for(alpha=0;alpha<int(NTrainingPts);alpha++){
-		printf("%g ",M(alpha));
-	}
-	printf(")\n");
-	
-	
-	
-	
+	//printf("residual=%g\n",residual);
+	LambdaGuess=(NTrainingPts-NPars)*pow(residual,-1.0/3.0);
+	//printf("LambdaGuess=%g\n",LambdaGuess);	
 	
 }

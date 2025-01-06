@@ -54,7 +54,7 @@ namespace NBandSmooth{
 		void TuneForSigmaA(double SigmaAset);
 		void CalcSigmaA();
 		void GetSigmaA123(double &sig1,double &sig2,double &sig3);
-		void CalcSigmaLambda();
+		void CalcSigmaLambda(double &LambdaGuess);
 		void CalcExactLogP();
 		void CalcBTTrain();
 		void SetSigmaA(double SigmaAset);
