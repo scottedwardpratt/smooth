@@ -26,6 +26,7 @@ namespace NBandSmooth{
 		unsigned int NPars,NTrainingPts,TrainType;
 		vector<vector<double>> ThetaTrain;
 		string ModelDirName;
+		double RGauss,RGauss1,RGauss2;
 		CPriorInfo *priorinfo;
 		Crandy *randy;
 		vector<CModelParameters *> modelparameters;
@@ -35,9 +36,7 @@ namespace NBandSmooth{
 		void SetThetaType3();
 		void SetThetaType4();
 		void SetThetaSimplex();
-
 		void WriteModelPars();
-
 	};
 
 

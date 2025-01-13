@@ -19,6 +19,9 @@ CSimplexSampler::CSimplexSampler(){
 	priorinfo=new CPriorInfo(prior_info_filename);
 	CModelParameters::priorinfo=priorinfo;
 	NPars=priorinfo->NModelPars;
+	RGauss=parmap.getD("Simplex_RGauss",1.0);
+	RGauss1=parmap.getD("Simplex_RGauss1",0.5);
+	RGauss2=parmap.getD("Simplex_RGauss2",1.0);
 }
 
 void CSimplexSampler::SetThetaSimplex(){
@@ -34,8 +37,7 @@ void CSimplexSampler::SetThetaSimplex(){
 
 void CSimplexSampler::SetThetaType1(){
 	unsigned int ipar,itrain,jtrain;
-	double R,z,RTrain,Rmax=0.9;
-	RTrain=sqrt(double(NPars));
+	double R,z,RTrain;
 	NTrainingPts=NPars+1;
 	ThetaTrain.resize(NTrainingPts);
 	for(itrain=0;itrain<NTrainingPts;itrain++){
@@ -56,27 +58,28 @@ void CSimplexSampler::SetThetaType1(){
 		R=z;
 	}
 
+	RTrain=RGauss*sqrt(double(NPars)/3.0);
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		for(ipar=0;ipar<NPars;ipar++){
 			if(priorinfo->type[ipar]=="gaussian")
 				ThetaTrain[itrain][ipar]*=(RTrain/R);
-			else
-				ThetaTrain[itrain][ipar]*=(Rmax/R);
+			else{
+				ThetaTrain[itrain][ipar]*=(RTrain/R);
+			}
+		}
+	}
+
+	double Rmax=0.95;
+	for(itrain=0;itrain<NTrainingPts;itrain++){
+		for(ipar=0;ipar<NPars;ipar++){
+			if(priorinfo->type[ipar]=="uniform"){
+				if(fabs(ThetaTrain[itrain][ipar])>Rmax){
+					ThetaTrain[itrain][ipar]*=(Rmax/fabs(ThetaTrain[itrain][ipar]));
+				}
+			}
 		}
 	}
 	
-	/*
-	double Rdiff2;
-	for(itrain=1;itrain<NTrainingPts;itrain++){
-		for(jtrain=0;jtrain<itrain;jtrain++){
-			Rdiff2=0.0;
-			for(ipar=0;ipar<NPars;ipar++){
-				Rdiff2+=pow(ThetaTrain[itrain][ipar]-ThetaTrain[jtrain][ipar],2);
-			}
-			printf("Rdiff2=%g\n",Rdiff2);
-		}
-	}
-	*/
 	
 }
 
@@ -136,59 +139,25 @@ void CSimplexSampler::SetThetaType2(){
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		for(ipar=0;ipar<NPars;ipar++){
 			if(itrain<=NPars){
-				ThetaTrain[itrain][ipar]*=(RTrain1/R1);
+				ThetaTrain[itrain][ipar]*=(RGauss1/R1);
 			}
 			else{
-				ThetaTrain[itrain][ipar]*=(RTrain2/R2);
+				ThetaTrain[itrain][ipar]*=(RGauss2/R2);
 			}
 		}
 	}
-//	for(itrain=0;itrain<=NPars;itrain++){
-	//	for(ipar=0;ipar<NPars;ipar++){
-		//	ThetaTrain[itrain][ipar]*=-1.0;
-		//}
-	//}
-	
-	
 
-	double Rmax=0.9,BiggestTheta;
-	for(itrain=NPars+1;itrain<NTrainingPts;itrain++){
-		BiggestTheta=0.0;
+
+	double Rmax=0.95;
+	for(itrain=0;itrain<NTrainingPts;itrain++){
 		for(ipar=0;ipar<NPars;ipar++){
-			if(fabs(ThetaTrain[itrain][ipar])>BiggestTheta){
-				if(priorinfo->type[ipar]=="gaussian")
-					BiggestTheta=fabs(ThetaTrain[itrain][ipar]);
+			if(priorinfo->type[ipar]=="uniform"){
+				if(fabs(ThetaTrain[itrain][ipar])>Rmax){
+					ThetaTrain[itrain][ipar]*=(Rmax/fabs(ThetaTrain[itrain][ipar]));
+				}
 			}
 		}
-		if(BiggestTheta>1.0){
-			for(ipar=0;ipar<NPars;ipar++){
-				ThetaTrain[itrain][ipar]=ThetaTrain[itrain][ipar]*Rmax/BiggestTheta;
-			}	
-			CLog::Info("Rmax/BiggestTheta="+to_string(Rmax/BiggestTheta)+"\n");	
-		}		
 	}
-
-	/*
-	double Rdiff2;
-	for(itrain=1;itrain<=NPars;itrain++){
-		for(jtrain=0;jtrain<itrain;jtrain++){
-			Rdiff2=0.0;
-			for(ipar=0;ipar<NPars;ipar++){
-				Rdiff2+=pow(ThetaTrain[itrain][ipar]-ThetaTrain[jtrain][ipar],2);
-			}
-			printf("%u,%u: Rdiff2=%g\n",itrain,jtrain,Rdiff2);
-		}
-	}
-	
-	double thetabar;
-	for(ipar=0;ipar<NPars;ipar++){
-		thetabar=0.0;
-		for(itrain=0;itrain<NTrainingPts;itrain++){
-			thetabar+=ThetaTrain[itrain][ipar];
-		}
-		printf("ipar=%u: thetabar=%g\n",ipar,thetabar);
-	}
-	*/
 	
 }
 
