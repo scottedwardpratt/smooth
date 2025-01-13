@@ -21,7 +21,7 @@ void CSmoothEmulator::CalcSigmaA(){
 		}
 	}
 	sigmaA2=sigmaA2/double(NTrainingPts);
-	SigmaA=sqrt(sigmaA2);
+	SigmaA=sqrt(fabs(sigmaA2));
 	
 	//CLog::Info("SigmaA="+to_string(SigmaA)+"\n");
 	
@@ -141,11 +141,13 @@ void CSmoothEmulator::CalcExactLogP(){
 	exparg=exparg/(SigmaA*SigmaA);
 	double detB=B.determinant();
 	logP=-0.5*log(fabs(detB))-NTrainingPts*log(SigmaA)+exparg;
-	printf("logP=%g, |B|=%g\n",logP,detB);
+	if(isinf(logP)){
+		printf("XXXXXXXXX detB=%g, Lambda=%g, SigmaA=%g, exparg=%g\n",detB,LAMBDA,SigmaA,exparg);
+	}
 	
 }
 
-void CSmoothEmulator::CalcSigmaLambda(double &LambdaGuess){
+void CSmoothEmulator::CalcSigmaLambdaAlt(double &LambdaGuess){
 	int a,alpha,beta;
 	double B,ybar;
 	vector<vector<double>> dTheta;
@@ -222,4 +224,52 @@ void CSmoothEmulator::CalcSigmaLambda(double &LambdaGuess){
 	LambdaGuess=(NTrainingPts-NPars)*pow(residual,-1.0/3.0);
 	//printf("LambdaGuess=%g\n",LambdaGuess);	
 	
+}
+
+void CSmoothEmulator::CalcSigmaLambda(){
+	double LambdaMin=2.0;
+	double bestLambda,dLambda=1.0,bestlogP,oldbestlogP,oldbestLambda;
+	int nfail=0;
+	LAMBDA=LambdaMin;  // minimum LAMBDA
+	Bcalculated=false;
+	CalcBTTrain();
+	CalcSigmaA();
+	CalcExactLogP();
+	bestLambda=LAMBDA;
+	bestlogP=logP;
+	oldbestlogP=logP;
+	oldbestLambda=LAMBDA;
+	if(logP!=logP || isinf(logP)){
+		nfail=100;
+		CLog::Info("Note: LAMBDA set to "+to_string(LAMBDA)+" -- optimum value might be higher\n but determinant(B) cannot be calculated due to numerical accuracy problems.\n");
+		logP=-200.0;
+	}
+	LAMBDA=bestLambda+dLambda;
+	while(nfail<6){
+		Bcalculated=false;
+		CalcBTTrain();
+		CalcSigmaA();
+		CalcExactLogP();
+		if(logP==logP && !isinf(logP) && logP>bestlogP){
+			oldbestlogP=bestlogP;
+			oldbestLambda=bestLambda;
+			bestlogP=logP;
+			bestLambda=LAMBDA;
+			LAMBDA=bestLambda+dLambda;
+		}
+		else{
+			bestLambda=oldbestLambda;
+			bestlogP=oldbestlogP;
+			nfail+=1;
+			dLambda=dLambda/2.0;
+			LAMBDA=bestLambda+dLambda;
+			if(logP!=logP || isinf(logP)){
+				CLog::Info("Note: LAMBDA set to "+to_string(LAMBDA)+" -- optimum value might be higher\n but determinant(B) cannot be calculated due to numerical accuracy problems.\n");
+			}
+		}
+	}
+	LAMBDA=bestLambda;
+	CalcBTTrain();
+	CalcSigmaA();
+	CalcExactLogP();
 }

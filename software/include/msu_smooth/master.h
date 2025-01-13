@@ -56,6 +56,7 @@ namespace NBandSmooth{
 
 		void ReadTrainingInfo();
 		//void GenerateCoefficientSamples();
+		void CalcAllSigmaLambda();
 		void TuneAllY(); // tune all observables
 		void TuneY(string obsname); // tune one observable
 		void TuneY(unsigned int iY); // tune one observable

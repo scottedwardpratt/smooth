@@ -79,6 +79,12 @@ CSmoothMaster::CSmoothMaster(){
 	
 }
 
+void CSmoothMaster::CalcAllSigmaLambda(){
+	for(unsigned int iY=0;iY<observableinfo->NObservables;iY++){
+		emulator[iY]->CalcSigmaLambda();
+	}	
+}
+
 void CSmoothMaster::TuneAllY(){
 	for(unsigned int iY=0;iY<observableinfo->NObservables;iY++){
 		if((UsePCA && !pca_ignore[iY]) || !UsePCA){
@@ -344,6 +350,7 @@ void CSmoothMaster::TestVsFullModelAlt(){
 		fitpercentage+=100.0*double(nfit)/double(ntest);
 	}
 	fitpercentage=fitpercentage/double(NObservables);
+	CLog::Info("percentage within 1 sigma = "+to_string(fitpercentage)+"\n");
 }
 
 void CSmoothMaster::TestVsFullModel(){
