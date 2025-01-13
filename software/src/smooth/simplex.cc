@@ -34,8 +34,8 @@ void CSimplexSampler::SetThetaSimplex(){
 
 void CSimplexSampler::SetThetaType1(){
 	unsigned int ipar,itrain,jtrain;
-	double R,z,RTrain;
-	RTrain=1.0-1.0/double(NPars+1);
+	double R,z,RTrain,Rmax=0.9;
+	RTrain=sqrt(double(NPars));
 	NTrainingPts=NPars+1;
 	ThetaTrain.resize(NTrainingPts);
 	for(itrain=0;itrain<NTrainingPts;itrain++){
@@ -58,7 +58,10 @@ void CSimplexSampler::SetThetaType1(){
 
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		for(ipar=0;ipar<NPars;ipar++){
-			ThetaTrain[itrain][ipar]*=(RTrain/R);
+			if(priorinfo->type[ipar]=="gaussian")
+				ThetaTrain[itrain][ipar]*=(RTrain/R);
+			else
+				ThetaTrain[itrain][ipar]*=(Rmax/R);
 		}
 	}
 	
@@ -78,11 +81,10 @@ void CSimplexSampler::SetThetaType1(){
 }
 
 void CSimplexSampler::SetThetaType2(){
-	bool SCALE_TO_CUBE=false;
 	unsigned int ipar,itrain,jtrain,N1,n;
 	double R,z,RTrain1,RTrain2;
-	RTrain2=1.0-1.0/double(NPars+1);
-	RTrain1=RTrain2/sqrt(2.0);
+	RTrain2=sqrt(NPars);
+	RTrain1=RTrain2/2.0;
 	
 	NTrainingPts=NPars+1;
 	ThetaTrain.resize(NTrainingPts);
@@ -148,20 +150,24 @@ void CSimplexSampler::SetThetaType2(){
 	//}
 	
 	
-	if(SCALE_TO_CUBE){
-		double Rmax=0.95,BiggestTheta;
-		for(itrain=NPars+1;itrain<NTrainingPts;itrain++){
-			BiggestTheta=0.0;
-			for(ipar=0;ipar<NPars;ipar++){
-				if(fabs(ThetaTrain[itrain][ipar])>BiggestTheta)
+
+	double Rmax=0.9,BiggestTheta;
+	for(itrain=NPars+1;itrain<NTrainingPts;itrain++){
+		BiggestTheta=0.0;
+		for(ipar=0;ipar<NPars;ipar++){
+			if(fabs(ThetaTrain[itrain][ipar])>BiggestTheta){
+				if(priorinfo->type[ipar]=="gaussian")
 					BiggestTheta=fabs(ThetaTrain[itrain][ipar]);
 			}
+		}
+		if(BiggestTheta>1.0){
 			for(ipar=0;ipar<NPars;ipar++){
 				ThetaTrain[itrain][ipar]=ThetaTrain[itrain][ipar]*Rmax/BiggestTheta;
 			}	
-			CLog::Info("Rmax/BiggestTheta="+to_string(Rmax/BiggestTheta)+"\n");			
-		}
+			CLog::Info("Rmax/BiggestTheta="+to_string(Rmax/BiggestTheta)+"\n");	
+		}		
 	}
+
 	/*
 	double Rdiff2;
 	for(itrain=1;itrain<=NPars;itrain++){

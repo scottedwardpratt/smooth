@@ -59,14 +59,14 @@ void CSmoothEmulator::CalcBTTrain(){
 				}
 			}
 		}
-		if(!FixSigmaA){
-			Binv=B.inverse();
-			CalcSigmaA();  // note this ignores effect of model randomness(SigmaYTrain) in setting SigmaA
-		}
-		for(a=0;a<NTrainingPts;a++){
-			B(a,a)+=pow(smoothmaster->traininginfo->SigmaYTrain[iY][a]/SigmaA,2);
-		}
 		Binv=B.inverse();
+		if(!FixSigmaA){
+			CalcSigmaA();  // note this ignores effect of model randomness(SigmaYTrain) in setting SigmaA
+			for(a=0;a<NTrainingPts;a++){
+				B(a,a)+=pow(smoothmaster->traininginfo->SigmaYTrain[iY][a]/SigmaA,2);
+			}
+			Binv=B.inverse();
+		}
 		Bcalculated=true;
 	}
 }
