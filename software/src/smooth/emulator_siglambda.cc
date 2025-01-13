@@ -18,6 +18,9 @@ void CSmoothEmulator::CalcSigmaA(){
 		for(b=0;b<int(NTrainingPts);b++){
 			sigmaA2+=smoothmaster->traininginfo->YTrain[iY][a]
 				*Binv(a,b)*smoothmaster->traininginfo->YTrain[iY][b];
+			//printf("delsigmaA2=%g, Ya=%g, yb=%g\n",smoothmaster->traininginfo->YTrain[iY][a]
+				//*Binv(a,b)*smoothmaster->traininginfo->YTrain[iY][b],smoothmaster->traininginfo->YTrain[iY][a],smoothmaster->traininginfo->YTrain[iY][b]);
+			//printf("(%d,%d) B=%g, Binv=%g\n",a,b,B(a,b),Binv(a,b));
 		}
 	}
 	sigmaA2=sigmaA2/double(NTrainingPts);
@@ -74,6 +77,8 @@ void CSmoothEmulator::CalcSigmaA(){
 
 void CSmoothEmulator::GetSigmaA123(double &sig1,double &sig2,double &sig3){
 	int a,b;
+	Bcalculated=false;
+	CalcBTTrain();
 	
 	double sigmaA2=0.0;
 	for(a=0;a<int(NTrainingPts);a++){
@@ -245,7 +250,7 @@ void CSmoothEmulator::CalcSigmaLambda(){
 		logP=-200.0;
 	}
 	LAMBDA=bestLambda+dLambda;
-	while(nfail<6){
+	while(nfail<7){
 		Bcalculated=false;
 		CalcBTTrain();
 		CalcSigmaA();
