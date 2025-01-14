@@ -19,9 +19,9 @@ CSimplexSampler::CSimplexSampler(){
 	priorinfo=new CPriorInfo(prior_info_filename);
 	CModelParameters::priorinfo=priorinfo;
 	NPars=priorinfo->NModelPars;
-	RGauss=parmap.getD("Simplex_RGauss",1.0);
-	RGauss1=parmap.getD("Simplex_RGauss1",0.5);
-	RGauss2=parmap.getD("Simplex_RGauss2",1.0);
+	RGauss=parmap.getD("Simplex_RGauss",1.5);
+	RGauss1=parmap.getD("Simplex_RGauss1",1.0);
+	RGauss2=parmap.getD("Simplex_RGauss2",2.0);
 }
 
 void CSimplexSampler::SetThetaSimplex(){
@@ -80,14 +80,11 @@ void CSimplexSampler::SetThetaType1(){
 		}
 	}
 	
-	
 }
 
 void CSimplexSampler::SetThetaType2(){
 	unsigned int ipar,itrain,jtrain,N1,n;
 	double R,z,RTrain1,RTrain2;
-	RTrain2=sqrt(NPars);
-	RTrain1=RTrain2/2.0;
 	
 	NTrainingPts=NPars+1;
 	ThetaTrain.resize(NTrainingPts);
@@ -135,18 +132,19 @@ void CSimplexSampler::SetThetaType2(){
 	for(ipar=0;ipar<NPars;ipar++)
 		R2+=ThetaTrain[itrain][ipar]*ThetaTrain[itrain][ipar];
 	R2=sqrt(R2);
+	RTrain1=RGauss1*sqrt(double(NPars)/3.0);
+	RTrain2=RGauss2*sqrt(double(NPars)/3.0);
 	
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		for(ipar=0;ipar<NPars;ipar++){
 			if(itrain<=NPars){
-				ThetaTrain[itrain][ipar]*=(RGauss1/R1);
+				ThetaTrain[itrain][ipar]*=(RTrain1/R1);
 			}
 			else{
-				ThetaTrain[itrain][ipar]*=(RGauss2/R2);
+				ThetaTrain[itrain][ipar]*=(RTrain2/R2);
 			}
 		}
 	}
-
 
 	double Rmax=0.95;
 	for(itrain=0;itrain<NTrainingPts;itrain++){

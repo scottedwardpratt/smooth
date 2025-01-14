@@ -17,6 +17,7 @@ CSmoothEmulator::CSmoothEmulator(string observable_name_set,bool pca_ignore_set)
 	LAMBDA=parmap->getD("SmoothEmulator_LAMBDA",2.0);
 	ConstrainA0=parmap->getB("SmoothEmulator_ConstrainA0",false);
 	iY=smoothmaster->observableinfo->GetIPosition(observable_name);
+	ALPHA=smoothmaster->observableinfo->ALPHA[iY];
 	pca_ignore=pca_ignore_set;
 	ThetaTrain.clear();
 	TTrain.clear();
@@ -31,6 +32,7 @@ void CSmoothEmulator::CalcBTTrain(){
 		TTrain.clear();
 		ThetaTrain.resize(NTrainingPts);
 		TTrain.resize(NTrainingPts);
+
 		for(unsigned int itrain=0;itrain<NTrainingPts;itrain++){
 			ThetaTrain[itrain].resize(NPars);
 			TTrain[itrain].resize(NCoefficients);
@@ -42,16 +44,7 @@ void CSmoothEmulator::CalcBTTrain(){
 		B.resize(NTrainingPts,NTrainingPts);
 		Binv.resize(NTrainingPts,NTrainingPts);
 		for(a=0;a<NTrainingPts;a++){
-			for(b=0;b<NTrainingPts;b++){
-				B(a,b)=0.0;
-				for(ic=0;ic<NCoefficients;ic++){
-					B(a,b)+=TTrain[a][ic]*TTrain[b][ic];
-				}
-			}
-		}
-		B.resize(NTrainingPts,NTrainingPts);
-		Binv.resize(NTrainingPts,NTrainingPts);
-		for(a=0;a<NTrainingPts;a++){
+			B(a,a)+=ALPHA;
 			for(b=0;b<NTrainingPts;b++){
 				B(a,b)=0.0;
 				for(ic=0;ic<NCoefficients;ic++){
@@ -60,13 +53,6 @@ void CSmoothEmulator::CalcBTTrain(){
 			}
 		}
 		Binv=B.inverse();
-		if(!FixSigmaA){
-			CalcSigmaA();  // note this ignores effect of model randomness(SigmaYTrain) in setting SigmaA
-			for(a=0;a<NTrainingPts;a++){
-				B(a,a)+=pow(smoothmaster->traininginfo->SigmaYTrain[iY][a]/SigmaA,2);
-			}
-			Binv=B.inverse();
-		}
 		Bcalculated=true;
 	}
 }

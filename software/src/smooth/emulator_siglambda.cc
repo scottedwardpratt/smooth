@@ -133,7 +133,6 @@ void CSmoothEmulator::GetSigmaA123(double &sig1,double &sig2,double &sig3){
 	sig3=SigmaA;
 	//CLog::Info("SigmaA="+to_string(SigmaA)+"\n");
 	
-
 }
 
 void CSmoothEmulator::CalcExactLogP(){
@@ -232,8 +231,8 @@ void CSmoothEmulator::CalcSigmaLambdaAlt(double &LambdaGuess){
 }
 
 void CSmoothEmulator::CalcSigmaLambda(){
-	double LambdaMin=2.0;
-	double bestLambda,dLambda=1.0,bestlogP,oldbestlogP,oldbestLambda;
+	double LambdaMin=1.0;
+	double bestLambda,dLambda=1.5,bestlogP,oldbestlogP,oldbestLambda;
 	int nfail=0;
 	LAMBDA=LambdaMin;  // minimum LAMBDA
 	Bcalculated=false;

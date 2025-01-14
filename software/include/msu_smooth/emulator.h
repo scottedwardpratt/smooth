@@ -30,7 +30,7 @@ namespace NBandSmooth{
 		unsigned int iY; // labels observable from observable info
 		string observable_name;
 
-		double LAMBDA,SigmaA;
+		double LAMBDA,SigmaA,ALPHA;
 		double A2barRatio,logP;
 
 		unsigned int NMC;   // NMC is for generating independent samplings of A in Tune
