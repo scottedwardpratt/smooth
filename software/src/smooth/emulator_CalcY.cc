@@ -8,7 +8,6 @@ void CSmoothEmulator::GetYAndUncertainty(vector<double> &Theta_s,double &Y,doubl
 	double unc2; // squared uncertainty
 	unsigned int a,b;
 	vector<double> S;
-	printf("ALPHA=%g\n",ALPHA);
 	S.resize(NTrainingPts);
 	for(a=0;a<NTrainingPts;a++){
 		S[a]=GetCorrelation(Theta_s,smoothmaster->traininginfo->modelpars[a]->Theta);

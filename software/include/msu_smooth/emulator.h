@@ -36,7 +36,6 @@ namespace NBandSmooth{
 		vector<vector<double>> ThetaTrain,TTrain;
 		Eigen::MatrixXd B,Binv;
 		Eigen::VectorXd chi;
-		bool Bcalculated;
 
 		CSmoothEmulator(string observable_name_set);
 		double GetCorrelation(vector<double> &theta1,vector<double> &theta2);

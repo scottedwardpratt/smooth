@@ -35,11 +35,12 @@ void CSmoothEmulator::CalcLogP(){
 }
 
 void CSmoothEmulator::CalcSigmaALambda(){
-	double LambdaMin=1.0;
-	double bestLambda,dLambda=1.5,bestlogP,oldbestlogP,oldbestLambda;
+	double LambdaMin=0.5*sqrt(double(NPars));
+	if(LambdaMin<1.0)
+		LambdaMin=1.0;
+	double bestLambda,dLambda=1.0,bestlogP,oldbestlogP,oldbestLambda;
 	int nfail=0;
 	LAMBDA=LambdaMin;  // minimum LAMBDA
-	Bcalculated=false;
 	CalcB();
 	CalcSigmaA();
 	CalcLogP();
@@ -54,7 +55,6 @@ void CSmoothEmulator::CalcSigmaALambda(){
 	}
 	LAMBDA=bestLambda+dLambda;
 	while(nfail<7){
-		Bcalculated=false;
 		CalcB();
 		CalcSigmaA();
 		CalcLogP();
@@ -77,6 +77,7 @@ void CSmoothEmulator::CalcSigmaALambda(){
 		}
 	}
 	LAMBDA=bestLambda;
+	CalcB();
 	CalcSigmaA();
 	CalcLogP();
 }

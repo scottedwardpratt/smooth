@@ -89,14 +89,32 @@ void CSmoothMaster::TuneAllY(){
 		}
 	}
 }
+
+void CSmoothMaster::TuneAllY(double LambdaSet){
+	for(unsigned int iY=0;iY<observableinfo->NObservables;iY++){
+		if((UsePCA && !pca_ignore[iY]) || !UsePCA){
+			//CLog::Info("---- Tuning for "+observableinfo->observable_name[iY]+" ----\n");
+			emulator[iY]->Tune(LambdaSet);
+		}
+	}
+}
 	
 void CSmoothMaster::TuneY(string obsname){
 	unsigned int iY=observableinfo->GetIPosition(obsname);
 	emulator[iY]->Tune();
 }
 
+void CSmoothMaster::TuneY(string obsname,double LambdaSet){
+	unsigned int iY=observableinfo->GetIPosition(obsname);
+	emulator[iY]->Tune(LambdaSet);
+}
+
 void CSmoothMaster::TuneY(unsigned int iY){
 	emulator[iY]->Tune();
+}
+
+void CSmoothMaster::TuneY(unsigned int iY,double LambdaSet){
+	emulator[iY]->Tune(LambdaSet);
 }
 
 /*void CSmoothMaster::GenerateCoefficientSamples(){

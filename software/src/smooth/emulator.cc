@@ -18,36 +18,32 @@ CSmoothEmulator::CSmoothEmulator(string observable_name_set){
 	iY=smoothmaster->observableinfo->GetIPosition(observable_name);
 	ALPHA=smoothmaster->observableinfo->ALPHA[iY];
 	ThetaTrain.clear();
-	Bcalculated=false;
 }
 
 void CSmoothEmulator::CalcB(){
-	if(!Bcalculated){
-		unsigned int a,b;
-		ThetaTrain.clear();
-		ThetaTrain.resize(NTrainingPts);
+	unsigned int a,b;
+	ThetaTrain.clear();
+	ThetaTrain.resize(NTrainingPts);
 
-		for(unsigned int itrain=0;itrain<NTrainingPts;itrain++){
-			ThetaTrain[itrain].resize(NPars);
-			ThetaTrain[itrain]=smoothmaster->traininginfo->modelpars[itrain]->Theta;
+	for(unsigned int itrain=0;itrain<NTrainingPts;itrain++){
+		ThetaTrain[itrain].resize(NPars);
+		ThetaTrain[itrain]=smoothmaster->traininginfo->modelpars[itrain]->Theta;
+	}
+	B.resize(NTrainingPts,NTrainingPts);
+	Binv.resize(NTrainingPts,NTrainingPts);
+	for(a=0;a<NTrainingPts;a++){
+		for(b=0;b<NTrainingPts;b++){
+			B(a,b)=GetCorrelation(ThetaTrain[a],ThetaTrain[b]);
 		}
-		B.resize(NTrainingPts,NTrainingPts);
-		Binv.resize(NTrainingPts,NTrainingPts);
-		for(a=0;a<NTrainingPts;a++){
-			for(b=0;b<NTrainingPts;b++){
-				B(a,b)=GetCorrelation(ThetaTrain[a],ThetaTrain[b]);
-			}
-		}
-		for(a=0;a<NTrainingPts;a++)
-			B(a,a)+=ALPHA;
-		Binv=B.inverse();
-		Bcalculated=true;
-		chi.resize(NTrainingPts);
-		for(a=0;a<NTrainingPts;a++){
-			chi[a]=0.0;
-			for(b=0;b<NTrainingPts;b++){
-				chi[a]+=Binv(a,b)*smoothmaster->traininginfo->YTrain[iY][b];
-			}
+	}
+	for(a=0;a<NTrainingPts;a++)
+		B(a,a)+=ALPHA;
+	Binv=B.inverse();
+	chi.resize(NTrainingPts);
+	for(a=0;a<NTrainingPts;a++){
+		chi[a]=0.0;
+		for(b=0;b<NTrainingPts;b++){
+			chi[a]+=Binv(a,b)*smoothmaster->traininginfo->YTrain[iY][b];
 		}
 	}
 }
