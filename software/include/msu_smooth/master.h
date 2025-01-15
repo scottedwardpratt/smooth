@@ -56,24 +56,21 @@ namespace NBandSmooth{
 
 		void ReadTrainingInfo();
 		//void GenerateCoefficientSamples();
-		void CalcAllSigmaLambda();
+		void CalcAllSigmaALambda();
 		void TuneAllY(); // tune all observables
 		void TuneY(string obsname); // tune one observable
 		void TuneY(unsigned int iY); // tune one observable
 		
-		void CalcAllY(CModelParameters *modelpars,vector<double> &Y,vector<double> &SigmaY_emulator);
-		void CalcAllY(vector<double> &theta,vector<double> &Y,vector<double> &SigmaY_emulator);
-		void CalcAllYOnly(CModelParameters *modelpars,vector<double> &Y);
-		void CalcAllYOnly(vector<double> &theta,vector<double> &Y);
+		void GetAllY(CModelParameters *modelpars,vector<double> &Y,vector<double> &SigmaY_emulator);
+		void GetAllY(vector<double> &theta,vector<double> &Y,vector<double> &SigmaY_emulator);
+		void GetAllYOnly(CModelParameters *modelpars,vector<double> &Y);
+		void GetAllYOnly(vector<double> &theta,vector<double> &Y);
 		
 		
-		void CalcY(unsigned int iY,CModelParameters *modelpars,double &Y,double &SigmaY_emulator);
-		void CalcY(unsigned int iY,vector<double> &theta,double &Y,double &SigmaY_emulator);
-		void CalcY(string obsname,CModelParameters *modelpars,double &Y,double &SigmaY_emulator);
-		void CalcY(string obsname,vector<double> &theta,double &Y,double &SigmaY_emulator);
-		double GetUncertainty(string obsname,vector<double> &theta);
-		double GetUncertainty(unsigned int iY,vector<double> &theta);
-		double GetUncertainty(int iY,vector<double> theta);
+		void GetY(unsigned int iY,CModelParameters *modelpars,double &Y,double &SigmaY_emulator);
+		void GetY(unsigned int iY,vector<double> &theta,double &Y,double &SigmaY_emulator);
+		void GetY(string obsname,CModelParameters *modelpars,double &Y,double &SigmaY_emulator);
+		void GetY(string obsname,vector<double> &theta,double &Y,double &SigmaY_emulator);
 		
 		double GetYOnly(unsigned int iY,CModelParameters *modelpars);
 		double GetYOnly(unsigned int iY,vector<double> &theta);
@@ -82,32 +79,16 @@ namespace NBandSmooth{
 		double GetYOnly(int iY,vector<double> theta);
 		double GetYOnlyPython(int DiY,vector<double> theta);
 		vector<double> GetYSigmaPython(int DiY,vector<double> theta);
+
+		double GetUncertainty(string obsname,vector<double> &Theta);
+		double GetUncertainty(unsigned int iY,vector<double> &theta);
+		double GetUncertainty(int iY,vector<double> theta);
 		
-		void CalcAllYdYdTheta(CModelParameters *modelpars,vector<double> &Y,
-		vector<double> &SigmaY_emulator,vector<vector<double>> &dYdTheta);
-		void CalcAllYdYdTheta(vector<double> &theta,vector<double> &Y,
-		vector<double> &SigmaY_emulator,vector<vector<double>> &dYdTheta);
-		void CalcYdYdTheta(string obsname,CModelParameters *modelpars,double &Y,
-		double &SigmaY_emulator,vector<double> &dYdTheta);
-		void CalcYdYdTheta(string obsname,vector<double> &theta,double &Y,
-		double &SigmaY_emulator,vector<double> &dYdTheta);
-		void CalcYdYdTheta(unsigned int iY,CModelParameters *modelpars,double &Y,
-		double &SigmaY_emulator,vector<double> &dYdTheta);
-		void CalcYdYdTheta(unsigned int iY,vector<double> &theta,double &Y,
-		double &SigmaY_emulator,vector<double> &dYdTheta);
-		
-		void CalcAllLogP();
 		void TestAtTrainingPts();
 		void TestAtTrainingPts(string obsname);
 		void TestAtTrainingPts(unsigned int iY);
 		void TestVsFullModelAlt();
 		void TestVsFullModel();
-		void WriteCoefficientsAllY();
-		void WriteCoefficients(string obsname);
-		void WriteCoefficients(unsigned int iY);
-		void ReadCoefficientsAllY();
-		void ReadCoefficients(string obsname);
-		void ReadCoefficients(unsigned int iY);
 		
 		vector<double> GetXFromTheta(vector<double> Theta);
 		vector<double> GetThetaFromX(vector<double> X);

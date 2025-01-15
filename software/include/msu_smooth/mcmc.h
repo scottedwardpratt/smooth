@@ -56,7 +56,7 @@ namespace NBandSmooth{
 		Eigen::MatrixXcd dTdTEigenVecs;
 
 		void CalcLL(vector<double> &theta,double &LL);
-		void CalcLLPlusDerivatives(vector<double> &theta,double &LL,vector<double> &dLL_dtheta);
+		//void CalcLLPlusDerivatives(vector<double> &theta,double &LL,vector<double> &dLL_dtheta);
 		CLLCalcSmooth *llcalc;
 		static CPriorInfo *priorinfo;
 	};
@@ -71,7 +71,7 @@ namespace NBandSmooth{
 		CObservableInfo *obsinfo;
 		CSmoothMaster *master;
 		virtual void CalcLL(vector<double> &theta,double &LL);
-		virtual void CalcLLPlusDerivatives(vector<double> &theta,double &LL,vector<double> &dLL_dtheta);
+		//virtual void CalcLLPlusDerivatives(vector<double> &theta,double &LL,vector<double> &dLL_dtheta);
 		static CPriorInfo *priorinfo;
 		static bool IGNORE_EMULATOR_ERROR;
 	};
@@ -80,7 +80,7 @@ namespace NBandSmooth{
 	public:
 		CLLCalcSmooth(CSmoothMaster *master);
 		void CalcLL(vector<double> &theta,double &LL);
-		void CalcLLPlusDerivatives(vector<double> &theta,double &LL,vector<double> &dLL_dtheta);
+		//void CalcLLPlusDerivatives(vector<double> &theta,double &LL,vector<double> &dLL_dtheta);
 	};
 
 };

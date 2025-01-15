@@ -61,10 +61,10 @@ void CMCMC::EvaluateTrace(){
 	
 	for(itrace=0;itrace<ntrace;itrace++){
 		if(IGNORE_EMULATOR_ERROR){
-			master->CalcAllYOnly(trace[itrace],Y);
+			master->GetAllYOnly(trace[itrace],Y);
 		}
 		else{
-			master->CalcAllY(trace[itrace],Y,SigmaYEmulator);
+			master->GetAllY(trace[itrace],Y,SigmaYEmulator);
 		}
 		if(UsePCA){
 			for(iobs=0;iobs<NObs;iobs++){

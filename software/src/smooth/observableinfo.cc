@@ -45,11 +45,11 @@ void CObservableInfo::ReadObservableInfo(string filename){
 				observable_name.push_back(string(dummy));
 				name_map.insert(pair<string,int>(observable_name[NObservables],NObservables));
 				NObservables+=1;
+				fscanf(fptr,"%lf",&alpharead);
+				ALPHA.push_back(alpharead);
 				fgets(dummy,200,fptr);
 			}
 			else{
-				fscanf(fptr,"%lf",&alpharead);
-				ALPHA.push_back(alpharead);
 				fgets(dummy,200,fptr);
 			}
 		}
