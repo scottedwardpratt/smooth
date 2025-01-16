@@ -11,10 +11,10 @@ Crandy *CSmoothEmulator::randy=NULL;
 unsigned int CSmoothEmulator::NTrainingPts=0;
 
 CSmoothEmulator::CSmoothEmulator(string observable_name_set){
-	GPOPTION=false;
 	observable_name=observable_name_set;
 	NTrainingPts=smoothmaster->traininginfo->NTrainingPts;
 	LAMBDA=parmap->getD("SmoothEmulator_LAMBDA",2.0);
+	GPOPTION=parmap->getB("SmoothEmulator_GPOPTION",false);
 	iY=smoothmaster->observableinfo->GetIPosition(observable_name);
 	ALPHA=smoothmaster->observableinfo->ALPHA[iY];
 	ThetaTrain.clear();
@@ -37,7 +37,7 @@ void CSmoothEmulator::CalcB(){
 		}
 	}
 	for(a=0;a<NTrainingPts;a++)
-		B(a,a)+=ALPHA;
+		B(a,a)+=ALPHA*ALPHA;
 	Binv=B.inverse();
 	chi.resize(NTrainingPts);
 	for(a=0;a<NTrainingPts;a++){
