@@ -23,6 +23,7 @@ namespace NBandSmooth{
 
 	class CSimplexSampler{
 	public:
+		CparameterMap parmap;
 		unsigned int NPars,NTrainingPts,TrainType;
 		vector<vector<double>> ThetaTrain;
 		string ModelDirName;
@@ -37,6 +38,8 @@ namespace NBandSmooth{
 		void SetThetaType4();
 		void SetThetaSimplex();
 		void WriteModelPars();
+		void GetSigmaBar(double LAMBDA,double ALPHA,double &SigmaBar2,double &detB,double &TrB,double &TrBinv);
+		double GetSigma2(double LAMBDA,double ALPHA,vector<double> &theta);
 	};
 
 

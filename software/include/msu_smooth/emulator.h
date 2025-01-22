@@ -30,7 +30,7 @@ namespace NBandSmooth{
 		unsigned int iY; // labels observable from observable info
 		string observable_name;
 
-		double LAMBDA,SigmaA,ALPHA;
+		double LAMBDA,SigmaA,ALPHA,LambdaVariance;
 		double logP;
 		bool GPOPTION;
 		vector<vector<double>> ThetaTrain,TTrain;
@@ -45,6 +45,7 @@ namespace NBandSmooth{
 		void Tune(double LambdaSet);
 		void CalcSigmaA();
 		void CalcSigmaALambda();
+		void CalcLambdaVariance();
 		void CalcLogP();
 		void CalcB();
 		

@@ -40,14 +40,17 @@ CSmoothMaster::CSmoothMaster(){
 	parmap->set("SmoothEmulator_NPars",NPars);
 	parmap->set("Smooth_NPars",NPars);
 	CTrainingInfo::smoothmaster=this;
+
+	printf("howdy a\n");
 	traininginfo = new CTrainingInfo(observableinfo,priorinfo);
+	printf("howdy b\n");
 
 	CSmoothEmulator::NPars=NPars;
 	CSmoothEmulator::smoothmaster=this;
 	CSmoothEmulator::parmap=parmap;
 	CSmoothEmulator::randy=randy;
 	emulator.resize(NObs);
-	
+
 	pca_ignore.resize(NObs);
 	if(UsePCA){
 		pca->ReadTransformationInfo();
@@ -301,7 +304,6 @@ void CSmoothMaster::TestVsFullModelAlt(){
 	for(iY=0;iY<NObservables;iY++){
 		nfit=ntest=0;
 		filename="smooth_data/fullmodel_testdata/"+observableinfo->observable_name[iY]+".txt";
-		printf("filename=%s\n",filename.c_str());
 		fptr=fopen(filename.c_str(),"r");
 		filename="smooth_data/fullmodel_testdata/YvsY_"+observableinfo->observable_name[iY]+".txt";
 		fptr_out=fopen(filename.c_str(),"w");

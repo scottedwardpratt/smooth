@@ -7,7 +7,6 @@ using namespace NBandSmooth;
 using namespace NMSUUtils;
 
 CSimplexSampler::CSimplexSampler(){
-	CparameterMap parmap;
 	randy=new Crandy(123);
 	parmap.ReadParsFromFile("smooth_data/smooth_parameters/simplex_parameters.txt");
 	string logfilename=parmap.getS("Simplex_LogFileName","Screen");
@@ -32,7 +31,7 @@ void CSimplexSampler::SetThetaSimplex(){
 	else{
 		CLog::Fatal("Inside CSimplexSampler::SetThetaSimplex, TrainType must be 1 or 2\n");
 	}
-	CLog::Info("NTrainingPts="+to_string(NTrainingPts)+"\n");
+	//CLog::Info("NTrainingPts="+to_string(NTrainingPts)+"\n");
 }
 
 void CSimplexSampler::SetThetaType1(){
@@ -184,5 +183,96 @@ void CSimplexSampler::WriteModelPars(){
 		}
 		fclose(fptr);
 	}
-	
+}
+
+void CSimplexSampler::GetSigmaBar(double LAMBDA,double ALPHA,double &SigmaBar2,double &detB,double &TrB,double &TrBinv){
+	// assumes
+	Eigen::MatrixXd B,Binv;
+	vector<double> W;
+	unsigned int a,b,ipar;
+	double delTheta,delThetaSquared,Omega,exparg,beta,rbeta,thetabar;
+	W.resize(NPars);
+	B.resize(NTrainingPts,NTrainingPts);
+	Binv.resize(NTrainingPts,NTrainingPts);
+	beta=1.0+(2.0/(3.0*LAMBDA*LAMBDA));
+	rbeta=1.0/sqrt(beta);
+
+	for(a=0;a<NTrainingPts;a++){
+		for(b=0;b<NTrainingPts;b++){
+			delThetaSquared=0.0;
+			for(ipar=0;ipar<NPars;ipar++){
+				delTheta=ThetaTrain[a][ipar]-ThetaTrain[b][ipar];
+				delThetaSquared+=delTheta*delTheta;
+			}
+			B(a,b)=exp(-0.5*delThetaSquared/(LAMBDA*LAMBDA));
+		}
+	}
+	for(a=0;a<NTrainingPts;a++)
+		B(a,a)+=ALPHA*ALPHA;
+	Binv=B.inverse();
+
+	SigmaBar2=1.0;
+	for(a=0;a<NTrainingPts;a++){
+		for(b=0;b<NTrainingPts;b++){
+			Omega=1.0;
+			for(ipar=0;ipar<NPars;ipar++){
+				thetabar=0.5*(ThetaTrain[a][ipar]+ThetaTrain[b][ipar]);
+				exparg=(-0.5/(LAMBDA*LAMBDA))
+				*(ThetaTrain[a][ipar]*ThetaTrain[a][ipar]+ThetaTrain[b][ipar]*ThetaTrain[b][ipar])
+				+thetabar*thetabar/(1.5*beta*pow(LAMBDA,4));
+				double wiab=rbeta*exp(exparg);
+				Omega*=wiab;
+				if(rbeta*exp(exparg)>1.0){
+					CLog::Fatal("exp(exparg)/sqrt(beta)="+to_string(exp(exparg)/sqrt(beta))+"\n");
+				}
+			}
+			SigmaBar2-=Omega*Binv(a,b);
+		}
+	}
+	detB=B.determinant();
+	TrB=B.trace();
+	TrBinv=Binv.trace();
+}
+
+double CSimplexSampler::GetSigma2(double LAMBDA,double ALPHA,vector<double> &theta){
+	unsigned int ipar,a,b;
+	Eigen::MatrixXd B,Binv;
+	double sigma2,delThetaSquared,delTheta;
+	double dthetaa,dthetab,dthetasuma,dthetasumb;
+
+	B.resize(NTrainingPts,NTrainingPts);
+	Binv.resize(NTrainingPts,NTrainingPts);
+
+	for(a=0;a<NTrainingPts;a++){
+		for(b=0;b<NTrainingPts;b++){
+			delThetaSquared=0.0;
+			for(ipar=0;ipar<NPars;ipar++){
+				delTheta=ThetaTrain[a][ipar]-ThetaTrain[b][ipar];
+				delThetaSquared+=delTheta*delTheta;
+			}
+			B(a,b)=exp(-0.5*delThetaSquared/(LAMBDA*LAMBDA));
+		}
+	}
+	for(a=0;a<NTrainingPts;a++)
+		B(a,a)+=ALPHA*ALPHA;
+	Binv=B.inverse();
+
+	sigma2=1.0;
+	for(a=0;a<NTrainingPts;a++){
+		dthetasuma=0.0;
+		for(ipar=0;ipar<NPars;ipar++){
+			dthetaa=ThetaTrain[a][ipar]-theta[ipar];
+			dthetasuma+=dthetaa*dthetaa;
+		}
+		for(b=0;b<NTrainingPts;b++){
+			dthetasumb=0.0;
+			for(ipar=0;ipar<NPars;ipar++){
+				dthetab=ThetaTrain[b][ipar]-theta[ipar];
+				dthetasumb+=dthetab*dthetaa;
+			}
+			sigma2-=Binv(a,b)*exp(-0.5*(dthetasuma+dthetasumb)/(LAMBDA*LAMBDA));
+		}
+	}
+	return(sigma2);
+
 }

@@ -103,12 +103,7 @@ void CTrainingInfo::ReadTrainingInfoSmoothFormat(){
 	
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		ifile=NTrainingList[itrain];
-		if(smoothmaster->UsePCA){
-			snprintf(filename,300,"smooth_data/%s/run%u/obs_pca.txt",rundirname.c_str(),ifile);
-		}
-		else{
-			snprintf(filename,300,"smooth_data/%s/run%u/obs.txt",rundirname.c_str(),ifile);
-		}
+		snprintf(filename,300,"smooth_data/%s/run%u/obs.txt",rundirname.c_str(),ifile);
 		fptr=fopen(filename,"r");
 		nsuccess=0;
 		do{

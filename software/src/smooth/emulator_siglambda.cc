@@ -81,3 +81,26 @@ void CSmoothEmulator::CalcSigmaALambda(){
 	CalcSigmaA();
 	CalcLogP();
 }
+
+void CSmoothEmulator::CalcLambdaVariance(){
+	double L,Lbar,dL=0.1,L2bar,norm,w;
+	norm=Lbar=L2bar=0.0;
+	for(L=1.0;L<8;L+=dL){
+		LAMBDA=L;
+		CalcB();
+		CalcSigmaA();
+		CalcLogP();
+		//w=exp(logP);
+		w=sqrt(Binv.determinant());
+		double factor=pow(SigmaA/100.0,NTrainingPts);
+		w=w/factor;
+		printf("L=%g, w=%g, |Binv|=%g, SigmaA=%g\n",L,w,Binv.determinant(),SigmaA);
+		norm+=w;
+		Lbar+=w*L;
+		L2bar+=w*L*L;
+	}
+	Lbar=Lbar/norm;
+	L2bar=L2bar/norm;
+	LambdaVariance=L2bar-Lbar*Lbar;
+	LAMBDA=Lbar;
+}
