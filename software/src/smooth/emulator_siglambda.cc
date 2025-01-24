@@ -33,7 +33,7 @@ void CSmoothEmulator::CalcLogP(){
 		printf("XXXXXXXXX detB=%g, Lambda=%g, SigmaA=%g, exparg=%g\n",detB,LAMBDA,SigmaA,exparg);
 	}
 }
-
+/*
 void CSmoothEmulator::CalcSigmaALambda(){
 	double LambdaMin=0.5*sqrt(double(NPars));
 	if(LambdaMin<1.0)
@@ -81,6 +81,7 @@ void CSmoothEmulator::CalcSigmaALambda(){
 	CalcSigmaA();
 	CalcLogP();
 }
+*/
 
 void CSmoothEmulator::CalcLambdaVariance(){
 	double L,Lbar,dL=0.1,L2bar,norm,w;
@@ -103,4 +104,101 @@ void CSmoothEmulator::CalcLambdaVariance(){
 	L2bar=L2bar/norm;
 	LambdaVariance=L2bar-Lbar*Lbar;
 	LAMBDA=Lbar;
+}
+
+void CSmoothEmulator::CalcSigmaALambda(){
+	double LambdaMin=0.5*sqrt(double(NPars));
+	vector<double> bestLAMBDA(3),bestlogP(3),bestdetB(3),bestSigmaA(3);
+	double dLambda=1.0;
+	Eigen::Matrix3d A123;
+	Eigen::Vector3d X123,Y123;
+	int ntry=0,nsuccess=0,il;
+	if(LambdaMin<1.0)
+		LambdaMin=1.0;
+
+	LAMBDA=LambdaMin;
+	CalcB();
+	CalcSigmaA();
+	CalcLogP();
+	detB=log(Binv.determinant());
+	for(il=0;il<3;il++){
+		bestLAMBDA[il]=-1000-il;
+		bestSigmaA[il]=SigmaA;
+		bestlogP[il]=-1000.0-il;
+		bestdetB[il]=detB;
+	}
+
+	LAMBDA=LambdaMin;
+	while(nsuccess<3){
+		ntry+=1;
+		CalcB();
+		CalcSigmaA();
+		CalcLogP();
+		detB=log(Binv.determinant());
+		if(logP>bestlogP[0]){
+			bestLAMBDA[2]=bestLAMBDA[1];
+			bestSigmaA[2]=bestSigmaA[1];
+			bestlogP[2]=bestlogP[1];
+			bestdetB[2]=bestdetB[1];
+			bestLAMBDA[1]=bestLAMBDA[0];
+			bestSigmaA[1]=bestSigmaA[0];
+			bestlogP[1]=bestlogP[0];
+			bestdetB[1]=bestdetB[0];
+			bestLAMBDA[0]=LAMBDA;
+			bestSigmaA[0]=SigmaA;
+			bestlogP[0]=logP;
+			bestdetB[0]=log(detB);
+		}
+		else if(logP>bestlogP[1]){
+			bestLAMBDA[2]=bestLAMBDA[1];
+			bestSigmaA[2]=bestSigmaA[1];
+			bestlogP[2]=bestlogP[1];
+			bestdetB[2]=bestdetB[1];
+			bestLAMBDA[1]=LAMBDA;
+			bestSigmaA[1]=SigmaA;
+			bestlogP[1]=logP;
+			bestdetB[1]=log(detB);
+		}
+		else if(logP>bestlogP[2]){
+			bestLAMBDA[2]=LAMBDA;
+			bestSigmaA[2]=SigmaA;
+			bestlogP[2]=logP;
+			bestdetB[2]=log(detB);
+		}
+
+		if(ntry<3){
+			LAMBDA=LAMBDA+dLambda;
+		}
+		else{
+			if(bestLAMBDA[0]>bestLAMBDA[1] && bestLAMBDA[0]>bestLAMBDA[2]){
+				LAMBDA=bestLAMBDA[0]+dLambda;
+			}
+			else if(bestLAMBDA[0]<bestLAMBDA[1] && bestLAMBDA[0]<bestLAMBDA[2]){
+				LAMBDA=bestLAMBDA[0]-dLambda;
+			}
+			else{
+				for(il=0;il<3;il++){
+					A123(il,0)=bestLAMBDA[il]*bestLAMBDA[il];
+					A123(il,1)=bestLAMBDA[il];
+					A123(il,2)=1.0;
+					Y123(il)=bestlogP[il];
+				}
+				X123=A123.colPivHouseholderQr().solve(Y123);
+				LAMBDA=-0.5*X123(0)/X123(1);
+				nsuccess+=1;
+				dLambda*=0.5;
+			}
+		}
+	}
+
+	for(il=0;il<3;il++){
+		Y123(il=bestdetB[il]);
+	}
+	X123=A123.colPivHouseholderQr().solve(Y123);
+	d2detBinvdLambda2=X123(0);
+
+	CalcB();
+	CalcSigmaA();
+	CalcLogP();
+
 }

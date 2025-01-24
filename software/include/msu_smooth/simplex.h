@@ -40,6 +40,7 @@ namespace NBandSmooth{
 		void WriteModelPars();
 		void GetSigmaBar(double LAMBDA,double ALPHA,double &SigmaBar2,double &detB,double &TrB,double &TrBinv);
 		double GetSigma2(double LAMBDA,double ALPHA,vector<double> &theta);
+		void GetC0D0(vector<double> &theta1,vector<double> &theta2,double &C0,double &D0);
 	};
 
 
