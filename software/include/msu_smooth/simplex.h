@@ -25,22 +25,26 @@ namespace NBandSmooth{
 	public:
 		CparameterMap parmap;
 		unsigned int NPars,NTrainingPts,TrainType;
+		double LAMBDA; //only used for estimating overall uncertainty
 		vector<vector<double>> ThetaTrain;
+		Eigen::MatrixXd I,J,K;
 		string ModelDirName;
 		double RGauss,RGauss1,RGauss2;
 		CPriorInfo *priorinfo;
 		Crandy *randy;
 		vector<CModelParameters *> modelparameters;
 		CSimplexSampler();
+		void SetThetaTrain(vector<vector<double>> &theta);
 		void SetThetaType1();
 		void SetThetaType2();
 		void SetThetaType3();
 		void SetThetaType4();
 		void SetThetaSimplex();
 		void WriteModelPars();
-		void GetSigmaBar(double LAMBDA,double ALPHA,double &SigmaBar2,double &detB,double &TrB,double &TrBinv);
-		double GetSigma2(double LAMBDA,double ALPHA,vector<double> &theta);
-		void GetC0D0(vector<double> &theta1,vector<double> &theta2,double &C0,double &D0);
+		double GetSigma2Bar(double LAMBDA,double ALPHA);
+		void GetC0DDprime(double LAMBDA,vector<double> &theta1,vector<double> &theta2,double &C0,double &D,double &Dprime);
+		void CalcIJK(double LAMBDA,double beta);
+
 	};
 
 

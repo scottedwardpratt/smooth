@@ -78,7 +78,6 @@ void CSimplexSampler::SetThetaType1(){
 			}
 		}
 	}
-	
 }
 
 void CSimplexSampler::SetThetaType2(){
@@ -155,7 +154,20 @@ void CSimplexSampler::SetThetaType2(){
 			}
 		}
 	}
-	
+}
+
+void CSimplexSampler::SetThetaTrain(vector<vector<double>> &theta){
+	unsigned int itrain,ipar;
+	for(itrain=0;itrain<ThetaTrain.size();itrain++)
+		ThetaTrain[itrain].clear();
+	ThetaTrain.clear();
+	NTrainingPts=theta.size();
+	ThetaTrain.resize(NTrainingPts);
+	for(itrain=0;itrain<NTrainingPts;itrain++){
+		ThetaTrain[itrain].resize(NPars);
+		for(ipar=0;ipar<NPars;ipar++)
+			ThetaTrain[itrain][ipar]=theta[itrain][ipar];
+	}
 }
 
 void CSimplexSampler::WriteModelPars(){
