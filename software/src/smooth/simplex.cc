@@ -57,7 +57,7 @@ void CSimplexSampler::SetThetaType1(){
 		R=z;
 	}
 
-	RTrain=RGauss*sqrt(double(NPars)/3.0);
+	RTrain=fabs(RGauss);
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		for(ipar=0;ipar<NPars;ipar++){
 			if(priorinfo->type[ipar]=="gaussian")
@@ -130,8 +130,8 @@ void CSimplexSampler::SetThetaType2(){
 	for(ipar=0;ipar<NPars;ipar++)
 		R2+=ThetaTrain[itrain][ipar]*ThetaTrain[itrain][ipar];
 	R2=sqrt(R2);
-	RTrain1=RGauss1*sqrt(double(NPars)/3.0);
-	RTrain2=RGauss2*sqrt(double(NPars)/3.0);
+	RTrain1=fabs(RGauss1);
+	RTrain2=fabs(RGauss2);
 	
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		for(ipar=0;ipar<NPars;ipar++){

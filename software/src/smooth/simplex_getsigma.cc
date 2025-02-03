@@ -53,12 +53,12 @@ void CSimplexSampler::CalcIJK(double LAMBDA,double beta){
 	}
 }
 
-double CSimplexSampler::GetSigma2Bar(double LAMBDA,double ALPHA){
+double CSimplexSampler::GetSigma2Bar(double LAMBDA,double ALPHA,double &detB){
 	unsigned int a,b;
 	Eigen::MatrixXd B,Binv,D,Dprime,B0,B2;
 	double beta=3.0,SigmaA=1.0; // SigmaA shouldn't matter
 	double dEdLambda2,d2logdetBdLambda2,Sigma2Bar;
-	double bb,dd,ddprime,detB0,detB1,detB2,dLAMBDA=0.1;
+	double bb,dd,ddprime,detB0,detB2,dLAMBDA=0.05;
 	I.resize(NTrainingPts,NTrainingPts);
 	J.resize(NTrainingPts,NTrainingPts);
 	K.resize(NTrainingPts,NTrainingPts);
@@ -79,22 +79,21 @@ double CSimplexSampler::GetSigma2Bar(double LAMBDA,double ALPHA){
 	Binv=B.inverse();
 
 	//printf("|B|=%g\n",B.determinant());
-
-	double S20=1.0-(I*Binv).trace();
-	dEdLambda2=(K*Binv).trace()+(J*Binv*D*Binv).trace()+(I*Binv*D*Binv*D*Binv).trace();
-	dEdLambda2=dEdLambda2/pow(LAMBDA,6);
-	if(dEdLambda2<-0.002){
-		CLog::Info("dEdLambda2<0, ="+to_string(dEdLambda2)+"\n");
-	}
-	/*
 	double Iterm,Jterm,Kterm;
 	Iterm=(I*Binv*D*Binv*D*Binv).trace();
 	Jterm=(J*Binv*D*Binv).trace();
 	Kterm=(K*Binv).trace();
-	*/
+	dEdLambda2=Iterm+Jterm+Kterm;
+	dEdLambda2=dEdLambda2/pow(LAMBDA,6);
+	double S20=1.0-(I*Binv).trace();
 
+	//dEdLambda2=(K*Binv).trace()+(J*Binv*D*Binv).trace()+(I*Binv*D*Binv*D*Binv).trace();
+	if(dEdLambda2<-0.002){
+		CLog::Info("dEdLambda2<0, ="+to_string(dEdLambda2)+"\n");
+	}
+	
 	// Calculate d2|B|/dLambda^2
-	detB1=B.determinant();
+	detB=B.determinant();
 	for(a=0;a<NTrainingPts;a++){
 		for(b=0;b<NTrainingPts;b++){
 			GetC0DDprime(LAMBDA-dLAMBDA,ThetaTrain[a],ThetaTrain[b],bb,dd,ddprime);
@@ -113,7 +112,11 @@ double CSimplexSampler::GetSigma2Bar(double LAMBDA,double ALPHA){
 	for(a=0;a<NTrainingPts;a++)
 		B(a,a)+=ALPHA*ALPHA;
 	detB2=B.determinant();
-	d2logdetBdLambda2=(log(detB2)-2.0*log(detB1)+log(detB0))/(dLAMBDA*dLAMBDA);
+
+	d2logdetBdLambda2=(log(detB2)-2.0*log(detB)+log(detB0))/(dLAMBDA*dLAMBDA);
+	if(d2logdetBdLambda2<0.0){
+		CLog::Info("d2logdetBdLambda2="+to_string(d2logdetBdLambda2)+", is <0\n");
+	}
 
 
 	Eigen::Matrix2d W,Winv;
@@ -131,7 +134,9 @@ double CSimplexSampler::GetSigma2Bar(double LAMBDA,double ALPHA){
 
 	W=Winv.inverse();
 	if(W(1,1)<0.0){
-		CLog::Fatal("W(1,1)<0, ="+to_string(W(1,1))+"\n");
+		printf("detB012=(%g,%g,%g)\n",detB0,detB,detB2);
+		CLog::Info("W(1,1)<0, ="+to_string(W(1,1))+"\n");
+		Sigma2Bar=1.0E99;
 	}
 	double S2_duetoLambda=dEdLambda2*W(1,1);
 	Sigma2Bar=S20+S2_duetoLambda;
