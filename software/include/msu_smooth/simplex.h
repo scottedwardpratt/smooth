@@ -38,10 +38,11 @@ namespace NBandSmooth{
 		void SetThetaType1();
 		void SetThetaType2();
 		void SetThetaType3();
-		void SetThetaType4();
+		void SetThetaType1Plus();
+		void SetThetaType2Plus();
 		void SetThetaSimplex();
 		void WriteModelPars();
-		double GetSigma2Bar(double LAMBDA,double ALPHA,double &detB);
+		double GetSigma2Bar(double LAMBDA,double ALPHA,double &detB,double &W11);
 		void GetC0DDprime(double LAMBDA,vector<double> &theta1,vector<double> &theta2,double &C0,double &D,double &Dprime);
 		void CalcIJK(double LAMBDA,double beta);
 

@@ -53,7 +53,7 @@ void CSimplexSampler::CalcIJK(double LAMBDA,double beta){
 	}
 }
 
-double CSimplexSampler::GetSigma2Bar(double LAMBDA,double ALPHA,double &detB){
+double CSimplexSampler::GetSigma2Bar(double LAMBDA,double ALPHA,double &detB,double &W11){
 	unsigned int a,b;
 	Eigen::MatrixXd B,Binv,D,Dprime,B0,B2;
 	double beta=3.0,SigmaA=1.0; // SigmaA shouldn't matter
@@ -78,7 +78,6 @@ double CSimplexSampler::GetSigma2Bar(double LAMBDA,double ALPHA,double &detB){
 		B(a,a)+=ALPHA*ALPHA;
 	Binv=B.inverse();
 
-	//printf("|B|=%g\n",B.determinant());
 	double Iterm,Jterm,Kterm;
 	Iterm=(I*Binv*D*Binv*D*Binv).trace();
 	Jterm=(J*Binv*D*Binv).trace();
@@ -94,6 +93,12 @@ double CSimplexSampler::GetSigma2Bar(double LAMBDA,double ALPHA,double &detB){
 	
 	// Calculate d2|B|/dLambda^2
 	detB=B.determinant();
+	if(detB!=detB){
+		CLog::Fatal("|B| != |B|\n");
+	}
+	if(fabs(detB)<1.0E-320){
+		CLog::Fatal("|B| too small, = "+to_string(detB)+"\n");
+	}
 	for(a=0;a<NTrainingPts;a++){
 		for(b=0;b<NTrainingPts;b++){
 			GetC0DDprime(LAMBDA-dLAMBDA,ThetaTrain[a],ThetaTrain[b],bb,dd,ddprime);
@@ -133,6 +138,7 @@ double CSimplexSampler::GetSigma2Bar(double LAMBDA,double ALPHA,double &detB){
 	+(1.0/pow(LAMBDA,6))*(D*Binv*D*Binv).trace() -(1.0/(2.0*pow(LAMBDA,6)))*(Dprime*Binv).trace();
 
 	W=Winv.inverse();
+	W11=W(1,1);
 	if(W(1,1)<0.0){
 		printf("detB012=(%g,%g,%g)\n",detB0,detB,detB2);
 		CLog::Info("W(1,1)<0, ="+to_string(W(1,1))+"\n");
