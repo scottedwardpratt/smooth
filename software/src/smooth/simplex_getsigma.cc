@@ -96,7 +96,7 @@ double CSimplexSampler::GetSigma2Bar(double LAMBDA,double ALPHA,double &detB,dou
 	if(detB!=detB){
 		CLog::Fatal("|B| != |B|\n");
 	}
-	if(fabs(detB)<1.0E-320){
+	if(fabs(detB)<5.0E-324){
 		CLog::Fatal("|B| too small, = "+to_string(detB)+"\n");
 	}
 	for(a=0;a<NTrainingPts;a++){
