@@ -35,13 +35,12 @@ namespace NBandSmooth{
 		vector<CModelParameters *> modelparameters;
 		CSimplexSampler();
 		void SetThetaTrain(vector<vector<double>> &theta);
-		void SetThetaType1();
-		void SetThetaType2();
-		void SetThetaType3();
-		void SetThetaType1Plus();
-		void SetThetaType2Plus();
-		void SetThetaSimplex();
-		void WriteModelPars();
+		void Optimize();
+		void Optimize_MC();
+		void OptimizeSphere_MC();
+		void OptimizeSimplex();
+		void OptimizeSimplexPlusCenter();
+		
 		double GetSigma2Bar(double LAMBDA,double ALPHA,double &detB,double &W11);
 		void GetC0DDprime(double LAMBDA,vector<double> &theta1,vector<double> &theta2,double &C0,double &D,double &Dprime);
 		void CalcIJK(double LAMBDA,double beta);

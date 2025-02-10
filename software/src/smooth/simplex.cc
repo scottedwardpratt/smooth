@@ -43,7 +43,6 @@ void CSimplexSampler::SetThetaSimplex(){
 	else{
 		CLog::Fatal("Inside CSimplexSampler::SetThetaSimplex, TrainType must be 1 or 2 or 3\n");
 	}
-	//CLog::Info("NTrainingPts="+to_string(NTrainingPts)+"\n");
 }
 
 void CSimplexSampler::SetThetaType1(){
