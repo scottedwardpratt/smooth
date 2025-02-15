@@ -6,6 +6,103 @@ using namespace std;
 using namespace NBandSmooth;
 using namespace NMSUUtils;
 
+void CSimplexSampler::Optimize(double LAMBDASet,double ALPHAset){
+	LAMBDA=LAMBDASet;
+	ALPHA=ALPHAset;
+	PLUS1=false;
+	NMC=parmap.getI("Simplex_NMC",0);
+	if(NMC==0){
+		CLog::Info("Enter NMC: ");
+		scanf("%u",&NMC);
+	}
+	if(OptimizeMethod=="MC"){
+		PLUS1=false;
+		NTrainingPts=parmap.getI("Simplex_NTrainingPts",0);
+		if(NTrainingPts==0){
+			CLog::Info("Enter NTrainingPts: ");
+			scanf("%u",&NTrainingPts);
+		}
+		Optimize_MC();
+	}
+	else if(OptimizeMethod=="MCSphere"){
+		PLUS1=true;
+		NTrainingPts=parmap.getI("Simplex_NTrainingPts",0);
+		if(NTrainingPts==0){
+			CLog::Info("Enter NTrainingPts: ");
+			scanf("%u",&NTrainingPts);
+		}
+		OptimizeSphere_MC();
+	}
+	else if(OptimizeMethod=="MCSimplex"){
+		PLUS1=false;
+		NTrainingPts=NPars+1;
+		OptimizeSimplex_MC();
+	}
+	else if(OptimizeMethod=="MCSimplexPlus1"){
+		PLUS1=true;
+		NTrainingPts=NPars+2;
+		OptimizeSimplex_MC();
+	}
+	else if(OptimizeMethod=="MCQuadratic"){
+		PLUS1=true;
+		NTrainingPts=(NPars+1)*(NPars+2)/2;
+		Optimize_MC();
+	}
+	else if(OptimizeMethod=="MCSphereQuadratic"){
+		PLUS1=true;
+		NTrainingPts=(NPars+1)*(NPars+2)/2;
+		OptimizeSphere_MC();
+	}
+}
+
+void CSimplexSampler::OptimizeSimplex_MC(){
+	double R=1.2,bestSigma2,Sigma2bar,dR=0.1,W11,detB,bestR,successrate;
+	unsigned int imc,nsuccess,nfail,itrain;
+	vector<vector<double>> besttheta;
+	Crandy randy(time(NULL));
+	bestSigma2=1.0E99;
+	bestR=R;
+	dR=0.2/sqrt(double(NTrainingPts));
+	besttheta.resize(NTrainingPts);
+	for(itrain=0;itrain<NTrainingPts;itrain++){
+		besttheta[itrain].resize(NPars);
+	}
+	if(PLUS1)
+		SetThetaSimplexPlus1(R);
+	else
+		SetThetaSimplex(R);
+	Sigma2bar=GetSigma2Bar(LAMBDA,ALPHA,detB,W11);
+	bestSigma2=Sigma2bar;
+	
+	nsuccess=nfail=0;
+	for(imc=0;imc<NMC;imc++){
+		R=bestR+dR*randy.ran_gauss();
+		if(PLUS1)
+			SetThetaSimplexPlus1(R);
+		else
+			SetThetaSimplex(R);
+		Sigma2bar=GetSigma2Bar(LAMBDA,ALPHA,detB,W11);
+		if(Sigma2bar<bestSigma2){
+			bestSigma2=Sigma2bar;
+			bestR=R;
+			nsuccess+=1;
+		}
+		else
+			nfail+=1;
+		if((100*(imc+1)%NMC)==0){
+			successrate=double(nsuccess)/double(nsuccess+nfail);
+			printf("++++++++++++++++++++finished %g percent, bestSigma2=%g, success %%=%g, dR=%g ++++++++++++++++\n",100.0*(imc+1.0)/double(NMC),bestSigma2,100.0*successrate,dR);
+			dR*=0.05+2.0*successrate;
+			nfail=nsuccess=0;
+		}
+	}
+
+	SetThetaSimplex(bestR);
+	SetThetaTrain(besttheta); 
+	Sigma2bar=GetSigma2Bar(LAMBDA,ALPHA,detB,W11);
+	bestSigma2=Sigma2bar;	
+}
+
 void CSimplexSampler::GetC0DDprime(double LAMBDA,vector<double> &theta1,vector<double> &theta2,double &C0,double &D,double &Dprime){
 	unsigned int ipar;
 	double delThetaSquared,delTheta;
@@ -19,44 +116,10 @@ void CSimplexSampler::GetC0DDprime(double LAMBDA,vector<double> &theta1,vector<d
 	Dprime=D*delThetaSquared;
 }
 
-void CSimplexSampler::CalcIJK(double LAMBDA,double beta){
-	unsigned int a,b,ipar;
-	double lambda,gamma,dT2,tatb,ta2,tb2,Jab,Jba,Iab,Kab;
-	double X,dXdgamma_a,dXdgamma_b,d2Xdgamma_adgamma_b;
-	gamma=1.0/(LAMBDA*LAMBDA);
-	lambda=2.0*gamma+beta;
-	for(a=0;a<NTrainingPts;a++){
-		for(b=0;b<NTrainingPts;b++){
-			dT2=tatb=ta2=tb2=0.0;
-			for(ipar=0;ipar<NPars;ipar++){
-				ta2+=pow(ThetaTrain[a][ipar],2);
-				tb2+=pow(ThetaTrain[b][ipar],2);
-				dT2+=pow(ThetaTrain[a][ipar]-ThetaTrain[b][ipar],2);
-				tatb+=ThetaTrain[a][ipar]*ThetaTrain[b][ipar];
-			}
-			X=gamma*gamma*dT2+beta*gamma*(ta2+tb2);
-			Iab=sqrt(pow(beta/lambda,NPars))*exp(-0.5*X/lambda);
-			dXdgamma_a=gamma*dT2+beta*ta2;
-			dXdgamma_b=gamma*dT2+beta*tb2;
-			Jab=-(0.5*double(NPars)/lambda)*Iab+(0.5*X/(lambda*lambda))*Iab-(0.5*dXdgamma_a/lambda)*Iab;
-			Jba=-(0.5*double(NPars)/lambda)*Iab+(0.5*X/(lambda*lambda))*Iab-(0.5*dXdgamma_b/lambda)*Iab;
-			d2Xdgamma_adgamma_b=dT2;
-			Kab=Jab*Jba/Iab +(0.5/(lambda*lambda))*Iab -(X/(lambda*lambda*lambda))*Iab
-				+(0.5*(dXdgamma_a+dXdgamma_b)/(lambda*lambda))*Iab -(0.5*d2Xdgamma_adgamma_b/lambda)*Iab;
-			Jab*=2.0;
-			Jba*=2.0;
-			Kab*=4.0;
-			I(a,b)=Iab;
-			J(a,b)=Jab+Jba;
-			K(a,b)=Kab;
-		}
-	}
-}
-
 double CSimplexSampler::GetSigma2Bar(double LAMBDA,double ALPHA,double &detB,double &W11){
 	unsigned int a,b;
 	Eigen::MatrixXd B,Binv,D,Dprime,BB0,BB1,BB2;
-	double beta=3.0,SigmaA=1.0; // SigmaA shouldn't matter
+	double beta=1.0,SigmaA=1.0; // SigmaA shouldn't matter
 	double dEdLambda2,d2logdetBdLambda2,Sigma2Bar;
 	double bb,dd,ddprime,detB0,detB1,detB2,dLAMBDA=0.05;
 	double detfactor=4*sqrt(NTrainingPts);

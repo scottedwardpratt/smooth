@@ -24,29 +24,38 @@ namespace NBandSmooth{
 	class CSimplexSampler{
 	public:
 		CparameterMap parmap;
-		unsigned int NPars,NTrainingPts,TrainType;
-		double LAMBDA; //only used for estimating overall uncertainty
+		unsigned int NPars,NTrainingPts,NMC;
+		bool PLUS1;
+		string OptimizeMethod;
+		double LAMBDA,ALPHA; //only used for estimating overall uncertainty
 		vector<vector<double>> ThetaTrain;
 		Eigen::MatrixXd I,J,K;
 		string ModelDirName;
-		double RGauss,RGauss1,RGauss2;
+		double RSimplex;
 		CPriorInfo *priorinfo;
 		Crandy *randy;
 		vector<CModelParameters *> modelparameters;
 		CSimplexSampler();
 		void SetThetaTrain(vector<vector<double>> &theta);
-		void Optimize();
+		void WriteModelPars();
+			
+		void Optimize(double LambdaSet,double ALPHAset);
 		void Optimize_MC();
 		void OptimizeSphere_MC();
-		void OptimizeSimplex();
-		void OptimizeSimplexPlusCenter();
+		void OptimizeSimplex_MC();
+		void SetThetaSimplex(double R);
+		void SetThetaSimplexPlus1(double R);
 		
-		double GetSigma2Bar(double LAMBDA,double ALPHA,double &detB,double &W11);
-		void GetC0DDprime(double LAMBDA,vector<double> &theta1,vector<double> &theta2,double &C0,double &D,double &Dprime);
-		void CalcIJK(double LAMBDA,double beta);
+		double GetSigma2Bar(double Lambda,double ALPHA,double &detB,double &W11);
+		void GetC0DDprime(double Lambda,vector<double> &theta1,vector<double> &theta2,double &C0,double &D,double &Dprime);
+		void CalcIJK(double Lambda,double beta);
+		void CalcIJK_Gaussian(double Lambda,double beta);
+		void GetIiJiKiGaussian(double Rprior,double Lambda,double theta_a,double theta_b,
+		double &I,double &Jaterm,double &Jbterm,double &Kabterm);
+		void GetIiJiKiUniform(double Rprior,double Lambda,double theta_a,double theta_b,
+		double &I,double &Jaterm,double &Jbterm,double &Kabterm);
 
 	};
-
 
 	namespace NAlternativeParameterSampling{
 		// Latin Hyer Cube parameters

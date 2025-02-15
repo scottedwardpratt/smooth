@@ -26,6 +26,8 @@ namespace NBandSmooth{
 		string parinfo_filename;
 		vector<string> parname,type; // type is gaussian or linear
 		vector<double> xmin, xmax;
+		vector<double> Rprior;  // width of priors after scaling for each parameter defaults=1/root3 for gaussian, =1 for uniform
+		double Rdefault; // if all are gaussian and have same Rrms, default=1/root3.
 		map<string,unsigned int> name_map;
 		unsigned int GetIPosition(string par_name);  // finds position given name of parameter
 		string GetName(unsigned int iposition);
