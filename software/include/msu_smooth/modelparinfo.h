@@ -30,7 +30,6 @@ namespace NBandSmooth{
 		void SetTheta(vector<double> &thetaset);
 		static unsigned int NModelPars;
 		static CPriorInfo *priorinfo;
-		static double GSCALE;
 	};
 
 };

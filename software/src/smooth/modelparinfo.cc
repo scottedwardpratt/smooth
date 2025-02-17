@@ -1,6 +1,5 @@
 #include "msu_smooth/modelparinfo.h"
 NBandSmooth::CPriorInfo* NBandSmooth::CModelParameters::priorinfo=NULL;
-double NBandSmooth::CModelParameters::GSCALE=sqrt(3.0);
 unsigned int NBandSmooth::CModelParameters::NModelPars=0;
 
 using namespace std;
@@ -14,7 +13,7 @@ CModelParameters::CModelParameters(){
 
 void CModelParameters::TranslateX_to_Theta(){
 	//for min, max range
-	double sigmax,xbar;
+	double sigmax,xbar,root3=sqrt(3.0);
 	unsigned int ipar;
 
 	for(ipar=0;ipar<NModelPars;ipar++){
@@ -24,26 +23,28 @@ void CModelParameters::TranslateX_to_Theta(){
 		else if(priorinfo->type[ipar]=="gaussian"){
 			xbar=priorinfo->xmin[ipar];
 			sigmax=priorinfo->xmax[ipar];
-			Theta[ipar]=(X[ipar]-xbar)/(sigmax*GSCALE);
+			Theta[ipar]=(X[ipar]-xbar)/(sigmax*root3);
 		}
 		else{
 			CLog::Fatal("Cannot translate X to Theta because type = "+priorinfo->type[ipar]+" is not recognized\n");
 		}
+		Theta[ipar]*=priorinfo->ThetaScale[ipar];
 	}
 }
 
 void CModelParameters::TranslateTheta_to_X(){
-	double sigmax,xbar;
+	double sigmax,xbar,tscale,root3=sqrt(3.0);
 	unsigned int ipar;
 
 	for(ipar=0;ipar<NModelPars;ipar++){
+		tscale=priorinfo->ThetaScale[ipar];
 		if(priorinfo->type[ipar]=="uniform"){
-			X[ipar]=priorinfo->xmin[ipar]+0.5*(1.0+Theta[ipar])*(priorinfo->xmax[ipar]-priorinfo->xmin[ipar]);
+			X[ipar]=priorinfo->xmin[ipar]+0.5*(1.0+Theta[ipar]/tscale)*(priorinfo->xmax[ipar]-priorinfo->xmin[ipar]);
 		}
 		else if(priorinfo->type[ipar]=="gaussian"){
 			xbar=priorinfo->xmin[ipar];
 			sigmax=priorinfo->xmax[ipar];
-			X[ipar]=xbar+GSCALE*sigmax*Theta[ipar];
+			X[ipar]=xbar+root3*sigmax*Theta[ipar]/tscale;
 		}
 		else{
 			CLog::Fatal("Cannot translate Theta to X because type = "+priorinfo->type[ipar]+" is not recognized\n");

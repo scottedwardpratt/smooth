@@ -64,7 +64,7 @@ void CLLCalc::CalcLLPlusDerivatives(vector<double> &theta,double &LL,vector<doub
 
 void CLLCalcSmooth::CalcLL(vector<double> &theta,double &LL){
 	unsigned int iy,ipar;
-	double sigma2;
+	double sigma2,root3=sqrt(3.0);
 	bool insidebounds=true;
 	LL=0.0;
 	for(ipar=0;ipar<NPars;ipar++){
@@ -89,7 +89,7 @@ void CLLCalcSmooth::CalcLL(vector<double> &theta,double &LL){
 		}
 		for(ipar=0;ipar<NPars;ipar++){
 			if(priorinfo->type[ipar]=="gaussian"){
-				LL-=0.5*pow(theta[ipar]*CModelParameters::GSCALE,2);
+				LL-=0.5*pow(theta[ipar]*root3/priorinfo->ThetaScale[ipar],2);
 			}
 		}
 	}

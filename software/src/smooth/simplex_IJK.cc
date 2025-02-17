@@ -8,8 +8,7 @@ using namespace NMSUUtils;
 
 double PI=4.0*atan(1.0);
 
-
-void CSimplexSampler::CalcIJK(double Lambda,vector<double> &Rprior){
+void CSimplexSampler::CalcIJK(double Lambda,vector<double> &ThetaPrior){
 	unsigned int a,b,ipar;
 	double Ii,Jafact,Jbfact,Kabfact;
 	double Jasum,Jbsum,Kabsum;
@@ -18,11 +17,11 @@ void CSimplexSampler::CalcIJK(double Lambda,vector<double> &Rprior){
 			I(a,b)=Jasum=0.0,Jbsum=0.0,Kabsum=0.0;
 			for(ipar=0;ipar<NPars;ipar++){
 				if(priorinfo->type[ipar]=="uniform"){
-					GetIiJiKiUniform(Rprior[ipar],Lambda,ThetaTrain[a][ipar],ThetaTrain[b][ipar],
+					GetIiJiKiUniform(ThetaPrior[ipar],Lambda,ThetaTrain[a][ipar],ThetaTrain[b][ipar],
 					Ii,Jafact,Jbfact,Kabfact);
 				}
 				else if(priorinfo->type[ipar]=="gaussian"){
-					GetIiJiKiGaussian(Rprior[ipar],Lambda,ThetaTrain[a][ipar],ThetaTrain[b][ipar],
+					GetIiJiKiGaussian(ThetaPrior[ipar],Lambda,ThetaTrain[a][ipar],ThetaTrain[b][ipar],
 					Ii,Jafact,Jbfact,Kabfact);
 				}
 				else{
@@ -39,10 +38,10 @@ void CSimplexSampler::CalcIJK(double Lambda,vector<double> &Rprior){
 	}
 }
 
-void CSimplexSampler::CalcIJK_Gaussian(double LAMBDA,double RPriorGauss){ // only works when all have gaussian priors with same RPrior=RPriorGauss
+void CSimplexSampler::CalcIJK_Gaussian(double LAMBDA,double ThetaPriorGauss){ // only works when all have gaussian priors with same ThetaPrior=ThetaPriorDefault
 	unsigned int a,b,ipar;
 	double lambda,gamma,dT2,tatb,ta2,tb2,Jab,Jba,Iab,Kab;
-	double X,dXdgamma_a,dXdgamma_b,d2Xdgamma_adgamma_b,beta=1.0/(RPriorGauss*RPriorGauss);
+	double X,dXdgamma_a,dXdgamma_b,d2Xdgamma_adgamma_b,beta=1.0/(ThetaPriorGauss*ThetaPriorGauss);
 	gamma=1.0/(LAMBDA*LAMBDA);
 	lambda=2.0*gamma+beta;
 	for(a=0;a<NTrainingPts;a++){
@@ -73,11 +72,11 @@ void CSimplexSampler::CalcIJK_Gaussian(double LAMBDA,double RPriorGauss){ // onl
 	}
 }
 
-void CSimplexSampler::GetIiJiKiGaussian(double Rprior,double Lambda,double theta_a,double theta_b,
+void CSimplexSampler::GetIiJiKiGaussian(double ThetaPrior,double Lambda,double theta_a,double theta_b,
 double &I,double &Jaterm,double &Jbterm,double &Kabterm){
 	double X,gamma,alpha,lambda,deltheta2,sumt2,Jterm;
 	gamma=1.0/(Lambda*Lambda);
-	alpha=1.0/(Rprior*Rprior);
+	alpha=1.0/(ThetaPrior*ThetaPrior);
 	lambda=2.0*gamma+alpha;
 	X=gamma*gamma*pow(theta_a-theta_b,2)+alpha*gamma*(theta_a*theta_a+theta_b*theta_b);
 	deltheta2=(theta_a-theta_b)*(theta_a-theta_b);
@@ -100,7 +99,7 @@ double &I,double &Jaterm,double &Jbterm,double &Kabterm){
 	printf("I=%8.5f, Jaterm=%8.5f, Jbterm=%8.5f, Sum=%8.5f, Kabterm=%8.5f\n",I,Jaterm,Jbterm,Jaterm+Jbterm,Kabterm);
 }
 
-void CSimplexSampler::GetIiJiKiUniform(double Rprior,double Lambda,double theta_a,double theta_b,
+void CSimplexSampler::GetIiJiKiUniform(double ThetaPrior,double Lambda,double theta_a,double theta_b,
 double &I,double &Jaterm,double &Jbterm,double &Kabterm){
 	double Ja,Jb,J,Kab;
 	double deltheta,thetabar,rootgamma,Xplus,Xminus,P,Y,W,bplus2,bminus2,deltheta2,bplus,bminus;
@@ -109,14 +108,14 @@ double &I,double &Jaterm,double &Jbterm,double &Kabterm){
 	thetabar=0.5*(theta_a+theta_b);
 	deltheta=0.5*(theta_a-theta_b);
 	deltheta2=deltheta*deltheta;
-	bplus=Rprior-thetabar;
-	bminus=-Rprior-thetabar;
+	bplus=ThetaPrior-thetabar;
+	bminus=-ThetaPrior-thetabar;
 	bplus2=bplus*bplus;
 	bminus2=bminus*bminus;
 	Xplus=exp(-gamma*bplus2);
 	Xminus=exp(-gamma*bminus2);
-	P=(0.5/Rprior)*exp(-gamma*deltheta*deltheta);
-	W=(1.0/rootgamma)*(sqrt(PI)/2.0)*(erf(rootgamma*(Rprior-thetabar))-erf(rootgamma*(-Rprior-thetabar)));
+	P=(0.5/ThetaPrior)*exp(-gamma*deltheta*deltheta);
+	W=(1.0/rootgamma)*(sqrt(PI)/2.0)*(erf(rootgamma*(ThetaPrior-thetabar))-erf(rootgamma*(-ThetaPrior-thetabar)));
 	I=P*W;
 	
 	J=-(0.5/gamma)*I-deltheta2*I;

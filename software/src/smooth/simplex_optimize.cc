@@ -126,7 +126,7 @@ double CSimplexSampler::GetSigma2Bar(double LAMBDA,double ALPHA,double &detB,dou
 	I.resize(NTrainingPts,NTrainingPts);
 	J.resize(NTrainingPts,NTrainingPts);
 	K.resize(NTrainingPts,NTrainingPts);
-	CalcIJK(LAMBDA,priorinfo->Rprior);
+	CalcIJK(LAMBDA,priorinfo->ThetaPrior);
 
 	B.resize(NTrainingPts,NTrainingPts);
 	Binv.resize(NTrainingPts,NTrainingPts);
