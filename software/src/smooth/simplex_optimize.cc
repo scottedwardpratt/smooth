@@ -119,14 +119,14 @@ void CSimplexSampler::GetC0DDprime(double LAMBDA,vector<double> &theta1,vector<d
 double CSimplexSampler::GetSigma2Bar(double LAMBDA,double ALPHA,double &detB,double &W11){
 	unsigned int a,b;
 	Eigen::MatrixXd B,Binv,D,Dprime,BB0,BB1,BB2;
-	double beta=1.0,SigmaA=1.0; // SigmaA shouldn't matter
+	double SigmaA=1.0; // SigmaA shouldn't matter
 	double dEdLambda2,d2logdetBdLambda2,Sigma2Bar;
 	double bb,dd,ddprime,detB0,detB1,detB2,dLAMBDA=0.05;
 	double detfactor=4*sqrt(NTrainingPts);
 	I.resize(NTrainingPts,NTrainingPts);
 	J.resize(NTrainingPts,NTrainingPts);
 	K.resize(NTrainingPts,NTrainingPts);
-	CalcIJK(LAMBDA,beta);
+	CalcIJK(LAMBDA,priorinfo->Rprior);
 
 	B.resize(NTrainingPts,NTrainingPts);
 	Binv.resize(NTrainingPts,NTrainingPts);

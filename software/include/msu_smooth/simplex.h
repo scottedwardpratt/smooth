@@ -48,7 +48,7 @@ namespace NBandSmooth{
 		
 		double GetSigma2Bar(double Lambda,double ALPHA,double &detB,double &W11);
 		void GetC0DDprime(double Lambda,vector<double> &theta1,vector<double> &theta2,double &C0,double &D,double &Dprime);
-		void CalcIJK(double Lambda,double beta);
+		void CalcIJK(double Lambda,vector<double> &Rprior);
 		void CalcIJK_Gaussian(double Lambda,double beta);
 		void GetIiJiKiGaussian(double Rprior,double Lambda,double theta_a,double theta_b,
 		double &I,double &Jaterm,double &Jbterm,double &Kabterm);
