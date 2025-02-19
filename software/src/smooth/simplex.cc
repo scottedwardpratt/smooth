@@ -20,9 +20,11 @@ CSimplexSampler::CSimplexSampler(){
 	NPars=priorinfo->NModelPars;
 }
 
-void CSimplexSampler::SetThetaSimplex(double R){
+void CSimplexSampler::SetThetaSimplex(double RSimplexSet){
 	unsigned int ipar,itrain,jtrain;
-	double z,RTrain;
+	double z,R;
+	RSimplex=fabs(RSimplexSet);
+	R=1.0;
 	NTrainingPts=NPars+1;
 	ThetaTrain.resize(NTrainingPts);
 	for(itrain=0;itrain<NTrainingPts;itrain++){
@@ -41,14 +43,13 @@ void CSimplexSampler::SetThetaSimplex(double R){
 		ThetaTrain[itrain][itrain-1]=z;
 		R=z;
 	}
-
-	RTrain=fabs(RSimplex);
+	
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		for(ipar=0;ipar<NPars;ipar++){
 			if(priorinfo->type[ipar]=="gaussian")
-				ThetaTrain[itrain][ipar]*=(RTrain/R);
+				ThetaTrain[itrain][ipar]*=(RSimplex/R);
 			else{
-				ThetaTrain[itrain][ipar]*=(RTrain/R);
+				ThetaTrain[itrain][ipar]*=(RSimplex/R);
 			}
 		}
 	}
@@ -65,9 +66,11 @@ void CSimplexSampler::SetThetaSimplex(double R){
 	}
 }
 
-void CSimplexSampler::SetThetaSimplexPlus1(double R){
+void CSimplexSampler::SetThetaSimplexPlus1(double RSimplexSet){
 	unsigned int ipar,itrain,jtrain;
-	double z,RTrain;
+	double z,R;
+	RSimplex=fabs(RSimplexSet);
+	R=1.0;
 	NTrainingPts=NPars+1;
 	ThetaTrain.resize(NTrainingPts);
 	for(itrain=0;itrain<NTrainingPts;itrain++){
@@ -86,14 +89,13 @@ void CSimplexSampler::SetThetaSimplexPlus1(double R){
 		ThetaTrain[itrain][itrain-1]=z;
 		R=z;
 	}
-
-	RTrain=fabs(RSimplex);
+	
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		for(ipar=0;ipar<NPars;ipar++){
 			if(priorinfo->type[ipar]=="gaussian")
-				ThetaTrain[itrain][ipar]*=(RTrain/R);
+				ThetaTrain[itrain][ipar]*=(RSimplex/R);
 			else{
-				ThetaTrain[itrain][ipar]*=(RTrain/R);
+				ThetaTrain[itrain][ipar]*=(RSimplex/R);
 			}
 		}
 	}

@@ -14,7 +14,8 @@ void CSimplexSampler::CalcIJK(double Lambda,vector<double> &ThetaPrior){
 	double Jasum,Jbsum,Kabsum;
 	for(a=0;a<NTrainingPts;a++){
 		for(b=0;b<NTrainingPts;b++){
-			I(a,b)=Jasum=0.0,Jbsum=0.0,Kabsum=0.0;
+			Jasum=0.0,Jbsum=0.0,Kabsum=0.0;
+			I(a,b)=1.0;
 			for(ipar=0;ipar<NPars;ipar++){
 				if(priorinfo->type[ipar]=="uniform"){
 					GetIiJiKiUniform(ThetaPrior[ipar],Lambda,ThetaTrain[a][ipar],ThetaTrain[b][ipar],
@@ -27,7 +28,7 @@ void CSimplexSampler::CalcIJK(double Lambda,vector<double> &ThetaPrior){
 				else{
 					CLog::Fatal("priorinfo->type not gaussian or uniform\n");
 				}
-				I(a,b)+=Ii;
+				I(a,b)*=Ii;
 				Jasum+=Jafact;
 				Jbsum+=Jbfact;
 				Kabsum+=Kabfact-Jafact*Jbfact;
@@ -40,30 +41,47 @@ void CSimplexSampler::CalcIJK(double Lambda,vector<double> &ThetaPrior){
 
 void CSimplexSampler::CalcIJK_Gaussian(double LAMBDA,double ThetaPriorGauss){ // only works when all have gaussian priors with same ThetaPrior=ThetaPriorDefault
 	unsigned int a,b,ipar;
-	double lambda,gamma,dT2,tatb,ta2,tb2,Jab,Jba,Iab,Kab;
+	double lambda,gamma,dT2,tatb,ta2,tb2,Jab,Jba,Iab,Kab,sumt2,Jfacta,Jfactb,Kfact;
 	double X,dXdgamma_a,dXdgamma_b,d2Xdgamma_adgamma_b,beta=1.0/(ThetaPriorGauss*ThetaPriorGauss);
 	gamma=1.0/(LAMBDA*LAMBDA);
 	lambda=2.0*gamma+beta;
 	for(a=0;a<NTrainingPts;a++){
 		for(b=0;b<NTrainingPts;b++){
-			dT2=tatb=ta2=tb2=0.0;
+			dT2=tatb=ta2=tb2=sumt2=0.0;
 			for(ipar=0;ipar<NPars;ipar++){
 				ta2+=pow(ThetaTrain[a][ipar],2);
 				tb2+=pow(ThetaTrain[b][ipar],2);
 				dT2+=pow(ThetaTrain[a][ipar]-ThetaTrain[b][ipar],2);
 				tatb+=ThetaTrain[a][ipar]*ThetaTrain[b][ipar];
+				sumt2+=pow(ThetaTrain[a][ipar]+ThetaTrain[b][ipar],2);
 			}
 			X=gamma*gamma*dT2+beta*gamma*(ta2+tb2);
 			Iab=sqrt(pow(beta/lambda,NPars))*exp(-0.5*X/lambda);
 			dXdgamma_a=gamma*dT2+beta*ta2;
 			dXdgamma_b=gamma*dT2+beta*tb2;
-			Jab=-(0.5*double(NPars)/lambda)*Iab+(0.5*X/(lambda*lambda))*Iab-(0.5*dXdgamma_a/lambda)*Iab;
-			Jba=-(0.5*double(NPars)/lambda)*Iab+(0.5*X/(lambda*lambda))*Iab-(0.5*dXdgamma_b/lambda)*Iab;
+			Jfacta=-(0.5*double(NPars)/lambda)+(0.5*X/(lambda*lambda))-(0.5*dXdgamma_a/lambda);
+			Jab=-Jfacta*Iab;
+			Jfactb=-(0.5*double(NPars)/lambda)+(0.5*X/(lambda*lambda))-(0.5*dXdgamma_b/lambda);
+			Jba=-Jfactb*Iab;
+			//printf("----------\nold Jfacta=%g, Jfactb=%g\n",Jfacta,Jfactb);
+			Jfacta=-0.5*ta2-(0.5*double(NPars)/lambda) -(gamma*gamma*sumt2/(lambda*lambda))+(gamma/lambda)*(ta2+tatb);
+			Jab=Iab*Jfacta;
+			Jfactb=-0.5*tb2-(0.5*double(NPars)/lambda) -(gamma*gamma*sumt2/(lambda*lambda))+(gamma/lambda)*(tb2+tatb);
+			Jba=Iab*Jfactb;
+			//printf("new Jfacta=%g, Jfactb=%g\n",Jfacta,Jfactb);
 			d2Xdgamma_adgamma_b=dT2;
+
+			Kfact=+(0.5/(lambda*lambda)) -(X/(lambda*lambda*lambda))
+				+(0.5*(dXdgamma_a+dXdgamma_b)/(lambda*lambda)) -(0.5*d2Xdgamma_adgamma_b/lambda);
 			Kab=Jab*Jba/Iab +(0.5/(lambda*lambda))*Iab -(X/(lambda*lambda*lambda))*Iab
 				+(0.5*(dXdgamma_a+dXdgamma_b)/(lambda*lambda))*Iab -(0.5*d2Xdgamma_adgamma_b/lambda)*Iab;
-			Jab*=2.0;
-			Jba*=2.0;
+			//printf("old Kfact=%g\n",Kfact);
+			Kfact=(0.5*double(NPars)/(lambda*lambda)) +(tatb/lambda)-sumt2*(gamma*lambda+gamma*gamma)/pow(lambda,3);
+			Kab=(Jab*Jba/Iab)+Iab*Kfact;
+			//printf("new Kfact=%g\n",Kfact);
+			
+			Jab*=-2.0;
+			Jba*=-2.0;
 			Kab*=4.0;
 			I(a,b)=Iab;
 			J(a,b)=Jab+Jba;
@@ -81,6 +99,7 @@ double &I,double &Jaterm,double &Jbterm,double &Kabterm){
 	X=gamma*gamma*pow(theta_a-theta_b,2)+alpha*gamma*(theta_a*theta_a+theta_b*theta_b);
 	deltheta2=(theta_a-theta_b)*(theta_a-theta_b);
 	sumt2=theta_a*theta_a+theta_b*theta_b;
+	//printf("ThetaTrain_ab=(%g,%g)\n",theta_a,theta_b);
 	
 	I=sqrt(alpha/lambda)*exp(-0.5*X/lambda);
 	Jterm=(-1.0/lambda)
@@ -96,7 +115,7 @@ double &I,double &Jaterm,double &Jbterm,double &Kabterm){
 	//Jab*=-2;
 	Jaterm*=-2;
 	Jbterm*=-2;
-	printf("I=%8.5f, Jaterm=%8.5f, Jbterm=%8.5f, Sum=%8.5f, Kabterm=%8.5f\n",I,Jaterm,Jbterm,Jaterm+Jbterm,Kabterm);
+	//printf("I=%8.5f, Jaterm=%8.5f, Jbterm=%8.5f, Sum=%8.5f, Kabterm=%8.5f\n",I,Jaterm,Jbterm,Jaterm+Jbterm,Kabterm);
 }
 
 void CSimplexSampler::GetIiJiKiUniform(double ThetaPrior,double Lambda,double theta_a,double theta_b,
@@ -138,7 +157,6 @@ double &I,double &Jaterm,double &Jbterm,double &Kabterm){
 	Jaterm=-Ja/I;
 	Jbterm=-Jb/I;
 	Kabterm=Kab/I;
-	printf("I=%8.5f, Jaterm=%8.5f, Jbterm=%8.5f, Sum=%8.5f, Kabterm=%8.5f\n",
-	I,Jaterm,Jbterm,Jaterm+Jbterm,Kabterm);
+	//printf("I=%8.5f, Jaterm=%8.5f, Jbterm=%8.5f, Sum=%8.5f, Kabterm=%8.5f\n",I,Jaterm,Jbterm,Jaterm+Jbterm,Kabterm);
 
 }

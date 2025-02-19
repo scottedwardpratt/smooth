@@ -45,6 +45,7 @@ namespace NBandSmooth{
 		void OptimizeSimplex_MC();
 		void SetThetaSimplex(double R);
 		void SetThetaSimplexPlus1(double R);
+		void SetThetaLatinHyperCube(vector<vector<double>> &theta);
 		
 		double GetSigma2Bar(double Lambda,double ALPHA,double &detB,double &W11);
 		void GetC0DDprime(double Lambda,vector<double> &theta1,vector<double> &theta2,double &C0,double &D,double &Dprime);
