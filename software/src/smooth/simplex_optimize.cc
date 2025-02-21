@@ -13,7 +13,8 @@ void CSimplexSampler::Optimize(double LAMBDASet,double ALPHAset){
 	LAMBDA=LAMBDASet;
 	ALPHA=ALPHAset;
 	PLUS1=false;
-	NMC=parmap.getI("Simplex_NMC",0);
+	if(NMC==0)
+		NMC=parmap.getI("Simplex_NMC",0);
 	if(NMC==0){
 		CLog::Info("Enter NMC: ");
 		scanf("%u",&NMC);
@@ -254,15 +255,15 @@ void CSimplexSampler::SetThetaLatinHyperCube(vector<vector<double>> &theta){
 }
 
 void CSimplexSampler::Optimize_MC(){
-	double ALPHA=0.01,Sigma2Bar,bestSigma2,dtheta,detB,W11,r,successrate;
-	unsigned int imc,nmc,itrain,ipar,nfail=0,nsuccess=0;
+	double Sigma2Bar,bestSigma2,dtheta,detB,W11,r,successrate;
+	unsigned int imc,itrain,ipar,nfail=0,nsuccess=0;
+	FILE *fptr,*fptr_vsNMC;
 	Crandy randy(time(NULL));
 	vector<vector<double>> besttheta;
-	nmc=parmap.getI("Simplex_NMC",1000);
-	printf("NMC=%u\n",nmc);
-	dtheta=0.2/sqrt(double(NTrainingPts));
+	printf("NTrainingpts=%u, NMC=%u, LAMBDA=%g, ALPHA=%g\n",NTrainingPts,NMC,LAMBDA,ALPHA);
+	dtheta=0.05/sqrt(double(NTrainingPts));
 	
-	
+	/*
 	double R0=1.0/sqrt(3.0);
 	besttheta.resize(NTrainingPts);
 	for(itrain=0;itrain<NTrainingPts;itrain++){
@@ -276,9 +277,9 @@ void CSimplexSampler::Optimize_MC(){
 			}
 		}
 	}
+	*/
 	
-	
-	//SetThetaLatinHyperCube(besttheta);
+	SetThetaLatinHyperCube(besttheta);
 	SetThetaTrain(besttheta);
 	
 	Sigma2Bar=GetSigma2Bar(LAMBDA,ALPHA,detB,W11);
@@ -286,10 +287,14 @@ void CSimplexSampler::Optimize_MC(){
 	printf("beginning: bestSigma2=%g\n",bestSigma2);
 	
 	string filename="Sigma2vsNMC/NTrain"+to_string(NTrainingPts)+".txt";
-	FILE *fptr_vsNMC=fopen(filename.c_str(),"w");
+	fptr_vsNMC=fopen(filename.c_str(),"w");
 	fprintf(fptr_vsNMC,"0 %g\n",bestSigma2);
 	
-	for(imc=0;imc<nmc;imc++){
+	fptr=fopen("Sigma2vsNTrain_Latin.txt","a");
+	fprintf(fptr,"%u %g\n",NTrainingPts,bestSigma2);
+	fclose(fptr);
+	
+	for(imc=0;imc<NMC;imc++){
 		for(itrain=0;itrain<NTrainingPts;itrain++){
 			for(ipar=0;ipar<NPars;ipar++){
 				ThetaTrain[itrain][ipar]=besttheta[itrain][ipar]+dtheta*randy.ran_gauss();
@@ -314,9 +319,10 @@ void CSimplexSampler::Optimize_MC(){
 			if(imc<pow(2,n))
 				n+=1000;
 		}
-		if((100*(imc+1)%nmc)==0){
+		if((100*(imc+1)%NMC)==0){
+			
 			successrate=double(nsuccess)/double(nsuccess+nfail);
-			printf("++++++++++ finished %g percent, bestSigma2=%g, success %%=%g, dtheta=%g ++++++++++\n",100.0*(imc+1.0)/double(nmc),bestSigma2,100.0*successrate,dtheta);
+			printf("++++++++++ finished %g percent, bestSigma2=%g, success %%=%g, dtheta=%g ++++++++++\n",100.0*(imc+1.0)/double(NMC),bestSigma2,100.0*successrate,dtheta);
 			dtheta*=0.05+2.0*successrate;
 			nfail=nsuccess=0;
 		}
@@ -336,8 +342,16 @@ void CSimplexSampler::Optimize_MC(){
 		printf(": %8.5f\n",sqrt(r));
 		
 	}
-	FILE *fptr=fopen("Sigma2vsNTrain.txt","a");
-	fprintf(fptr,"%3d %8.5f\n",NTrainingPts,bestSigma2);
+	fptr=fopen("Sigma2vsNTrain.txt","a");
+	fprintf(fptr,"%3d %8.6f\n",NTrainingPts,bestSigma2);
+	fclose(fptr);
+	
+	fptr=fopen("Sigma2vsLambda.txt","a");
+	fprintf(fptr,"%8.5f %8.6f\n",LAMBDA,bestSigma2);
+	fclose(fptr);
+	
+	fptr=fopen("Sigma2vsNPars.txt","a");
+	fprintf(fptr,"%8.5u %8.6f %u\n",NPars,bestSigma2,NTrainingPts);
 	fclose(fptr);
 	
 	/*
@@ -440,7 +454,7 @@ void CSimplexSampler::OptimizeSimplex_MC(){
 
 void CSimplexSampler::OptimizeSphere_MC(){
 	double Sigma2Bar,bestSigma2=1.0E99,dtheta,detB,W11,r,R0=1.0,successrate;
-	unsigned int imc,nmc=NMC,itrain,ipar,nfail=0,nsuccess=0;
+	unsigned int imc,itrain,ipar,nfail=0,nsuccess=0;
 	Crandy randy(time(NULL));
 	vector<vector<double>> besttheta;
 
@@ -473,7 +487,7 @@ void CSimplexSampler::OptimizeSphere_MC(){
 	bestSigma2=Sigma2Bar;
 	printf("beginning: bestSigma2=%g\n",bestSigma2);
 	
-	for(imc=0;imc<nmc;imc++){
+	for(imc=0;imc<NMC;imc++){
 		for(itrain=1;itrain<NTrainingPts;itrain++){
 			r=0.0;
 			for(ipar=0;ipar<NPars;ipar++){
@@ -500,9 +514,9 @@ void CSimplexSampler::OptimizeSphere_MC(){
 		}
 		else
 			nfail+=1;
-		if((100*(imc+1)%nmc)==0){
+		if((100*(imc+1)%NMC)==0){
 			successrate=double(nsuccess)/double(nsuccess+nfail);
-			printf("++++++++ finished %g percent, bestSigma2=%g, bestR=%g, success %%=%g, dtheta=%g +++++++++++\n",100.0*(imc+1.0)/double(nmc),bestSigma2,fabs(besttheta[1][0]),100.0*successrate,dtheta);
+			printf("++++++++ finished %g percent, bestSigma2=%g, bestR=%g, success %%=%g, dtheta=%g +++++++++++\n",100.0*(imc+1.0)/double(NMC),bestSigma2,fabs(besttheta[1][0]),100.0*successrate,dtheta);
 			dtheta*=0.05+2.0*successrate;
 			nfail=nsuccess=0;
 		}

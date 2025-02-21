@@ -202,3 +202,62 @@ void CSmoothEmulator::CalcSigmaALambda(){
 	CalcLogP();
 
 }
+
+void CSmoothEmulator::CalcWBprimeChi(){
+	unsigned int a,b,ipar;
+	double dtheta,dtheta2,C0,sa2=SigmaA*SigmaA,YBinvY;
+	Eigen::VectorXd ytrain(NTrainingPts);
+	Eigen::MatrixXd BB(NTrainingPts,NTrainingPts);
+	
+	Bprime.resize(NTrainingPts,NTrainingPts);
+	Bprimeprime.resize(NTrainingPts,NTrainingPts);
+	chiprime.resize(NTrainingPts);
+	for(a=0;a<NTrainingPts;a++){
+		ytrain(a)=smoothmaster->traininginfo->YTrain[iY][a];
+		for(b=0;b<NTrainingPts;b++){
+			dtheta2=0.0;
+			for(ipar=0;ipar<NPars;ipar++){
+				dtheta=ThetaTrain[a][ipar]-ThetaTrain[b][ipar];
+				dtheta2+=dtheta*dtheta;
+			}
+			C0=GetCorrelation(ThetaTrain[a],ThetaTrain[b]);
+			Bprime(a,b)=C0*dtheta2;
+			Bprimeprime(a,b)=Bprime(a,b)*dtheta2;
+		}
+	}
+	YBinvY=ytrain.transpose()*Binv*ytrain;
+	Winv(0,0)=-double(NTrainingPts)/sa2+(3.0/(sa2*sa2))*YBinvY;
+	
+	Eigen::MatrixXd BB(NTrainingPts,NTrainingPts);
+	BB=Binv*Bprime*Binv;
+	Winv(1,0)=(-1.0/pow(SigmaA*LAMBDA,3))*ytrain*BB*ytrain;
+	Winv(0,1)=Winv[1][0];
+	
+	double term1,term2;
+	term1=2.0*ytrain*BB*Bprime*Binv*ytrain;
+	term2=ytrain*Binv*Bprimeprime*Binv*ytrain;
+	Winv(1,2)=0.5*d2detBinvdLambda2+(0.5/(sa2*pow(LAMBDA,6))*(term1-term2)
+		+(3.0/(2.0*sa2*pow(LAMBDA,4))*term2;
+	W=Winv.inverse();
+
+	chiprime=Binv*Bprime*Binv*ytrain;
+	
+}
+
+double CSmoothEmulator::GetSigma2_Lambda(vector<double> &theta){
+	unsigned int a,ipar;
+	double dtheta2,answer;
+	Eigen::VectorXd c0(NTrainingPts);
+	Eigen::VectorXd cprime0(NTrainingPts);
+	for(a=0;a<NTrainingPts;a++){
+		dtheta2=0.0;
+		for(ipar=0;ipar<NPars;ipar++)
+			dtheta2+=pow(theta[i]-ThetaTrain[a][i],2);
+		c0(a)=GetCorrelation(theta,ThetaTrain[a]);
+		cprime0(a)=dtheta2*c0(a);
+	}
+	answer=pow((cprime0*chi-c0prime*chiprime)/pow(LAMBDA,3),2)*W(1,1);
+	return answer;
+}
+	
+	

@@ -33,12 +33,17 @@ namespace NBandSmooth{
 		double LAMBDA,SigmaA,ALPHA,LambdaVariance;
 		double logP,detB,d2detBinvdLambda2;
 		bool GPOPTION;
-		vector<vector<double>> ThetaTrain,TTrain;
+		vector<vector<double>> ThetaTrain;
 		Eigen::MatrixXd B,Binv;
-		Eigen::VectorXd chi;
+		Eigen::MatrixXd Bprime,Bprimeprime;
+		Eigen::VectorXd chi,chiprime;
+		Eigen::Matrix2d W,Winv;
+		void CalcWBprimeBprimeprime();
 
 		CSmoothEmulator(string observable_name_set);
 		double GetCorrelation(vector<double> &theta1,vector<double> &theta2);
+		void CalcWBprimeChi();
+		double GetSigma2_Lambda(vector<double> &theta);
 
 		void SetThetaTrain();
 		void Tune();
