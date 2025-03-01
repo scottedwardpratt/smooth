@@ -18,6 +18,7 @@ CSimplexSampler::CSimplexSampler(){
 	priorinfo=new CPriorInfo(prior_info_filename);
 	CModelParameters::priorinfo=priorinfo;
 	NPars=priorinfo->NModelPars;
+	INCLUDE_LAMBDA_UNCERTAINTY=parmap.getB("Simplex_INCLUDE_LAMBDA_UNCERTAINTY",true);
 }
 
 void CSimplexSampler::SetThetaSimplex(double RSimplexSet){

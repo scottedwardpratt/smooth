@@ -20,17 +20,20 @@ void CSmoothEmulator::CalcSigmaA(){
 }
 
 void CSmoothEmulator::CalcLogP(){
+	Eigen::MatrixXd BB=B;
 	double exparg=0.0;
+	double detfactor=4*sqrt(NTrainingPts);
 	for(int a=0;a<int(NTrainingPts);a++){
 		for(int b=0;b<int(NTrainingPts);b++){
 			exparg-=0.5*smoothmaster->traininginfo->YTrain[iY][a]*Binv(a,b)*smoothmaster->traininginfo->YTrain[iY][b];
 		}
 	}
 	exparg=exparg/(SigmaA*SigmaA);
-	double detB=B.determinant();
-	logP=-0.5*log(fabs(detB))-NTrainingPts*log(SigmaA)+exparg;
+	BB=B*detfactor;
+	detBB=BB.determinant();
+	logP=-0.5*log(fabs(detBB))-NTrainingPts*log(SigmaA)+exparg;
 	if(isinf(logP)){
-		printf("XXXXXXXXX detB=%g, Lambda=%g, SigmaA=%g, exparg=%g\n",detB,LAMBDA,SigmaA,exparg);
+		printf("XXXXXXXXX detBB=%g, Lambda=%g, SigmaA=%g, exparg=%g\n",detBB,LAMBDA,SigmaA,exparg);
 	}
 }
 /*
@@ -92,10 +95,10 @@ void CSmoothEmulator::CalcLambdaVariance(){
 		CalcSigmaA();
 		CalcLogP();
 		//w=exp(logP);
-		w=sqrt(Binv.determinant());
+		w=sqrt(fabs(detBB));
 		double factor=pow(SigmaA/100.0,NTrainingPts);
 		w=w/factor;
-		printf("L=%g, w=%g, |Binv|=%g, SigmaA=%g\n",L,w,Binv.determinant(),SigmaA);
+		printf("L=%g, w=%g, |BB|=%g, SigmaA=%g\n",L,w,detBB,SigmaA);
 		norm+=w;
 		Lbar+=w*L;
 		L2bar+=w*L*L;
@@ -107,9 +110,9 @@ void CSmoothEmulator::CalcLambdaVariance(){
 }
 
 void CSmoothEmulator::CalcSigmaALambda(){
-	double LambdaMin=0.5*sqrt(double(NPars));
-	vector<double> bestLAMBDA(3),bestlogP(3),bestdetB(3),bestSigmaA(3);
-	double dLambda=1.0;
+	double LambdaMin=0.5*sqrt(double(NPars)),LambdaMax=8;
+	vector<double> bestLAMBDA(3),bestlogP(3),bestlndetBB(3),bestSigmaA(3);
+	double dLambda=1.0,lndetBB;
 	Eigen::Matrix3d A123;
 	Eigen::Vector3d X123,Y123;
 	int ntry=0,nsuccess=0,il;
@@ -118,62 +121,78 @@ void CSmoothEmulator::CalcSigmaALambda(){
 
 	LAMBDA=LambdaMin;
 	CalcB();
+	if(INCLUDE_LAMBDA_UNCERTAINTY){
+		CalcWBprimeChi();
+	}
 	CalcSigmaA();
 	CalcLogP();
-	detB=log(Binv.determinant());
+	lndetBB=log(detBB);
 	for(il=0;il<3;il++){
 		bestLAMBDA[il]=-1000-il;
 		bestSigmaA[il]=SigmaA;
-		bestlogP[il]=-1000.0-il;
-		bestdetB[il]=detB;
+		bestlogP[il]=-100000.0-il;
+		bestlndetBB[il]=lndetBB;
 	}
 
 	LAMBDA=LambdaMin;
 	while(nsuccess<3){
 		ntry+=1;
 		CalcB();
+		if(INCLUDE_LAMBDA_UNCERTAINTY){
+			CalcWBprimeChi();
+		}
 		CalcSigmaA();
 		CalcLogP();
-		detB=log(Binv.determinant());
+		printf("LAMBDA=%g, logP=%g\n",LAMBDA,logP);
+		lndetBB=log(detBB);
+		printf("------- ln(detBB) = %g ----------\n",lndetBB);
+		if(!isfinite(detBB)){
+			cout << "|B|=" << detBB << "B=\n" << B << endl;
+			cout << "Binv=\n" << Binv << endl;
+			exit(1);
+		}
 		if(logP>bestlogP[0]){
 			bestLAMBDA[2]=bestLAMBDA[1];
 			bestSigmaA[2]=bestSigmaA[1];
 			bestlogP[2]=bestlogP[1];
-			bestdetB[2]=bestdetB[1];
+			bestlndetBB[2]=bestlndetBB[1];
+			
 			bestLAMBDA[1]=bestLAMBDA[0];
 			bestSigmaA[1]=bestSigmaA[0];
 			bestlogP[1]=bestlogP[0];
-			bestdetB[1]=bestdetB[0];
+			bestlndetBB[1]=bestlndetBB[0];
+			
 			bestLAMBDA[0]=LAMBDA;
 			bestSigmaA[0]=SigmaA;
 			bestlogP[0]=logP;
-			bestdetB[0]=log(detB);
+			bestlndetBB[0]=lndetBB;
 		}
 		else if(logP>bestlogP[1]){
 			bestLAMBDA[2]=bestLAMBDA[1];
 			bestSigmaA[2]=bestSigmaA[1];
 			bestlogP[2]=bestlogP[1];
-			bestdetB[2]=bestdetB[1];
+			bestlndetBB[2]=bestlndetBB[1];
+			
 			bestLAMBDA[1]=LAMBDA;
 			bestSigmaA[1]=SigmaA;
 			bestlogP[1]=logP;
-			bestdetB[1]=log(detB);
+			bestlndetBB[1]=lndetBB;
 		}
 		else if(logP>bestlogP[2]){
 			bestLAMBDA[2]=LAMBDA;
 			bestSigmaA[2]=SigmaA;
 			bestlogP[2]=logP;
-			bestdetB[2]=log(detB);
+			bestlndetBB[2]=lndetBB;
 		}
 
 		if(ntry<3){
 			LAMBDA=LAMBDA+dLambda;
 		}
 		else{
-			if(bestLAMBDA[0]>bestLAMBDA[1] && bestLAMBDA[0]>bestLAMBDA[2]){
+			if(bestLAMBDA[0]>bestLAMBDA[1] && bestLAMBDA[0]>bestLAMBDA[2] && nsuccess==0){
 				LAMBDA=bestLAMBDA[0]+dLambda;
 			}
-			else if(bestLAMBDA[0]<bestLAMBDA[1] && bestLAMBDA[0]<bestLAMBDA[2]){
+			else if(bestLAMBDA[0]<bestLAMBDA[1] && bestLAMBDA[0]<bestLAMBDA[2] && nsuccess==0){
 				LAMBDA=bestLAMBDA[0]-dLambda;
 			}
 			else{
@@ -182,24 +201,42 @@ void CSmoothEmulator::CalcSigmaALambda(){
 					A123(il,1)=bestLAMBDA[il];
 					A123(il,2)=1.0;
 					Y123(il)=bestlogP[il];
+					printf("il=%d: Y123=%g\n, bestlogP=%g\n",il,Y123[il],bestlogP[il]);
 				}
 				X123=A123.colPivHouseholderQr().solve(Y123);
-				LAMBDA=-0.5*X123(0)/X123(1);
+				LAMBDA=-0.5*X123(1)/X123(0);
 				nsuccess+=1;
 				dLambda*=0.5;
 			}
 		}
+		if(LAMBDA<LambdaMin){
+			LAMBDA=LambdaMin;
+			nsuccess=100000;
+		}
+		if(LAMBDA>LambdaMax){
+			LAMBDA=LambdaMax;
+			printf("setting LAMBDA=LambdaMax, nsuccess=%d\n",nsuccess);
+			nsuccess=100000;
+		}
 	}
 
-	for(il=0;il<3;il++){
-		Y123(il=bestdetB[il]);
+	if(INCLUDE_LAMBDA_UNCERTAINTY){
+		for(il=0;il<3;il++){
+			Y123(il)=bestlndetBB[il];
+		}
+		X123=A123.colPivHouseholderQr().solve(Y123);
+		d2lndetBBdLambda2=X123(0);
 	}
-	X123=A123.colPivHouseholderQr().solve(Y123);
-	d2detBinvdLambda2=X123(0);
-
+	
+	
 	CalcB();
+	if(INCLUDE_LAMBDA_UNCERTAINTY){
+		CalcWBprimeChi();
+	}
 	CalcSigmaA();
 	CalcLogP();
+	
+	printf("best LAMBDA=%g\n",LAMBDA);
 
 }
 
@@ -228,16 +265,15 @@ void CSmoothEmulator::CalcWBprimeChi(){
 	YBinvY=ytrain.transpose()*Binv*ytrain;
 	Winv(0,0)=-double(NTrainingPts)/sa2+(3.0/(sa2*sa2))*YBinvY;
 	
-	Eigen::MatrixXd BB(NTrainingPts,NTrainingPts);
 	BB=Binv*Bprime*Binv;
-	Winv(1,0)=(-1.0/pow(SigmaA*LAMBDA,3))*ytrain*BB*ytrain;
-	Winv(0,1)=Winv[1][0];
+	Winv(1,0)=(-1.0/pow(SigmaA*LAMBDA,3))*ytrain.transpose()*BB*ytrain;
+	Winv(0,1)=Winv(1,0);
 	
 	double term1,term2;
-	term1=2.0*ytrain*BB*Bprime*Binv*ytrain;
-	term2=ytrain*Binv*Bprimeprime*Binv*ytrain;
-	Winv(1,2)=0.5*d2detBinvdLambda2+(0.5/(sa2*pow(LAMBDA,6))*(term1-term2)
-		+(3.0/(2.0*sa2*pow(LAMBDA,4))*term2;
+	term1=2.0*ytrain.transpose()*BB*Bprime*Binv*ytrain;
+	term2=ytrain.transpose()*Binv*Bprimeprime*Binv*ytrain;
+	Winv(1,1)=-0.5*d2lndetBBdLambda2+(0.5/(sa2*pow(LAMBDA,6)))*(term1-term2)
+		+(3.0/(2.0*sa2*pow(LAMBDA,4)))*term2;
 	W=Winv.inverse();
 
 	chiprime=Binv*Bprime*Binv*ytrain;
@@ -246,18 +282,25 @@ void CSmoothEmulator::CalcWBprimeChi(){
 
 double CSmoothEmulator::GetSigma2_Lambda(vector<double> &theta){
 	unsigned int a,ipar;
-	double dtheta2,answer;
+	double dtheta2,answer,dEdLambda;
 	Eigen::VectorXd c0(NTrainingPts);
 	Eigen::VectorXd cprime0(NTrainingPts);
 	for(a=0;a<NTrainingPts;a++){
 		dtheta2=0.0;
-		for(ipar=0;ipar<NPars;ipar++)
-			dtheta2+=pow(theta[i]-ThetaTrain[a][i],2);
+		for(ipar=0;ipar<NPars;ipar++){
+			dtheta2+=pow(theta[ipar]-ThetaTrain[a][ipar],2);
+		}
 		c0(a)=GetCorrelation(theta,ThetaTrain[a]);
 		cprime0(a)=dtheta2*c0(a);
 	}
-	answer=pow((cprime0*chi-c0prime*chiprime)/pow(LAMBDA,3),2)*W(1,1);
+	double ABC=(cprime0.transpose()*chi);
+	ABC=ABC-(c0.transpose()*chiprime);
+	dEdLambda=ABC/(LAMBDA*LAMBDA*LAMBDA);
+	answer=dEdLambda*dEdLambda*W(1,1);
+	//printf("dEdLambda=%g, W11=%g. sigma^2_Lambda=%g\n",dEdLambda,W(1,1),answer);
+	//answer=0.0;
 	return answer;
 }
+
 	
 	

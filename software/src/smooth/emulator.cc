@@ -14,7 +14,7 @@ CSmoothEmulator::CSmoothEmulator(string observable_name_set){
 	observable_name=observable_name_set;
 	NTrainingPts=smoothmaster->traininginfo->NTrainingPts;
 	LAMBDA=parmap->getD("SmoothEmulator_LAMBDA",2.0);
-	GPOPTION=parmap->getB("SmoothEmulator_GPOPTION",false);
+	INCLUDE_LAMBDA_UNCERTAINTY=parmap->getB("SmoothEmulator_INCLUDE_LAMBDA_UNCERTAINTY",true);
 	iY=smoothmaster->observableinfo->GetIPosition(observable_name);
 	ALPHA=smoothmaster->observableinfo->ALPHA[iY];
 	ThetaTrain.clear();
@@ -50,22 +50,12 @@ void CSmoothEmulator::CalcB(){
 
 double CSmoothEmulator::GetCorrelation(vector<double> &Theta1,vector<double> &Theta2){
 	unsigned int ipar;
-	if(!GPOPTION){
-		double Theta1DotTheta2=0.0;
-		for(ipar=0;ipar<NPars;ipar++){
-			Theta1DotTheta2+=Theta1[ipar]*Theta2[ipar];
-		}
-		return exp(Theta1DotTheta2/(LAMBDA*LAMBDA));
+	double delTheta,delThetaSquared=0.0;
+	for(ipar=0;ipar<NPars;ipar++){
+		delTheta=Theta1[ipar]-Theta2[ipar];
+		delThetaSquared+=delTheta*delTheta;
 	}
-	else{
-		double delTheta,delThetaSquared=0.0;
-		for(ipar=0;ipar<CModelParameters::NModelPars;ipar++){
-			delTheta=Theta1[ipar]-Theta2[ipar];
-			delThetaSquared+=delTheta*delTheta;
-		}
-		return exp(-0.5*delThetaSquared/(LAMBDA*LAMBDA));
-
-	}
+	return exp(-0.5*delThetaSquared/(LAMBDA*LAMBDA));
 }
 
 void CSmoothEmulator::Tune(){
@@ -75,6 +65,7 @@ void CSmoothEmulator::Tune(){
 void CSmoothEmulator::Tune(double LambdaSet){
 	LAMBDA=LambdaSet;
 	CalcB();
+	CalcWBprimeChi();
 	CalcSigmaA();
 	CalcLogP();
 }

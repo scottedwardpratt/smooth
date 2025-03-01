@@ -8,7 +8,6 @@ using namespace std;
 using namespace NBandSmooth;
 using namespace NMSUUtils;
 
-
 void CSimplexSampler::Optimize(double LAMBDASet,double ALPHAset){
 	LAMBDA=LAMBDASet;
 	ALPHA=ALPHAset;
@@ -73,151 +72,35 @@ void CSimplexSampler::GetC0DDprime(double LAMBDA,vector<double> &theta1,vector<d
 	Dprime=D*delThetaSquared;
 }
 
-double CSimplexSampler::GetSigma2Bar(double LAMBDA,double ALPHA,double &detB,double &W11){
-	unsigned int a,b;
-	Eigen::MatrixXd B,Binv,D,Dprime,BB0,BB1,BB2;
-	double SigmaA=1.0; // SigmaA shouldn't matter
-	double dEdLambda2,d2logdetBdLambda2,Sigma2Bar;
-	double bb,dd,ddprime,detB0,detB1,detB2,dLAMBDA=0.01*LAMBDA;
-	double detfactor=4*sqrt(NTrainingPts);
-	I.resize(NTrainingPts,NTrainingPts);
-	J.resize(NTrainingPts,NTrainingPts);
-	K.resize(NTrainingPts,NTrainingPts);
-	CalcIJK(LAMBDA,priorinfo->ThetaPrior);
-	/*
-	printf("------ General  ------\n");
-	for(a=0;a<NTrainingPts;a++){
-		for(b=0;b<NTrainingPts;b++){
-			printf("%10.3e ",K(a,b));
-		}
-		printf("\n");
-	}
-	CalcIJK_Gaussian(LAMBDA,1.0/sqrt(3.0));
-	printf("------ Gaussian ------\n");
-	for(a=0;a<NTrainingPts;a++){
-		for(b=0;b<NTrainingPts;b++){
-			printf("%10.3e ",K(a,b));
-		}
-		printf("\n");
-	}
-	*/
-
-	B.resize(NTrainingPts,NTrainingPts);
-	Binv.resize(NTrainingPts,NTrainingPts);
-	D.resize(NTrainingPts,NTrainingPts);
-	Dprime.resize(NTrainingPts,NTrainingPts);
-	for(a=0;a<NTrainingPts;a++){
-		for(b=0;b<NTrainingPts;b++){
-			GetC0DDprime(LAMBDA,ThetaTrain[a],ThetaTrain[b],bb,dd,ddprime);
-			B(a,b)=bb; D(a,b)=dd; Dprime(a,b)=ddprime;
-		}
-	}
-	for(a=0;a<NTrainingPts;a++)
-		B(a,a)+=ALPHA*ALPHA;
-	Binv=B.inverse();
-
-	double Iterm,Jterm,Kterm;
-	Iterm=(I*Binv*D*Binv*D*Binv).trace();
-	Jterm=-(J*Binv*D*Binv).trace();
-	Kterm=(K*Binv).trace();
-	dEdLambda2=Iterm+Jterm+Kterm;
-	dEdLambda2=dEdLambda2/pow(LAMBDA,6);
-	double S20=1.0-(I*Binv).trace();
-
-	if(dEdLambda2<-0.002){
-		CLog::Info("dEdLambda2<0, ="+to_string(dEdLambda2)+"\n");
-	}
-	
-	// Calculate d2|B|/dLambda^2
-	BB1=B*detfactor;
-	detB1=BB1.determinant();
-	
-	if(detB1!=detB1){
-		CLog::Fatal("|B| != |B|\n");
-	}
-	if(fabs(detB1)<5.0E-324){
-		CLog::Fatal("|B| too small, = "+to_string(detB1)+"\n");
-	}
-	for(a=0;a<NTrainingPts;a++){
-		for(b=0;b<NTrainingPts;b++){
-			GetC0DDprime(LAMBDA-dLAMBDA,ThetaTrain[a],ThetaTrain[b],bb,dd,ddprime);
-			B(a,b)=bb; D(a,b)=dd; Dprime(a,b)=ddprime;
-		}
-	}
-	for(a=0;a<NTrainingPts;a++)
-		B(a,a)+=ALPHA*ALPHA;
-	BB0=B*detfactor;
-	detB0=BB0.determinant();
-	for(a=0;a<NTrainingPts;a++){
-		for(b=0;b<NTrainingPts;b++){
-			GetC0DDprime(LAMBDA+dLAMBDA,ThetaTrain[a],ThetaTrain[b],bb,dd,ddprime);
-			B(a,b)=bb; D(a,b)=dd; Dprime(a,b)=ddprime;
-		}
-	}
-	for(a=0;a<NTrainingPts;a++)
-		B(a,a)+=ALPHA*ALPHA;
-	BB2=B*detfactor;
-	detB2=BB2.determinant();
-
-	d2logdetBdLambda2=(log(detB2)-2.0*log(detB1)+log(detB0))/(dLAMBDA*dLAMBDA);
-	if(d2logdetBdLambda2<0.0){
-		CLog::Info("d2logdetBdLambda2="+to_string(d2logdetBdLambda2)+", is <0\n");
-	}
-
-	Eigen::Matrix2d W,Winv;
-	//-logZ=0.5*log(fabs(detB))+NTrainingPts*log(SigmaA)+0.5*y*Binv*y;
-
-	W.resize(2,2);
-	Winv.resize(2,2);
-	Winv(0,0)=double(2*NTrainingPts)/(SigmaA*SigmaA);
-
-	Winv(1,0)=Winv(0,1)=(-1.0/(SigmaA*pow(LAMBDA,3)))*((Binv*D).trace());
-
-	Winv(1,1)=0.5*d2logdetBdLambda2 +(3.0/(2.0*pow(LAMBDA,4)))*(D*Binv).trace()
-		+(1.0/pow(LAMBDA,6))*(D*Binv*D*Binv).trace() -(1.0/(2.0*pow(LAMBDA,6)))*(Dprime*Binv).trace();
-
-	W=Winv.inverse();
-	W11=W(1,1);
-	if(W(1,1)<0.0){
-		printf("detB012=(%g,%g,%g)\n",detB0,detB1,detB2);
-		CLog::Info("W(1,1)<0, ="+to_string(W(1,1))+"\n");
-		Sigma2Bar=1.0E99;
-	}
-	double S2_duetoLambda=dEdLambda2*W(1,1);
-	Sigma2Bar=S20+S2_duetoLambda;
-	detB=detB1;
-	return Sigma2Bar;
-}
-
 double my_erfinv (double a)
 {
-    double p, r, t;
-    t = fmaf (a, 0.0f - a, 1.0f);
-    t = log(t);
-    if (fabs(t) > 6.125f) { // maximum ulp error = 2.35793
-        p =              3.03697567e-10; //  0x1.4deb44p-32 
-        p = fma (p, t,  2.93243101e-8); //  0x1.f7c9aep-26 
-        p = fma (p, t,  1.22150334e-6); //  0x1.47e512p-20 
-        p = fma (p, t,  2.84108955e-5); //  0x1.dca7dep-16 
-        p = fma (p, t,  3.93552968e-4); //  0x1.9cab92p-12 
-        p = fma (p, t,  3.02698812e-3); //  0x1.8cc0dep-9 
-        p = fma (p, t,  4.83185798e-3); //  0x1.3ca920p-8 
-        p = fma (p, t, -2.64646143e-1); // -0x1.0eff66p-2 
-        p = fma (p, t,  8.40016484e-1); //  0x1.ae16a4p-1 
-    } else { // maximum ulp error = 2.35002
-        p =              5.43877832e-9;  //  0x1.75c000p-28 
-        p = fma (p, t,  1.43285448e-7); //  0x1.33b402p-23 
-        p = fma (p, t,  1.22774793e-6); //  0x1.499232p-20 
-        p = fma (p, t,  1.12963626e-7); //  0x1.e52cd2p-24 
-        p = fma (p, t, -5.61530760e-5); // -0x1.d70bd0p-15 
-        p = fma (p, t, -1.47697632e-4); // -0x1.35be90p-13 
-        p = fma (p, t,  2.31468678e-3); //  0x1.2f6400p-9 
-        p = fma (p, t,  1.15392581e-2); //  0x1.7a1e50p-7 
-        p = fma (p, t, -2.32015476e-1); // -0x1.db2aeep-3 
-        p = fma (p, t,  8.86226892e-1); //  0x1.c5bf88p-1 
-    }
-    r = a * p;
-    return r;
+	double p, r, t;
+	t = fmaf (a, 0.0f - a, 1.0f);
+	t = log(t);
+	if (fabs(t) > 6.125f) { // maximum ulp error = 2.35793
+		p =              3.03697567e-10; //  0x1.4deb44p-32 
+		p = fma (p, t,  2.93243101e-8); //  0x1.f7c9aep-26 
+		p = fma (p, t,  1.22150334e-6); //  0x1.47e512p-20 
+		p = fma (p, t,  2.84108955e-5); //  0x1.dca7dep-16 
+		p = fma (p, t,  3.93552968e-4); //  0x1.9cab92p-12 
+		p = fma (p, t,  3.02698812e-3); //  0x1.8cc0dep-9 
+		p = fma (p, t,  4.83185798e-3); //  0x1.3ca920p-8 
+		p = fma (p, t, -2.64646143e-1); // -0x1.0eff66p-2 
+		p = fma (p, t,  8.40016484e-1); //  0x1.ae16a4p-1 
+	} else { // maximum ulp error = 2.35002
+		p =              5.43877832e-9;  //  0x1.75c000p-28 
+		p = fma (p, t,  1.43285448e-7); //  0x1.33b402p-23 
+		p = fma (p, t,  1.22774793e-6); //  0x1.499232p-20 
+		p = fma (p, t,  1.12963626e-7); //  0x1.e52cd2p-24 
+		p = fma (p, t, -5.61530760e-5); // -0x1.d70bd0p-15 
+		p = fma (p, t, -1.47697632e-4); // -0x1.35be90p-13 
+		p = fma (p, t,  2.31468678e-3); //  0x1.2f6400p-9 
+		p = fma (p, t,  1.15392581e-2); //  0x1.7a1e50p-7 
+		p = fma (p, t, -2.32015476e-1); // -0x1.db2aeep-3 
+		p = fma (p, t,  8.86226892e-1); //  0x1.c5bf88p-1 
+	}
+	r = a * p;
+	return r;
 }
 
 void CSimplexSampler::SetThetaLatinHyperCube(vector<vector<double>> &theta){
@@ -267,15 +150,15 @@ void CSimplexSampler::Optimize_MC(){
 	double R0=1.0/sqrt(3.0);
 	besttheta.resize(NTrainingPts);
 	for(itrain=0;itrain<NTrainingPts;itrain++){
-		besttheta[itrain].resize(NPars);
-		for(ipar=0;ipar<NPars;ipar++){
-			besttheta[itrain][ipar]=R0*randy.ran_gauss();
-			if(itrain==0)
-				besttheta[itrain][ipar]=0.0;
-			if(itrain==1 && ipar!=0){
-				besttheta[itrain][ipar]=0.0;
-			}
-		}
+	besttheta[itrain].resize(NPars);
+	for(ipar=0;ipar<NPars;ipar++){
+	besttheta[itrain][ipar]=R0*randy.ran_gauss();
+	if(itrain==0)
+	besttheta[itrain][ipar]=0.0;
+	if(itrain==1 && ipar!=0){
+	besttheta[itrain][ipar]=0.0;
+	}
+	}
 	}
 	*/
 	
@@ -323,7 +206,7 @@ void CSimplexSampler::Optimize_MC(){
 			
 			successrate=double(nsuccess)/double(nsuccess+nfail);
 			printf("++++++++++ finished %g percent, bestSigma2=%g, success %%=%g, dtheta=%g ++++++++++\n",100.0*(imc+1.0)/double(NMC),bestSigma2,100.0*successrate,dtheta);
-			dtheta*=0.05+2.0*successrate;
+			dtheta*=0.05+4.0*successrate;
 			nfail=nsuccess=0;
 		}
 		
@@ -359,40 +242,40 @@ void CSimplexSampler::Optimize_MC(){
 	vector<vector<double>> ctheta;
 	ctheta.resize(NTrainingPts);
 	for(itrain=0;itrain<NTrainingPts;itrain++)
-		ctheta[itrain].resize(NTrainingPts);
+	ctheta[itrain].resize(NTrainingPts);
 	vector<double> rtrain(NTrainingPts);
 	for(itrain=0;itrain<NTrainingPts;itrain++){
-		rtrain[itrain]=0.0;
-		for(ipar=0;ipar<NPars;ipar++){
-			rtrain[itrain]+=besttheta[itrain][ipar]*besttheta[itrain][ipar];
-		}
-		rtrain[itrain]=sqrt(rtrain[itrain]);
+	rtrain[itrain]=0.0;
+	for(ipar=0;ipar<NPars;ipar++){
+	rtrain[itrain]+=besttheta[itrain][ipar]*besttheta[itrain][ipar];
+	}
+	rtrain[itrain]=sqrt(rtrain[itrain]);
 	}
 	for(ipar=0;ipar<NPars;ipar++)
 	for(itrain=0;itrain<NTrainingPts;itrain++){
-		for(jtrain=0;jtrain<NTrainingPts;jtrain++){
-			double rij=0.0;
-			if(rtrain[itrain]>0.1 && rtrain[jtrain]>0.1){
-				ctheta[itrain][jtrain]=0.0;
-				for(ipar=0;ipar<NPars;ipar++){
-					rij+=pow(besttheta[itrain][ipar]-besttheta[jtrain][ipar],2);
-					ctheta[itrain][jtrain]+=besttheta[itrain][ipar]*besttheta[jtrain][ipar];
-				}
-				rij=sqrt(rij);
-				ctheta[itrain][jtrain]=ctheta[itrain][jtrain]/(rtrain[itrain]*rtrain[jtrain]);
-				fprintf(fptr,"%8.5f ",ctheta[itrain][jtrain]);
-			}
-		}
+	for(jtrain=0;jtrain<NTrainingPts;jtrain++){
+	double rij=0.0;
+	if(rtrain[itrain]>0.1 && rtrain[jtrain]>0.1){
+	ctheta[itrain][jtrain]=0.0;
+	for(ipar=0;ipar<NPars;ipar++){
+	rij+=pow(besttheta[itrain][ipar]-besttheta[jtrain][ipar],2);
+	ctheta[itrain][jtrain]+=besttheta[itrain][ipar]*besttheta[jtrain][ipar];
+	}
+	rij=sqrt(rij);
+	ctheta[itrain][jtrain]=ctheta[itrain][jtrain]/(rtrain[itrain]*rtrain[jtrain]);
+	fprintf(fptr,"%8.5f ",ctheta[itrain][jtrain]);
+	}
+	}
 	}			
 	
 	fptr=fopen("ctheta.txt","w");
 	for(itrain=0;itrain<NTrainingPts;itrain++){
-		sort(ctheta[itrain].begin(),ctheta[itrain].end());
-		for(jtrain=0;jtrain<NTrainingPts;jtrain++){
-			fprintf(fptr,"%8.5f ",ctheta[itrain][jtrain]);
+	sort(ctheta[itrain].begin(),ctheta[itrain].end());
+	for(jtrain=0;jtrain<NTrainingPts;jtrain++){
+	fprintf(fptr,"%8.5f ",ctheta[itrain][jtrain]);
 
-		}
-		fprintf(fptr,"\n");
+	}
+	fprintf(fptr,"\n");
 	}
 	fclose(fptr);
 	*/
@@ -440,7 +323,7 @@ void CSimplexSampler::OptimizeSimplex_MC(){
 		if((100*(imc+1)%NMC)==0){
 			successrate=double(nsuccess)/double(nsuccess+nfail);
 			printf("+++++++++ finished %g percent, bestSigma2=%g, success %%=%g, dR=%g ++++++++\n",100.0*(imc+1.0)/double(NMC),bestSigma2,100.0*successrate,dR);
-			dR*=0.05+2.0*successrate;
+			dR*=0.05+4.0*successrate;
 			nfail=nsuccess=0;
 		}
 	}
@@ -517,11 +400,134 @@ void CSimplexSampler::OptimizeSphere_MC(){
 		if((100*(imc+1)%NMC)==0){
 			successrate=double(nsuccess)/double(nsuccess+nfail);
 			printf("++++++++ finished %g percent, bestSigma2=%g, bestR=%g, success %%=%g, dtheta=%g +++++++++++\n",100.0*(imc+1.0)/double(NMC),bestSigma2,fabs(besttheta[1][0]),100.0*successrate,dtheta);
-			dtheta*=0.05+2.0*successrate;
+			dtheta*=0.05+4.0*successrate;
 			nfail=nsuccess=0;
 		}
 		
 	}
 	printf("--- best Sigma2=%g ---\n",bestSigma2);
 	SetThetaTrain(besttheta);
+}
+
+double CSimplexSampler::GetSigma2Bar(double LAMBDA,double ALPHA,double &detB,double &W11){
+	unsigned int a,b;
+	Eigen::MatrixXd B,Binv,D,Dprime,BB0,BB1,BB2;
+	double SigmaA=1.0; // SigmaA shouldn't matter
+	double dEdLambda2,d2logdetBdLambda2,Sigma2Bar;
+	double bb,dd,ddprime,detB0,detB1,detB2,dLAMBDA=0.01*LAMBDA,S20;
+	double detfactor=4*sqrt(NTrainingPts);
+	
+	I.resize(NTrainingPts,NTrainingPts);
+	J.resize(NTrainingPts,NTrainingPts);
+	K.resize(NTrainingPts,NTrainingPts);
+	CalcIJK(LAMBDA,priorinfo->ThetaPrior);
+	
+	/*
+	printf("------ General  ------\n");
+	for(a=0;a<NTrainingPts;a++){
+	for(b=0;b<NTrainingPts;b++){
+	printf("%10.3e ",K(a,b));
+	}
+	printf("\n");
+	}
+	CalcIJK_Gaussian(LAMBDA,1.0/sqrt(3.0));
+	printf("------ Gaussian ------\n");
+	for(a=0;a<NTrainingPts;a++){
+	for(b=0;b<NTrainingPts;b++){
+	printf("%10.3e ",K(a,b));
+	}
+	printf("\n");
+	}
+	*/
+
+	B.resize(NTrainingPts,NTrainingPts);
+	Binv.resize(NTrainingPts,NTrainingPts);
+	D.resize(NTrainingPts,NTrainingPts);
+	Dprime.resize(NTrainingPts,NTrainingPts);
+	for(a=0;a<NTrainingPts;a++){
+		for(b=0;b<NTrainingPts;b++){
+			GetC0DDprime(LAMBDA,ThetaTrain[a],ThetaTrain[b],bb,dd,ddprime);
+			B(a,b)=bb; D(a,b)=dd; Dprime(a,b)=ddprime;
+		}
+	}
+	for(a=0;a<NTrainingPts;a++)
+		B(a,a)+=ALPHA*ALPHA;
+	Binv=B.inverse();
+	S20=1.0-(I*Binv).trace();
+	if(INCLUDE_LAMBDA_UNCERTAINTY){
+
+		double Iterm,Jterm,Kterm;
+		Iterm=(I*Binv*D*Binv*D*Binv).trace();
+		Jterm=-(J*Binv*D*Binv).trace();
+		Kterm=(K*Binv).trace();
+		dEdLambda2=Iterm+Jterm+Kterm;
+		dEdLambda2=dEdLambda2/pow(LAMBDA,6);
+
+		if(dEdLambda2<-0.002){
+			CLog::Info("dEdLambda2<0, ="+to_string(dEdLambda2)+"\n");
+		}
+	
+		// Calculate d2|B|/dLambda^2
+		BB1=B*detfactor;
+		detB1=BB1.determinant();
+	
+		if(detB1!=detB1){
+			CLog::Fatal("|B| != |B|\n");
+		}
+		if(fabs(detB1)<5.0E-324){
+			CLog::Fatal("|B| too small, = "+to_string(detB1)+"\n");
+		}
+		for(a=0;a<NTrainingPts;a++){
+			for(b=0;b<NTrainingPts;b++){
+				GetC0DDprime(LAMBDA-dLAMBDA,ThetaTrain[a],ThetaTrain[b],bb,dd,ddprime);
+				B(a,b)=bb; D(a,b)=dd; Dprime(a,b)=ddprime;
+			}
+		}
+		for(a=0;a<NTrainingPts;a++)
+			B(a,a)+=ALPHA*ALPHA;
+		BB0=B*detfactor;
+		detB0=BB0.determinant();
+		for(a=0;a<NTrainingPts;a++){
+			for(b=0;b<NTrainingPts;b++){
+				GetC0DDprime(LAMBDA+dLAMBDA,ThetaTrain[a],ThetaTrain[b],bb,dd,ddprime);
+				B(a,b)=bb; D(a,b)=dd; Dprime(a,b)=ddprime;
+			}
+		}
+		for(a=0;a<NTrainingPts;a++)
+			B(a,a)+=ALPHA*ALPHA;
+		BB2=B*detfactor;
+		detB2=BB2.determinant();
+
+		d2logdetBdLambda2=(log(detB2)-2.0*log(detB1)+log(detB0))/(dLAMBDA*dLAMBDA);
+		if(d2logdetBdLambda2<0.0){
+			CLog::Info("d2logdetBdLambda2="+to_string(d2logdetBdLambda2)+", is <0\n");
+		}
+
+		Eigen::Matrix2d W,Winv;
+		//-logZ=0.5*log(fabs(detB))+NTrainingPts*log(SigmaA)+0.5*y*Binv*y;
+
+		W.resize(2,2);
+		Winv.resize(2,2);
+		Winv(0,0)=double(2*NTrainingPts)/(SigmaA*SigmaA);
+
+		Winv(1,0)=Winv(0,1)=(-1.0/(SigmaA*pow(LAMBDA,3)))*((Binv*D).trace());
+
+		Winv(1,1)=0.5*d2logdetBdLambda2 +(3.0/(2.0*pow(LAMBDA,4)))*(D*Binv).trace()
+			+(1.0/pow(LAMBDA,6))*(D*Binv*D*Binv).trace() -(1.0/(2.0*pow(LAMBDA,6)))*(Dprime*Binv).trace();
+
+		W=Winv.inverse();
+		W11=W(1,1);
+		if(W(1,1)<0.0){
+			printf("detB012=(%g,%g,%g)\n",detB0,detB1,detB2);
+			CLog::Info("W(1,1)<0, ="+to_string(W(1,1))+"\n");
+			Sigma2Bar=1.0E99;
+		}
+		double S2_duetoLambda=dEdLambda2*W(1,1);
+		//printf("S20=%g, S2_duetoLambda=%g\n",S20,S2_duetoLambda);
+		Sigma2Bar=S20+S2_duetoLambda;
+		detB=detB1;
+		return Sigma2Bar;
+	}
+	else
+		return S20;
 }

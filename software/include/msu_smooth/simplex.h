@@ -25,7 +25,7 @@ namespace NBandSmooth{
 	public:
 		CparameterMap parmap;
 		unsigned int NPars,NTrainingPts,NMC;
-		bool PLUS1;
+		bool PLUS1,INCLUDE_LAMBDA_UNCERTAINTY;
 		string OptimizeMethod;
 		double LAMBDA,ALPHA; //only used for estimating overall uncertainty
 		vector<vector<double>> ThetaTrain;

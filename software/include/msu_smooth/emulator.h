@@ -31,8 +31,8 @@ namespace NBandSmooth{
 		string observable_name;
 
 		double LAMBDA,SigmaA,ALPHA,LambdaVariance;
-		double logP,detB,d2detBinvdLambda2;
-		bool GPOPTION;
+		double logP,detBB,d2lndetBBdLambda2;
+		bool INCLUDE_LAMBDA_UNCERTAINTY;
 		vector<vector<double>> ThetaTrain;
 		Eigen::MatrixXd B,Binv;
 		Eigen::MatrixXd Bprime,Bprimeprime;

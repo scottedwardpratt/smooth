@@ -20,7 +20,6 @@ CTrainingInfo::CTrainingInfo(CObservableInfo *observableinfo_set,CPriorInfo *pri
 	else{
 		CLog::Fatal("SmoothEmulator_TrainingFormat not recognized,\n should be training_format_smooth or training_format_surmise\n");
 	}
-	
 	unsigned int iy,ntrain;
 	YTrain.resize(NObservables);
 	SigmaYTrain.resize(NObservables);

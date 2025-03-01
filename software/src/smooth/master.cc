@@ -40,11 +40,7 @@ CSmoothMaster::CSmoothMaster(){
 	parmap->set("SmoothEmulator_NPars",NPars);
 	parmap->set("Smooth_NPars",NPars);
 	CTrainingInfo::smoothmaster=this;
-
-	printf("howdy a\n");
 	traininginfo = new CTrainingInfo(observableinfo,priorinfo);
-	printf("howdy b\n");
-
 	CSmoothEmulator::NPars=NPars;
 	CSmoothEmulator::smoothmaster=this;
 	CSmoothEmulator::parmap=parmap;
@@ -87,7 +83,7 @@ void CSmoothMaster::CalcAllSigmaALambda(){
 void CSmoothMaster::TuneAllY(){
 	for(unsigned int iY=0;iY<observableinfo->NObservables;iY++){
 		if((UsePCA && !pca_ignore[iY]) || !UsePCA){
-			//CLog::Info("---- Tuning for "+observableinfo->observable_name[iY]+" ----\n");
+			CLog::Info("---- Tuning for "+observableinfo->observable_name[iY]+" ----\n");
 			emulator[iY]->Tune();
 		}
 	}
@@ -247,29 +243,37 @@ void CSmoothMaster::GetAllYOnly(vector<double> &Theta,vector<double> &Yvec){
 }
 
 void CSmoothMaster::TestAtTrainingPts(){
+	unsigned int iY;
+	for(iY=0;iY<observableinfo->NObservables;iY++){
+		TestAtTrainingPts(iY);
+	}
+
+	/*
 	char pchars[CLog::CHARLENGTH];
 	unsigned int itrain,iY;
 	unsigned int NObservables=observableinfo->NObservables;
 	double Y,SigmaY_emulator;
 	CLog::Info("--- Y_train     Y_emulator    Sigma_emulator ----\n");
 	for(itrain=0;itrain<traininginfo->NTrainingPts;itrain++){
-		CLog::Info("------ itrain="+to_string(itrain)+" --------\n");
-		for(iY=0;iY<NObservables;iY++){
-			GetY(iY,traininginfo->modelpars[itrain],Y,SigmaY_emulator);
-			snprintf(pchars,CLog::CHARLENGTH,
-			"Y[%u]=%10.3e =? %10.3e  +/- %12.5e\n",iY,traininginfo->YTrain[iY][itrain],Y,SigmaY_emulator);
-			CLog::Info(pchars);
-		}
+	CLog::Info("------ itrain="+to_string(itrain)+" --------\n");
+	for(iY=0;iY<NObservables;iY++){
+	GetY(iY,traininginfo->modelpars[itrain],Y,SigmaY_emulator);
+	snprintf(pchars,CLog::CHARLENGTH,
+	"Y[%u]=%10.3e =? %10.3e  +/- %12.5e\n",iY,traininginfo->YTrain[iY][itrain],Y,SigmaY_emulator);
+	CLog::Info(pchars);
 	}
+	}*/
 }
 
 void CSmoothMaster::TestAtTrainingPts(unsigned int iY){
 	char pchars[CLog::CHARLENGTH];
 	unsigned int itrain;
 	double Y,SigmaY_emulator;
-	CLog::Info("--- Y_train     Y_emulator    Sigma_emulator ----\n");
+	CLog::Info("----------- "+observableinfo->observable_name[iY]+" -------------\n");
+	CLog::Info("--- Y_train     Y_emulator    Sigma_emulator ---- Lambda="
+		+to_string(emulator[iY]->LAMBDA)+", SigmaA="+to_string(emulator[iY]->SigmaA)+"\n");
 	for(itrain=0;itrain<traininginfo->NTrainingPts;itrain++){
-		CLog::Info("------ itrain="+to_string(itrain)+" --------\n");
+		CLog::Info("------ itrain="+to_string(itrain)+": ");
 		GetY(iY,traininginfo->modelpars[itrain],Y,SigmaY_emulator);
 		snprintf(pchars,CLog::CHARLENGTH,
 		"Y[%u]=%10.3e =? %10.3e  +/- %12.5e\n",iY,traininginfo->YTrain[iY][itrain],Y,SigmaY_emulator);
