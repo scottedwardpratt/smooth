@@ -8,6 +8,7 @@ using namespace NMSUUtils;
 
 CSimplexSampler::CSimplexSampler(){
 	randy=new Crandy(123);
+	FIRSTCALL=true;
 	parmap.ReadParsFromFile("smooth_data/smooth_parameters/simplex_parameters.txt");
 	string logfilename=parmap.getS("Simplex_LogFileName","Screen");
 	if(logfilename!="Screen"){

@@ -161,9 +161,17 @@ void CSimplexSampler::Optimize_MC(){
 	}
 	}
 	*/
+
 	
-	SetThetaLatinHyperCube(besttheta);
-	SetThetaTrain(besttheta);
+	if(FIRSTCALL==true){
+		SetThetaLatinHyperCube(besttheta);
+		SetThetaTrain(besttheta);
+		FIRSTCALL=false;
+	}
+	else{
+		printf("-------- check\n");
+		besttheta=ThetaTrain;
+	}
 	
 	Sigma2Bar=GetSigma2Bar(LAMBDA,ALPHA,detB,W11);
 	bestSigma2=Sigma2Bar;
@@ -390,7 +398,7 @@ void CSimplexSampler::OptimizeSphere_MC(){
 		if(Sigma2Bar<bestSigma2){
 			nsuccess+=1;
 			bestSigma2=Sigma2Bar;
-			printf("%10d: bestSigma2=%g, R=%g, detB=%g, W11=%g\n",imc,bestSigma2,ThetaTrain[1][0],detB,W11);
+			//printf("%10d: bestSigma2=%g, R=%g, detB=%g, W11=%g\n",imc,bestSigma2,ThetaTrain[1][0],detB,W11);
 			for(itrain=0;itrain<NTrainingPts;itrain++){
 				besttheta[itrain]=ThetaTrain[itrain];
 			}
