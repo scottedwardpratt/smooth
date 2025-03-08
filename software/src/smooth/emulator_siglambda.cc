@@ -98,7 +98,7 @@ void CSmoothEmulator::CalcLambdaVariance(){
 		w=sqrt(fabs(detBB));
 		double factor=pow(SigmaA/100.0,NTrainingPts);
 		w=w/factor;
-		printf("L=%g, w=%g, |BB|=%g, SigmaA=%g\n",L,w,detBB,SigmaA);
+		//printf("L=%g, w=%g, |BB|=%g, SigmaA=%g\n",L,w,detBB,SigmaA);
 		norm+=w;
 		Lbar+=w*L;
 		L2bar+=w*L*L;
@@ -143,9 +143,9 @@ void CSmoothEmulator::CalcSigmaALambda(){
 		}
 		CalcSigmaA();
 		CalcLogP();
-		printf("LAMBDA=%g, logP=%g\n",LAMBDA,logP);
+		//printf("LAMBDA=%g, logP=%g\n",LAMBDA,logP);
 		lndetBB=log(detBB);
-		printf("------- ln(detBB) = %g ----------\n",lndetBB);
+		//printf("------- ln(detBB) = %g ----------\n",lndetBB);
 		if(!isfinite(detBB)){
 			cout << "|B|=" << detBB << "B=\n" << B << endl;
 			cout << "Binv=\n" << Binv << endl;
@@ -201,7 +201,7 @@ void CSmoothEmulator::CalcSigmaALambda(){
 					A123(il,1)=bestLAMBDA[il];
 					A123(il,2)=1.0;
 					Y123(il)=bestlogP[il];
-					printf("il=%d: Y123=%g\n, bestlogP=%g\n",il,Y123[il],bestlogP[il]);
+					//printf("il=%d: Y123=%g\n, bestlogP=%g\n",il,Y123[il],bestlogP[il]);
 				}
 				X123=A123.colPivHouseholderQr().solve(Y123);
 				LAMBDA=-0.5*X123(1)/X123(0);
@@ -236,7 +236,7 @@ void CSmoothEmulator::CalcSigmaALambda(){
 	CalcSigmaA();
 	CalcLogP();
 	
-	printf("best LAMBDA=%g\n",LAMBDA);
+	printf("iY=%u: best LAMBDA=%g\n",iY,LAMBDA);
 
 }
 

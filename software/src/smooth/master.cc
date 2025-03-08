@@ -302,15 +302,24 @@ void CSmoothMaster::TestVsFullModelAlt(){
 	unsigned int NObservables=observableinfo->NObservables;
 	double Y,SigmaY_emulator,realY;
 	vector<double> testtheta;
-	FILE *fptr,*fptr_out;
+	FILE *fptr,*fptr_out,*fptr_fit;
 	string filename;
 	fitpercentage=0.0;
+	double averageaveragesigma2=0.0;
+	
+	int sigma2count[200]={0};
+	double dsigma2=0.0005;
+	int isigma2,ifit;
+	int nfitpercent[100]={0};
+	
 	for(iY=0;iY<NObservables;iY++){
 		nfit=ntest=0;
 		filename="smooth_data/fullmodel_testdata/"+observableinfo->observable_name[iY]+".txt";
 		fptr=fopen(filename.c_str(),"r");
 		filename="smooth_data/fullmodel_testdata/YvsY_"+observableinfo->observable_name[iY]+".txt";
 		fptr_out=fopen(filename.c_str(),"w");
+		
+		double averagesigma2=0.0;
 		
 		testtheta.resize(NPars);
 		do{
@@ -321,6 +330,7 @@ void CSmoothMaster::TestVsFullModelAlt(){
 			if(!feof(fptr)){
 				ntest+=1;
 				GetY(iY,testtheta,Y,SigmaY_emulator);
+				averagesigma2+=SigmaY_emulator*SigmaY_emulator;
 				snprintf(pchars,CLog::CHARLENGTH,
 				"Y[%u]=%10.3e =? %10.3e,    SigmaY_emulator=%12.5e\n",
 				iY,Y,realY,SigmaY_emulator);
@@ -331,11 +341,34 @@ void CSmoothMaster::TestVsFullModelAlt(){
 		}while(!feof(fptr));
 		fclose(fptr);		
 		fclose(fptr_out);
+		averagesigma2=averagesigma2/(ntest*emulator[iY]->SigmaA*emulator[iY]->SigmaA);
+		isigma2=floorl(averagesigma2/dsigma2);
+		if(isigma2<200)
+			sigma2count[isigma2]+=1;
+		averageaveragesigma2+=averagesigma2;
+		CLog::Info("iY="+to_string(iY)+": <sigma^2_E>/sigma_A^2="+to_string(averagesigma2)+"\n");
 		CLog::Info(observableinfo->observable_name[iY]+": "+to_string(nfit)+" out of "+to_string(ntest)+" points within 1 sigma\n");
 		fitpercentage+=100.0*double(nfit)/double(ntest);
+		ifit=floorl(100.0*double(nfit)/double(ntest));
+		nfitpercent[ifit]+=1;
+		if(nfit==0){
+			CLog::Info("nfit=0!!!! for iY="+to_string(iY)+". Check out "+filename+"\n");
+		}
 	}
 	fitpercentage=fitpercentage/double(NObservables);
 	CLog::Info("percentage within 1 sigma = "+to_string(fitpercentage)+"\n");
+	CLog::Info("<<sigma^2_E/sigma_A^2>>="+to_string(averageaveragesigma2/double(NObservables))+"\n");
+	fptr=fopen("sigma2count.txt","w");
+	for(isigma2=0;isigma2<200;isigma2++)
+		fprintf(fptr,"%7.4f %d\n",(isigma2+0.5)*dsigma2,sigma2count[isigma2]);
+	fclose(fptr);
+	
+	filename="fitpercentage.txt";
+	fptr_fit=fopen(filename.c_str(),"w");
+	for(ifit=0;ifit<100;ifit++){
+		fprintf(fptr_fit,"%2d %d\n",ifit,nfitpercent[ifit]);
+	}
+	fclose(fptr_fit);
 }
 
 void CSmoothMaster::TestVsFullModel(){
