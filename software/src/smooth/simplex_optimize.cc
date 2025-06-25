@@ -138,7 +138,7 @@ void CSimplexSampler::SetThetaLatinHyperCube(vector<vector<double>> &theta){
 }
 
 void CSimplexSampler::Optimize_MC(){
-	double Sigma2Bar,bestSigma2,dtheta,detB,W11,r,successrate;
+	double Sigma2Bar,bestSigma2,dtheta,W11,r,successrate;
 	unsigned int imc,itrain,ipar,nfail=0,nsuccess=0;
 	FILE *fptr,*fptr_vsNMC;
 	Crandy randy(time(NULL));
@@ -169,11 +169,10 @@ void CSimplexSampler::Optimize_MC(){
 		FIRSTCALL=false;
 	}
 	else{
-		printf("-------- check\n");
 		besttheta=ThetaTrain;
 	}
 	
-	Sigma2Bar=GetSigma2Bar(LAMBDA,ALPHA,detB,W11);
+	Sigma2Bar=GetSigma2Bar(LAMBDA,ALPHA,W11);
 	bestSigma2=Sigma2Bar;
 	printf("beginning: bestSigma2=%g\n",bestSigma2);
 	
@@ -191,7 +190,7 @@ void CSimplexSampler::Optimize_MC(){
 				ThetaTrain[itrain][ipar]=besttheta[itrain][ipar]+dtheta*randy.ran_gauss();
 			}
 		}
-		Sigma2Bar=GetSigma2Bar(LAMBDA,ALPHA,detB,W11);
+		Sigma2Bar=GetSigma2Bar(LAMBDA,ALPHA,W11);
 		//printf("Sigma2Bar=%g\n",Sigma2Bar);
 		if(Sigma2Bar<bestSigma2){
 			nsuccess+=1;
@@ -219,7 +218,6 @@ void CSimplexSampler::Optimize_MC(){
 		}
 		
 	}
-	printf("--- best Sigma2=%g ---\n",bestSigma2);
 	fprintf(fptr_vsNMC,"%u %g\n",imc,bestSigma2);
 	fclose(fptr_vsNMC);
 	
@@ -290,7 +288,7 @@ void CSimplexSampler::Optimize_MC(){
 }
 
 void CSimplexSampler::OptimizeSimplex_MC(){
-	double R=1.2,bestSigma2,Sigma2bar,dR=0.1,W11,detB,bestR,successrate;
+	double R=1.2,bestSigma2,Sigma2bar,dR=0.1,W11,bestR,successrate;
 	unsigned int imc,nsuccess,nfail,itrain;
 	vector<vector<double>> besttheta;
 	Crandy randy(time(NULL));
@@ -307,7 +305,7 @@ void CSimplexSampler::OptimizeSimplex_MC(){
 	else
 		SetThetaSimplex(R);
 
-	Sigma2bar=GetSigma2Bar(LAMBDA,ALPHA,detB,W11);
+	Sigma2bar=GetSigma2Bar(LAMBDA,ALPHA,W11);
 	bestSigma2=Sigma2bar;
 	printf("beginning: bestSigma2=%g\n",bestSigma2);
 	
@@ -318,7 +316,7 @@ void CSimplexSampler::OptimizeSimplex_MC(){
 			SetThetaSimplexPlus1(R);
 		else
 			SetThetaSimplex(R);
-		Sigma2bar=GetSigma2Bar(LAMBDA,ALPHA,detB,W11);
+		Sigma2bar=GetSigma2Bar(LAMBDA,ALPHA,W11);
 		if(Sigma2bar<bestSigma2){
 			bestSigma2=Sigma2bar;
 			bestR=R;
@@ -339,12 +337,12 @@ void CSimplexSampler::OptimizeSimplex_MC(){
 	printf("bestR=%g\n",bestR);
 	SetThetaSimplex(bestR);
 	SetThetaTrain(besttheta); 
-	Sigma2bar=GetSigma2Bar(LAMBDA,ALPHA,detB,W11);
+	Sigma2bar=GetSigma2Bar(LAMBDA,ALPHA,W11);
 	bestSigma2=Sigma2bar;	
 }
 
 void CSimplexSampler::OptimizeSphere_MC(){
-	double Sigma2Bar,bestSigma2=1.0E99,dtheta,detB,W11,r,R0=1.0,successrate;
+	double Sigma2Bar,bestSigma2=1.0E99,dtheta,W11,r,R0=1.0,successrate;
 	unsigned int imc,itrain,ipar,nfail=0,nsuccess=0;
 	Crandy randy(time(NULL));
 	vector<vector<double>> besttheta;
@@ -374,7 +372,7 @@ void CSimplexSampler::OptimizeSphere_MC(){
 		}
 	}
 	SetThetaTrain(besttheta); 
-	Sigma2Bar=GetSigma2Bar(LAMBDA,ALPHA,detB,W11);
+	Sigma2Bar=GetSigma2Bar(LAMBDA,ALPHA,W11);
 	bestSigma2=Sigma2Bar;
 	printf("beginning: bestSigma2=%g\n",bestSigma2);
 	
@@ -393,12 +391,12 @@ void CSimplexSampler::OptimizeSphere_MC(){
 				ThetaTrain[itrain][ipar]*=ThetaTrain[1][0]/r;
 			}
 		}
-		Sigma2Bar=GetSigma2Bar(LAMBDA,ALPHA,detB,W11);
+		Sigma2Bar=GetSigma2Bar(LAMBDA,ALPHA,W11);
 		
 		if(Sigma2Bar<bestSigma2){
 			nsuccess+=1;
 			bestSigma2=Sigma2Bar;
-			//printf("%10d: bestSigma2=%g, R=%g, detB=%g, W11=%g\n",imc,bestSigma2,ThetaTrain[1][0],detB,W11);
+			//printf("%10d: bestSigma2=%g, R=%g, W11=%g\n",imc,bestSigma2,ThetaTrain[1][0],W11);
 			for(itrain=0;itrain<NTrainingPts;itrain++){
 				besttheta[itrain]=ThetaTrain[itrain];
 			}
@@ -413,25 +411,25 @@ void CSimplexSampler::OptimizeSphere_MC(){
 		}
 		
 	}
-	printf("--- best Sigma2=%g ---\n",bestSigma2);
 	SetThetaTrain(besttheta);
 }
 
-double CSimplexSampler::GetSigma2Bar(double LAMBDA,double ALPHA,double &detB,double &W11){
+double CSimplexSampler::GetSigma2Bar(double LAMBDA,double ALPHA,double &W11){
 	unsigned int a,b;
-	Eigen::MatrixXd B,Binv,D,Dprime,BB0,BB1,BB2;
+	Eigen::MatrixXd B,Binv,D,Dprime,BB0,BB1,BB2,bdd,bddi;
 	double SigmaA=1.0; // SigmaA shouldn't matter
-	double dEdLambda2,d2logdetBdLambda2,Sigma2Bar;
-	double bb,dd,ddprime,detB0,detB1,detB2,dLAMBDA=0.01*LAMBDA,S20;
+	double dEdLambda2,Sigma2Bar;
+	double bb,dd,ddprime,S20;
 	double detfactor=4*sqrt(NTrainingPts);
 	
 	I.resize(NTrainingPts,NTrainingPts);
 	J.resize(NTrainingPts,NTrainingPts);
 	K.resize(NTrainingPts,NTrainingPts);
+	bdd.resize(NTrainingPts,NTrainingPts);
+	bddi.resize(NTrainingPts,NTrainingPts);
 	CalcIJK(LAMBDA,priorinfo->ThetaPrior);
 	
 	/*
-	printf("------ General  ------\n");
 	for(a=0;a<NTrainingPts;a++){
 	for(b=0;b<NTrainingPts;b++){
 	printf("%10.3e ",K(a,b));
@@ -439,7 +437,6 @@ double CSimplexSampler::GetSigma2Bar(double LAMBDA,double ALPHA,double &detB,dou
 	printf("\n");
 	}
 	CalcIJK_Gaussian(LAMBDA,1.0/sqrt(3.0));
-	printf("------ Gaussian ------\n");
 	for(a=0;a<NTrainingPts;a++){
 	for(b=0;b<NTrainingPts;b++){
 	printf("%10.3e ",K(a,b));
@@ -465,8 +462,10 @@ double CSimplexSampler::GetSigma2Bar(double LAMBDA,double ALPHA,double &detB,dou
 	if(INCLUDE_LAMBDA_UNCERTAINTY){
 
 		double Iterm,Jterm,Kterm;
-		Iterm=(I*Binv*D*Binv*D*Binv).trace();
-		Jterm=-(J*Binv*D*Binv).trace();
+		bdd=D*Binv;
+		bddi=Binv*bdd;
+		Iterm=(I*bddi*bdd).trace();
+		Jterm=-(J*bddi).trace();
 		Kterm=(K*Binv).trace();
 		dEdLambda2=Iterm+Jterm+Kterm;
 		dEdLambda2=dEdLambda2/pow(LAMBDA,6);
@@ -477,42 +476,9 @@ double CSimplexSampler::GetSigma2Bar(double LAMBDA,double ALPHA,double &detB,dou
 	
 		// Calculate d2|B|/dLambda^2
 		BB1=B*detfactor;
-		detB1=BB1.determinant();
 	
-		if(detB1!=detB1){
-			CLog::Fatal("|B| != |B|\n");
-		}
-		if(fabs(detB1)<5.0E-324){
-			CLog::Fatal("|B| too small, = "+to_string(detB1)+"\n");
-		}
-		for(a=0;a<NTrainingPts;a++){
-			for(b=0;b<NTrainingPts;b++){
-				GetC0DDprime(LAMBDA-dLAMBDA,ThetaTrain[a],ThetaTrain[b],bb,dd,ddprime);
-				B(a,b)=bb; D(a,b)=dd; Dprime(a,b)=ddprime;
-			}
-		}
-		for(a=0;a<NTrainingPts;a++)
-			B(a,a)+=ALPHA*ALPHA;
-		BB0=B*detfactor;
-		detB0=BB0.determinant();
-		for(a=0;a<NTrainingPts;a++){
-			for(b=0;b<NTrainingPts;b++){
-				GetC0DDprime(LAMBDA+dLAMBDA,ThetaTrain[a],ThetaTrain[b],bb,dd,ddprime);
-				B(a,b)=bb; D(a,b)=dd; Dprime(a,b)=ddprime;
-			}
-		}
-		for(a=0;a<NTrainingPts;a++)
-			B(a,a)+=ALPHA*ALPHA;
-		BB2=B*detfactor;
-		detB2=BB2.determinant();
-
-		d2logdetBdLambda2=(log(detB2)-2.0*log(detB1)+log(detB0))/(dLAMBDA*dLAMBDA);
-		if(d2logdetBdLambda2<0.0){
-			CLog::Info("d2logdetBdLambda2="+to_string(d2logdetBdLambda2)+", is <0\n");
-		}
 
 		Eigen::Matrix2d W,Winv;
-		//-logZ=0.5*log(fabs(detB))+NTrainingPts*log(SigmaA)+0.5*y*Binv*y;
 
 		W.resize(2,2);
 		Winv.resize(2,2);
@@ -520,20 +486,16 @@ double CSimplexSampler::GetSigma2Bar(double LAMBDA,double ALPHA,double &detB,dou
 
 		Winv(1,0)=Winv(0,1)=(-1.0/(SigmaA*pow(LAMBDA,3)))*((Binv*D).trace());
 
-		Winv(1,1)=0.5*d2logdetBdLambda2 +(3.0/(2.0*pow(LAMBDA,4)))*(D*Binv).trace()
-			+(1.0/pow(LAMBDA,6))*(D*Binv*D*Binv).trace() -(1.0/(2.0*pow(LAMBDA,6)))*(Dprime*Binv).trace();
+		Winv(1,1)=(0.5/pow(LAMBDA,6))*(D*Binv*D*Binv).trace();
 
 		W=Winv.inverse();
 		W11=W(1,1);
 		if(W(1,1)<0.0){
-			printf("detB012=(%g,%g,%g)\n",detB0,detB1,detB2);
 			CLog::Info("W(1,1)<0, ="+to_string(W(1,1))+"\n");
 			Sigma2Bar=1.0E99;
 		}
 		double S2_duetoLambda=dEdLambda2*W(1,1);
-		//printf("S20=%g, S2_duetoLambda=%g\n",S20,S2_duetoLambda);
 		Sigma2Bar=S20+S2_duetoLambda;
-		detB=detB1;
 		return Sigma2Bar;
 	}
 	else

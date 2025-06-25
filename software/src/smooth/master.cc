@@ -81,12 +81,23 @@ void CSmoothMaster::CalcAllSigmaALambda(){
 }
 
 void CSmoothMaster::TuneAllY(){
+	FILE *fptr=fopen("sigmalambda.txt","w");
+	double sigmaAbar=0.0,Lambdabar=0.0;
 	for(unsigned int iY=0;iY<observableinfo->NObservables;iY++){
 		if((UsePCA && !pca_ignore[iY]) || !UsePCA){
-			CLog::Info("---- Tuning for "+observableinfo->observable_name[iY]+" ----\n");
+			//CLog::Info("---- Tuning for "+observableinfo->observable_name[iY]+" ----\n");
 			emulator[iY]->Tune();
 		}
+		emulator[iY]->Tune();
+		fprintf(fptr,"%10.3f %10.5f\n",emulator[iY]->SigmaA,emulator[iY]->LAMBDA);
+		//printf("%10.3f %10.5f\n",emulator[iY]->SigmaA,emulator[iY]->LAMBDA);
+		sigmaAbar+=emulator[iY]->SigmaA;
+		Lambdabar+=emulator[iY]->LAMBDA;
 	}
+	sigmaAbar=sigmaAbar/double(observableinfo->NObservables);
+	Lambdabar=Lambdabar/double(observableinfo->NObservables);
+	fclose(fptr);
+	//printf("<sigmaA>=%g, <Lambda>=%g\n",sigmaAbar,Lambdabar);
 }
 
 void CSmoothMaster::TuneAllY(double LambdaSet){

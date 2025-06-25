@@ -5,7 +5,6 @@ using namespace NMSUUtils;
 
 CSmooth::CSmooth(unsigned int NPars_Set,unsigned int maxrank_set){
 	NPars=NPars_Set;
-	UseRFactor=false;
 	MaxRank=maxrank_set;
 	InitArrays();
 }
@@ -19,7 +18,6 @@ CSmooth::CSmooth(){
 		CLog::Info("Inside CSmooth::InitArrays(), MaxRank="+to_string(MaxRank)+" is too big, being reset to 5\n");
 		MaxRank=5;
 	}
-	UseRFactor=parmap.getB("Smooth_UseRFactor",false);
 	InitArrays();
 }
 
@@ -197,20 +195,11 @@ void CSmooth::InitArrays(){
 }
 
 double CSmooth::GetRFactor(double LAMBDA,vector<double> &theta){
-	unsigned int ir,ipar,NPars=theta.size();
+	unsigned int ipar,NPars=theta.size();
 	double r2=0.0,answer;
-	if(UseRFactor){
-		for(ipar=0;ipar<NPars;ipar++)
-			r2+=theta[ipar]*theta[ipar];
-		answer=1.0;
-		for(ir=1;ir<=MaxRank;ir++){
-			answer+=pow(r2/(LAMBDA*LAMBDA),ir)/double(factorial[ir]);
-		}
-		answer=1.0/sqrt(answer);
-	}
-	else{
-		answer=1.0;
-	}
+	for(ipar=0;ipar<NPars;ipar++)
+		r2+=theta[ipar]*theta[ipar];
+	answer=exp(-0.5*r2/(LAMBDA*LAMBDA));
 	return answer;
 }
 
