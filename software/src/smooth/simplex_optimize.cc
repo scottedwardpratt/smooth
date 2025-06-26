@@ -143,25 +143,9 @@ void CSimplexSampler::Optimize_MC(){
 	FILE *fptr,*fptr_vsNMC;
 	Crandy randy(time(NULL));
 	vector<vector<double>> besttheta;
-	printf("NTrainingpts=%u, NMC=%u, LAMBDA=%g, ALPHA=%g\n",NTrainingPts,NMC,LAMBDA,ALPHA);
-	dtheta=0.05/sqrt(double(NTrainingPts));
 	
-	/*
-	double R0=1.0/sqrt(3.0);
-	besttheta.resize(NTrainingPts);
-	for(itrain=0;itrain<NTrainingPts;itrain++){
-	besttheta[itrain].resize(NPars);
-	for(ipar=0;ipar<NPars;ipar++){
-	besttheta[itrain][ipar]=R0*randy.ran_gauss();
-	if(itrain==0)
-	besttheta[itrain][ipar]=0.0;
-	if(itrain==1 && ipar!=0){
-	besttheta[itrain][ipar]=0.0;
-	}
-	}
-	}
-	*/
-
+	CLog::Info("NTrainingpts="+to_string(NTrainingPts)+", NMC="+to_string(NMC)+", LAMBDA="+to_string(LAMBDA)+", ALPHA="+to_string(ALPHA)+"\n");
+	dtheta=0.05/sqrt(double(NTrainingPts));
 	
 	if(FIRSTCALL==true){
 		SetThetaLatinHyperCube(besttheta);
@@ -174,7 +158,7 @@ void CSimplexSampler::Optimize_MC(){
 	
 	Sigma2Bar=GetSigma2Bar(LAMBDA,ALPHA,W11);
 	bestSigma2=Sigma2Bar;
-	printf("beginning: bestSigma2=%g\n",bestSigma2);
+	CLog::Info("Optimize_MC: at beginning: bestSigma2="+to_string(bestSigma2)+"\n");
 	
 	string filename="Sigma2vsNMC/NTrain"+to_string(NTrainingPts)+".txt";
 	fptr_vsNMC=fopen(filename.c_str(),"w");
@@ -191,7 +175,6 @@ void CSimplexSampler::Optimize_MC(){
 			}
 		}
 		Sigma2Bar=GetSigma2Bar(LAMBDA,ALPHA,W11);
-		//printf("Sigma2Bar=%g\n",Sigma2Bar);
 		if(Sigma2Bar<bestSigma2){
 			nsuccess+=1;
 			bestSigma2=Sigma2Bar;
@@ -212,7 +195,7 @@ void CSimplexSampler::Optimize_MC(){
 		if((100*(imc+1)%NMC)==0){
 			
 			successrate=double(nsuccess)/double(nsuccess+nfail);
-			printf("++++++++++ finished %g percent, bestSigma2=%g, success %%=%g, dtheta=%g ++++++++++\n",100.0*(imc+1.0)/double(NMC),bestSigma2,100.0*successrate,dtheta);
+			CLog::Info("++++++ finished "+to_string(100.0*(imc+1.0)/double(NMC))+",  bestSigma2="+to_string(bestSigma2)+", success %%="+to_string(100.0*successrate)+", dtheta="+to_string(dtheta)+"\n");
 			dtheta*=0.05+4.0*successrate;
 			nfail=nsuccess=0;
 		}
@@ -221,14 +204,21 @@ void CSimplexSampler::Optimize_MC(){
 	fprintf(fptr_vsNMC,"%u %g\n",imc,bestSigma2);
 	fclose(fptr_vsNMC);
 	
+	string rthetastring;
+	char rthetachar[11];
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		r=0.0;
-		printf("%2d: ",itrain);
+		rthetastring="-- itrain="+to_string(itrain)+" --\ntheta=:\n";
+		CLog::Info(rthetastring);
+		rthetastring="";
 		for(ipar=0;ipar<NPars;ipar++){
 			r+=pow(besttheta[itrain][ipar],2);
-			printf("%8.5f ",besttheta[itrain][ipar]);
+			snprintf(rthetachar,11,"%9.3f ",besttheta[itrain][ipar]);
+			rthetastring+=string(rthetachar);
+			
 		}
-		printf(": %8.5f\n",sqrt(r));
+		CLog::Info(rthetastring);
+		CLog::Info("r="+to_string(sqrt(r))+"\n");
 		
 	}
 	fptr=fopen("Sigma2vsNTrain.txt","a");
@@ -242,49 +232,7 @@ void CSimplexSampler::Optimize_MC(){
 	fptr=fopen("Sigma2vsNPars.txt","a");
 	fprintf(fptr,"%8.5u %8.6f %u\n",NPars,bestSigma2,NTrainingPts);
 	fclose(fptr);
-	
-	/*
-	int jtrain;
-	vector<vector<double>> ctheta;
-	ctheta.resize(NTrainingPts);
-	for(itrain=0;itrain<NTrainingPts;itrain++)
-	ctheta[itrain].resize(NTrainingPts);
-	vector<double> rtrain(NTrainingPts);
-	for(itrain=0;itrain<NTrainingPts;itrain++){
-	rtrain[itrain]=0.0;
-	for(ipar=0;ipar<NPars;ipar++){
-	rtrain[itrain]+=besttheta[itrain][ipar]*besttheta[itrain][ipar];
-	}
-	rtrain[itrain]=sqrt(rtrain[itrain]);
-	}
-	for(ipar=0;ipar<NPars;ipar++)
-	for(itrain=0;itrain<NTrainingPts;itrain++){
-	for(jtrain=0;jtrain<NTrainingPts;jtrain++){
-	double rij=0.0;
-	if(rtrain[itrain]>0.1 && rtrain[jtrain]>0.1){
-	ctheta[itrain][jtrain]=0.0;
-	for(ipar=0;ipar<NPars;ipar++){
-	rij+=pow(besttheta[itrain][ipar]-besttheta[jtrain][ipar],2);
-	ctheta[itrain][jtrain]+=besttheta[itrain][ipar]*besttheta[jtrain][ipar];
-	}
-	rij=sqrt(rij);
-	ctheta[itrain][jtrain]=ctheta[itrain][jtrain]/(rtrain[itrain]*rtrain[jtrain]);
-	fprintf(fptr,"%8.5f ",ctheta[itrain][jtrain]);
-	}
-	}
-	}			
-	
-	fptr=fopen("ctheta.txt","w");
-	for(itrain=0;itrain<NTrainingPts;itrain++){
-	sort(ctheta[itrain].begin(),ctheta[itrain].end());
-	for(jtrain=0;jtrain<NTrainingPts;jtrain++){
-	fprintf(fptr,"%8.5f ",ctheta[itrain][jtrain]);
 
-	}
-	fprintf(fptr,"\n");
-	}
-	fclose(fptr);
-	*/
 }
 
 void CSimplexSampler::OptimizeSimplex_MC(){
@@ -307,7 +255,7 @@ void CSimplexSampler::OptimizeSimplex_MC(){
 
 	Sigma2bar=GetSigma2Bar(LAMBDA,ALPHA,W11);
 	bestSigma2=Sigma2bar;
-	printf("beginning: bestSigma2=%g\n",bestSigma2);
+	CLog::Info("Beginning simplex optimization:\nR="+to_string(bestR)+", bestSigma2="+to_string(bestSigma2)+"\n");
 	
 	nsuccess=nfail=0;
 	for(imc=0;imc<NMC;imc++){
@@ -328,13 +276,15 @@ void CSimplexSampler::OptimizeSimplex_MC(){
 			nfail+=1;
 		if((100*(imc+1)%NMC)==0){
 			successrate=double(nsuccess)/double(nsuccess+nfail);
-			printf("+++++++++ finished %g percent, bestSigma2=%g, success %%=%g, dR=%g ++++++++\n",100.0*(imc+1.0)/double(NMC),bestSigma2,100.0*successrate,dR);
+			CLog::Info("+++++++++ finished "+to_string(100.0*(imc+1.0)/double(NMC))+" percent, bestSigma2="
+				+to_string(bestSigma2)+", success %%="+to_string(100.0*successrate)+
+					", dR="+to_string(dR)+"\n");
 			dR*=0.05+4.0*successrate;
 			nfail=nsuccess=0;
 		}
 	}
 
-	printf("bestR=%g\n",bestR);
+	CLog::Info("Best R for simplex="+to_string(bestR)+"\n");
 	SetThetaSimplex(bestR);
 	SetThetaTrain(besttheta); 
 	Sigma2bar=GetSigma2Bar(LAMBDA,ALPHA,W11);
@@ -374,7 +324,7 @@ void CSimplexSampler::OptimizeSphere_MC(){
 	SetThetaTrain(besttheta); 
 	Sigma2Bar=GetSigma2Bar(LAMBDA,ALPHA,W11);
 	bestSigma2=Sigma2Bar;
-	printf("beginning: bestSigma2=%g\n",bestSigma2);
+	CLog::Info("beginning: bestSigma2="+to_string(bestSigma2)+"\n");
 	
 	for(imc=0;imc<NMC;imc++){
 		for(itrain=1;itrain<NTrainingPts;itrain++){
@@ -396,7 +346,6 @@ void CSimplexSampler::OptimizeSphere_MC(){
 		if(Sigma2Bar<bestSigma2){
 			nsuccess+=1;
 			bestSigma2=Sigma2Bar;
-			//printf("%10d: bestSigma2=%g, R=%g, W11=%g\n",imc,bestSigma2,ThetaTrain[1][0],W11);
 			for(itrain=0;itrain<NTrainingPts;itrain++){
 				besttheta[itrain]=ThetaTrain[itrain];
 			}
@@ -405,7 +354,7 @@ void CSimplexSampler::OptimizeSphere_MC(){
 			nfail+=1;
 		if((100*(imc+1)%NMC)==0){
 			successrate=double(nsuccess)/double(nsuccess+nfail);
-			printf("++++++++ finished %g percent, bestSigma2=%g, bestR=%g, success %%=%g, dtheta=%g +++++++++++\n",100.0*(imc+1.0)/double(NMC),bestSigma2,fabs(besttheta[1][0]),100.0*successrate,dtheta);
+			CLog::Info("++++++++ finished "+to_string(100.0*(imc+1.0)/double(NMC))+", bestSigma2="+to_string(bestSigma2)+", bestR="+to_string(fabs(besttheta[1][0]))+"\n success %%="+to_string(100.0*successrate)+", dtheta="+to_string(dtheta)+" +++++++++++\n");
 			dtheta*=0.05+4.0*successrate;
 			nfail=nsuccess=0;
 		}
@@ -429,22 +378,6 @@ double CSimplexSampler::GetSigma2Bar(double LAMBDA,double ALPHA,double &W11){
 	bddi.resize(NTrainingPts,NTrainingPts);
 	CalcIJK(LAMBDA,priorinfo->ThetaPrior);
 	
-	/*
-	for(a=0;a<NTrainingPts;a++){
-	for(b=0;b<NTrainingPts;b++){
-	printf("%10.3e ",K(a,b));
-	}
-	printf("\n");
-	}
-	CalcIJK_Gaussian(LAMBDA,1.0/sqrt(3.0));
-	for(a=0;a<NTrainingPts;a++){
-	for(b=0;b<NTrainingPts;b++){
-	printf("%10.3e ",K(a,b));
-	}
-	printf("\n");
-	}
-	*/
-
 	B.resize(NTrainingPts,NTrainingPts);
 	Binv.resize(NTrainingPts,NTrainingPts);
 	D.resize(NTrainingPts,NTrainingPts);
@@ -483,9 +416,7 @@ double CSimplexSampler::GetSigma2Bar(double LAMBDA,double ALPHA,double &W11){
 		W.resize(2,2);
 		Winv.resize(2,2);
 		Winv(0,0)=double(2*NTrainingPts)/(SigmaA*SigmaA);
-
 		Winv(1,0)=Winv(0,1)=(-1.0/(SigmaA*pow(LAMBDA,3)))*((Binv*D).trace());
-
 		Winv(1,1)=(0.5/pow(LAMBDA,6))*(D*Binv*D*Binv).trace();
 
 		W=Winv.inverse();
