@@ -38,7 +38,6 @@ namespace NBandSmooth{
 		Eigen::MatrixXd Bprime,Bprimeprime;
 		Eigen::VectorXd chi,chiprime;
 		Eigen::Matrix2d W,Winv;
-		void CalcWBprimeBprimeprime();
 
 		CSmoothEmulator(string observable_name_set);
 		double GetCorrelation(vector<double> &theta1,vector<double> &theta2);
