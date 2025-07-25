@@ -18,7 +18,7 @@ void CSimplexSampler::Optimize(double LAMBDASet,double ALPHAset){
 		CLog::Info("Enter NMC: ");
 		scanf("%u",&NMC);
 	}
-	if(OptimizeMethod=="MC"){
+	if(TPOMethod=="MC"){
 		PLUS1=false;
 		if(NTrainingPts==0)
 			NTrainingPts=parmap.getI("Simplex_NTrainingPts",0);
@@ -28,7 +28,7 @@ void CSimplexSampler::Optimize(double LAMBDASet,double ALPHAset){
 		}
 		Optimize_MC();
 	}
-	else if(OptimizeMethod=="MCSphere"){
+	else if(TPOMethod=="MCSphere"){
 		PLUS1=true;
 		NTrainingPts=parmap.getI("Simplex_NTrainingPts",0);
 		if(NTrainingPts==0){
@@ -37,22 +37,22 @@ void CSimplexSampler::Optimize(double LAMBDASet,double ALPHAset){
 		}
 		OptimizeSphere_MC();
 	}
-	else if(OptimizeMethod=="MCSimplex"){
+	else if(TPOMethod=="MCSimplex"){
 		PLUS1=false;
 		NTrainingPts=NPars+1;
 		OptimizeSimplex_MC();
 	}
-	else if(OptimizeMethod=="MCSimplexPlus1"){
+	else if(TPOMethod=="MCSimplexPlus1"){
 		PLUS1=true;
 		NTrainingPts=NPars+2;
 		OptimizeSimplex_MC();
 	}
-	else if(OptimizeMethod=="MCQuadratic"){
+	else if(TPOMethod=="MCQuadratic"){
 		PLUS1=true;
 		NTrainingPts=(NPars+1)*(NPars+2)/2;
 		Optimize_MC();
 	}
-	else if(OptimizeMethod=="MCSphereQuadratic"){
+	else if(TPOMethod=="MCSphereQuadratic"){
 		PLUS1=true;
 		NTrainingPts=(NPars+1)*(NPars+2)/2;
 		OptimizeSphere_MC();

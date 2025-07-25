@@ -34,7 +34,7 @@ CSmoothMaster::CSmoothMaster(){
 	TrainingThetasFileName=parmap->getS("SmoothEmulator_TrainingThetasFilename","TrainingThetas.txt");
 	TrainingObsFileName=parmap->getS("SmoothEmulator_TrainingObsFilename","TrainingObs.txt");
 	
-	filename="smooth_data/Info/modelpar_info.txt";
+	filename="smooth_data/Info/prior_info.txt";
 	priorinfo=new CPriorInfo(filename);
 	NPars=priorinfo->NModelPars;
 	parmap->set("SmoothEmulator_NPars",NPars);

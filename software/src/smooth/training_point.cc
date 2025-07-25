@@ -1,12 +1,12 @@
-#include "msu_smooth/simplex.h"
-#include "msu_smooth/modelparinfo.h"
+#include "msu_smooth/trainingpoint_optimizer.h"
+#include "msu_smooth/prior_info.h"
 #include <cstdlib>
 
 using namespace std;
 using namespace NBandSmooth;
 using namespace NMSUUtils;
 
-CSimplexSampler::CSimplexSampler(){
+CTPO::CTPO(){
 	randy=new Crandy(123);
 	FIRSTCALL=true;
 	parmap.ReadParsFromFile("smooth_data/smooth_parameters/simplex_parameters.txt");
@@ -15,14 +15,14 @@ CSimplexSampler::CSimplexSampler(){
 		CLog::Init(logfilename);
 	}
 	OptimizeMethod=parmap.getS("Simplex_OptimizeMethod","MC");
-	string prior_info_filename="smooth_data/Info/modelpar_info.txt";
+	string prior_info_filename="smooth_data/Info/prior_info.txt";
 	priorinfo=new CPriorInfo(prior_info_filename);
 	CModelParameters::priorinfo=priorinfo;
 	NPars=priorinfo->NModelPars;
 	INCLUDE_LAMBDA_UNCERTAINTY=parmap.getB("Simplex_INCLUDE_LAMBDA_UNCERTAINTY",true);
 }
 
-void CSimplexSampler::SetThetaSimplex(double RSimplexSet){
+void CTPO::SetThetaSimplex(double RSimplexSet){
 	unsigned int ipar,itrain,jtrain;
 	double z,R;
 	RSimplex=fabs(RSimplexSet);
@@ -68,7 +68,7 @@ void CSimplexSampler::SetThetaSimplex(double RSimplexSet){
 	}
 }
 
-void CSimplexSampler::SetThetaSimplexPlus1(double RSimplexSet){
+void CTPO::SetThetaSimplexPlus1(double RSimplexSet){
 	unsigned int ipar,itrain,jtrain;
 	double z,R;
 	RSimplex=fabs(RSimplexSet);
@@ -122,7 +122,7 @@ void CSimplexSampler::SetThetaSimplexPlus1(double RSimplexSet){
 	}
 }
 
-void CSimplexSampler::SetThetaTrain(vector<vector<double>> &theta){
+void CTPO::SetThetaTrain(vector<vector<double>> &theta){
 	unsigned int itrain,ipar;
 	for(itrain=0;itrain<ThetaTrain.size();itrain++)
 		ThetaTrain[itrain].clear();
@@ -136,7 +136,7 @@ void CSimplexSampler::SetThetaTrain(vector<vector<double>> &theta){
 	}
 }
 
-void CSimplexSampler::WriteModelPars(){
+void CTPO::WriteModelPars(){
 	FILE *fptr;
 	string filename,dirname,command;
 	unsigned int itrain,ipar;
