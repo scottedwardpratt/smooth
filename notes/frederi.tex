@@ -1,0 +1,62 @@
+\documentclass[12pt]{article}
+\usepackage{subfiles}
+\usepackage{graphicx}
+\usepackage[
+        pdfencoding=auto,%
+        pdftitle={My Notes}
+        pdfauthor={Scott Pratt},%
+        pdfstartview=FitV,%
+        colorlinks=true,%
+        linkcolor=blue,%
+        citecolor=blue, %
+        urlcolor=blue,
+				breaklinks=true]{hyperref}
+\usepackage{xurl}
+\usepackage{comment}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{dsfont}
+\usepackage[small,bf]{caption}
+\usepackage{bm}
+
+\numberwithin{equation}{section} 
+\numberwithin{figure}{section} 
+\newcommand\eqnumber{\addtocounter{equation}{1}\tag{\theequation}}
+\newcommand\identity{\mathds{1}}
+
+\setlength{\headheight}{16pt}
+\parskip 6pt
+\parindent 0pt
+\textwidth 7.0in
+\hoffset -0.8in
+\textheight 9.2in
+\voffset -1in
+\boldmath
+%
+\begin{document}
+Here $\langle ....\rangle(\vec{h})$ be the average of $...$ over all the possible expansion coefficients given the hyper parameters $\vec{h}$.
+Let $\langle\langle ...\rangle\rangle$ be the average once one has also averaged over $\vec{h}$. Here $\vec{h}_0$ is the hyper parameter vector at which the probability $P(\vec{h})$ is maximized, $\bar{Y}(\vec{h})=\langle Y\rangle(\vec{h})$, and $\bar{Y}_0=\langle Y\rangle(\vec{h}_0)$.
+\begin{eqnarray*}
+\langle\langle \delta Y^2\rangle\rangle &=&
+\int d\vec{h}~P(\vec{h}) \langle [Y-\bar{Y}_0]^2\rangle(\vec{h})\\
+&=&\int d\vec{h}~P(\vec{h}) \langle [(Y-\bar{Y}(\vec{h})+(\bar{Y}(\vec{h})-\bar{Y}_0)]^2\rangle(\vec{h})\\
+&=&\int d\vec{h}~P(\vec{h})\left\{
+\langle(Y-\bar{Y}(\vec{h})^2\rangle(\vec{h})+\langle(\bar{Y}(\vec{h})-\bar{Y}_0)^2\rangle
+\right\}\\
+&=&\int d\vec{h}~P(\vec{h})\left\{\langle(Y-\bar{Y}_0)^2\rangle_0
++\frac{(h_i-h_{0i})(h_j-h_{0j})}{2}\frac{\partial^2}{\partial h_i\partial h_j}\langle(Y-\bar{Y}(\vec{h}))^2\rangle\right.\\
+&&\hspace*{75pt}\left.+(h_i-h_{0i})(h_j-h_{0j})\left(\frac{\partial\bar{Y}(\vec{h})}{\partial h_i}\right)\left(\frac{\partial\bar{Y}(\vec{h})}{\partial h_j}\right)+\mathcal{O}(h-h_0)^3
+\right\}\\
+&\approx&\langle(Y-\bar{Y}_0)^2\rangle_0
++\left[\frac{\partial\bar{Y}(h)}{\partial h_i}\frac{\partial\bar{Y}(h)}{\partial h_j}\right]\int d\vec{h}~P(\vec{h})(h_i-h_{0i})(h_j-h_{0j}).
+\end{eqnarray*}
+The approximation of the last step is built on the assumption that sufficient training data has been provided so that 
+\begin{enumerate}\itemsep=0pt
+\item $P(\vec{h})$ is sufficiently narrow about $\vec{h}_0$ that higher order terms in $\vec{h}-\vec{h}_0$ can be ignored.
+\item $\langle (Y-\bar{Y})^2\rangle_0$ is small so that terms that scale both as $\langle (Y-\bar{Y})^2\rangle_0$ and $(\vec{h}-\vec{h}_0)^2$ can be ignored.
+\end{enumerate}
+One of the remaining terms is small because $\langle (Y-\bar{Y})^2\rangle_0$ and the second is small because $\vec{h}-\vec{h}_0$ is small. The neglected terms should all be increasingly smaller relative to these terms as the number of training points is increased.
+
+\end{document}
+
