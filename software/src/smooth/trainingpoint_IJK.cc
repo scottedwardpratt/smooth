@@ -1,5 +1,5 @@
-#include "msu_smooth/simplex.h"
-#include "msu_smooth/modelparinfo.h"
+#include "msu_smooth/trainingpoint_optimizer.h"
+#include "msu_smooth/prioinfo.h"
 #include <cstdlib>
 
 using namespace std;
