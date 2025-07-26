@@ -1,5 +1,5 @@
 #include "msu_smooth/trainingpoint_optimizer.h"
-#include "msu_smooth/prioinfo.h"
+#include "msu_smooth/priorinfo.h"
 #include <cstdlib>
 
 using namespace std;
@@ -8,7 +8,7 @@ using namespace NMSUUtils;
 
 double PI=4.0*atan(1.0);
 
-void CSimplexSampler::CalcIJK(double Lambda,vector<double> &ThetaPrior){
+void CTPO::CalcIJK(double Lambda,vector<double> &ThetaPrior){
 	unsigned int a,b,ipar;
 	double Ii,Jafact,Jbfact,Kabfact;
 	double Jasum,Jbsum,Kabsum;
@@ -39,7 +39,7 @@ void CSimplexSampler::CalcIJK(double Lambda,vector<double> &ThetaPrior){
 	}
 }
 
-void CSimplexSampler::CalcIJK_Gaussian(double LAMBDA,double ThetaPriorGauss){ // only works when all have gaussian priors with same ThetaPrior=ThetaPriorDefault
+void CTPO::CalcIJK_Gaussian(double LAMBDA,double ThetaPriorGauss){ // only works when all have gaussian priors with same ThetaPrior=ThetaPriorDefault
 	unsigned int a,b,ipar;
 	double lambda,gamma,dT2,tatb,ta2,tb2,Jab,Jba,Iab,Kab,sumt2,Jfacta,Jfactb,Kfact;
 	double X,dXdgamma_a,dXdgamma_b,d2Xdgamma_adgamma_b,beta=1.0/(ThetaPriorGauss*ThetaPriorGauss);
@@ -90,7 +90,7 @@ void CSimplexSampler::CalcIJK_Gaussian(double LAMBDA,double ThetaPriorGauss){ //
 	}
 }
 
-void CSimplexSampler::GetIiJiKiGaussian(double ThetaPrior,double Lambda,double theta_a,double theta_b,
+void CTPO::GetIiJiKiGaussian(double ThetaPrior,double Lambda,double theta_a,double theta_b,
 double &I,double &Jaterm,double &Jbterm,double &Kabterm){
 	double X,gamma,alpha,lambda,deltheta2,sumt2,Jterm;
 	gamma=1.0/(Lambda*Lambda);
@@ -118,7 +118,7 @@ double &I,double &Jaterm,double &Jbterm,double &Kabterm){
 	//printf("I=%8.5f, Jaterm=%8.5f, Jbterm=%8.5f, Sum=%8.5f, Kabterm=%8.5f\n",I,Jaterm,Jbterm,Jaterm+Jbterm,Kabterm);
 }
 
-void CSimplexSampler::GetIiJiKiUniform(double ThetaPrior,double Lambda,double theta_a,double theta_b,
+void CTPO::GetIiJiKiUniform(double ThetaPrior,double Lambda,double theta_a,double theta_b,
 double &I,double &Jaterm,double &Jbterm,double &Kabterm){
 	double Ja,Jb,J,Kab;
 	double deltheta,thetabar,rootgamma,Xplus,Xminus,P,Y,W,bplus2,bminus2,deltheta2,bplus,bminus;

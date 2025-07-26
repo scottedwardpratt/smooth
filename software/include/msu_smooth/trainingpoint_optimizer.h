@@ -1,5 +1,5 @@
-#ifndef __TPO_SAMPLER_H__
-#define __TPO_SAMPLER_H__
+#ifndef __TPO_H__
+#define __TPO_H__
 #include <cstdlib>
 #include <cmath>
 #include <cstdio>
@@ -21,7 +21,7 @@ using namespace NMSUUtils;
 
 namespace NBandSmooth{
 
-	class CTPOSampler{
+	class CTPO{
 	public:
 		CparameterMap parmap;
 		unsigned int NPars,NTrainingPts,NMC;
@@ -35,7 +35,7 @@ namespace NBandSmooth{
 		CPriorInfo *priorinfo;
 		Crandy *randy;
 		vector<CModelParameters *> modelparameters;
-		CTPOSampler();
+		CTPO();
 		void SetThetaTrain(vector<vector<double>> &theta);
 		void WriteModelPars();
 			

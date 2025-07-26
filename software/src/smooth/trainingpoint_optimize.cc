@@ -1,4 +1,4 @@
-#include "msu_smooth/simplex.h"
+#include "msu_smooth/trainingpoint_optimizer.h"
 #include "msu_smooth/modelparinfo.h"
 #include <cstdlib>
 #include <algorithm>
@@ -8,20 +8,38 @@ using namespace std;
 using namespace NBandSmooth;
 using namespace NMSUUtils;
 
-void CSimplexSampler::Optimize(double LAMBDASet,double ALPHAset){
+CTPO::CTPO(){
+	randy=new Crandy(123);
+	FIRSTCALL=true;
+	parmap.ReadParsFromFile("smooth_data/smooth_parameters/tpo_parameters.txt");
+	string logfilename=parmap.getS("TPO_LogFileName","Screen");
+	if(logfilename!="Screen"){
+		CLog::Init(logfilename);
+	}
+	TPOMethod=parmap.getS("TPOMethod","MC");
+	string prior_info_filename="smooth_data/Info/prior_info.txt";
+	priorinfo=new CPriorInfo(prior_info_filename);
+	CModelParameters::priorinfo=priorinfo;
+	NPars=priorinfo->NModelPars;
+	INCLUDE_LAMBDA_UNCERTAINTY=parmap.getB("TPO_INCLUDE_LAMBDA_UNCERTAINTY",true);
+}
+
+void CTPO::Optimize(double LAMBDASet,double ALPHAset){
 	LAMBDA=LAMBDASet;
 	ALPHA=ALPHAset;
 	PLUS1=false;
 	if(NMC==0)
-		NMC=parmap.getI("Simplex_NMC",0);
+		NMC=parmap.getI("TPO_NMC",0);
 	if(NMC==0){
 		CLog::Info("Enter NMC: ");
 		scanf("%u",&NMC);
 	}
 	if(TPOMethod=="MC"){
 		PLUS1=false;
-		if(NTrainingPts==0)
-			NTrainingPts=parmap.getI("Simplex_NTrainingPts",0);
+		if(NTrainingPts==0){
+			NTrainingPts=parmap.getI("NTrainingPts",0);
+			NTrainingPts=parmap.getI("TPO_NTrainingPts",0);
+		}
 		if(NTrainingPts==0){
 			CLog::Info("Enter NTrainingPts: ");
 			scanf("%u",&NTrainingPts);
@@ -30,7 +48,7 @@ void CSimplexSampler::Optimize(double LAMBDASet,double ALPHAset){
 	}
 	else if(TPOMethod=="MCSphere"){
 		PLUS1=true;
-		NTrainingPts=parmap.getI("Simplex_NTrainingPts",0);
+		NTrainingPts=parmap.getI("TPO_NTrainingPts",0);
 		if(NTrainingPts==0){
 			CLog::Info("Enter NTrainingPts: ");
 			scanf("%u",&NTrainingPts);
@@ -59,7 +77,7 @@ void CSimplexSampler::Optimize(double LAMBDASet,double ALPHAset){
 	}
 }
 
-void CSimplexSampler::GetC0DDprime(double LAMBDA,vector<double> &theta1,vector<double> &theta2,double &C0,double &D,double &Dprime){
+void CTPO::GetC0DDprime(double LAMBDA,vector<double> &theta1,vector<double> &theta2,double &C0,double &D,double &Dprime){
 	unsigned int ipar;
 	double delThetaSquared,delTheta;
 	delThetaSquared=0.0;
@@ -103,7 +121,7 @@ double my_erfinv (double a)
 	return r;
 }
 
-void CSimplexSampler::SetThetaLatinHyperCube(vector<vector<double>> &theta){
+void CTPO::SetThetaLatinHyperCube(vector<vector<double>> &theta){
 	Crandy randy(time(NULL));
 	double thetamax,dtheta,root2=sqrt(2.0);
 	unsigned int ipar,itrain,is;
@@ -137,7 +155,7 @@ void CSimplexSampler::SetThetaLatinHyperCube(vector<vector<double>> &theta){
 	
 }
 
-void CSimplexSampler::Optimize_MC(){
+void CTPO::Optimize_MC(){
 	double Sigma2Bar,bestSigma2,dtheta,W11,r,successrate;
 	unsigned int imc,itrain,ipar,nfail=0,nsuccess=0;
 	FILE *fptr,*fptr_vsNMC;
@@ -195,7 +213,7 @@ void CSimplexSampler::Optimize_MC(){
 		if((100*(imc+1)%NMC)==0){
 			
 			successrate=double(nsuccess)/double(nsuccess+nfail);
-			CLog::Info("++++++ finished "+to_string(100.0*(imc+1.0)/double(NMC))+",  bestSigma2="+to_string(bestSigma2)+", success %%="+to_string(100.0*successrate)+", dtheta="+to_string(dtheta)+"\n");
+			CLog::Info("++++++ finished "+to_string(lrint(100.0*(imc+1.0)/double(NMC)))+"%%,  bestSigma2="+to_string(bestSigma2)+", success %%="+to_string(100.0*successrate)+", dtheta="+to_string(dtheta)+"\n");
 			dtheta*=0.05+4.0*successrate;
 			nfail=nsuccess=0;
 		}
@@ -235,7 +253,7 @@ void CSimplexSampler::Optimize_MC(){
 
 }
 
-void CSimplexSampler::OptimizeSimplex_MC(){
+void CTPO::OptimizeSimplex_MC(){
 	double R=1.2,bestSigma2,Sigma2bar,dR=0.1,W11,bestR,successrate;
 	unsigned int imc,nsuccess,nfail,itrain;
 	vector<vector<double>> besttheta;
@@ -291,7 +309,7 @@ void CSimplexSampler::OptimizeSimplex_MC(){
 	bestSigma2=Sigma2bar;	
 }
 
-void CSimplexSampler::OptimizeSphere_MC(){
+void CTPO::OptimizeSphere_MC(){
 	double Sigma2Bar,bestSigma2=1.0E99,dtheta,W11,r,R0=1.0,successrate;
 	unsigned int imc,itrain,ipar,nfail=0,nsuccess=0;
 	Crandy randy(time(NULL));
@@ -363,7 +381,7 @@ void CSimplexSampler::OptimizeSphere_MC(){
 	SetThetaTrain(besttheta);
 }
 
-double CSimplexSampler::GetSigma2Bar(double LAMBDA,double ALPHA,double &W11){
+double CTPO::GetSigma2Bar(double LAMBDA,double ALPHA,double &W11){
 	unsigned int a,b;
 	Eigen::MatrixXd B,Binv,D,Dprime,BB0,BB1,BB2,bdd,bddi;
 	double SigmaA=1.0; // SigmaA shouldn't matter
@@ -431,4 +449,145 @@ double CSimplexSampler::GetSigma2Bar(double LAMBDA,double ALPHA,double &W11){
 	}
 	else
 		return S20;
+}
+
+void CTPO::SetThetaSimplex(double RSimplexSet){
+	unsigned int ipar,itrain,jtrain;
+	double z,R;
+	RSimplex=fabs(RSimplexSet);
+	R=1.0;
+	NTrainingPts=NPars+1;
+	ThetaTrain.resize(NTrainingPts);
+	for(itrain=0;itrain<NTrainingPts;itrain++){
+		ThetaTrain[itrain].resize(NPars);
+		for(ipar=0;ipar<NPars;ipar++)
+			ThetaTrain[itrain][ipar]=0.0;
+	}
+	
+	ThetaTrain[0][0]=-R;
+	ThetaTrain[1][0]=R;
+	for(itrain=2;itrain<NTrainingPts;itrain++){
+		z=R*itrain/sqrt(double(itrain*itrain)-1.0);
+		for(jtrain=0;jtrain<itrain;jtrain++){
+			ThetaTrain[jtrain][itrain-1]=-z/double(itrain);
+		}
+		ThetaTrain[itrain][itrain-1]=z;
+		R=z;
+	}
+	
+	for(itrain=0;itrain<NTrainingPts;itrain++){
+		for(ipar=0;ipar<NPars;ipar++){
+			if(priorinfo->type[ipar]=="gaussian")
+				ThetaTrain[itrain][ipar]*=(RSimplex/R);
+			else{
+				ThetaTrain[itrain][ipar]*=(RSimplex/R);
+			}
+		}
+	}
+
+	double Rmax=0.95;
+	for(itrain=0;itrain<NTrainingPts;itrain++){
+		for(ipar=0;ipar<NPars;ipar++){
+			if(priorinfo->type[ipar]=="uniform"){
+				if(fabs(ThetaTrain[itrain][ipar])>Rmax){
+					ThetaTrain[itrain][ipar]*=(Rmax/fabs(ThetaTrain[itrain][ipar]));
+				}
+			}
+		}
+	}
+}
+
+void CTPO::SetThetaSimplexPlus1(double RSimplexSet){
+	unsigned int ipar,itrain,jtrain;
+	double z,R;
+	RSimplex=fabs(RSimplexSet);
+	R=1.0;
+	NTrainingPts=NPars+1;
+	ThetaTrain.resize(NTrainingPts);
+	for(itrain=0;itrain<NTrainingPts;itrain++){
+		ThetaTrain[itrain].resize(NPars);
+		for(ipar=0;ipar<NPars;ipar++)
+			ThetaTrain[itrain][ipar]=0.0;
+	}
+	
+	ThetaTrain[0][0]=-R;
+	ThetaTrain[1][0]=R;
+	for(itrain=2;itrain<NTrainingPts;itrain++){
+		z=R*itrain/sqrt(double(itrain*itrain)-1.0);
+		for(jtrain=0;jtrain<itrain;jtrain++){
+			ThetaTrain[jtrain][itrain-1]=-z/double(itrain);
+		}
+		ThetaTrain[itrain][itrain-1]=z;
+		R=z;
+	}
+	
+	for(itrain=0;itrain<NTrainingPts;itrain++){
+		for(ipar=0;ipar<NPars;ipar++){
+			if(priorinfo->type[ipar]=="gaussian")
+				ThetaTrain[itrain][ipar]*=(RSimplex/R);
+			else{
+				ThetaTrain[itrain][ipar]*=(RSimplex/R);
+			}
+		}
+	}
+	
+	// Add point at origin (differentiates this from type 1
+	NTrainingPts+=1;
+	ThetaTrain.resize(NTrainingPts);
+	ThetaTrain[NTrainingPts-1].resize(NPars);
+	for(ipar=0;ipar<NPars;ipar++)
+		ThetaTrain[NTrainingPts-1][ipar]=0.0;
+	
+	
+	double Rmax=0.95;
+	for(itrain=0;itrain<NTrainingPts;itrain++){
+		for(ipar=0;ipar<NPars;ipar++){
+			if(priorinfo->type[ipar]=="uniform"){
+				if(fabs(ThetaTrain[itrain][ipar])>Rmax){
+					ThetaTrain[itrain][ipar]*=(Rmax/fabs(ThetaTrain[itrain][ipar]));
+				}
+			}
+		}
+	}
+}
+
+void CTPO::SetThetaTrain(vector<vector<double>> &theta){
+	unsigned int itrain,ipar;
+	for(itrain=0;itrain<ThetaTrain.size();itrain++)
+		ThetaTrain[itrain].clear();
+	ThetaTrain.clear();
+	NTrainingPts=theta.size();
+	ThetaTrain.resize(NTrainingPts);
+	for(itrain=0;itrain<NTrainingPts;itrain++){
+		ThetaTrain[itrain].resize(NPars);
+		for(ipar=0;ipar<NPars;ipar++)
+			ThetaTrain[itrain][ipar]=theta[itrain][ipar];
+	}
+}
+
+void CTPO::WriteModelPars(){
+	FILE *fptr;
+	string filename,dirname,command;
+	unsigned int itrain,ipar;
+	vector<CModelParameters *> modelparameters(NTrainingPts);
+
+	for(itrain=0;itrain<NTrainingPts;itrain++){
+		modelparameters[itrain]=new CModelParameters();
+		for(ipar=0;ipar<NPars;ipar++){
+			modelparameters[itrain]->Theta[ipar]=ThetaTrain[itrain][ipar];
+		}
+		modelparameters[itrain]->TranslateTheta_to_X();
+	}
+	for(itrain=0;itrain<NTrainingPts;itrain++){
+		dirname="smooth_data/modelruns/run"+to_string(itrain);
+		command="mkdir -p "+dirname;
+		system(command.c_str());
+		filename=dirname+"/mod_parameters.txt";
+		fptr=fopen(filename.c_str(),"w");
+		for(ipar=0;ipar<NPars;ipar++){
+			fprintf(fptr,"%s %g\n",
+			priorinfo->parname[ipar].c_str(),modelparameters[itrain]->X[ipar]);
+		}
+		fclose(fptr);
+	}
 }
