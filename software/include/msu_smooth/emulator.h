@@ -27,12 +27,12 @@ namespace NBandSmooth{
 
 	class CSmoothEmulator{
 	public:
+				bool INCLUDE_LAMBDA_UNCERTAINTY;
 		unsigned int iY; // labels observable from observable info
 		string observable_name;
 
 		double LAMBDA,SigmaA,ALPHA,LambdaVariance;
 		double logP,detBB,d2lndetBBdLambda2;
-		bool INCLUDE_LAMBDA_UNCERTAINTY;
 		vector<vector<double>> ThetaTrain;
 		Eigen::MatrixXd B,Binv;
 		Eigen::MatrixXd Bprime,Bprimeprime;

@@ -11,10 +11,8 @@
 #include "msu_smooth/observableinfo.h"
 using namespace NMSUUtils;
 namespace NBandSmooth{
-	
 	class CPCA{
 	public:
-
 		CPCA();
 		CparameterMap *parmap;
 		unsigned int nruns,NObs;

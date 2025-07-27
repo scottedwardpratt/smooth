@@ -23,15 +23,16 @@ namespace NBandSmooth{
 
 	class CTPO{
 	public:
+		bool PLUS1,INCLUDE_LAMBDA_UNCERTAINTY;
 		CparameterMap parmap;
 		unsigned int NPars,NTrainingPts,NMC;
-		bool PLUS1,INCLUDE_LAMBDA_UNCERTAINTY,FIRSTCALL;
 		string TPOMethod;
 		double LAMBDA,ALPHA; //only used for estimating overall uncertainty
 		vector<vector<double>> ThetaTrain;
 		Eigen::MatrixXd I,J,K;
 		string ModelDirName;
 		double RSimplex;
+		bool FIRSTCALL;
 		CPriorInfo *priorinfo;
 		Crandy *randy;
 		vector<CModelParameters *> modelparameters;
@@ -56,24 +57,6 @@ namespace NBandSmooth{
 		void GetIiJiKiUniform(double Rprior,double Lambda,double theta_a,double theta_b,
 		double &I,double &Jaterm,double &Jbterm,double &Kabterm);
 
-	};
-
-	namespace NAlternativeParameterSampling{
-		// Latin Hyer Cube parameters
-		void GetParsLHC(unsigned int NRuns,unsigned int NPars,Crandy *randy,vector<vector<double>> &Theta);
-		void GetParsLHC_Modified(unsigned int NRuns,unsigned int NPars,Crandy *randy,vector<vector<double>> &Theta);
-		double GetPEShuffle(vector<vector<double>> x);
-		// These are used for Coulomb force generated parameters
-		void GetParsCoulomb(unsigned int NRuns,unsigned int NPars,Crandy *randy,vector<vector<double>> &Theta);
-		void CalcEnergy(vector<vector<double>> &x,vector<vector<double>> &vv,vector<vector<double>> &v,double &PE,double &KE,double &Etot);
-		void Propagate(double dt,vector<vector<double>> &x,vector<vector<double>> &xx,vector<vector<double>> &v,vector<vector<double>> &vv,double &PE);
-		void GetForcePotential(vector<double> &x,vector<double> &xx,vector<double> &F,double &potential);
-		//
-		void GetParsCoulombHO(Crandy *randy,vector<vector<double>> &Theta);
-		void GetFRelVRelHO(vector<double> &x,vector<double> &xx,vector<double> &Frel,double &Vrel);
-		void PropagateHO(double dt,vector<vector<double>> &x,vector<vector<double>> &xx,vector<vector<double>> &v,vector<vector<double>> &vv,double &PE);
-		void CalcEnergyHO(vector<vector<double>> &x,vector<vector<double>> &vv,vector<vector<double>> &v,double &PE,double &KE,double &Etot);
-		void GetFextVextHO(vector<double> &x,vector<double> &Fext,double &Vext);
 	};
 
 };

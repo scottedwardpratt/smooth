@@ -31,6 +31,7 @@ namespace NBandSmooth{
 	
 	class CSmoothMaster{
 	public:
+		bool UsePCA;
 		unsigned int TrainType;
 		CSmoothMaster();
 		CparameterMap *parmap;
@@ -42,11 +43,9 @@ namespace NBandSmooth{
 		Crandy *randy;
 		CSmooth *smooth;
 		string ModelRunDirName,CoefficientsDirName,TrainingThetasFileName,TrainingObsFileName;
-		bool UsePCA;
 		string SmoothEmulator_TrainingFormat;
-		vector<bool> pca_ignore;
 		double pca_minvariance,fitpercentage;
-		
+		vector<bool> pca_ignore;
 		int GetNPars(){
 			return NPars;
 		}
