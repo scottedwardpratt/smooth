@@ -73,7 +73,7 @@ void CTrainingInfo::ReadTrainingInfoSmoothFormat(){
 	else{
 		while(getline(ss, token, ',')) {
 			size_t pos = token.find("-");
-			if (pos != string::npos) {
+			if (pos != string::npos){
 
 				unsigned int start = stoi(token.substr(0, pos));
 				unsigned int end = stoi(token.substr(pos+1));

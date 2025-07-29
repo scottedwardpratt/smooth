@@ -29,6 +29,8 @@ namespace NBandSmooth{
 		string TPOMethod;
 		double LAMBDA,ALPHA; //only used for estimating overall uncertainty
 		vector<vector<double>> ThetaTrain;
+		vector<bool> TrainingPtsFreeze;
+		vector<bool> TrainingPtsRead;
 		Eigen::MatrixXd I,J,K;
 		string ModelDirName;
 		double RSimplex;
@@ -39,6 +41,11 @@ namespace NBandSmooth{
 		CTPO();
 		void SetThetaTrain(vector<vector<double>> &theta);
 		void WriteModelPars();
+		
+		void CreateTrainingPts();
+		void ReadTrainingPts(); // to start from given positions
+		void FreezeTrainingPts();
+		void SetTrainingPts(); // Sets those points which were not read in from file
 			
 		void Optimize(double LambdaSet,double ALPHAset);
 		void Optimize_MC();
@@ -47,6 +54,7 @@ namespace NBandSmooth{
 		void SetThetaSimplex(double R);
 		void SetThetaSimplexPlus1(double R);
 		void SetThetaLatinHyperCube(vector<vector<double>> &theta);
+		void SetThetaRandom(vector<vector<double>> &theta);
 		
 		double GetSigma2Bar(double Lambda,double ALPHA,double &W11);
 		void GetC0DDprime(double Lambda,vector<double> &theta1,vector<double> &theta2,double &C0,double &D,double &Dprime);
