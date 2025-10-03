@@ -60,7 +60,7 @@ void CTrainingInfo::ReadTrainingInfoSmoothFormat(){
 		irun=0;
 		exists=false;
 		do{
-			runfilename="smooth_data/modelruns/run"+to_string(irun);
+			runfilename="smooth_data/FullModelRuns/run"+to_string(irun);
 			if(filesystem::exists(runfilename)){
 				NTrainingList.push_back(irun);
 				exists=true;
@@ -124,7 +124,7 @@ void CTrainingInfo::ReadTrainingInfoSmoothFormat(){
 
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		ilist=NTrainingList[itrain];
-		snprintf(filename,300,"smooth_data/%s/run%u/mod_parameters.txt",rundirname.c_str(),ilist);
+		snprintf(filename,300,"smooth_data/%s/run%u/model_parameters.txt",rundirname.c_str(),ilist);
 		fptr=fopen(filename,"r");
 		nread=0;
 		do{

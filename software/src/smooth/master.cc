@@ -7,7 +7,7 @@ CSmoothMaster::CSmoothMaster(){
 	unsigned int iZ;
 	CPCA *pca=NULL;
 	parmap=new CparameterMap;
-	parmap->ReadParsFromFile("smooth_data/smooth_parameters/emulator_parameters.txt");
+	parmap->ReadParsFromFile("smooth_data/Options/emulator_options.txt");
 	int ranseed=parmap->getI("RANDY_SEED",time(NULL));
 	randy=new Crandy(ranseed);
 	
@@ -30,7 +30,7 @@ CSmoothMaster::CSmoothMaster(){
 	observableinfo=new CObservableInfo(filename);
 	NObs=observableinfo->NObservables;
 	
-	ModelRunDirName=parmap->getS("SmoothEmulator_ModelRunDirName","modelruns");
+	ModelRunDirName=parmap->getS("SmoothEmulator_ModelRunDirName","FullModelRuns");
 	TrainingThetasFileName=parmap->getS("SmoothEmulator_TrainingThetasFilename","TrainingThetas.txt");
 	TrainingObsFileName=parmap->getS("SmoothEmulator_TrainingObsFilename","TrainingObs.txt");
 	
@@ -422,7 +422,7 @@ void CSmoothMaster::TestVsFullModel(){
 		//CLog::Info("Writing test_vs_full_model results to "+filename+"\n");
 		
 		for(itest=0;itest<ntestpts;itest++){
-			filename="smooth_data/modelruns/run"+to_string(TestList[itest])+"/mod_parameters.txt";
+			filename="smooth_data/FullModelRuns/run"+to_string(TestList[itest])+"/model_parameters.txt";
 			fptr=fopen(filename.c_str(),"r");
 			for(iread=0;iread<NPars;iread++){
 				fscanf(fptr,"%s %lf %lf",modparnamechars,&Xread,&SigmaXRead);
@@ -434,7 +434,7 @@ void CSmoothMaster::TestVsFullModel(){
 			testpars.TranslateX_to_Theta();
 			GetY(iY,testpars.Theta,Y,SigmaY_emulator);
 			
-			filename="smooth_data/modelruns/run"+to_string(TestList[itest])+"/obs.txt";
+			filename="smooth_data/FullModelRuns/run"+to_string(TestList[itest])+"/obs.txt";
 			fptr=fopen(filename.c_str(),"r");
 			iread=-1;
 			do{

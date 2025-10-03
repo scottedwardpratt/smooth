@@ -169,10 +169,10 @@ void CTPO::WriteModelPars(){
 		modelparameters[itrain]->TranslateTheta_to_X();
 	}
 	for(itrain=0;itrain<NTrainingPts;itrain++){
-		dirname="smooth_data/modelruns/run"+to_string(itrain);
+		dirname="smooth_data/FullModelRuns/run"+to_string(itrain);
 		command="mkdir -p "+dirname;
 		system(command.c_str());
-		filename=dirname+"/mod_parameters.txt";
+		filename=dirname+"/model_parameters.txt";
 		fptr=fopen(filename.c_str(),"w");
 		for(ipar=0;ipar<NPars;ipar++){
 			fprintf(fptr,"%s %g\n",
@@ -268,7 +268,7 @@ void CTPO::ReadTrainingPts(){
 	
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		if(TrainingPtsRead[itrain]){
-			snprintf(filename,300,"smooth_data/%s/run%u/mod_parameters.txt",rundirname.c_str(),itrain);
+			snprintf(filename,300,"smooth_data/%s/run%u/model_parameters.txt",rundirname.c_str(),itrain);
 			if(filesystem::exists(filename)){
 				exists=true;
 			}

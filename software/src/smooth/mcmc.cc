@@ -17,16 +17,16 @@ CMCMC::CMCMC(CSmoothMaster *master_set){
 	priorinfo=master->priorinfo;
 	CLLCalc::priorinfo=priorinfo;
 	parmap=master->parmap;
-	parmap->ReadParsFromFile("smooth_data/smooth_parameters/mcmc_parameters.txt");
+	parmap->ReadParsFromFile("smooth_data/Options/mcmc_options.txt");
 	string logfilename=parmap->getS("MCMC_LogFileName","Screen");
 	if(logfilename!="Screen"){
 		CLog::Init(logfilename);
 	}
 	randy=master->randy;
 	NPars=master->NPars;
-	trace_filename=parmap->getS("MCMC_TRACE_FILENAME","mcmc_trace/trace.txt");
-	Xtrace_filename=parmap->getS("MCMC_TRACE_FILENAME","mcmc_trace/Xtrace.txt");
-	string command="mkdir -p smooth_data/mcmc_trace";
+	trace_filename=parmap->getS("MCMC_TRACE_FILENAME","MCMC_trace/trace.txt");
+	Xtrace_filename=parmap->getS("MCMC_TRACE_FILENAME","MCMC_trace/Xtrace.txt");
+	string command="mkdir -p smooth_data/MCMC_trace";
 	system(command.c_str());
 	OPTIMIZESTEPS=parmap->getB("MCMC_OPTIMIZESTEPS",false);
 	IGNORE_EMULATOR_ERROR=parmap->getB("MCMC_IGNORE_EMULATOR_ERROR",false);

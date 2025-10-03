@@ -11,7 +11,7 @@ using namespace NMSUUtils;
 CTPO::CTPO(){
 	randy=new Crandy(123);
 	FIRSTCALL=true;
-	parmap.ReadParsFromFile("smooth_data/smooth_parameters/tpo_parameters.txt");
+	parmap.ReadParsFromFile("smooth_data/Options/tpo_options.txt");
 	string logfilename=parmap.getS("TPO_LogFileName","Screen");
 	if(logfilename!="Screen"){
 		CLog::Init(logfilename);
