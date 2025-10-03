@@ -5,13 +5,13 @@
 \section{Installation and Getting Started}\label{sec:installation}
 
 \subsection{Prerequisites}
-{\it Smooth Emulator} programs should run on UNIX, Mac OS or Linux, but is not supported for Windows OS. The software is largely  written in C++, though there are some python scripts included for graphing results. In addition to a C++ compiler (CMake files assume you can accommodate the  C++ 20 standard), the user needs the following software installed.
+{\it Smooth Emulator} software should run on UNIX, Mac OS or Linux, but is not supported for Windows OS. {\it Smooth Emulator} is largely  written in C++. In addition to a C++ compiler (CMake files assume you have C++ 20 standard), the user needs the following software installed.
 
 \begin{itemize}
     \item git
     \item CMake
     \item Eigen3 (Linear Algebra Package)
-    \item Python/Matplotlib (only for generating plots)
+    \item Python/Matplotlib (only for generating plots in the MCMC procedure)
 \end{itemize}
 
 CMake is an open-source, cross-platform build system that helps automate the process of compiling and linking for software projects. Hopefully, CMake will perform the needed gymnastics to find the Eigen3 installation. To install CMake, either visit the CMake website (https://cmake.org/), or use the system's package manager for the specific system. For example, on Mac OS, if one uses {\it homebrew} as a package manager, the command is
@@ -34,16 +34,16 @@ The software requires downloading the BAND framework software repository into so
 }
 Within the repository, there will be a directory\\{\tt /Users/CarlosSmith/bandframework/software/SmoothEmulator/}. All the relevant functionality of {\it Smooth Emulator} is contained within this directory. Throughout the manual the phrase {\tt \$\{GITHOME\_BAND\_SMOOTH\}} will refer to this directory. 
 
-The User should create a personal directory from which the User would perform most projects. This is easiest accomplished by copying the template directory from the {\it Smooth} distribution. For example
+The User needs to create a personal directory from which the User would perform most projects. This is easiest accomplished by copying a template from the {\it Smooth} distribution. For example
 {\tt
 \begin{verbatim}
-    % cp -r ${GITHOME_BAND_SMOOTH}/templates /Users/CarlosSmith/smoothy
+    % cp -r ${GITHOME_BAND_SMOOTH}/templates /Users/CarlosSmith/mysmoothy
 \end{verbatim}
 }
-The User may choose any other name besides {\tt smoothy}. The directory {\tt ../smoothy/..} is the root directory for the User's executables and analyses data, and should be outside the {\tt bandframework/} path so that the User's work does not interfere with the repository. Within this directory one will find a template analysis directory, which is named  {\tt /Users/CarlosSmith/smoothy/analysis\_template}. One can copy that directory to a new directory, e.g. {\tt ../smoothy/my\_analysis}.
-Hence forth, {\tt \$\{MY\_ANALYIS\}} is a name chosen by the User, and will refer to this directory, including the path, from which the User will perform most of the analysis. Thus, the User may wish to have several such directories, located according to the User's preference. Any time a new analysis is performed with new parameters, and if the User wishes to save the previous analysis, a new {\tt \$\{MY\_ANALYSIS\}} directory should be created. 
+Within this directory one will find a template project directory, which for the template would then be {\tt /Users/CarlosSmith/mysmoothy/myproject}. 
+Hence forth, {\tt \$\{MY\_PROJECT\}} is a name chosen by the User, and will refer to this directory, including the path, from which the User will perform most of the analysis. The User may wish to have several such directories, located according to the User's preference. Any time a new analysis is performed with new parameters, and if the User wishes to save the previous analysis, a new {\tt \$\{MY\_PROJECT\}} directory should be created. These directories should be outside the main distribution, i.e. outside the {\tt bandframework/} path so that the User's work does not interfere with the repository. 
 
-Within the {\tt smoothy/} directory, there is also a directory {\tt ../smoothy/mylocal/}, which after the copying above will become: {\tt /Users/CarlosSmith/smoothy/mylocal}. The {\tt mylocal/} directory contains the main programs and the {\it Smooth Emulator} executables which will be stored in {\tt \$\{GITHOME\_BAND\_SMOOTH\}/mylocal/bin}. Because the User might wish to edit the main programs, or to add similar programs, this provides the User a space to make such edits, all while leaving an original copy of the directory in the {\tt templates/} directory. 
+Within the {\tt templates/} directory, there is also a directory {\tt ../templates/mylocal/}, which after the copying above will become: {\tt /Users/CarlosSmith/mysmoothy/mylocal}. The {\tt mylocal/} directory contains the main programs and the {\it Smooth Emulator} executables which will be stored in {\tt \$\{GITHOME\_BAND\_SMOOTH\}/mylocal/bin}. Because the User might wish to edit the main programs, or to add similar programs, this provides the User a space to make such edits, all while leaving an original copy of the directory in the {\tt templates/} directory. 
 
 For the remainder of this manual, {\tt \$\{GITHOME\_BAND\_SMOOTH\}}, {\tt \$\{MY\_LOCAL\}} and {\tt \$\{MY\_PROJECT\}} will be used to denote the location of these directories.
 

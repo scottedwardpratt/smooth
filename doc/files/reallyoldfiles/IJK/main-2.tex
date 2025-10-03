@@ -1,0 +1,248 @@
+\documentclass[onecolumn,floatfix,superscriptaddress,a4paper,showpacs,showkeys,nofootinbib,notitlepage]{revtex4-1}
+\usepackage[colorlinks=true,linktocpage=true,linkcolor=blue,citecolor=blue,allcolors=blue]{hyperref}
+\usepackage{epsfig}
+\usepackage{latexsym}
+\usepackage[utf8]{inputenc}
+\usepackage{xspace}
+\usepackage{indentfirst}
+\usepackage{enumitem}
+\usepackage{color}
+\usepackage{placeins}
+
+\usepackage{setspace}
+\usepackage{lipsum}
+
+\usepackage{hyperref}
+
+\usepackage{todonotes}
+
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[english]{babel}
+\usepackage{url}
+\graphicspath{{figs/}}
+\topmargin= -1cm
+height= 22cm
+
+\newcommand{\const}{\mathop{\rm const}\nolimits}
+\newcommand{\bs}{\boldsymbol}
+\newcommand*{\dis}{\displaystyle}
+\newcommand{\bvar}{\mathbf}
+
+\newcommand{\mean}[1]{\langle #1 \rangle}
+\newcommand{\eq}[1]{\begin{align} #1 \end{align}}
+\newcommand{\Eq}[1]{Eq.~(\ref{#1})}
+\newcommand{\Eqs}[2]{Eqs.~(\ref{#1}) and (\ref{#2})}
+\newcommand{\Eqss}[2]{Eqs.~(\ref{#1})-(\ref{#2})}
+
+\newcommand{\der}[2]{\dfrac{\partial #1}{\partial #2}}
+\newcommand\ddfrac[2]{\frac{\displaystyle #1}{\displaystyle #2}}
+\newcommand\ddder[2]{\frac{\partial \displaystyle #1}{\partial \displaystyle #2}}
+\newcommand\derc[3]{\left[\ddder{#1}{#2}\right]_{#3}}
+\newcommand{\nBB}{n_{B(\bar{B})}}
+\newcommand\id[0]{^{\rm id}}
+\newcommand{\scw}{S\sigma}
+\newcommand{\scwz}[1]{\left(S\sigma\right)_{#1}}
+\newcommand{\wid}[1]{\omega_{\rm id}^{#1}}
+\newcommand\tab[2]{
+\begin{center}
+\begin{table}
+\begin{tabular}#1
+\end{tabular}
+\caption{#2}
+\end{table}
+\end{center}}
+
+\newcommand\wt[1]{\widetilde{#1}}
+
+\newcommand{\thickhata}[1]{\mathbf{\hat{{\hspace*{-2pt}$#1$}}}}
+\newcommand{\thickhat}[1]{\mathbf{\hat{{$#1$}}}}
+\newcommand{\subeq}[1]{\begin{subequations} #1 \end{subequations}}
+\newcommand{\red}[1]{color{red}{#1}}
+\newcommand{\be}{\begin{equation}}
+\newcommand{\ee}{\end{equation}}
+\newcommand{\rv}[1]{color{blue}{bf{RP: #1}}}
+\newcommand{\os}[1]{color{black}{bf{Oleh: #1}}}
+\newcommand{\vv}[1]{color{blue}{bf{VV: #1}}}
+\newcommand{\mus}{\mu^*}
+\newcommand{\ms}{m^*}
+
+
+\begin{document}
+\title{
+Mesh optimization
+}
+
+\date{\today}
+
+\begin{abstract}
+
+\end{abstract}
+\keywords{}
+
+\maketitle
+\section{Integrals}
+\eq{
+I_{ab}=-\frac{\sqrt{\pi } {\Lambda} \exp^{-\frac{({\theta_a}-{\theta_b})^2}{4 {\Lambda}^2}} \left({erf}\left(\frac{-2 {\beta}+{\theta_a}+{\theta_b}}{2 {\Lambda}}\right)-{erf}\left(\frac{2 {\beta}+{\theta_a}+{\theta_b}}{2 {\Lambda}}\right)\right)}{4 {\beta}}
+}
+
+\eq{
+J_{ab}=\frac{1}{{16 {\beta}}}{\Lambda} \exp^{-\frac{2 {\beta}^2+{\theta_a}^2+{\theta_b}^2}{2 {\Lambda}^2}} (\sqrt{\pi } \left(2 {\Lambda}^2+({\theta_a}-{\theta_b})^2\right) \exp^{\frac{4 {\beta}^2+({\theta_a}+{\theta_b})^2}{4 {\Lambda}^2}} \left({erf}\left(\frac{2 {\beta}+{\theta_a}+{\theta_b}}{2 {\Lambda}}\right)-{erf}\left(\frac{-2 {\beta}+{\theta_a}+{\theta_b}}{2 {\Lambda}}\right)\right)\\-4 {\Lambda} ({\theta_a}-3 {\theta_b}) \sinh \left(\frac{{\beta} ({\theta_a}+{\theta_b})}{{\Lambda}^2}\right)-8 {\beta} {\Lambda} \cosh \left(\frac{{\beta} ({\theta_a}+{\theta_b})}{{\Lambda}^2}\right))}
+}
+\eq{
+K_{ab}=(1/(64 \beta))\exp^{-((2 \beta^2 + \theta_a^2 + \theta_b^2)/(
+  2 \Lambda^2))} \Lambda (-8 \beta \Lambda (4 \beta^2 + 6 \Lambda^2 + 
+      \theta_a^2 + 10 \theta_a \theta_b + \theta_b^2) \cosh[(
+     \beta (\theta_a + \theta_b))/\Lambda^2] + \\
+   \exp^{(4 \beta^2 + (\theta_a + \theta_b)^2)/(4 \Lambda^2)}
+     \sqrt{\pi} (12 \Lambda^4 - 
+      4 \Lambda^2 (\theta_a - \theta_b)^2 + (\theta_a - 
+        \theta_b)^4) (-Erf[(-2 \beta + \theta_a + \theta_b)/(2 \Lambda)] + 
+      Erf[(2 \beta + \theta_a + \theta_b)/(2 \Lambda)]) \\- 
+   4 \Lambda (\theta_a + \theta_b) (-12 \beta^2 - 6 \Lambda^2 + \theta_a^2 - 
+      6 \theta_a \theta_b + \theta_b^2) \sinh[(\beta (\theta_a + \theta_b))/
+     \Lambda^2])
+}
+\bibliography{main.bib}
+
+
+
+\end{document}
+
+
+{\bf Proton number fluctuations due to nuclear clusters.}
+
+$A$ is the total number of nucleons in central Au+Au collisions ($A\cong 400$).
+
+$N$ is the number of single nucleons.
+
+$\alpha$ is the number of nuclear clusters ("alpha particles").
+
+$n_\alpha$ is the number of nucleons in the $\alpha$ cluster.
+
+Probability distribution
+\eq{ \label{PNa}
+P(N,\alpha) = C\, \frac{\overline{N}^N}{N!}~
+\frac{\overline{\alpha}^\alpha}{\alpha !}~\delta(A-N-n_\alpha \alpha)~,
+}
+where
+\eq{
+C(A,\overline{N},\overline{\alpha},n_\alpha)~=~
+\left[\sum_{N,\alpha} \frac{\overline{N}^N}{N!}~
+\frac{\overline{\alpha}^\alpha}{\alpha !}~\delta(A-N-n_\alpha \alpha)\right]^{-1}~.
+}
+
+Expected values of the system parameters:
+$\overline{N}=200$, $n_\alpha =4$, $\overline{\alpha}= 50$.
+
+One finds ($k=1,2, \ldots$):
+\eq{
+&\langle N^k\rangle = \sum_{N,\alpha} N^k\,P(N,\alpha)\\
+& = C\int_0^{2\pi}dx \exp(iAx) \sum_{N,\alpha} N^k ~\frac{z^N}{N!}\,\frac{z_\alpha^\alpha}{\alpha!}
+\nonumber \\
+&  C\int_0^{2\pi}dx \exp\left[i Ax + \exp(- i \overline{\alpha}\,x\,n_\alpha)\right] 
+\frac{(z\partial z)^k}{\partial z^k}\,\exp(z)~,
+}
+where 
+\eq{z\equiv \overline{N} \exp(-ix)~,  ~~~z_\alpha\equiv \overline{\alpha}\exp (-ixn_\alpha).
+}
+\eq{
+C_A(\mean{N},\mean{\alpha})=(\partial_z)^A \exp^{\exp^{\mu} \mean{N}z+\mean\alpha z^{n^\alpha}}
+}
+\eq{
+C_A(\mean{N},\mean{\alpha})={A \choose n}C_n^{N}C_{A-k}^{\alpha}
+}
+\eq{
+\mean{N^k}=\mean{N}^{k}{A\choose k}\frac{C_{A-k}}{C_A}
+}
+Using basic logic we assume:
+\eq{
+C_n^N=\mean{N}^n
+}
+\eq{
+C_n^{\alpha}=\frac{n!}{(n/4)!}\mean{\alpha}^{n/4},
+}
+where $n_\alpha$ has to be divisible by $n_{\alpha}$.
+This should be practical in computation of particle fluctuations.
+Another possibility is to use expressions involving bell polynomials:
+\eq{
+C_A=\sum_k B_{A,k}(f^{(1)},\cdots,f^{(A-k+1)}),
+}
+where :
+\eq{
+f=\mean{N}z+\mean{\alpha}z^{n_{\alpha}}
+}
+{\bf One finds:}
+\eq{
+\omega[N]=\omega[N](A,\overline{N},\overline{\alpha}, n_\alpha)= \frac{n_\alpha}{1+n_\alpha}
+}
+\eq{
+\omega[\alpha]=\frac{1}{1+n_\alpha}
+}
+\os{There is no simple expression. The easiest would be assyptotic formula derived in prev paper.}
+Instead of Eq.~(\ref{PNa}) let us try
+\eq{\label{PNa-1}
+P(N,\alpha)= C \frac{\overline{\alpha}^\alpha}{\alpha !}
+\delta(A-N-\alpha n_\alpha)~.
+%
+} 
+One then finds
+\eq{
+P(N)\equiv \sum_\alpha P(N,\alpha)= C \frac{\overline{\alpha}^{(A-N)/n_\alpha}}{([(A-N)/n_\alpha ]!}
+ }
+
+{\bf In the GCE formulation of the cluster model the single nucleon fluctuations is not sensitive to the large baryon number fluctuations in the large clusters. An exact conservation of the total number of baryons generate large proton number fluctuations. }
+\subsection{Ideal Gas of Clusters with decays}
+In the following we would like to formulate simple model that includes nuclear clusters as well as possibility of their decays. To do that consider two components system of nucleons with baryonic charge $B_N=1$ and some hypothetical nuclear cluster named $\alpha$ with $B_\alpha=Q_{\alpha}$. This cluster alpha can either survive in a nuclear collision event of decay with some probability $p_\alpha$. Distribution of particles before decayes can be modeled with a mixture of poisson distributions for each of the speacies with averages $n_N$ and $n_\alpha$.
+\eq{
+P(N,\alpha)=W^{-1}(n_N,n_\alpha)\frac{n_N^N}{N!}\frac{n_\alpha^\alpha}{\alpha!}\delta(B-N-Q_\alpha \alpha)
+}
+after that each $alpha$ cluster can decay or not with bernoulli distribution. Distribution of the sum of decayed particles is therefore binomial. 
+The resulting distribtion of nucleons therefore reads:
+\eq{
+P(N)=B(n_{decay},\alpha|p_\alpha)P(N_{prim},\alpha)\delta(Q_{\alpha}n_{decay}+N_{prim}-N)
+},
+where $n_{decay}$ is the number of alpha clusters that dissolved into $Q_\alpha n_{decay}$ nucleons.
+\section{Comparison with data}
+In order to compare with proton number fluctuations measured by HADES experiments at $E_{lab}=1.23$A$GEV$ we employ following procedure.
+First baryon fluctuations in total space have to be computed assuming exact baryon number conservation and the nature of alpha particle and baryon distributions. After that nucleon fluctuations have to be corrected for finite experimental acceptance, to do that one uses binomial acceptance procedure. Then another component is estimating proton fluctuations from nucleon fluctuations within the acceptance. This can also be done using binomial anzats however more involved distributions dependent on isospin processes can take place. This is a question for future study.
+
+In order to estimate $\alpha$ that corresponds to HADES detector we use proton spectra. By fitting rapidity and transverse momentum distributions of protons and computing corresponding acceptance parameters $\alpha_{p_t}$ and $\alpha_y$. The chance of baryon to be either proton or neutron is also binomial in nature $\alpha_{p}=\frac{\mean{N_p}}{\mean{N_p}+\mean{N_n}}$. The superposition of such binomial corrections yield $\alpha=\alpha_p\alpha_y\alpha_{p_t}$. 
+
+In Fig.(\ref{cumulants}) on the panel (a) one sees comparison of the HADES fluctuation inside one unit of the CM rapidity against a model where $\alpha$ fluctuates according to poisson distribution and the nucleon number is $N=2A-4\alpha$. For the value of $\alpha$ that corresponds to $0-10\%$ central collisions we see major disrepancies between our theory and data (spectra and yields were published for this range). However one should take in mind that HADES data was corrected for acceptance and for most central events value of $\alpha$ can be slightly larger. Therefore we also considered $\alpha=0.5$ and $0.8$.  One can see that in this case model manages to rectreate scaling of cumulants.
+
+
+Another interesting possibility is to look at the influence of decays inside ideal cluster gasses on the final distribution of monomers. This for realistic value of $\alpha$ is presented in Fig.(\ref{cumulants}) panel (b). While decays do increase fluctuations of nucleons. This increase is rather moderate. In particular Case B has different sign for Skewness and kurtosis compared to case B.
+
+Model considered here can be rather sensitive to the other parameters of the model. This dependence can be investigated. 
+
+It seems like the data supports GCE value more than acceptance corrected one. 
+\begin{figure*}
+\includegraphics[width=.47width]{x-poisson-alpha.pdf}
+\includegraphics[width=.47width]{x-idealgas-decays.pdf}
+\caption{\label{cumulants}}
+\end{figure*}
+
+\section{Different rapidity distributions for clusters and nucleons.}
+Consider following scenario.
+Spectator matter fragments into a mixture of nuclear fragments. Some of those fragments overlap with experimental acceptance. In this case one can assume:
+\eq{
+P(\alpha_{f},\alpha_{b},N)=B(\alpha_f,n_f|x_f)B(\alpha_b,n_b|x_b)\\
+B(N,n_N|x)P(n_f)P(n_b)P(n_N)\delta(Q_\alpha(n_f+n_b)+n_N-B)
+}
+\eq{
+P(\alpha_{f},\alpha_{b},N)=B(\alpha_f,n_f|x_f)B(\alpha_b,n_b|x_b)\\
+B(N,n_N|x)P(n_f)P(n_b)P(B-Q_\alpha(n_f+n_b))
+}
+In this case regardless of the nature of $P(n_f)$ and $P(n_b)$ one as $x_f, x_b \to 0$ final distribution of $alpha$s inside acceptance should be poissonian.
+Thus we arrive at:
+\eq{
+P(\alpha,N)=\frac{\mean{\alpha}^{\alpha}}{\alpha!}B(N,n_N|x_N)P(n_N)\delta(Q_\alpha  (n_f+n_b) + n_N - B)
+}
+The only components we luck at this point is nature of $P(B-Q_\alpha (n_f+n_b)))$. One can also assume that $x_N\approx 1$ and avoid acceptance correction altogether. If $P(n_N)$ is very flat.
+\eq{
+P(\alpha,N)=\frac{\mean{\alpha}^{\alpha}}{\alpha!}\delta(Q_\alpha  (n_f+n_b) + N - B)
+}
+Large values of scaled variance of the true proton distribution can be caused by different phenomena both critical and non-critical. Perhaps decays play a significant role. However it seems that separation into nucleonic and spectator matter has little to do with nuclear potential and should only be driven by early state non-equilibrium dynamics.
+
