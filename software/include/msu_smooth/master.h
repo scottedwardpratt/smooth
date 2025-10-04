@@ -42,7 +42,7 @@ namespace NBandSmooth{
       CPriorInfo *priorinfo;
       Crandy *randy;
       CSmooth *smooth;
-      string ModelRunDirName,CoefficientsDirName,TrainingThetasFileName,TrainingObsFileName;
+      string CoefficientsDirName,TrainingThetasFileName,TrainingObsFileName;
       string SmoothEmulator_TrainingFormat;
       double pca_minvariance,fitpercentage;
       vector<bool> pca_ignore;

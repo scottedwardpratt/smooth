@@ -54,7 +54,6 @@ void CTrainingInfo::ReadTrainingInfoSmoothFormat(){
 	string runfilename;
 	int irun;
 	bool exists;
-	string rundirname=smoothmaster->ModelRunDirName;
 
 	if(NTrainingStr=="all" || NTrainingStr=="All" || NTrainingStr=="ALL"){
 		irun=0;
@@ -102,7 +101,7 @@ void CTrainingInfo::ReadTrainingInfoSmoothFormat(){
 	
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		ifile=NTrainingList[itrain];
-		snprintf(filename,300,"smooth_data/%s/run%u/obs.txt",rundirname.c_str(),ifile);
+		snprintf(filename,300,"smooth_data/FullModelRuns/run%u/obs.txt",ifile);
 		fptr=fopen(filename,"r");
 		nsuccess=0;
 		do{
@@ -124,7 +123,7 @@ void CTrainingInfo::ReadTrainingInfoSmoothFormat(){
 
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		ilist=NTrainingList[itrain];
-		snprintf(filename,300,"smooth_data/%s/run%u/model_parameters.txt",rundirname.c_str(),ilist);
+		snprintf(filename,300,"smooth_data/FullModelRuns/run%u/model_parameters.txt",ilist);
 		fptr=fopen(filename,"r");
 		nread=0;
 		do{

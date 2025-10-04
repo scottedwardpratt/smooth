@@ -19,6 +19,7 @@ CSmooth::CSmooth(){
 		MaxRank=5;
 	}
 	InitArrays();
+   printf("initialized\n");
 }
 
 void CSmooth::InitArrays(){

@@ -183,7 +183,6 @@ void CTPO::WriteModelPars(){
 }
 
 void CTPO::FreezeTrainingPts(){
-	printf("howdy\n");
 	string token;
 	string runfilename;
 	unsigned int itrain,i;
