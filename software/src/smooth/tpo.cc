@@ -144,13 +144,19 @@ double my_erfinv (double a){
 void CTPO::Optimize_MC(){
 	double Sigma2Bar,bestSigma2,dtheta,W11,r,successrate;
 	unsigned int imc,itrain,ipar,nfail=0,nsuccess=0;
+   string command;
 	FILE *fptr,*fptr_vsNMC;
 	Crandy randy(time(NULL));
 	vector<vector<double>> besttheta;
 	
 	CLog::Info("NTrainingpts="+to_string(NTrainingPts)+", NMC="+to_string(NMC)+", LAMBDA="+to_string(LAMBDA)+", ALPHA="+to_string(ALPHA)+"\n");
 	dtheta=0.05/sqrt(double(NTrainingPts));
-	
+   command="mkdir -p smooth_data/trainingpoint_data";
+   system(command.c_str());
+   command="mkdir -p smooth_data/trainingpoint_data/Sigma2vsNMC";
+   system(command.c_str());
+   command="mkdir -p smooth_data/trainingpoint_data/SigmaVsLambda";
+   system(command.c_str());
 	if(FIRSTCALL==true){
 		SetThetaLatinHyperCube(besttheta);
 		SetThetaTrain(besttheta);
@@ -164,11 +170,11 @@ void CTPO::Optimize_MC(){
 	bestSigma2=Sigma2Bar;
 	CLog::Info("Optimize_MC: at beginning: bestSigma2="+to_string(bestSigma2)+"\n");
 	
-	string filename="Sigma2vsNMC/NTrain"+to_string(NTrainingPts)+".txt";
+	string filename="smooth_data/trainingpoint_data/Sigma2vsNMC/NTrain"+to_string(NTrainingPts)+".txt";
 	fptr_vsNMC=fopen(filename.c_str(),"w");
 	fprintf(fptr_vsNMC,"0 %g\n",bestSigma2);
 	
-	fptr=fopen("Sigma2vsNTrain_Latin.txt","a");
+	fptr=fopen("smooth_data/trainingpoint_data/Sigma2vsNTrain_Latin.txt","a");
 	fprintf(fptr,"%u %g\n",NTrainingPts,bestSigma2);
 	fclose(fptr);
 	
@@ -225,15 +231,15 @@ void CTPO::Optimize_MC(){
 		CLog::Info("r="+to_string(sqrt(r))+"\n");
 		
 	}
-	fptr=fopen("Sigma2vsNTrain.txt","a");
+	fptr=fopen("smooth_data/trainingpoint_data/Sigma2vsNTrain.txt","a");
 	fprintf(fptr,"%3d %8.6f\n",NTrainingPts,bestSigma2);
 	fclose(fptr);
 	
-	fptr=fopen("Sigma2vsLambda.txt","a");
+	fptr=fopen("smooth_data/trainingpoint_data/Sigma2vsLambda.txt","a");
 	fprintf(fptr,"%8.5f %8.6f\n",LAMBDA,bestSigma2);
 	fclose(fptr);
 	
-	fptr=fopen("Sigma2vsNPars.txt","a");
+	fptr=fopen("smooth_data/trainingpoint_data/Sigma2vsNPars.txt","a");
 	fprintf(fptr,"%8.5u %8.6f %u\n",NPars,bestSigma2,NTrainingPts);
 	fclose(fptr);
 	
