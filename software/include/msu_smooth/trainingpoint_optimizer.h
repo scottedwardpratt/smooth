@@ -47,7 +47,7 @@ namespace NBandSmooth{
 		void FreezeTrainingPts();
 		void SetTrainingPts(); // Sets those points which were not read in from file
 			
-		void Optimize(double LambdaSet,double ALPHAset);
+		void Optimize(double LambdaSet);
 		void Optimize_MC();
 		void OptimizeSphere_MC();
 		void OptimizeSimplex_MC();

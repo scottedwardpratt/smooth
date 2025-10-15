@@ -56,9 +56,9 @@ void CTPO::CreateTrainingPts(){
 	
 }
 
-void CTPO::Optimize(double LAMBDASet,double ALPHAset){
+void CTPO::Optimize(double LAMBDASet){
 	LAMBDA=LAMBDASet;
-	ALPHA=ALPHAset;
+	ALPHA=parmap.getD("TPO_ALPHA",0.01);
 	PLUS1=false;
 	if(NMC==0)
 		NMC=parmap.getI("TPO_NMC",0);
@@ -142,7 +142,7 @@ double my_erfinv (double a){
 }
 
 void CTPO::Optimize_MC(){
-	double Sigma2Bar,bestSigma2,dtheta,W11,r,successrate;
+	double Sigma2Bar,bestSigma2,dtheta,W11,successrate;
 	unsigned int imc,itrain,ipar,nfail=0,nsuccess=0;
    string command;
 	FILE *fptr,*fptr_vsNMC;
@@ -213,26 +213,28 @@ void CTPO::Optimize_MC(){
 	}
 	fprintf(fptr_vsNMC,"%u %g\n",imc,bestSigma2);
 	fclose(fptr_vsNMC);
-	
-	string rthetastring;
-	char rthetachar[11];
-	for(itrain=0;itrain<NTrainingPts;itrain++){
-		r=0.0;
-		rthetastring="-- itrain="+to_string(itrain)+" --\ntheta=:\n";
-		CLog::Info(rthetastring);
-		rthetastring="";
-		for(ipar=0;ipar<NPars;ipar++){
-			r+=pow(besttheta[itrain][ipar],2);
-			snprintf(rthetachar,11,"%9.3f ",besttheta[itrain][ipar]);
-			rthetastring+=string(rthetachar);
-			
-		}
-		CLog::Info(rthetastring);
-		CLog::Info("r="+to_string(sqrt(r))+"\n");
-		
-	}
-	fptr=fopen("smooth_data/trainingpoint_data/Sigma2vsNTrain.txt","a");
-	fprintf(fptr,"%3d %8.6f\n",NTrainingPts,bestSigma2);
+   
+   /*
+    string rthetastring;
+    char rthetachar[11];
+    double r;
+    for(itrain=0;itrain<NTrainingPts;itrain++){
+    r=0.0;
+    rthetastring="-- itrain="+to_string(itrain)+" --\ntheta=:\n";
+    CLog::Info(rthetastring);
+    rthetastring="";
+    for(ipar=0;ipar<NPars;ipar++){
+    r+=pow(besttheta[itrain][ipar],2);
+    snprintf(rthetachar,11,"%9.3f ",besttheta[itrain][ipar]);
+    rthetastring+=string(rthetachar);
+    
+    }
+    CLog::Info(rthetastring);
+    CLog::Info("r="+to_string(sqrt(r))+"\n");
+    
+    }*/
+   fptr=fopen("smooth_data/trainingpoint_data/Sigma2vsNTrain.txt","a");
+   fprintf(fptr,"%3d %8.6f\n",NTrainingPts,bestSigma2);
 	fclose(fptr);
 	
 	fptr=fopen("smooth_data/trainingpoint_data/Sigma2vsLambda.txt","a");

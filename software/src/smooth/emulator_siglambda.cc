@@ -156,7 +156,7 @@ void CSmoothEmulator::CalcSigmaALambda(){
 		}
 		if(LAMBDA>LambdaMax){
 			LAMBDA=LambdaMax;
-			printf("setting LAMBDA=LambdaMax, nsuccess=%d\n",nsuccess);
+			//printf("setting LAMBDA=LambdaMax, nsuccess=%d\n",nsuccess);
 			nsuccess=100000;
 		}
 	}

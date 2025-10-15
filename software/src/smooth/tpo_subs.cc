@@ -203,7 +203,6 @@ void CTPO::FreezeTrainingPts(){
 				unsigned int end = stoi(token.substr(pos+1));
 
 				for (unsigned int i = start; i <= end; i++){
-					printf("%u ",i);
 					TrainingPtsFreeze[i]=true;
 					if(TrainingPtsRead[i]==false){
 						CLog::Info("Warning: For training point "+to_string(i)+": freezing point which was set randomly\n");
@@ -212,12 +211,10 @@ void CTPO::FreezeTrainingPts(){
 			}
 			else {
 				i=stoi(token);
-				printf("%u ",i);
 				TrainingPtsFreeze[i]=true;
 			}
 		}
 	}
-	printf("\n");
 
 }
 
@@ -251,19 +248,16 @@ void CTPO::ReadTrainingPts(){
 					unsigned int end = stoi(token.substr(pos+1));
 
 					for (unsigned int itrain = start; itrain <= end; itrain++){
-						printf("%u ",itrain);
 						TrainingPtsRead[itrain]=true;
 					}
 				}
 				else {
 					itrain=stoi(token);
-					printf("%u ",itrain);
 					TrainingPtsRead[itrain]=true;
 				}
 			}
 		}
 	}
-	printf("\n");
 	
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		if(TrainingPtsRead[itrain]){
