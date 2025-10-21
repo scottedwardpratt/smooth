@@ -16,7 +16,7 @@ CTPO::CTPO(){
 	if(logfilename!="Screen"){
 		CLog::Init(logfilename);
 	}
-	TPOMethod=parmap.getS("TPOMethod","MC");
+	TPO_Method=parmap.getS("TPO_Method","MC");
 	string prior_info_filename="smooth_data/Info/prior_info.txt";
 	priorinfo=new CPriorInfo(prior_info_filename);
 	CModelParameters::priorinfo=priorinfo;
@@ -27,19 +27,18 @@ CTPO::CTPO(){
 
 void CTPO::CreateTrainingPts(){
 	unsigned int itrain;
-	if(TPOMethod=="MC" || TPOMethod=="MCSphere"){
-		NTrainingPts=parmap.getI("NTrainingPts",0);
+	if(TPO_Method=="MC" || TPO_Method=="MCSphere"){
 		NTrainingPts=parmap.getI("TPO_NTrainingPts",0);
 		if(NTrainingPts==0){
 			CLog::Info("Enter NTrainingPts: ");
 			scanf("%u",&NTrainingPts);
 		}
 	}	 
-	else if(TPOMethod=="MCSimplex")
+	else if(TPO_Method=="MCSimplex")
 		NTrainingPts=NPars+1;
-	else if(TPOMethod=="MCSimplexPlus1")
+	else if(TPO_Method=="MCSimplexPlus1")
 		NTrainingPts=NPars+2;
-	else if(TPOMethod=="MCQuadratic" || TPOMethod=="MCSphereQuadratic")
+	else if(TPO_Method=="MCQuadratic" || TPO_Method=="MCSphereQuadratic")
 		NTrainingPts=(NPars+1)*(NPars+2)/2;
 	
 	ThetaTrain.clear();
@@ -60,38 +59,33 @@ void CTPO::Optimize(double LAMBDASet){
 	LAMBDA=LAMBDASet;
 	ALPHA=parmap.getD("TPO_ALPHA",0.01);
 	PLUS1=false;
-	if(NMC==0)
-		NMC=parmap.getI("TPO_NMC",0);
+   NMC=parmap.getI("TPO_NMC",0);
 	if(NMC==0){
 		CLog::Info("Enter NMC: ");
 		scanf("%u",&NMC);
 	}
-	if(TPOMethod=="MC"){
+	if(TPO_Method=="MC"){
 		PLUS1=false;
 		Optimize_MC();
 	}
-	else if(TPOMethod=="MCSphere"){
+	else if(TPO_Method=="MCSphere"){
 		PLUS1=true;
-		if(NTrainingPts==0){
-			CLog::Info("Enter NTrainingPts: ");
-			scanf("%u",&NTrainingPts);
-		}
 		OptimizeSphere_MC();
 	}
-	else if(TPOMethod=="MCSimplex"){
+	else if(TPO_Method=="MCSimplex"){
 		PLUS1=false;
 		OptimizeSimplex_MC();
 	}
-	else if(TPOMethod=="MCSimplexPlus1"){
+	else if(TPO_Method=="MCSimplexPlus1"){
 		PLUS1=true;
 		OptimizeSimplex_MC();
 	}
-	else if(TPOMethod=="MCQuadratic"){
+	else if(TPO_Method=="MCQuadratic"){
 		PLUS1=true;
 		NTrainingPts=(NPars+1)*(NPars+2)/2;
 		Optimize_MC();
 	}
-	else if(TPOMethod=="MCSphereQuadratic"){
+	else if(TPO_Method=="MCSphereQuadratic"){
 		PLUS1=true;
 		NTrainingPts=(NPars+1)*(NPars+2)/2;
 		OptimizeSphere_MC();
