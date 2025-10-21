@@ -17,6 +17,7 @@ CTPO::CTPO(){
 		CLog::Init(logfilename);
 	}
 	TPO_Method=parmap.getS("TPO_Method","MC");
+   FullModelRunDirName=parmap.getS("Smooth_FullModelRunDirName","smooth_data/FullModelRuns");
 	string prior_info_filename="smooth_data/Info/prior_info.txt";
 	priorinfo=new CPriorInfo(prior_info_filename);
 	CModelParameters::priorinfo=priorinfo;

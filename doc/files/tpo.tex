@@ -15,11 +15,12 @@ If one visits the User's analysis directory, these options are defined in the fi
 {\tt
 \begin{verbatim}
  #LogFileName               tpolog.txt  # comment out to direct output to screen
- TPOMethod  MCQuadratic  # can be "MC", "MCSphere", "MCSimplex", "MCSimplexPlus1", "MCQuadratic", "MCSphereQuadratic"
+ TPO_Method  MCQuadratic  # can be "MC", "MCSphere", "MCSimplex", "MCSimplexPlus1", "MCQuadratic", "MCSphereQuadratic"
  TPO_NTrainingPts    0   # only relevant for OptimizeMethod="MCSphere" or "MC"
  TPO_NMC  10000
  TPO_ALPHA 0.01
  TPO_INCLUDE_LAMBDA_UNCERTAINTY true
+ Smooth_FullModelRunDirName  smooth_data/FullModelRunDirName
  #TPO_ReadPoints 0,1,4-7,10,11-13,21
  #TPO_FreezePoints 0,1,4-7,10,11-13,21
 \end{verbatim}
@@ -28,8 +29,8 @@ For the parameter file, the first string is the parameter name and is followed b
 \begin{enumerate}\itemsep 0pt
     \item {\bf Simplex\_TrainType}\\
 Possible values are ``1'' or ``2''. The default, ``1'', will position points according to a simplex, i.e. in two dimensions this is an equilateral triangle and in three dimensions, it is a tetrahedron. In $n$ dimensions there are $n+1$ points separated at equal distances from one another and centered at the origin. For ``2'', points are added at the half-way points between each vertex of the tetrahedron. The points at the bisection points are scaled to a different radius than those at the vertices. This provides the precise number of training points to exactly determine both the linear and quadratic terms.
-\item {\bf Simplex\_ModelRunDirName}\\
-This sets the path to the directory in which the run files will be created. The default name is {\tt ./modelruns}, but the User can change this to anything they want. The path is relative to the analysis directory, i.e. the directory from which you run the {\it simplex} command.
+\item {\bf Smooth\_FullModelRunDirName}\\
+This sets the path to the directory in which the run files will be created. The default name is {\tt smooth\_data/FullModelRuns}, but the User can change this to anything they want. The path is relative to the analysis directory, i.e. the directory from which you run the {\it simplex} command.
 \item {\bf LogFileName}\\
 If this is left blank, {\it Training Point Optimizer} will write output to the string. Otherwise it will write output to a file. Given that {\it Training Point Optimizer} runs in a few seconds, the program is usually run interactively and output is sent to the screen.
 \end{enumerate}
@@ -86,7 +87,7 @@ Next, change into your analysis directory and run the program.
 }
 Here {\tt \$\{MY\_LOCAL\}/bin} is the path to where the User compiles the main programs into executables. 
 
-{\tt trainingpoint\_optimizer} will read parameters from the {\tt smooth\_data/Options/tpo\_options.txt} file and from the {\tt smooth\_data/Info/prior\_info.txt} files. It will then write the information about the training points in the directory {\tt smooth\_data/modelruns/}. Within the directory, a sub-directory will be created for each training point, named {\tt run0/, run1/, run2/}$\cdots$. Within each subdirectory, {\tt trainingpoint\_optimizer} creates a file {\tt runI/mod\_parameters.txt} for the I$^{\rm th}$ training point. For example, the {\tt run0/mod\_parameters.txt} file might be
+{\tt trainingpoint\_optimizer} will read parameters from the {\tt smooth\_data/Options/tpo\_options.txt} file and from the {\tt smooth\_data/Info/prior\_info.txt} files. It will then write the information about the training points in the directory {\tt smooth\_data/FullModelRuns/}. Within the directory, a sub-directory will be created for each training point, named {\tt run0/, run1/, run2/}$\cdots$. Within each subdirectory, {\tt trainingpoint\_optimizer} creates a file {\tt runI/mod\_parameters.txt} for the I$^{\rm th}$ training point. For example, the {\tt run0/mod\_parameters.txt} file might be
 {\tt\begin{verbatim}
    NuclearCompressibility     229.08
    ScreeningMass              0.453

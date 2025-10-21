@@ -40,6 +40,7 @@ namespace NBandSmooth{
       CTrainingInfo *traininginfo;
       CObservableInfo *observableinfo;
       CPriorInfo *priorinfo;
+      string FullModelRunDirName;
       Crandy *randy;
       CSmooth *smooth;
       string CoefficientsDirName,TrainingThetasFileName,TrainingObsFileName;

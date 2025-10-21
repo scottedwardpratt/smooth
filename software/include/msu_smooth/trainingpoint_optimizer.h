@@ -26,13 +26,13 @@ namespace NBandSmooth{
 		bool PLUS1,INCLUDE_LAMBDA_UNCERTAINTY;
 		CparameterMap parmap;
 		unsigned int NPars,NTrainingPts,NMC;
-		string TPOMethod;
+		string TPO_Method;
 		double LAMBDA,ALPHA; //only used for estimating overall uncertainty
 		vector<vector<double>> ThetaTrain;
 		vector<bool> TrainingPtsFreeze;
 		vector<bool> TrainingPtsRead;
 		Eigen::MatrixXd I,J,K;
-		string ModelDirName;
+		string FullModelRunDirName;
 		double RSimplex;
 		bool FIRSTCALL;
 		CPriorInfo *priorinfo;

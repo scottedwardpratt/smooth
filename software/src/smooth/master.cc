@@ -30,7 +30,7 @@ CSmoothMaster::CSmoothMaster(){
 	observableinfo=new CObservableInfo(filename);
 	NObs=observableinfo->NObservables;
 	
-	//ModelRunDirName=parmap->getS("SmoothEmulator_ModelRunDirName","FullModelRuns");
+	FullModelRunDirName=parmap->getS("Smooth_FullModelRunDirName","smooth_data/FullModelRuns");
 	TrainingThetasFileName=parmap->getS("SmoothEmulator_TrainingThetasFilename","TrainingThetas.txt");
 	TrainingObsFileName=parmap->getS("SmoothEmulator_TrainingObsFilename","TrainingObs.txt");
 	
