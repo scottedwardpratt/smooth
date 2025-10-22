@@ -30,7 +30,7 @@ For the parameter file, the first string is the parameter name and is followed b
     \item {\bf Simplex\_TrainType}\\
 Possible values are ``1'' or ``2''. The default, ``1'', will position points according to a simplex, i.e. in two dimensions this is an equilateral triangle and in three dimensions, it is a tetrahedron. In $n$ dimensions there are $n+1$ points separated at equal distances from one another and centered at the origin. For ``2'', points are added at the half-way points between each vertex of the tetrahedron. The points at the bisection points are scaled to a different radius than those at the vertices. This provides the precise number of training points to exactly determine both the linear and quadratic terms.
 \item {\bf Smooth\_FullModelRunDirName}\\
-This sets the path to the directory in which the run files will be created. The default name is {\tt smooth\_data/FullModelRuns}, but the User can change this to anything they want. The path is relative to the analysis directory, i.e. the directory from which you run the {\it simplex} command.
+This sets the path to the directory in which the run files will be created. The default name is {\tt smooth\_data/FullModelRuns}, but the User can change this to anything they want. The path is relative to the analysis directory, i.e. the directory from which you run the {\tt trainingpoint\_optimizer} command.
 \item {\bf LogFileName}\\
 If this is left blank, {\it Training Point Optimizer} will write output to the string. Otherwise it will write output to a file. Given that {\it Training Point Optimizer} runs in a few seconds, the program is usually run interactively and output is sent to the screen.
 \end{enumerate}

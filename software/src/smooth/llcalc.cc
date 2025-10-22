@@ -28,23 +28,18 @@ CLLCalc::CLLCalc(CSmoothMaster *master_set){
 }
 
 CLLCalcSmooth::CLLCalcSmooth(CSmoothMaster *master_set){
-	master=master_set;
-	NPars=master->NPars;
-	priorinfo=master->priorinfo;
-	obsinfo=master->observableinfo;
-	if(master->UsePCA){
-		obsinfo->ReadExperimentalInfo("PCA_Info/experimental_info.txt"); // might want to change this later to be more flexible
-	}
-	else{
-		obsinfo->ReadExperimentalInfo("Info/experimental_info.txt"); // might want to change this later to be more flexible
-	}
-	NObs=obsinfo->NObservables;
-	Y.resize(NObs);
-	dYdTheta.resize(NObs);
-	SigmaY.resize(NObs);
-	SigmaY_emulator.resize(NObs);
-	for(unsigned int iy=0;iy<NObs;iy++){
-		dYdTheta[iy].resize(NPars);
+   master=master_set;
+   NPars=master->NPars;
+   priorinfo=master->priorinfo;
+   obsinfo=master->observableinfo;
+   obsinfo->ReadExperimentalInfo("Info/experimental_info.txt"); // might want to change this later to be more flexible
+   NObs=obsinfo->NObservables;
+   Y.resize(NObs);
+   dYdTheta.resize(NObs);
+   SigmaY.resize(NObs);
+   SigmaY_emulator.resize(NObs);
+   for(unsigned int iy=0;iy<NObs;iy++){
+      dYdTheta[iy].resize(NPars);
 	}
 	priorinfo=master_set->priorinfo;
 }

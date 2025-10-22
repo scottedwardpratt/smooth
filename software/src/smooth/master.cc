@@ -4,8 +4,6 @@ using namespace NBandSmooth;
 
 CSmoothMaster::CSmoothMaster(){
 	unsigned int NObs;
-	unsigned int iZ;
-	CPCA *pca=NULL;
 	parmap=new CparameterMap;
 	parmap->ReadParsFromFile("smooth_data/Options/emulator_options.txt");
 	int ranseed=parmap->getI("RANDY_SEED",time(NULL));
@@ -14,25 +12,19 @@ CSmoothMaster::CSmoothMaster(){
 	string logfilename=parmap->getS("SmoothEmulator_LogFileName","Screen");
 	if(logfilename!="Screen"){
 		CLog::Init(logfilename);
-	}
-	SmoothEmulator_TrainingFormat=parmap->getS("SmoothEmulator_TrainingFormat","training_format_smooth");
-	string filename;
-	UsePCA=parmap->getB("SmoothEmulator_UsePCA",false);
-	if(UsePCA){
-		filename="smooth_data/PCA_Info/observable_info.txt";
-		CoefficientsDirName="coefficients_pca";
-		pca=new CPCA();
-	}
-	else{
-		filename="smooth_data/Info/observable_info.txt";
-		CoefficientsDirName="coefficients";
-	}
-	observableinfo=new CObservableInfo(filename);
-	NObs=observableinfo->NObservables;
-	
+   }
+   SmoothEmulator_TrainingFormat=parmap->getS("SmoothEmulator_TrainingFormat","SMOOTH");
+   string filename;
+   
+   filename="smooth_data/Info/observable_info.txt";
+   CoefficientsDirName="coefficients";
+   
+   observableinfo=new CObservableInfo(filename);
+   NObs=observableinfo->NObservables;
+   
 	FullModelRunDirName=parmap->getS("Smooth_FullModelRunDirName","smooth_data/FullModelRuns");
-	TrainingThetasFileName=parmap->getS("SmoothEmulator_TrainingThetasFilename","TrainingThetas.txt");
-	TrainingObsFileName=parmap->getS("SmoothEmulator_TrainingObsFilename","TrainingObs.txt");
+	SurmiseTrainingPointsFileName=parmap->getS("SmoothEmulator_SurmiseTrainingPointsFilename","SurmiseTrainingPoints.txt");
+	SurmiseTrainingObsFileName=parmap->getS("SmoothEmulator_SurmiseTrainingObsFilename","SurmiseTrainingObs.txt");
 	
 	filename="smooth_data/Info/prior_info.txt";
 	priorinfo=new CPriorInfo(filename);
@@ -44,34 +36,15 @@ CSmoothMaster::CSmoothMaster(){
 	CSmoothEmulator::NPars=NPars;
 	CSmoothEmulator::smoothmaster=this;
 	CSmoothEmulator::parmap=parmap;
-	CSmoothEmulator::randy=randy;
-	emulator.resize(NObs);
-
-	pca_ignore.resize(NObs);
-	if(UsePCA){
-		pca->ReadTransformationInfo();
-		pca_minvariance=parmap->getD("SmoothEmulator_PCAMinVariance",0.0);
-		for(iZ=0;iZ<NObs;iZ++)
-			pca_ignore[iZ]=false;
-		for(iZ=0;iZ<NObs;iZ++){
-			if(pca->eigvals(iZ)<pca_minvariance)
-				pca_ignore[iZ]=true;
-			else
-				pca_ignore[iZ]=false;
-		}
-		delete pca;
-	}
-	else{
-		for(iZ=0;iZ<NObs;iZ++)
-			pca_ignore[iZ]=false;
-	}
-	for(unsigned int iy=0;iy<NObs;iy++){
-		if(!UsePCA || !pca_ignore[iy]){
-			emulator[iy]=new CSmoothEmulator(observableinfo->observable_name[iy]);
-		}
-	}
-	ReadTrainingInfo();
-	
+   CSmoothEmulator::randy=randy;
+   emulator.resize(NObs);
+   
+   
+   for(unsigned int iy=0;iy<NObs;iy++){
+      emulator[iy]=new CSmoothEmulator(observableinfo->observable_name[iy]);
+   }
+   ReadTrainingInfo();
+   
 }
 
 void CSmoothMaster::CalcAllSigmaALambda(){
@@ -84,10 +57,6 @@ void CSmoothMaster::TuneAllY(){
 	FILE *fptr=fopen("sigmalambda.txt","w");
 	double sigmaAbar=0.0,Lambdabar=0.0;
 	for(unsigned int iY=0;iY<observableinfo->NObservables;iY++){
-		if((UsePCA && !pca_ignore[iY]) || !UsePCA){
-			//CLog::Info("---- Tuning for "+observableinfo->observable_name[iY]+" ----\n");
-			emulator[iY]->Tune();
-		}
 		emulator[iY]->Tune();
 		fprintf(fptr,"%10.3f %10.5f\n",emulator[iY]->SigmaA,emulator[iY]->LAMBDA);
 		//printf("%10.3f %10.5f\n",emulator[iY]->SigmaA,emulator[iY]->LAMBDA);
@@ -102,10 +71,7 @@ void CSmoothMaster::TuneAllY(){
 
 void CSmoothMaster::TuneAllY(double LambdaSet){
 	for(unsigned int iY=0;iY<observableinfo->NObservables;iY++){
-		if((UsePCA && !pca_ignore[iY]) || !UsePCA){
-			//CLog::Info("---- Tuning for "+observableinfo->observable_name[iY]+" ----\n");
-			emulator[iY]->Tune(LambdaSet);
-		}
+      emulator[iY]->Tune(LambdaSet);
 	}
 }
 	
@@ -422,7 +388,7 @@ void CSmoothMaster::TestVsFullModel(){
 		//CLog::Info("Writing test_vs_full_model results to "+filename+"\n");
 		
 		for(itest=0;itest<ntestpts;itest++){
-			filename="smooth_data/FullModelRuns/run"+to_string(TestList[itest])+"/model_parameters.txt";
+			filename=FullModelRunDirName+"/run"+to_string(TestList[itest])+"/model_parameters.txt";
 			fptr=fopen(filename.c_str(),"r");
 			for(iread=0;iread<NPars;iread++){
 				fscanf(fptr,"%s %lf %lf",modparnamechars,&Xread,&SigmaXRead);
@@ -434,7 +400,7 @@ void CSmoothMaster::TestVsFullModel(){
 			testpars.TranslateX_to_Theta();
 			GetY(iY,testpars.Theta,Y,SigmaY_emulator);
 			
-			filename="smooth_data/FullModelRuns/run"+to_string(TestList[itest])+"/obs.txt";
+			filename=FullModelRunDirName+"/run"+to_string(TestList[itest])+"/obs.txt";
 			fptr=fopen(filename.c_str(),"r");
 			iread=-1;
 			do{

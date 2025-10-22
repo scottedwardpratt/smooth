@@ -8,26 +8,24 @@ CSmoothMaster* CTrainingInfo::smoothmaster=NULL;
 CTrainingInfo::CTrainingInfo(CObservableInfo *observableinfo_set,CPriorInfo *priorinfo_set){
 	observableinfo=observableinfo_set;
 	priorinfo=priorinfo_set;
-	CModelParameters::priorinfo=priorinfo;
+	CModelParameters::priorinfo=priorinfog;
 	NObservables=observableinfo->NObservables;
-	if(smoothmaster->SmoothEmulator_TrainingFormat == "training_format_smooth"){
+	if(smoothmaster->SmoothEmulator_TrainingFormat == "SMOOTH"){
 		ReadTrainingInfoSmoothFormat();
 	}
-	else if(smoothmaster->SmoothEmulator_TrainingFormat == "training_format_surmise"){
+	else if(smoothmaster->SmoothEmulator_TrainingFormat == "SURMISE"){
 		string TrainingInfoFileName=smoothmaster->parmap->getS("SmoothEmulator_TrainingInfoFileName","traininginfo.txt");
 		ReadTrainingInfoSurmiseFormat();
 	}
 	else{
-		CLog::Fatal("SmoothEmulator_TrainingFormat not recognized,\n should be training_format_smooth or training_format_surmise\n");
+		CLog::Fatal("SmoothEmulator_TrainingFormat not recognized,\n should be SMOOTH or SURMISE\n");
 	}
 	unsigned int iy,ntrain;
 	YTrain.resize(NObservables);
-	SigmaYTrain.resize(NObservables);
 	for(iy=0;iy<NObservables;iy++){
 		YTrain[iy].resize(NTrainingPts);
-		SigmaYTrain[iy].resize(NTrainingPts);
 		for(ntrain=0;ntrain<NTrainingPts;ntrain++)
-			YTrain[iy][ntrain]=SigmaYTrain[iy][ntrain]=0.0;
+			YTrain[iy][ntrain]=0.0;
 	}
 
 	CSmoothEmulator::NTrainingPts=NTrainingPts;
@@ -39,11 +37,11 @@ void CTrainingInfo::ReadTrainingInfoSmoothFormat(){
 	unsigned int NObs=smoothmaster->observableinfo->NObservables;
 	char filename[300],obs_charname[300],mod_par_name[300];
 	string obs_name;
-	double y,sigmay,x;
+	double y,x;
 	FILE *fptr;
 	
-	if(smoothmaster->SmoothEmulator_TrainingFormat != "training_format_smooth"){
-		CLog::Fatal("SmoothEmulator_TrainingFormat should be set to training_format_smooth\n if ReadTrainingInfo() is to be used\n");
+	if(smoothmaster->SmoothEmulator_TrainingFormat != "SMOOTH"){
+		CLog::Fatal("SmoothEmulator_TrainingFormat should be set to SMOOTH\n if ReadTrainingInfo() is to be used\n");
 	}
 	//
 	string NTrainingStr = smoothmaster->parmap->getS("SmoothEmulator_TrainingPts","1");
@@ -59,7 +57,7 @@ void CTrainingInfo::ReadTrainingInfoSmoothFormat(){
 		irun=0;
 		exists=false;
 		do{
-			runfilename="smooth_data/FullModelRuns/run"+to_string(irun);
+			runfilename=smoothmaster->FullModelRunDirName+"/run"+to_string(irun);
 			if(filesystem::exists(runfilename)){
 				NTrainingList.push_back(irun);
 				exists=true;
@@ -93,25 +91,22 @@ void CTrainingInfo::ReadTrainingInfoSmoothFormat(){
 	}
 	
 	YTrain.resize(NObs);
-	SigmaYTrain.resize(NObs);
 	for(iy=0;iy<NObs;iy++){
 		YTrain[iy].resize(NTrainingPts);
-		SigmaYTrain[iy].resize(NTrainingPts);
 	}
 	
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		ifile=NTrainingList[itrain];
-		snprintf(filename,300,"smooth_data/FullModelRuns/run%u/obs.txt",ifile);
+		snprintf(filename,300,"%s/run%u/obs.txt",smoothmaster->FullModelRunDirName.c_str(),ifile);
 		fptr=fopen(filename,"r");
 		nsuccess=0;
 		do{
 			fscanf(fptr,"%s",obs_charname);
 			if(!feof(fptr)){
-				fscanf(fptr,"%lf %lf",&y,&sigmay);
+				fscanf(fptr,"%lf",&y);
 				obs_name=string(obs_charname);
 				iy=smoothmaster->observableinfo->GetIPosition(obs_name);
 				YTrain[iy][itrain]=y;
-				SigmaYTrain[iy][itrain]=sigmay;
 				nsuccess+=1;
 			}
 		}while(!feof(fptr));
@@ -123,7 +118,7 @@ void CTrainingInfo::ReadTrainingInfoSmoothFormat(){
 
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		ilist=NTrainingList[itrain];
-		snprintf(filename,300,"smooth_data/FullModelRuns/run%u/model_parameters.txt",ilist);
+		snprintf(filename,300,"%s/run%u/model_parameters.txt",smoothmaster->FullModelRunDirName.c_str(),ilist);
 		fptr=fopen(filename,"r");
 		nread=0;
 		do{
@@ -148,8 +143,8 @@ void CTrainingInfo::ReadTrainingInfoSmoothFormat(){
 }
 
 void CTrainingInfo::ReadTrainingInfoSurmiseFormat(){
-	if(smoothmaster->SmoothEmulator_TrainingFormat != "training_format_surmise"){
-		CLog::Fatal("SmoothEmulator_TrainingFormat should be set to training_format_surmise\n if ReadTrainingInfoSurmiseFormat() is to be used\n");
+	if(smoothmaster->SmoothEmulator_TrainingFormat != "SURMISE"){
+		CLog::Fatal("SmoothEmulator_TrainingFormat should be set to SURMISE\n if ReadTrainingInfoSurmiseFormat() is to be used\n");
 	}
 	unsigned int itrain,ipar,iobs;
 	unsigned int NModelPars=CModelParameters::NModelPars;
@@ -158,7 +153,7 @@ void CTrainingInfo::ReadTrainingInfoSurmiseFormat(){
 	string obs_name,filename;
 	double y,x;
 	
-	filename=smoothmaster->TrainingThetasFileName;
+	filename=smoothmaster->SurmiseTrainingPointsFileName;
 	FILE *fptr=fopen(filename.c_str(),"r");
 	itrain=0;
 	do{
@@ -183,20 +178,17 @@ void CTrainingInfo::ReadTrainingInfoSurmiseFormat(){
 	fptr=fopen(filename.c_str(),"r");
 	
 	YTrain.resize(NObs);
-	SigmaYTrain.resize(NObs);
 	for(iobs=0;iobs<NObs;iobs++){
 		YTrain[iobs].resize(NTrainingPts);
-		SigmaYTrain[iobs].resize(NTrainingPts);
 	}
 	
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		for(iobs=0;iobs<NObs;iobs++){
 			fscanf(fptr,"%lf",&y);
 			if(feof(fptr)){
-				CLog::Fatal("reading training info: not enough lines in "+smoothmaster->TrainingObsFileName+"\n");
+				CLog::Fatal("reading training info: not enough lines in "+smoothmaster->SurmiseTrainingObsFileName+"\n");
 			}
 			YTrain[iobs][itrain]=y;
-			SigmaYTrain[iobs][itrain]=0.0;
 		}
 		fgets(dummy,10000,fptr);
 	}

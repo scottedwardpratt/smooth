@@ -3,10 +3,10 @@ using namespace std;
 using namespace NBandSmooth;
 
 void CSmoothMaster::ReadTrainingInfo(){
-	if(SmoothEmulator_TrainingFormat == "training_format_smooth"){
+	if(SmoothEmulator_TrainingFormat == "SMOOTH"){
 		traininginfo->ReadTrainingInfoSmoothFormat();
 	}
-	else if(SmoothEmulator_TrainingFormat == "training_format_surmise"){
+	else if(SmoothEmulator_TrainingFormat == "SURMISE"){
 		traininginfo->ReadTrainingInfoSurmiseFormat();
 	}
 }
