@@ -19,12 +19,14 @@
 #include "msu_smooth/observableinfo.h"
 #include "msu_smooth/priorinfo.h"
 #include "msu_smooth/traininginfo.h"
+#include "msu_smooth/testinginfo.h"
 
 using namespace NMSUUtils;
 
 namespace NBandSmooth{
    class CSmoothEmulator;
    class CTrainingInfo;
+   class CTestingInfo;
    class CPriorInfo;
    class CObservableInfo;
    class CModelParInfo;
@@ -32,19 +34,20 @@ namespace NBandSmooth{
    class CSmoothMaster{
    public:
       bool UsePCA;
-      unsigned int TrainType;
       CSmoothMaster();
       CparameterMap *parmap;
       unsigned int NPars;
       vector<CSmoothEmulator *> emulator;
       CTrainingInfo *traininginfo;
+      CTestingInfo *testinginfo;
       CObservableInfo *observableinfo;
       CPriorInfo *priorinfo;
-      string FullModelRunDirName;
+      string FullModelRunDirName,FullModelTestingRunDirName;
       Crandy *randy;
       CSmooth *smooth;
-      string CoefficientsDirName,SurmiseTrainingPointsFileName,SurmixeTrainingObsFileName;
-      string SmoothEmulator_TrainingFormat;
+      string SurmiseTrainingPointsFileName,SurmiseTrainingObsFileName;
+      string SurmiseTestingPointsFileName,SurmiseTestingObsFileName;
+      string SmoothEmulator_TrainingFormat,SmoothEmulator_TestingFormat;
       double pca_minvariance,fitpercentage;
       vector<bool> pca_ignore;
       int GetNPars(){
@@ -55,6 +58,7 @@ namespace NBandSmooth{
       }
       
       void ReadTrainingInfo();
+      void ReadTestingInfo();
       //void GenerateCoefficientSamples();
       void CalcAllSigmaALambda();
       void TuneAllY(); // tune all observables

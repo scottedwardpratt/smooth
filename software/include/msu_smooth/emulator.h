@@ -64,7 +64,7 @@ namespace NBandSmooth{
 		static unsigned int NPars;
 		static CparameterMap *parmap;
 		static Crandy *randy;
-		static unsigned int NTrainingPts;
+		static unsigned int NTrainingPts,NTestingPts;
 
 	};
 

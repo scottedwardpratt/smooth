@@ -17,14 +17,18 @@ CSmoothMaster::CSmoothMaster(){
    string filename;
    
    filename="smooth_data/Info/observable_info.txt";
-   CoefficientsDirName="coefficients";
    
    observableinfo=new CObservableInfo(filename);
    NObs=observableinfo->NObservables;
    
 	FullModelRunDirName=parmap->getS("Smooth_FullModelRunDirName","smooth_data/FullModelRuns");
+   FullModelTestingRunDirName=parmap->getS("Smooth_FullModelTestingRunDirName","smooth_data/FullModelTestingRuns");
+   
 	SurmiseTrainingPointsFileName=parmap->getS("SmoothEmulator_SurmiseTrainingPointsFilename","SurmiseTrainingPoints.txt");
 	SurmiseTrainingObsFileName=parmap->getS("SmoothEmulator_SurmiseTrainingObsFilename","SurmiseTrainingObs.txt");
+   
+   SurmiseTestingPointsFileName=parmap->getS("SmoothEmulator_SurmiseTestingPointsFilename","SurmiseTestingingPoints.txt");
+   SurmiseTestingObsFileName=parmap->getS("SmoothEmulator_SurmiseTestingObsFilename","SurmiseTestingingObs.txt");
 	
 	filename="smooth_data/Info/prior_info.txt";
 	priorinfo=new CPriorInfo(filename);
@@ -32,7 +36,9 @@ CSmoothMaster::CSmoothMaster(){
 	parmap->set("SmoothEmulator_NPars",NPars);
 	parmap->set("Smooth_NPars",NPars);
 	CTrainingInfo::smoothmaster=this;
+   CTestingInfo::smoothmaster=this;
 	traininginfo = new CTrainingInfo(observableinfo,priorinfo);
+   testinginfo = new CTestingInfo(observableinfo,priorinfo);
 	CSmoothEmulator::NPars=NPars;
 	CSmoothEmulator::smoothmaster=this;
 	CSmoothEmulator::parmap=parmap;
@@ -92,13 +98,6 @@ void CSmoothMaster::TuneY(unsigned int iY){
 void CSmoothMaster::TuneY(unsigned int iY,double LambdaSet){
 	emulator[iY]->Tune(LambdaSet);
 }
-
-/*void CSmoothMaster::GenerateCoefficientSamples(){
-	for(unsigned int iY=0;iY<observableinfo->NObservables;iY++){
-		CLog::Info("Tuning Emulator for "+observableinfo->GetName(iY)+"\n");
-		emulator[iY]->GenerateASamples();
-	}
-}*/
 
 void CSmoothMaster::GetY(unsigned int iY,CModelParameters *modelpars,double &Y,double &SigmaY_emulator){
 	emulator[iY]->GetYAndUncertainty(modelpars->Theta,Y,SigmaY_emulator);
@@ -225,21 +224,6 @@ void CSmoothMaster::TestAtTrainingPts(){
 		TestAtTrainingPts(iY);
 	}
 
-	/*
-	char pchars[CLog::CHARLENGTH];
-	unsigned int itrain,iY;
-	unsigned int NObservables=observableinfo->NObservables;
-	double Y,SigmaY_emulator;
-	CLog::Info("--- Y_train     Y_emulator    Sigma_emulator ----\n");
-	for(itrain=0;itrain<traininginfo->NTrainingPts;itrain++){
-	CLog::Info("------ itrain="+to_string(itrain)+" --------\n");
-	for(iY=0;iY<NObservables;iY++){
-	GetY(iY,traininginfo->modelpars[itrain],Y,SigmaY_emulator);
-	snprintf(pchars,CLog::CHARLENGTH,
-	"Y[%u]=%10.3e =? %10.3e  +/- %12.5e\n",iY,traininginfo->YTrain[iY][itrain],Y,SigmaY_emulator);
-	CLog::Info(pchars);
-	}
-	}*/
 }
 
 void CSmoothMaster::TestAtTrainingPts(unsigned int iY){
@@ -273,154 +257,82 @@ void CSmoothMaster::TestAtTrainingPts(string obsname){
 	}
 }
 
-void CSmoothMaster::TestVsFullModelAlt(){
-	char pchars[CLog::CHARLENGTH];
-	unsigned int iY,ipar,nfit=0,ntest=0;
-	unsigned int NObservables=observableinfo->NObservables;
-	double Y,SigmaY_emulator,realY;
-	vector<double> testtheta;
-	FILE *fptr,*fptr_out,*fptr_fit;
-	string filename;
-	fitpercentage=0.0;
-	double averageaveragesigma2=0.0;
-	
-	int sigma2count[200]={0};
-	double dsigma2=0.0005;
-	int isigma2,ifit;
-	int nfitpercent[100]={0};
-	
-	for(iY=0;iY<NObservables;iY++){
-		nfit=ntest=0;
-		filename="smooth_data/fullmodel_testdata/"+observableinfo->observable_name[iY]+".txt";
-		fptr=fopen(filename.c_str(),"r");
-		filename="smooth_data/fullmodel_testdata/YvsY_"+observableinfo->observable_name[iY]+".txt";
-		fptr_out=fopen(filename.c_str(),"w");
-		
-		double averagesigma2=0.0;
-		
-		testtheta.resize(NPars);
-		do{
-			for(ipar=0;ipar<NPars;ipar++){
-				fscanf(fptr,"%lf",&testtheta[ipar]);
-			}
-			fscanf(fptr,"%lf",&realY);
-			if(!feof(fptr)){
-				ntest+=1;
-				GetY(iY,testtheta,Y,SigmaY_emulator);
-				averagesigma2+=SigmaY_emulator*SigmaY_emulator;
-				snprintf(pchars,CLog::CHARLENGTH,
-				"Y[%u]=%10.3e =? %10.3e,    SigmaY_emulator=%12.5e\n",
-				iY,Y,realY,SigmaY_emulator);
-				fprintf(fptr_out,"%12.5e  %12.5e %12.5e\n",realY,Y,SigmaY_emulator);
-				if(fabs(Y-realY)<SigmaY_emulator)
-					nfit+=1;
-			}	
-		}while(!feof(fptr));
-		fclose(fptr);		
-		fclose(fptr_out);
-		averagesigma2=averagesigma2/(ntest*emulator[iY]->SigmaA*emulator[iY]->SigmaA);
-		isigma2=floorl(averagesigma2/dsigma2);
-		if(isigma2<200)
-			sigma2count[isigma2]+=1;
-		averageaveragesigma2+=averagesigma2;
-		CLog::Info("iY="+to_string(iY)+": <sigma^2_E>/sigma_A^2="+to_string(averagesigma2)+"\n");
-		CLog::Info(observableinfo->observable_name[iY]+": "+to_string(nfit)+" out of "+to_string(ntest)+" points within 1 sigma\n");
-		fitpercentage+=100.0*double(nfit)/double(ntest);
-		ifit=floorl(100.0*double(nfit)/double(ntest));
-		nfitpercent[ifit]+=1;
-		if(nfit==0){
-			CLog::Info("nfit=0!!!! for iY="+to_string(iY)+". Check out "+filename+"\n");
-		}
-	}
-	fitpercentage=fitpercentage/double(NObservables);
-	CLog::Info("percentage within 1 sigma = "+to_string(fitpercentage)+"\n");
-	CLog::Info("<<sigma^2_E/sigma_A^2>>="+to_string(averageaveragesigma2/double(NObservables))+"\n");
-	fptr=fopen("sigma2count.txt","w");
-	for(isigma2=0;isigma2<200;isigma2++)
-		fprintf(fptr,"%7.4f %d\n",(isigma2+0.5)*dsigma2,sigma2count[isigma2]);
-	fclose(fptr);
-	
-	filename="fitpercentage.txt";
-	fptr_fit=fopen(filename.c_str(),"w");
-	for(ifit=0;ifit<100;ifit++){
-		fprintf(fptr_fit,"%2d %d\n",ifit,nfitpercent[ifit]);
-	}
-	fclose(fptr_fit);
-}
-
 void CSmoothMaster::TestVsFullModel(){
-	string TestListStr = parmap->getS("SmoothEmulator_TestPts","1");
-	
-	vector<unsigned int> TestList;
-	stringstream ss(TestListStr);
-	string token;
-
-	while(getline(ss, token, ',')) {
-		size_t pos = token.find("-");
-		if (pos != string::npos) {
-
-			unsigned int start = stoi(token.substr(0, pos));
-			unsigned int end = stoi(token.substr(pos+1));
-
-			for (unsigned int i = start; i <= end; i++)
-			TestList.push_back(i);
-		}
-		else {
-			TestList.push_back(stoi(token));
-		}
-	}
-	
-	unsigned int ntestpts=TestList.size();
-	char obsnamechars[200],modparnamechars[200];
-	string obsname,modparname;
-	unsigned int iY,iread,itest,ipar,nfit;
-	unsigned int NObservables=observableinfo->NObservables;
-	double Y,SigmaY_emulator,realY,realSigmaY;
-	double Xread,SigmaXRead;
-	CModelParameters testpars;
+   char obsnameread[200],cdummy[200];
+	unsigned int iY,ntest=0,itest;
+	unsigned int NObs=observableinfo->NObservables;
+	vector<double> Y,SigmaY_emulator;
+	vector<double> testtheta;
 	FILE *fptr,*fptr_out;
 	string filename;
-	for(iY=0;iY<NObservables;iY++){
-		filename="smooth_data/fullmodel_testdata/YvsY_"+observableinfo->observable_name[iY]+".txt";
-		fptr_out=fopen(filename.c_str(),"w");
-		nfit=0;
-		
-		//CLog::Info("Writing test_vs_full_model results to "+filename+"\n");
-		
-		for(itest=0;itest<ntestpts;itest++){
-			filename=FullModelRunDirName+"/run"+to_string(TestList[itest])+"/model_parameters.txt";
-			fptr=fopen(filename.c_str(),"r");
-			for(iread=0;iread<NPars;iread++){
-				fscanf(fptr,"%s %lf %lf",modparnamechars,&Xread,&SigmaXRead);
-				modparname=string(modparnamechars);
-				ipar=priorinfo->GetIPosition(modparname);
-				testpars.X[ipar]=Xread;
-			}
-			fclose(fptr);
-			testpars.TranslateX_to_Theta();
-			GetY(iY,testpars.Theta,Y,SigmaY_emulator);
-			
-			filename=FullModelRunDirName+"/run"+to_string(TestList[itest])+"/obs.txt";
-			fptr=fopen(filename.c_str(),"r");
-			iread=-1;
-			do{
-				iread+=1;
-				fscanf(fptr,"%s %lf %lf",obsnamechars,&realY,&realSigmaY);
-				obsname=string(obsnamechars);
-				
-			}while(iread<observableinfo->NObservables && obsname!=observableinfo->observable_name[iY]);
-			fclose(fptr);
-			if(fabs(Y-realY)<SigmaY_emulator)
-				nfit+=1;
-			if(obsname!=observableinfo->observable_name[iY])
-				CLog::Fatal("cannot find obsname amongst observales, obsname="+obsname+"\n");
-			
-			fprintf(fptr_out,"%lf %lf %lf\n",realY,Y,SigmaY_emulator);
-			
-		}
-		fclose(fptr_out);
-		CLog::Info(observableinfo->observable_name[iY]+": "+to_string(nfit)+" out of "+to_string(ntestpts)+" points within 1 sigma\n");
-	}
+	fitpercentage=0.0;
+   vector<int> nfit;
+   vector<double> averagesigma2;
+   string(command);
+   double realY;
+	
+	int ifit;
+	int nfitpercent[100]={0};
+   ReadTestingInfo();
+   ntest=CSmoothEmulator::NTestingPts;
+   nfit.resize(NObs,0);
+   averagesigma2.resize(NObs,0.0);
+   Y.resize(NObs);
+   SigmaY_emulator.resize(NObs);
+   
+   command="mkdir -p smooth_data/fullmodel_testdata";
+   filename=FullModelTestingRunDirName+"/YvsY.txt";
+   fptr_out=fopen(filename.c_str(),"w");
+   for(itest=0;itest<ntest;itest++){
+      GetAllY(testinginfo->modelpars[itest],Y,SigmaY_emulator); // emulated values
+      
+      
+      filename=FullModelTestingRunDirName+"/run"+to_string(itest)+"/obs.txt";
+      fptr=fopen(filename.c_str(),"r");
+      do{
+         fscanf(fptr,"%s",obsnameread);
+         while(obsnameread[0]=='#'){
+            fgets(cdummy,200,fptr);
+            fscanf(fptr,"%s",obsnameread);
+         }
+         if(!feof(fptr)){
+            fscanf(fptr,"%lf",&realY);
+            if(!feof(fptr)){
+               iY=observableinfo->GetIPosition(obsnameread);
+               averagesigma2[iY]+=(realY-Y[iY])*(realY-Y[iY]);
+               fprintf(fptr_out,"%10.3e %10.3e %10.3e\n",realY,Y[iY],SigmaY_emulator[iY]);
+               if(fabs(realY-Y[iY])<SigmaY_emulator[iY])
+                  nfit[iY]+=1;
+            }
+            fgets(cdummy,200,fptr);
+            fscanf(fptr,"%s",obsnameread);
+         }
+         
+         
+         
+      }while(!feof(fptr));
+      fclose(fptr);
+      
+   }
+   fclose(fptr_out);
+   
+   
+   for(iY=0;iY<NObs;iY++){
+      CLog::Info("<(Y-Yreal)^2>/SigmaY^2_emulator="+to_string(averagesigma2[iY]/(SigmaY_emulator[iY]*SigmaY_emulator[iY]))+"\n");
+      fitpercentage=100.0*double(nfit[iY])/double(ntest);
+      CLog::Info("percent < 1 sigma = "+to_string(fitpercentage)+"\n");
+      ifit=floorl(fitpercentage);
+      nfitpercent[ifit]+=1;
+   }
+   
+   filename="fitpercentage.txt";
+   fptr=fopen(filename.c_str(),"w");
+   for(ifit=0;ifit<100;ifit++){
+      fprintf(fptr,"%3d %g\n",ifit,double(nfitpercent[ifit])/double(ntest));
+   }
+   
+   fclose(fptr);
+
 }
 
 vector<double> CSmoothMaster::GetYSigmaPython(int DiY,vector<double> theta){

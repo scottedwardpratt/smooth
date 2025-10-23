@@ -8,7 +8,7 @@ CSmoothMaster* CTrainingInfo::smoothmaster=NULL;
 CTrainingInfo::CTrainingInfo(CObservableInfo *observableinfo_set,CPriorInfo *priorinfo_set){
 	observableinfo=observableinfo_set;
 	priorinfo=priorinfo_set;
-	CModelParameters::priorinfo=priorinfog;
+	CModelParameters::priorinfo=priorinfo;
 	NObservables=observableinfo->NObservables;
 	if(smoothmaster->SmoothEmulator_TrainingFormat == "SMOOTH"){
 		ReadTrainingInfoSmoothFormat();
@@ -174,7 +174,7 @@ void CTrainingInfo::ReadTrainingInfoSurmiseFormat(){
 	fclose(fptr);
 	
 	NTrainingPts=itrain;
-	filename=smoothmaster->TrainingObsFileName;
+	filename=smoothmaster->SurmiseTrainingObsFileName;
 	fptr=fopen(filename.c_str(),"r");
 	
 	YTrain.resize(NObs);
@@ -200,3 +200,4 @@ void CTrainingInfo::ReadTrainingInfoSurmiseFormat(){
 	}
 	
 }
+
