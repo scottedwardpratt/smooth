@@ -9,6 +9,7 @@ CSmoothMaster *CSmoothEmulator::smoothmaster=NULL;
 CparameterMap *CSmoothEmulator::parmap=NULL;
 Crandy *CSmoothEmulator::randy=NULL;
 unsigned int CSmoothEmulator::NTrainingPts=0;
+unsigned int CSmoothEmulator::NTestingPts=0;
 
 CSmoothEmulator::CSmoothEmulator(string observable_name_set){
 	observable_name=observable_name_set;

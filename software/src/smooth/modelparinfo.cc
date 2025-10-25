@@ -68,9 +68,9 @@ void CModelParameters::Write(string filename){
 	unsigned int ipar;
 	filename="smooth_data/"+filename;
 	FILE *fptr=fopen(filename.c_str(),"w");
-	fprintf(fptr,"#   parname        X      Theta\n");
+	fprintf(fptr,"#                   parname    X       Theta\n");
 	for(ipar=0;ipar<NModelPars;ipar++){
-		fprintf(fptr,"%24s %12.5e, theta=%12.5e\n",
+		fprintf(fptr,"%24s %12.5e %12.5e\n",
 		priorinfo->parname[ipar].c_str(),X[ipar],Theta[ipar]);
 	}
 	fclose(fptr);

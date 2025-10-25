@@ -11,3 +11,12 @@ void CSmoothMaster::ReadTrainingInfo(){
 	}
 }
 
+void CSmoothMaster::ReadTestingInfo(){
+   if(SmoothEmulator_TestingFormat == "SMOOTH"){
+      testinginfo->ReadTestingInfoSmoothFormat();
+   }
+   else if(SmoothEmulator_TestingFormat == "SURMISE"){
+      testinginfo->ReadTestingInfoSurmiseFormat();
+   }
+}
+

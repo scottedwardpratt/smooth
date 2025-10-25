@@ -27,20 +27,21 @@ void CSmoothEmulator::CalcLogP(){
 		for(int b=0;b<int(NTrainingPts);b++){
 			exparg-=0.5*smoothmaster->traininginfo->YTrain[iY][a]*Binv(a,b)*smoothmaster->traininginfo->YTrain[iY][b];
 		}
-	}
-	exparg=exparg/(SigmaA*SigmaA);
-	BB=B*detfactor;
-	detBB=BB.determinant();
-	logP=-0.5*log(fabs(detBB))-NTrainingPts*log(SigmaA)+exparg;
-	if(isinf(logP)){
-		printf("XXXXXXXXX detBB=%g, Lambda=%g, SigmaA=%g, exparg=%g\n",detBB,LAMBDA,SigmaA,exparg);
-	}
+   }
+   exparg=exparg/(SigmaA*SigmaA);
+   BB=B*detfactor;
+   detBB=BB.determinant();
+   logP=-0.5*log(fabs(detBB))-NTrainingPts*log(SigmaA)+exparg;
+   if(isinf(logP)){
+      CLog::Fatal("XlogP in CalcSigmaA is infinite: detBB="+to_string(detBB)+", Lambda="+to_string(LAMBDA)
+                  +", SigmaA="+to_string(SigmaA)+", exparg="+to_string(exparg)+"\n");
+   }
 }
 
 void CSmoothEmulator::CalcLambdaVariance(){
-	double L,Lbar,dL=0.1,L2bar,norm,w;
-	norm=Lbar=L2bar=0.0;
-	for(L=1.0;L<8;L+=dL){
+   double L,Lbar,dL=0.1,L2bar,norm,w;
+   norm=Lbar=L2bar=0.0;
+   for(L=1.0;L<8;L+=dL){
 		LAMBDA=L;
 		CalcB();
 		CalcSigmaA();
@@ -49,7 +50,6 @@ void CSmoothEmulator::CalcLambdaVariance(){
 		w=sqrt(fabs(detBB));
 		double factor=pow(SigmaA/100.0,NTrainingPts);
 		w=w/factor;
-		//printf("L=%g, w=%g, |BB|=%g, SigmaA=%g\n",L,w,detBB,SigmaA);
 		norm+=w;
 		Lbar+=w*L;
 		L2bar+=w*L*L;
@@ -92,7 +92,6 @@ void CSmoothEmulator::CalcSigmaALambda(){
 		}
 		CalcSigmaA();
 		CalcLogP();
-		//printf("LAMBDA=%g, logP=%g\n",LAMBDA,logP);
 		if(!isfinite(detBB)){
 			cout << "|B|=" << detBB << "B=\n" << B << endl;
 			cout << "Binv=\n" << Binv << endl;
@@ -142,7 +141,6 @@ void CSmoothEmulator::CalcSigmaALambda(){
 					A123(il,1)=bestLAMBDA[il];
 					A123(il,2)=1.0;
 					Y123(il)=bestlogP[il];
-					//printf("il=%d: Y123=%g\n, bestlogP=%g\n",il,Y123[il],bestlogP[il]);
 				}
 				X123=A123.colPivHouseholderQr().solve(Y123);
 				LAMBDA=-0.5*X123(1)/X123(0);
@@ -156,7 +154,6 @@ void CSmoothEmulator::CalcSigmaALambda(){
 		}
 		if(LAMBDA>LambdaMax){
 			LAMBDA=LambdaMax;
-			//printf("setting LAMBDA=LambdaMax, nsuccess=%d\n",nsuccess);
 			nsuccess=100000;
 		}
 	}
@@ -169,186 +166,8 @@ void CSmoothEmulator::CalcSigmaALambda(){
 		d2lndetBBdLambda2=pow(LAMBDA,-6)*((Binv*Bprimeprime)-(Binv*Bprime*Binv*Bprime)).trace()
 			-3.0*pow(LAMBDA,-4)*(Binv*Bprime).trace();
 	}
-	
-	
-	//printf("iY=%u: best LAMBDA=%g\n",iY,LAMBDA);
 
 }
-
-/*
-void CSmoothEmulator::CalcSigmaALambda_old(){
-	double LambdaMin=sqrt(double(NPars)/3.0),LambdaMax=8;
-	vector<double> bestLAMBDA(3),bestlogP(3),bestlndetBB(3),bestSigmaA(3);
-	double dLambda=1.0,lndetBB;
-	Eigen::Matrix3d A123;
-	Eigen::Vector3d X123,Y123;
-	int ntry=0,nsuccess=0,il;
-	if(LambdaMin<1.0)
-		LambdaMin=1.0;
-
-	LAMBDA=LambdaMin;
-	CalcB();
-	if(INCLUDE_LAMBDA_UNCERTAINTY){
-		CalcWBprimeChi();
-	}
-	CalcSigmaA();
-	CalcLogP();
-	lndetBB=log(detBB);
-	for(il=0;il<3;il++){
-		bestLAMBDA[il]=-1000-il;
-		bestSigmaA[il]=SigmaA;
-		bestlogP[il]=-100000.0-il;
-		bestlndetBB[il]=lndetBB;
-	}
-
-	LAMBDA=LambdaMin;
-	while(nsuccess<3){
-		ntry+=1;
-		CalcB();
-		if(INCLUDE_LAMBDA_UNCERTAINTY){
-			CalcWBprimeChi();
-		}
-		CalcSigmaA();
-		CalcLogP();
-		//printf("LAMBDA=%g, logP=%g\n",LAMBDA,logP);
-		lndetBB=log(detBB);
-		//printf("------- ln(detBB) = %g ----------\n",lndetBB);
-		if(!isfinite(detBB)){
-			cout << "|B|=" << detBB << "B=\n" << B << endl;
-			cout << "Binv=\n" << Binv << endl;
-			exit(1);
-		}
-		if(logP>bestlogP[0]){
-			bestLAMBDA[2]=bestLAMBDA[1];
-			bestSigmaA[2]=bestSigmaA[1];
-			bestlogP[2]=bestlogP[1];
-			bestlndetBB[2]=bestlndetBB[1];
-			
-			bestLAMBDA[1]=bestLAMBDA[0];
-			bestSigmaA[1]=bestSigmaA[0];
-			bestlogP[1]=bestlogP[0];
-			bestlndetBB[1]=bestlndetBB[0];
-			
-			bestLAMBDA[0]=LAMBDA;
-			bestSigmaA[0]=SigmaA;
-			bestlogP[0]=logP;
-			bestlndetBB[0]=lndetBB;
-		}
-		else if(logP>bestlogP[1]){
-			bestLAMBDA[2]=bestLAMBDA[1];
-			bestSigmaA[2]=bestSigmaA[1];
-			bestlogP[2]=bestlogP[1];
-			bestlndetBB[2]=bestlndetBB[1];
-			
-			bestLAMBDA[1]=LAMBDA;
-			bestSigmaA[1]=SigmaA;
-			bestlogP[1]=logP;
-			bestlndetBB[1]=lndetBB;
-		}
-		else if(logP>bestlogP[2]){
-			bestLAMBDA[2]=LAMBDA;
-			bestSigmaA[2]=SigmaA;
-			bestlogP[2]=logP;
-			bestlndetBB[2]=lndetBB;
-		}
-
-		if(ntry<3){
-			LAMBDA=LAMBDA+dLambda;
-		}
-		else{
-			if(bestLAMBDA[0]>bestLAMBDA[1] && bestLAMBDA[0]>bestLAMBDA[2] && nsuccess==0){
-				LAMBDA=bestLAMBDA[0]+dLambda;
-			}
-			else if(bestLAMBDA[0]<bestLAMBDA[1] && bestLAMBDA[0]<bestLAMBDA[2] && nsuccess==0){
-				LAMBDA=bestLAMBDA[0]-dLambda;
-			}
-			else{
-				for(il=0;il<3;il++){
-					A123(il,0)=bestLAMBDA[il]*bestLAMBDA[il];
-					A123(il,1)=bestLAMBDA[il];
-					A123(il,2)=1.0;
-					Y123(il)=bestlogP[il];
-					//printf("il=%d: Y123=%g\n, bestlogP=%g\n",il,Y123[il],bestlogP[il]);
-				}
-				X123=A123.colPivHouseholderQr().solve(Y123);
-				LAMBDA=-0.5*X123(1)/X123(0);
-				nsuccess+=1;
-				dLambda*=0.5;
-			}
-		}
-		if(LAMBDA<LambdaMin){
-			LAMBDA=LambdaMin;
-			nsuccess=100000;
-		}
-		if(LAMBDA>LambdaMax){
-			LAMBDA=LambdaMax;
-			printf("setting LAMBDA=LambdaMax, nsuccess=%d\n",nsuccess);
-			nsuccess=100000;
-		}
-	}
-
-	if(INCLUDE_LAMBDA_UNCERTAINTY){
-		for(il=0;il<3;il++){
-			Y123(il)=bestlndetBB[il];
-		}
-		X123=A123.colPivHouseholderQr().solve(Y123);
-		d2lndetBBdLambda2=2.0*X123(0);
-		//
-		CalcB();
-		CalcWBprimeChi();
-		CalcSigmaA();
-		CalcLogP();
-		double d2lndetBBdLambda2_alt=pow(LAMBDA,-6)*((Binv*Bprimeprime)-(Binv*Bprime*Binv*Bprime)).trace()
-			-3.0*pow(LAMBDA,-4)*(Binv*Bprime).trace();
-		
-		double dx=0.001,Lambda1=LAMBDA;
-		double lndet1,lndet0,lndet2;
-		
-		CalcB();
-		CalcSigmaA();
-		CalcLogP();
-		CalcWBprimeChi();
-		lndet1=log(detBB);
-		
-		LAMBDA=Lambda1-dx;
-		CalcB();
-		CalcSigmaA();
-		CalcLogP();
-		CalcWBprimeChi();
-		lndet0=log(detBB);
-		
-		LAMBDA=Lambda1+dx;
-		CalcB();
-		CalcSigmaA();
-		CalcLogP();
-		CalcWBprimeChi();
-		lndet2=log(detBB);
-		
-		printf("LambdaMin=%g\n",LambdaMin);
-		printf("LAMBDA=%g: %g =? %g =? %g\n",LAMBDA,d2lndetBBdLambda2_alt,d2lndetBBdLambda2,(lndet0+lndet2-2.0*lndet1)/(dx*dx));
-		
-		LAMBDA=Lambda1;
-		CalcSigmaA();
-		CalcLogP();
-		CalcWBprimeChi();
-
-		//
-	}
-	
-	Misc::Pause();
-	
-	
-	CalcB();
-	if(INCLUDE_LAMBDA_UNCERTAINTY){
-		CalcWBprimeChi();
-	}
-	CalcSigmaA();
-	CalcLogP();
-	
-	//printf("iY=%u: best LAMBDA=%g\n",iY,LAMBDA);
-
-}
-*/
 
 void CSmoothEmulator::CalcWBprimeChi(){
 	unsigned int a,b,ipar;
@@ -408,8 +227,6 @@ double CSmoothEmulator::GetSigma2_Lambda(vector<double> &theta){
 	ABC=ABC-(c0.transpose()*chiprime);
 	dEdLambda=ABC/(LAMBDA*LAMBDA*LAMBDA);
 	answer=dEdLambda*dEdLambda*W(1,1);
-	//printf("dEdLambda=%g, W11=%g. sigma^2_Lambda=%g\n",dEdLambda,W(1,1),answer);
-	//answer=0.0;
 	return answer;
 }
 

@@ -41,7 +41,7 @@ void CTPO::CreateTrainingPts(){
 		NTrainingPts=NPars+2;
 	else if(TPO_Method=="MCQuadratic" || TPO_Method=="MCSphereQuadratic")
 		NTrainingPts=(NPars+1)*(NPars+2)/2;
-	
+   
 	ThetaTrain.clear();
 	ThetaTrain.resize(NTrainingPts);
 	for(itrain=0;itrain<NTrainingPts;itrain++){

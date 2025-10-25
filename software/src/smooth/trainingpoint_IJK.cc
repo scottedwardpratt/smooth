@@ -63,22 +63,18 @@ void CTPO::CalcIJK_Gaussian(double LAMBDA,double ThetaPriorGauss){ // only works
 			Jab=-Jfacta*Iab;
 			Jfactb=-(0.5*double(NPars)/lambda)+(0.5*X/(lambda*lambda))-(0.5*dXdgamma_b/lambda);
 			Jba=-Jfactb*Iab;
-			//printf("----------\nold Jfacta=%g, Jfactb=%g\n",Jfacta,Jfactb);
 			Jfacta=-0.5*ta2-(0.5*double(NPars)/lambda) -(gamma*gamma*sumt2/(lambda*lambda))+(gamma/lambda)*(ta2+tatb);
 			Jab=Iab*Jfacta;
 			Jfactb=-0.5*tb2-(0.5*double(NPars)/lambda) -(gamma*gamma*sumt2/(lambda*lambda))+(gamma/lambda)*(tb2+tatb);
 			Jba=Iab*Jfactb;
-			//printf("new Jfacta=%g, Jfactb=%g\n",Jfacta,Jfactb);
 			d2Xdgamma_adgamma_b=dT2;
 
 			Kfact=+(0.5/(lambda*lambda)) -(X/(lambda*lambda*lambda))
 				+(0.5*(dXdgamma_a+dXdgamma_b)/(lambda*lambda)) -(0.5*d2Xdgamma_adgamma_b/lambda);
 			Kab=Jab*Jba/Iab +(0.5/(lambda*lambda))*Iab -(X/(lambda*lambda*lambda))*Iab
 				+(0.5*(dXdgamma_a+dXdgamma_b)/(lambda*lambda))*Iab -(0.5*d2Xdgamma_adgamma_b/lambda)*Iab;
-			//printf("old Kfact=%g\n",Kfact);
 			Kfact=(0.5*double(NPars)/(lambda*lambda)) +(tatb/lambda)-sumt2*(gamma*lambda+gamma*gamma)/pow(lambda,3);
 			Kab=(Jab*Jba/Iab)+Iab*Kfact;
-			//printf("new Kfact=%g\n",Kfact);
 			
 			Jab*=-2.0;
 			Jba*=-2.0;
@@ -99,7 +95,6 @@ double &I,double &Jaterm,double &Jbterm,double &Kabterm){
 	X=gamma*gamma*pow(theta_a-theta_b,2)+alpha*gamma*(theta_a*theta_a+theta_b*theta_b);
 	deltheta2=(theta_a-theta_b)*(theta_a-theta_b);
 	sumt2=theta_a*theta_a+theta_b*theta_b;
-	//printf("ThetaTrain_ab=(%g,%g)\n",theta_a,theta_b);
 	
 	I=sqrt(alpha/lambda)*exp(-0.5*X/lambda);
 	Jterm=(-1.0/lambda)
@@ -115,48 +110,46 @@ double &I,double &Jaterm,double &Jbterm,double &Kabterm){
 	//Jab*=-2;
 	Jaterm*=-2;
 	Jbterm*=-2;
-	//printf("I=%8.5f, Jaterm=%8.5f, Jbterm=%8.5f, Sum=%8.5f, Kabterm=%8.5f\n",I,Jaterm,Jbterm,Jaterm+Jbterm,Kabterm);
 }
 
 void CTPO::GetIiJiKiUniform(double ThetaPrior,double Lambda,double theta_a,double theta_b,
-double &I,double &Jaterm,double &Jbterm,double &Kabterm){
-	double Ja,Jb,J,Kab;
-	double deltheta,thetabar,rootgamma,Xplus,Xminus,P,Y,W,bplus2,bminus2,deltheta2,bplus,bminus;
-	double gamma=1.0/(Lambda*Lambda);
-	rootgamma=sqrt(gamma);
-	thetabar=0.5*(theta_a+theta_b);
-	deltheta=0.5*(theta_a-theta_b);
-	deltheta2=deltheta*deltheta;
-	bplus=ThetaPrior-thetabar;
-	bminus=-ThetaPrior-thetabar;
-	bplus2=bplus*bplus;
-	bminus2=bminus*bminus;
-	Xplus=exp(-gamma*bplus2);
-	Xminus=exp(-gamma*bminus2);
-	P=(0.5/ThetaPrior)*exp(-gamma*deltheta*deltheta);
-	W=(1.0/rootgamma)*(sqrt(PI)/2.0)*(erf(rootgamma*(ThetaPrior-thetabar))-erf(rootgamma*(-ThetaPrior-thetabar)));
-	I=P*W;
-	
-	J=-(0.5/gamma)*I-deltheta2*I;
-	Y=bplus*Xplus-bminus*Xminus;
-	J+=(0.5/gamma)*P*Y;
-	
-	Ja=J-P*Xplus*deltheta/gamma+P*Xminus*deltheta/gamma;
-	Jb=2.0*J-Ja;	
-
-	Kab=J*((-0.5/gamma)-deltheta2);
-	Kab+=0.5*I/(gamma*gamma);
-	Kab=Kab-P*Xplus*bplus*((0.5/(gamma*gamma))+0.5*(deltheta2/gamma)+0.5*bplus*bplus/gamma);
-	Kab=Kab+P*Xminus*bminus*((0.5/(gamma*gamma))+0.5*(deltheta2/gamma)+0.5*bminus*bminus/gamma);
-	
-	Kab-=I*(2.0*deltheta2/gamma);
-	Kab=Kab+P*Xplus*bplus*2.0*deltheta2/gamma;
-	Kab=Kab-P*Xminus*bminus*2.0*deltheta2/gamma;
-
-	J=-2.0*J;
-	Jaterm=-Ja/I;
-	Jbterm=-Jb/I;
-	Kabterm=Kab/I;
-	//printf("I=%8.5f, Jaterm=%8.5f, Jbterm=%8.5f, Sum=%8.5f, Kabterm=%8.5f\n",I,Jaterm,Jbterm,Jaterm+Jbterm,Kabterm);
-
+                            double &I,double &Jaterm,double &Jbterm,double &Kabterm){
+   double Ja,Jb,J,Kab;
+   double deltheta,thetabar,rootgamma,Xplus,Xminus,P,Y,W,bplus2,bminus2,deltheta2,bplus,bminus;
+   double gamma=1.0/(Lambda*Lambda);
+   rootgamma=sqrt(gamma);
+   thetabar=0.5*(theta_a+theta_b);
+   deltheta=0.5*(theta_a-theta_b);
+   deltheta2=deltheta*deltheta;
+   bplus=ThetaPrior-thetabar;
+   bminus=-ThetaPrior-thetabar;
+   bplus2=bplus*bplus;
+   bminus2=bminus*bminus;
+   Xplus=exp(-gamma*bplus2);
+   Xminus=exp(-gamma*bminus2);
+   P=(0.5/ThetaPrior)*exp(-gamma*deltheta*deltheta);
+   W=(1.0/rootgamma)*(sqrt(PI)/2.0)*(erf(rootgamma*(ThetaPrior-thetabar))-erf(rootgamma*(-ThetaPrior-thetabar)));
+   I=P*W;
+   
+   J=-(0.5/gamma)*I-deltheta2*I;
+   Y=bplus*Xplus-bminus*Xminus;
+   J+=(0.5/gamma)*P*Y;
+   
+   Ja=J-P*Xplus*deltheta/gamma+P*Xminus*deltheta/gamma;
+   Jb=2.0*J-Ja;
+   
+   Kab=J*((-0.5/gamma)-deltheta2);
+   Kab+=0.5*I/(gamma*gamma);
+   Kab=Kab-P*Xplus*bplus*((0.5/(gamma*gamma))+0.5*(deltheta2/gamma)+0.5*bplus*bplus/gamma);
+   Kab=Kab+P*Xminus*bminus*((0.5/(gamma*gamma))+0.5*(deltheta2/gamma)+0.5*bminus*bminus/gamma);
+   
+   Kab-=I*(2.0*deltheta2/gamma);
+   Kab=Kab+P*Xplus*bplus*2.0*deltheta2/gamma;
+   Kab=Kab-P*Xminus*bminus*2.0*deltheta2/gamma;
+   
+   J=-2.0*J;
+   Jaterm=-Ja/I;
+   Jbterm=-Jb/I;
+   Kabterm=Kab/I;
+   
 }
