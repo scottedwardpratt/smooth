@@ -42,7 +42,7 @@ namespace NBandSmooth{
       CTestingInfo *testinginfo;
       CObservableInfo *observableinfo;
       CPriorInfo *priorinfo;
-      string FullModelRunDirName,FullModelTestingRunDirName;
+      string FullModelRunsDirName,FullModelTestingRunsDirName;
       Crandy *randy;
       CSmooth *smooth;
       string SurmiseTrainingPointsFileName,SurmiseTrainingObsFileName;

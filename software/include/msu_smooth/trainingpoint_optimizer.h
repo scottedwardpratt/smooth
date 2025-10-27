@@ -32,7 +32,7 @@ namespace NBandSmooth{
 		vector<bool> TrainingPtsFreeze;
 		vector<bool> TrainingPtsRead;
 		Eigen::MatrixXd I,J,K;
-		string FullModelRunDirName;
+		string FullModelRunsDirName;
 		double RSimplex;
 		bool FIRSTCALL;
 		CPriorInfo *priorinfo;

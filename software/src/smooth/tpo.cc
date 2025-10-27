@@ -17,12 +17,12 @@ CTPO::CTPO(){
 		CLog::Init(logfilename);
 	}
 	TPO_Method=parmap.getS("TPO_Method","MC");
-   FullModelRunDirName=parmap.getS("Smooth_FullModelRunDirName","smooth_data/FullModelRuns");
+   FullModelRunsDirName=parmap.getS("TPO_FullModelRunsDirName","smooth_data/FullModelRuns");
 	string prior_info_filename="smooth_data/Info/prior_info.txt";
 	priorinfo=new CPriorInfo(prior_info_filename);
 	CModelParameters::priorinfo=priorinfo;
 	NPars=priorinfo->NModelPars;
-	INCLUDE_LAMBDA_UNCERTAINTY=parmap.getB("TPO_INCLUDE_LAMBDA_UNCERTAINTY",true);
+	INCLUDE_LAMBDA_UNCERTAINTY=parmap.getB("TPO_Include_LAMBDA_Uncertainty",true);
 	CreateTrainingPts();
 }
 

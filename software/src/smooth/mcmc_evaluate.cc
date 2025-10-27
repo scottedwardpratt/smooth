@@ -97,10 +97,12 @@ void CMCMC::EvaluateTrace(){
 		for(jpar=0;jpar<NPars;jpar++){
 			CovThetaTheta(ipar,jpar)=CovThetaTheta(ipar,jpar)-thetabar[ipar]*thetabar[jpar];
 		}
+      printf("\n");
 		for(iobs=0;iobs<NObs;iobs++){
 			CovThetaY(ipar,iobs)=CovThetaY(ipar,iobs)-thetabar[ipar]*Ybar[iobs];
 		}
 	}
+   Misc::Pause();
 	
 	for(iobs=0;iobs<NObs;iobs++){
 		for(jobs=0;jobs<NObs;jobs++){
@@ -155,7 +157,6 @@ void CMCMC::EvaluateTrace(){
 	for(ipar=0;ipar<NPars;ipar++){
 		SigmaString.clear();
 		for(jpar=0;jpar<NPars;jpar++){
-			CovThetaTheta(ipar,jpar)=CovThetaTheta(ipar,jpar)-thetabar[ipar]*thetabar[jpar];
 			snprintf(cc,CLog::CHARLENGTH,"%12.5e ",CovThetaTheta(ipar,jpar));
 			SigmaString=SigmaString+cc;
 		}

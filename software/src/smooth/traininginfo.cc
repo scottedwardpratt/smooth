@@ -57,7 +57,7 @@ void CTrainingInfo::ReadTrainingInfoSmoothFormat(){
 		irun=0;
 		exists=false;
 		do{
-			runfilename=smoothmaster->FullModelRunDirName+"/run"+to_string(irun);
+			runfilename=smoothmaster->FullModelRunsDirName+"/run"+to_string(irun);
 			if(filesystem::exists(runfilename)){
 				NTrainingList.push_back(irun);
 				exists=true;
@@ -97,7 +97,7 @@ void CTrainingInfo::ReadTrainingInfoSmoothFormat(){
 	
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		ifile=NTrainingList[itrain];
-		snprintf(filename,300,"%s/run%u/obs.txt",smoothmaster->FullModelRunDirName.c_str(),ifile);
+		snprintf(filename,300,"%s/run%u/obs.txt",smoothmaster->FullModelRunsDirName.c_str(),ifile);
 		fptr=fopen(filename,"r");
 		nsuccess=0;
 		do{
@@ -118,7 +118,7 @@ void CTrainingInfo::ReadTrainingInfoSmoothFormat(){
 
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		ilist=NTrainingList[itrain];
-		snprintf(filename,300,"%s/run%u/model_parameters.txt",smoothmaster->FullModelRunDirName.c_str(),ilist);
+		snprintf(filename,300,"%s/run%u/model_parameters.txt",smoothmaster->FullModelRunsDirName.c_str(),ilist);
 		fptr=fopen(filename,"r");
 		nread=0;
 		do{

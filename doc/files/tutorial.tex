@@ -99,7 +99,7 @@ Now the user can run {\tt Simplex Sampler}, which must be run from the project d
    NTrainingPts=28
 \end{verbatim}
 }
-If one had set {\tt Simplex\_TrainType}=1, only seven training points would have been created. The programs writes information about the training points in the {\tt smooth\_data/modelruns/} directory. Changing into that directory, there should now be 28 sub-directories, corresponding to the 28 training points: {\tt modelruns/run0}, {\tt modelruns/run1}, {\tt modelruns/run2}, {\tt modelruns/}$\cdots$. Each directory has one text file describing the training points. For example, the {\tt modelruns/run0/mod\_parameters.txt} file might be 
+If one had set {\tt Simplex\_TrainType}=1, only seven training points would have been created. The programs writes information about the training points in the {\tt smooth\_data/modelruns/} directory. Changing into that directory, there should now be 28 sub-directories, corresponding to the 28 training points: {\tt modelruns/run0}, {\tt modelruns/run1}, {\tt modelruns/run2}, {\tt modelruns/}$\cdots$. Each directory has one text file describing the training points. For example, the {\tt modelruns/run0/model\_parameters.txt} file might be 
 {\tt
 \begin{verbatim}
    compressibility 190.282
@@ -113,7 +113,7 @@ If one had set {\tt Simplex\_TrainType}=1, only seven training points would have
 This describes the six model parameters, which will serve as the input for the first full model run.  The next step will be to run the full model for the parameters in each directory. Thus for {\tt Simplex\_Traintype=1}, one would need 7 full-model runs, and for {\tt Simplex\_Traintype=2}, one would need to do 28 full-model runs. The corresponding observables will be written in the files {\tt smooth\_data/modelruns/runI/obs.txt}
 
 \subsection{Running the Fake Full Model}
-Once the training points have been generated, the user will run a full model based on the given structure, tailored to address their specific problem. For the tutorial, a fake full model is provided. It reads the model-parameter values in each {\tt smooth\_data/modelruns/runI/mod\_parameters.txt} file and writes the corresponding observables in {\tt smooth\_data/modelruns/runI/obs.txt}. The output should be as follows:
+Once the training points have been generated, the user will run a full model based on the given structure, tailored to address their specific problem. For the tutorial, a fake full model is provided. It reads the model-parameter values in each {\tt smooth\_data/modelruns/runI/model\_parameters.txt} file and writes the corresponding observables in {\tt smooth\_data/modelruns/runI/obs.txt}. The output should be as follows:
 {\tt
 \begin{verbatim}
    ${MY_PROJECT}/rhic% ${MY_LOCAL}/bin/fakerhic

@@ -169,7 +169,7 @@ void CTPO::WriteModelPars(){
 		modelparameters[itrain]->TranslateTheta_to_X();
 	}
 	for(itrain=0;itrain<NTrainingPts;itrain++){
-		dirname=FullModelRunDirName+"/run"+to_string(itrain);
+		dirname=FullModelRunsDirName+"/run"+to_string(itrain);
 		command="mkdir -p "+dirname;
 		system(command.c_str());
 		filename=dirname+"/model_parameters.txt";
@@ -261,7 +261,7 @@ void CTPO::ReadTrainingPts(){
 	
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		if(TrainingPtsRead[itrain]){
-			snprintf(filename,300,"%s/run%u/model_parameters.txt",FullModelRunDirName.c_str(),itrain);
+			snprintf(filename,300,"%s/run%u/model_parameters.txt",FullModelRunsDirName.c_str(),itrain);
 			if(filesystem::exists(filename)){
 				exists=true;
 			}
