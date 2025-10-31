@@ -14,7 +14,7 @@ CTrainingInfo::CTrainingInfo(CObservableInfo *observableinfo_set,CPriorInfo *pri
 		ReadTrainingInfoSmoothFormat();
 	}
 	else if(smoothmaster->SmoothEmulator_TrainingFormat == "SURMISE"){
-		string TrainingInfoFileName=smoothmaster->parmap->getS("SmoothEmulator_TrainingInfoFileName","traininginfo.txt");
+		string TrainingInfoFileName=smoothmaster->parmap->getS("SmoothEmulator_FullModelTrainingParsFileName","smooth\_data/FullModelRuns/modelpars\_surmise.txt");
 		ReadTrainingInfoSurmiseFormat();
 	}
 	else{

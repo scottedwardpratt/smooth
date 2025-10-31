@@ -24,12 +24,10 @@ CSmoothMaster::CSmoothMaster(){
    
 	FullModelRunsDirName=parmap->getS("Smooth_FullModelRunsDirName","smooth_data/FullModelRuns");
    FullModelTestingRunsDirName=parmap->getS("Smooth_FullModelTestingRunsDirName","smooth_data/FullModelTestingRuns");
-   
-	SurmiseTrainingPointsFileName=parmap->getS("SmoothEmulator_SurmiseTrainingPointsFilename","smooth_data/SurmiseTrainingPoints.txt");
-	SurmiseTrainingObsFileName=parmap->getS("SmoothEmulator_SurmiseTrainingObsFilename","smooth_data/SurmiseTrainingObs.txt");
-   
-   SurmiseTestingPointsFileName=parmap->getS("SmoothEmulator_SurmiseTestingPointsFilename","smooth_data/SurmiseTestingingPoints.txt");
-   SurmiseTestingObsFileName=parmap->getS("SmoothEmulator_SurmiseTestingObsFilename","smooth_data/SurmiseTestingingObs.txt");
+   SurmiseTrainingParsFileName=parmap->getS("SmoothEmulator_FullModelTrainingParsFileName","smooth\_data/FullModelRuns/modelpars\_surmise.txt");
+   SurmiseTrainingObsFileName=parmap->getS("SmoothEmulator_FullModelTrainingObsFileName","smooth\_data/FullModelRuns/obs\_surmise.txt");
+   SurmiseTestsingParsFileName=parmap->getS("SmoothEmulator_FullModelTestingParsFileName","smooth\_data/FullModelTestingRuns/modelpars\_surmise.txt");
+   SurmiseTestingObsFileName=parmap->getS("SmoothEmulator_FullModelTestingObsFileName","smooth\_data/FullModelTestingRuns/obs\_surmise.txt");
    
 	filename="smooth_data/Info/prior_info.txt";
 	priorinfo=new CPriorInfo(filename);

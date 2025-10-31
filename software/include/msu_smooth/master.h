@@ -45,8 +45,8 @@ namespace NBandSmooth{
       string FullModelRunsDirName,FullModelTestingRunsDirName;
       Crandy *randy;
       CSmooth *smooth;
-      string SurmiseTrainingPointsFileName,SurmiseTrainingObsFileName;
-      string SurmiseTestingPointsFileName,SurmiseTestingObsFileName;
+      string SurmiseTrainingParsFileName,SurmiseTrainingObsFileName;
+      string SurmiseTestingParsFileName,SurmiseTestingObsFileName;
       string SmoothEmulator_TrainingFormat,SmoothEmulator_TestingFormat;
       double pca_minvariance,fitpercentage;
       vector<bool> pca_ignore;
@@ -94,8 +94,7 @@ namespace NBandSmooth{
       void TestAtTrainingPts();
       void TestAtTrainingPts(string obsname);
       void TestAtTrainingPts(unsigned int iY);
-      void TestVsFullModelAlt();
-      void TestVsFullModel();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           void TestVsFullModel();
       
       vector<double> GetXFromTheta(vector<double> Theta);
       vector<double> GetThetaFromX(vector<double> X);

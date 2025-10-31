@@ -27,7 +27,7 @@ namespace NBandSmooth{
 
 	class CSmoothEmulator{
 	public:
-				bool INCLUDE_LAMBDA_UNCERTAINTY;
+      bool INCLUDE_LAMBDA_UNCERTAINTY,FIXLAMBDA;
 		unsigned int iY; // labels observable from observable info
 		string observable_name;
 

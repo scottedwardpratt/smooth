@@ -14,7 +14,8 @@ unsigned int CSmoothEmulator::NTestingPts=0;
 CSmoothEmulator::CSmoothEmulator(string observable_name_set){
 	observable_name=observable_name_set;
 	NTrainingPts=smoothmaster->traininginfo->NTrainingPts;
-	LAMBDA=parmap->getD("SmoothEmulator_LAMBDA",2.0);
+   FIXLAMBDA=parmap->getB("SmoothEmulator_FixLambda",false);
+	LAMBDA=parmap->getD("SmoothEmulator_LAMBDA",2.5);
 	INCLUDE_LAMBDA_UNCERTAINTY=parmap->getB("SmoothEmulator_INCLUDE_LAMBDA_UNCERTAINTY",true);
 	iY=smoothmaster->observableinfo->GetIPosition(observable_name);
 	ALPHA=smoothmaster->observableinfo->ALPHA[iY];
@@ -60,7 +61,10 @@ double CSmoothEmulator::GetCorrelation(vector<double> &Theta1,vector<double> &Th
 }
 
 void CSmoothEmulator::Tune(){
-	CalcSigmaALambda();
+   if(FIXLAMBDA)
+      Tune(LAMBDA);
+   else
+      CalcSigmaALambda();
 }
 
 void CSmoothEmulator::Tune(double LambdaSet){

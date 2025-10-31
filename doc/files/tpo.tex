@@ -25,7 +25,26 @@ The first column is the model-parameter name, and the last three parameters desc
 
 {\tt training\_point\_optimizer} takes all this information into account when optimizing the selection of points. For example if the sensitivity scale for a given model parameter is small, points will be chose so better capture behavior along the other parameters. Section \ref{sec:theory} provides a brief description of the theoretical basis of the training-point selection and for more detailed description one can read \href{./smoothdraft.pdf}{{\tt smoothdraft.pdf}}.
 
+\subsection{Format for Storing Output from Full-Model Runs for Training and Testing}
+There are two formats for storing full-model output. The first is the default, and is recommended for {\it Smooth Emulator} software, and the alternative is to use a format that might be more convenient if the User is to use SURMISE software for the subsequent emulator or MCMC analysis. The training-point-optimization software will write the output in both formats.
+\subsubsection{{\tt SMOOTH} format for Storing the Coordinates of the Training Points}
+The information for training is all stored in a directory. The default directory is {\tt smooth\_data/FullModelRuns/}, but that directory can be changed by setting options (see below). With that directory there are subdirectories {\tt run0/,run1,}$\cdots$. Each subdirectory contains the information relative to the full-model run at a specific point in model-parameter space. Within each run directory, there are two files, one describing the model-parameters, {\tt smooth\_data/FullModelRuns/runI/model\_parameters.txt}, and on describing the values of observables, {\tt smooth\_data/runI/obs.txt}, at that point in parameter space. The format for the {\tt model\_parameters.txt} files is:
+{\tt
+\begin{verbatim}
+parameter_name_1 x1  
+parameter_name_2 x2  
+.
+\end{verbatim}}
+The model-parameter names must be identical to those listed in {\tt smooth\_data/Info/prior\_info.txt}, and the values of those parameters are {\tt x1}$\cdots$. The training-point optimization software does not require information about the observables.
 
+\subsubsection{{\tt SURMISE} format for Storing the Coordinates of the Training Points}
+In this format, all the training-point coordinates are stored in a single file, located at {\tt smooth\_data/FullModelRuns/model\_parameters\_surmise.txt}. The format for that file is:
+{\tt
+\begin{verbatim}
+x1_1	x1_2	x1_3	...
+x2_1	x2_2	x2_3	...
+\end{verbatim}}
+Here, the coordinates of the $n^{\rm th}$ training point is {\tt xn\_1,xn\_2...}. The parameter names are not provided here, so the User must be careful to remember which column corresponds to which model parameter. Unlike the {\tt SMOOTH} format you cannot read in points from this format, and thus one must set the {\tt TPO\_ReadPoints} option below to {\tt all}. 
 
 \subsection{Training Point Optimizer (TPO) Options}
 These options are all set in the ascii file {\tt smooth\_data/Options/tpo\_options.txt}, where the path is relative to the analysis directory. An example of the file is:
@@ -37,6 +56,7 @@ These options are all set in the ascii file {\tt smooth\_data/Options/tpo\_optio
  TPO_NMC  10000
  TPO_ALPHA 0.01
  TPO_Include_LAMBDA_Uncertainty true
+ TPO_FileFormat SMOOTH  # must be either SMOOTH or SURMISE (SURMISE format has limited functionality)
  TPO_FullModelRunsDirName  smooth_data/FullModelRuns
  #TPO_ReadPoints 0,1,4-7,10,11-13,21
  #TPO_FreezePoints 0,1,4-7,10,11-13,21
@@ -77,7 +97,7 @@ If set to {\tt NONE} all the training points are allowed to vary in the optimiza
  
 \subsection{Running {\tt trainingpoint\_optimizer} to Generate Training Points}
 
-To run {\it Training Point Optimizer}, first make sure the program is compiled. To compile the programs, change into the {MY\_LOCAL/main\_programs/} directory and enter the following command,
+To run {\it Training Point Optimizer}, first make sure the program is compiled. To compile the programs, change into the {\tt \$\{MY\_LOCAL\}/main\_programs/} directory and enter the following command,
 
 \begin{verbatim}
    ${MY_LOCAL}/software% cmake .
@@ -106,5 +126,60 @@ At this point, it is up to the User to run their full model at each training poi
 If the User desires to use their own procedure for training points, or if the User wishes to augment the {\it Training Point Optimizer} points with additional training points, the User can write their own files {\tt runI/model\_parameters.txt}. The emulator should work fine, though the User should remember that when training the emulator (see Sec. \ref{sec:emulator}) the emulator parameter describing with {\tt runI} directories to apply should be modified.
 
 There is one warning to be issued when choosing training points for tuning {\it Smooth Emulator}. When solving for the Taylor coefficients, the emulator uses the factor of those coefficients (products of $\theta_i$) in the linear algebra routine. However, if those coefficients are not linearly independent, the solution becomes undetermined. For example, if two of the training points were exactly the same, it would fail. 
+
+\section{Writing Programs Accessing the Training Point Optimization Software}
+{\it Smooth Emulator Software} is organized to accommodate the User building their own main programs that incorporate the functionality. For the training-point optimization software, the software's functionality is rather simple and the User can adjust the functionality through setting options as described above. The main programs and the executables are stored in the {\tt \${M{\tt \$\{MY\_LOCAL\}/main\_programs/} and {\tt \${M{\tt \$\{MY\_LOCAL\}/bin/} directories respectively. The provided main program's source code, {\tt trainingpoint\_optimizer\_main.cc}, aside from the headers, is:
+{\tt\begin{verbatim}
+   int main(){
+   double LAMBDA=3.0; // Sets initial guess for Lambda
+   NBandSmooth::CTPO *tpo=new NBandSmooth::CTPO();  // the constructor
+   tpo->Optimize(LAMBDA);  // Find optimum model parameters assuming some value of LAMBDA
+   tpo->WriteModelPars();  // Write the model parameters for each training point
+   return 0;
+}
+\end{verbatim}
+}
+Several additional methods can be seen by viewing the header file, {\tt \$\{{GITHOME\_BAND\_SMOOTH\}/software/include/msu\_smooth/trainingpoint\_optimizer.h}. However, the useful methods are all called by {\tt Optimize(double LAMBDA)} with the correct options listed.
+
+\subsection{The {\tt parameterMap} utility class}
+If the User wishes to write programs that change options during the running, they can use the parameterMap class, which has an object within the {\tt CTPO} class. This class is an extension of C++ maps. The header file for that class ({\tt \$\{{GITHOME\_BAND\_SMOOTH\}/software/include/msu\_smoothutils/parametermap.h}) is:
+{\tt\begin{verbatim}
+class CparameterMap : public map<string,string> {
+public:
+	bool   getB(string ,bool);
+	int    getI(string ,int);
+	long long int getLongI(string ,long long int);
+	string getS(string ,string);
+	double getD(string ,double);
+	vector< double > getV(string, string);
+	vector< string > getVS(string, string);
+	vector< vector< double > > getM(string);
+	vector< vector< double > > getM(string, double);
+	void set(string, double);
+	void set(string, int);
+	void set(string, unsigned int);
+	void set(string, long long int);
+	void set(string, bool);
+	void set(string, string);
+	void set(string, char*);
+	void set(string, vector< double >);
+	void set(string, vector< string >);
+	void set(string, vector< vector< double > >);
+	void ReadParsFromFile(const char *filename);
+	void ReadParsFromFile(string filename);
+	void PrintPars();
+	char *message;
+};
+\end{verbatim}
+}
+For example, if the User wished to add a line which reset the option {\tt TPO\_NMC} set above to the value of 10000, they could add a line to the main program above:
+{\tt \begin{verbatim}
+	tpo->set("TPO_NMC",10000);
+\end{verbatim}}
+If the User wanted to have the program find the value, they could add a line
+{\tt \begin{verbatim}
+	int NMC=tpo->getI("TPO_NMC",0);
+\end{verbatim}}
+The first argument specifies the key in the map, and the second is the value returned should that key not exist in the map. The methods {\tt getB,~getI,~getLongI,~getS} and {\tt getD} return booleans, integers, strings or doubles. The software does have the capability to set and find vectors, but that shouldn't be necessary in this instance. All the options listed above can be reset through the {\tt set(key,value)} method.
 
 \end{document}
