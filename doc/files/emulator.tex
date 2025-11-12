@@ -188,31 +188,16 @@ This is also only relevant if {\tt SmoothEmulator\_TrainingFormat} is set to {\t
 
 \subsection{Running {\it Smooth Emulator} Programs}
 
-The source code for several {\it Smooth Emulator} main programs can be found in the \\{\tt \$\{MY\_LOCAL\}/software/main\_programs/} directory. They are separated from the bulk of the software, which is in the {\tt \$\{bandframework\}/SmoothEmulator/software/} directory. The main programs are designed so that the User can easily copy and edit them to create versions that might be more appropriate to the User's specific needs. When compiled, from the {\tt \$\{MY\_LOCAL\}/main\_programs/} directory, the executables appear in the {\tt \$\{MY\_LOCAL\}/bin/} directory. If the User wishes to make new executables, it is perhaps easiest to locate the new main programs in the {\tt main\_programs/} directory and edit the {\tt \$\{MY\_LOCAL\}/software/CMakeLists.txt} file. After briefly discussing how to run the codes, a review of the four codes that use the emulation functionality is provided. The source code for these four codes is provided here with the purpose of showing the User how they might use these codes as bases for designing and coding their own main programs.
+The source code for several {\it Smooth Emulator} main programs can be found in the \\{\tt \$\{MY\_LOCAL\}/software/main\_programs/} directory. They are separated from the bulk of the software, which is in the {\tt \$\{bandframework\}/SmoothEmulator/software/} directory. The main programs are designed so that the User can easily copy and edit them to create versions that might be more appropriate to the User's specific needs. When compiled, from the {\tt \$\{MY\_LOCAL\}/software/} directory, the executables appear in the {\tt \$\{MY\_LOCAL\}/bin/} directory. If the User wishes to make new executables, it is perhaps easiest to edit and rename the existing programs in the {\tt \$\{MY\_LOCAL\}/software/main\_programs/} directory and then add the appropriate line to the {\tt \$\{MY\_LOCAL\}/software/CMakeLists.txt} file. After briefly discussing how to run the codes, a review of the four codes that use the emulation functionality is provided. The source code for these four codes is provided here with the purpose of showing the User how they might use these codes as bases for designing and coding their own main programs.
 
-To begin, we consider the source code {\tt \$\{MY\_LOCAL\}main\_programs/smoothy\_tune\_main.cc}. Once compiled the corresponding executable is {\tt \$\{MY\_LOCAL\}/bin/smoothy\_tune}. The source code for {\tt smoothy\_tune} is:
+From within the {\tt \$\{MY\_LOCAL\}/software/} directory, one can compile the programs with the command:
 {\tt
 \begin{verbatim}
-int main(){
-  // First create CSmoothMaster
-  CparameterMap *parmap=new CparameterMap();
-  CSmoothMaster master(parmap);  
-  // Tune for all observables "Y"
-  master.TuneAllY();
-  // Write coefficients to file
-  master.WriteCoefficientsAllY();
-  return 0;
-}
+ MY_LOCAL/software % cmake .
+ MY_LOCAL/software % make
 \end{verbatim}
 }
-From within the {\tt \$\{MY\_LOCAL\}/main\_programs/} directory, one can compile the programs with the command:
-{\tt
-\begin{verbatim}
- MY_LOCAL/main\_programs % cmake .
- MY_LOCAL/main\_programs % make
-\end{verbatim}
-}
-The executable {\tt smoothy\_tune} should now appear in the {\tt \$\{MY\_LOCAL\}/bin/} directory. If one enters {\tt make} without the name of the program, all the main-program source files will be compiled. Assuming the directory {\tt \$\{MY\_LOCAL\}/bin/} has been added to the User's path, the User may switch to the User's project directory, and enter the program name, e.g.
+The executables should now appear in the {\tt \$\{MY\_LOCAL\}/bin/} directory. If one enters {\tt make} {\it program name} only that program  will be compiled. One can peruse the . Assuming the directory {\tt \$\{MY\_LOCAL\}/bin/} has been added to the User's path, the User may switch to the User's project directory, and enter the program name, e.g.
 {\tt
 \begin{verbatim}
   ~/MY_PROJECT % smoothy_testattrainingpts
@@ -235,7 +220,7 @@ This program builds and tunes the emulator, then compares the emulator predictio
 \end{verbatim}}
 The first column denotes the specific training point, the second and third columns represents the observable as calculated by the full model and emulator, with the emulator's uncertainty provided in the last column. After printing the information for the first observable, the program then provides the comparison for the subsequent observables.
 
-The main program, {\tt \$\{MY\_LOCAL\}/software/main\_programs/smoothy\_testattrainingpts\_main.cc} for this executable is rather short and simple:
+The main program, {\tt \$\{MY\_LOCAL\}/software/main\_programs/smoothy\_testattrainingpts\_main.cc}, for this executable is rather short and simple:
 {\tt
 \begin{verbatim}
 int main(){
@@ -245,7 +230,7 @@ int main(){
 	return 0;
 }
 \end{verbatim}}
-All the functionality should be accessed through the {\tt CSmoothMaster} object. The constructor reads in the information and options files, plus the training data (and testing data if it exists). The tuning command, {\tt master.TuneAllY()}, finds optimum values for the two hyper-parameters, plus stores a few arrays for quicker calculation.
+The functionality is mainly accessed through the {\tt CSmoothMaster} object. The constructor reads in the information and options files, plus the training data (and testing data if it exists). The tuning command, {\tt master.TuneAllY()}, finds optimum values for the two hyper-parameters, plus stores a few arrays for quicker calculation.
 
 \subsubsection{{\tt smoothy\_testvsfullmodel}}
 As the name suggests, this program compares the emulated values to full-model calculations, but instead of comparing to values calculated at training points, it compares to full-model calculations at training points not used to train the data.
@@ -412,7 +397,7 @@ It would probably be useful to view the header file for the {\tt master} class, 
 
 \subsection{Other Potentially Useful {\it Smooth Emulator Objects}}
 
-Within the main program one may also wish to apply or access other objects with the {\it Smooth Emulator} framework. Their functionalities are described here:
+The four programs described above access the functionality through the {\tt CSmoothMaster} object. However, within the main program one may also wish to apply or access other objects with the {\it Smooth Emulator} framework. Their functionalities are described here:
 \begin{itemize}\itemsep=0pt
 \item {\tt CparameterMap}\\
 This object stores the emulator parameters described above. It is a simple inheritization of a map, linking string labels to values of various types. The object can read a parameter list from a file, e.g.\\

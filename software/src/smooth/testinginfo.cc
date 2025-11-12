@@ -151,7 +151,7 @@ void CTestingInfo::ReadTestingInfoSurmiseFormat(){
 	string obs_name,filename;
 	double y,x;
 	
-	filename=smoothmaster->SurmiseTestingPointsFileName;
+	filename=smoothmaster->SurmiseTestingParsFileName;
 	FILE *fptr=fopen(filename.c_str(),"r");
 	itest=0;
 	do{

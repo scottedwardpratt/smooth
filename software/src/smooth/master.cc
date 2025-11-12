@@ -24,10 +24,10 @@ CSmoothMaster::CSmoothMaster(){
    
 	FullModelRunsDirName=parmap->getS("Smooth_FullModelRunsDirName","smooth_data/FullModelRuns");
    FullModelTestingRunsDirName=parmap->getS("Smooth_FullModelTestingRunsDirName","smooth_data/FullModelTestingRuns");
-   SurmiseTrainingParsFileName=parmap->getS("SmoothEmulator_FullModelTrainingParsFileName","smooth\_data/FullModelRuns/modelpars\_surmise.txt");
-   SurmiseTrainingObsFileName=parmap->getS("SmoothEmulator_FullModelTrainingObsFileName","smooth\_data/FullModelRuns/obs\_surmise.txt");
-   SurmiseTestsingParsFileName=parmap->getS("SmoothEmulator_FullModelTestingParsFileName","smooth\_data/FullModelTestingRuns/modelpars\_surmise.txt");
-   SurmiseTestingObsFileName=parmap->getS("SmoothEmulator_FullModelTestingObsFileName","smooth\_data/FullModelTestingRuns/obs\_surmise.txt");
+   SurmiseTrainingParsFileName=parmap->getS("SmoothEmulator_FullModelTrainingParsFileName","smooth_data/FullModelRuns/modelpars_surmise.txt");
+   SurmiseTrainingObsFileName=parmap->getS("SmoothEmulator_FullModelTrainingObsFileName","smooth_data/FullModelRuns/obs_surmise.txt");
+   SurmiseTestingParsFileName=parmap->getS("SmoothEmulator_FullModelTestingParsFileName","smooth_data/FullModelTestingRuns/modelpars_surmise.txt");
+   SurmiseTestingObsFileName=parmap->getS("SmoothEmulator_FullModelTestingObsFileName","smooth_data/FullModelTestingRuns/obs_surmise.txt");
    
 	filename="smooth_data/Info/prior_info.txt";
 	priorinfo=new CPriorInfo(filename);
@@ -58,17 +58,10 @@ void CSmoothMaster::CalcAllSigmaALambda(){
 }
 
 void CSmoothMaster::TuneAllY(){
-	FILE *fptr=fopen("smooth_data/output_stuff/sigmalambda.txt","w");
-	double sigmaAbar=0.0,Lambdabar=0.0;
 	for(unsigned int iY=0;iY<observableinfo->NObservables;iY++){
 		emulator[iY]->Tune();
-		fprintf(fptr,"%10.3f %10.5f\n",emulator[iY]->SigmaA,emulator[iY]->LAMBDA);
-		sigmaAbar+=emulator[iY]->SigmaA;
-		Lambdabar+=emulator[iY]->LAMBDA;
 	}
-	sigmaAbar=sigmaAbar/double(observableinfo->NObservables);
-	Lambdabar=Lambdabar/double(observableinfo->NObservables);
-	fclose(fptr);
+   WriteSigmaLambda();
 }
 
 void CSmoothMaster::TuneAllY(double LambdaSet){

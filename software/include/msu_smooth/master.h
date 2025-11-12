@@ -64,9 +64,9 @@ namespace NBandSmooth{
       void TuneAllY(); // tune all observables
       void TuneY(string obsname); // tune one observable
       void TuneY(unsigned int iY); // tune one observable
-      void TuneAllY(double LAMBDA); // tune all observables
-      void TuneY(string obsname,double LAMBDA); // tune one observable
-      void TuneY(unsigned int iY,double LAMBDA); // tune one observable
+      void TuneAllY(double LAMBDA); // tune all observables with fixed Lambda
+      void TuneY(string obsname,double LAMBDA); // tune one observable with fixed Lambda
+      void TuneY(unsigned int iY,double LAMBDA); // tune one observable with fixed Lambda
       
       void GetAllY(CModelParameters *modelpars,vector<double> &Y,vector<double> &SigmaY_emulator);
       void GetAllY(vector<double> &theta,vector<double> &Y,vector<double> &SigmaY_emulator);
@@ -94,10 +94,15 @@ namespace NBandSmooth{
       void TestAtTrainingPts();
       void TestAtTrainingPts(string obsname);
       void TestAtTrainingPts(unsigned int iY);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           void TestVsFullModel();
-      
+      void TestVsFullModel();
+
       vector<double> GetXFromTheta(vector<double> Theta);
       vector<double> GetThetaFromX(vector<double> X);
+      
+      void ReadSigmaLambda();
+      void ReadSigmaLambda(string filename);
+      void WriteSigmaLambda();
+      void WriteSigmaLambda(string filename);
       
    };
    

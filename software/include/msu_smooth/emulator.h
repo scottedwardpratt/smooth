@@ -40,13 +40,14 @@ namespace NBandSmooth{
 		Eigen::Matrix2d W,Winv;
 
 		CSmoothEmulator(string observable_name_set);
+      void Init();
 		double GetCorrelation(vector<double> &theta1,vector<double> &theta2);
 		void CalcWBprimeChi();
 		double GetSigma2_Lambda(vector<double> &theta);
 
 		void SetThetaTrain();
 		void Tune();
-		void Tune(double LambdaSet);
+		void Tune(double LambdaSet); // fix Lambda
 		void CalcSigmaA();
 		void CalcSigmaALambda();
 		void CalcLambdaVariance();
@@ -55,11 +56,6 @@ namespace NBandSmooth{
 		
 		void GetYAndUncertainty(vector<double> &Theta,double &Y,double &uncertainty);
 		
-		void WriteCoefficients();
-		void ReadCoefficients();
-		
-		void Init();
-
 		static CSmoothMaster *smoothmaster;
 		static unsigned int NPars;
 		static CparameterMap *parmap;
