@@ -44,7 +44,7 @@ void CSmoothMaster::ReadSigmaLambda(string filename){
    char obsname[200];
    string obsstring;
    for(unsigned int iY=0;iY<observableinfo->NObservables;iY++){
-      fscanf(fptr,"%s %lf %lf\n",obsname,&emulator[iY]->SigmaA,&emulator[iY]->LAMBDA);
+      fscanf(fptr,"%s %lf %lf",obsname,&emulator[iY]->SigmaA,&emulator[iY]->LAMBDA);
       obsstring=obsname;
       if(obsstring!=observableinfo->observable_name[iY]){
          CLog::Fatal("Reading in obs name ("+obsstring+") from "+filename+" - does not match name in observable info ("+observableinfo->observable_name[iY]+")");

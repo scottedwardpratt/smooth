@@ -31,13 +31,13 @@ C_0(\vec{\theta}_1,\vec{\theta}_2)&=&e^{-|\vec{\theta}_1-\vec{\theta}_2|^2/2\Lam
 \end{eqnarray}
 Closed form for the uncertainties, as provided in \href{./smoothdraft.pdf}{{\tt smoothdraft.pdf}}, are also calculated by {\it Smooth Emulator} software. Here $\alpha$ represents an estimate of the point-by-point uncertainty as a fraction of $\alpha$. If one thinks the model calculations have an uncertainty that due to sampling or noise varies by an amount $\sigma_{\rm noise}$, and if one believes the characteristic strength of $Y$ is $\sigma_A$, one chooses $\alpha=\sigma_{\rm noise}/\sigma_A$. For example, if the full-model uses some sampling algorithm that has a 1\% uncertainty, one would choose $\alpha=0.01$. More discussion is provided in Sec. \ref{sec:theory}.   
 
-The executables based on {\it Smooth Emulator} are located in the User's {\tt \$\{MY\_LOCAL\}/bin} directory. Examples of such executables are {\tt smoothy\_tune} or {\tt smoothy\_calcobs}. These functions must be executed from within the User's project directory. In the following subsections, we first review the format for each of the required input files, then describe how to run {\it Smooth Emulator}, how its output is stored.
+The executables based on {\it Smooth Emulator} are located in the User's {\tt \$\{MY\_LOCAL\}/bin} directory. Examples of such executables are {\tt smoothy\_tune} or {\tt smoothy\_calcobs}. These functions must be executed from within the User's analysis directory. In the following subsections, we first review the format for each of the required input files, then describe how to run {\it Smooth Emulator}, how its output is stored.
 
 \subsection{Preparing Files for {\it Smooth Emulator}}
 
 Before training the emulator, one must first run the full model at a given set of training points. In addition to an options file (described in the next sub-section), the User must provide the following:
 \begin{enumerate}\itemsep=0pt
-\item A file listing the names of observables. This file is named\\{\tt smooth\_data/Info/observable\_info.txt}, where the path is relative to the project directory. The file format is:\\
+\item A file listing the names of observables. This file is named\\{\tt smooth\_data/Info/observable\_info.txt}, where the path is relative to the analysis directory. The file format is:\\
 {\tt
 \begin{verbatim}
    observable_name_1   ALPHA_1
@@ -105,7 +105,7 @@ The first number is the measured value and the second is the experimentally repo
 \subsection{{\it Smooth Emulator} Options}
 
 {\it Smooth Emulator} requires a file describing the options,
-{\tt \$\{MY\_PROJECT\}/smooth\_data/Options/emulator\_options.txt}. The ascii file is simply a list of option names followed by values. Here is an example of such a file.
+{\tt \$\{MY\_ANALYSIS\}/smooth\_data/Options/emulator\_options.txt}. The ascii file is simply a list of option names followed by values. Here is an example of such a file.
 {\tt
 \begin{verbatim}
   # Location of output, comment out for interactive running
@@ -197,10 +197,10 @@ From within the {\tt \$\{MY\_LOCAL\}/software/} directory, one can compile the p
  MY_LOCAL/software % make
 \end{verbatim}
 }
-The executables should now appear in the {\tt \$\{MY\_LOCAL\}/bin/} directory. If one enters {\tt make} {\it program name} only that program  will be compiled. One can peruse the . Assuming the directory {\tt \$\{MY\_LOCAL\}/bin/} has been added to the User's path, the User may switch to the User's project directory, and enter the program name, e.g.
+The executables should now appear in the {\tt \$\{MY\_LOCAL\}/bin/} directory. If one enters {\tt make} {\it program name} only that program  will be compiled. One can peruse the . Assuming the directory {\tt \$\{MY\_LOCAL\}/bin/} has been added to the User's path, the User may switch to the User's analysis directory, and enter the program name, e.g.
 {\tt
 \begin{verbatim}
-  ~/MY_PROJECT % smoothy_testattrainingpts
+  ~/${MY_ANALYSIS}% smoothy_testattrainingpts
 \end{verbatim}
 }
 There are four main programs provided in the distribution which read in the training data, train an emulator and perform an operation. The four executables are:
@@ -369,7 +369,7 @@ SmoothEmulator_TestPts 90-99
 to train the emulator with the first 90 points and test it at the last 10 points. Tests for each observable are stored in a directory {\tt fullmodel\_testdata/}.
 
 \item {\tt void TestVsFullModelAlt()}\\
-This is useful for comparing emulator to model evaluated at points not used for training. For the full model, make a sub-directory within the project directory called {\tt fullmodeltestdata/}. Within that subdirectory, for each observable create a file called {\tt OBSNAME.txt}, where {\tt OBSNAME} is the name for each observable. Each file should have the format
+This is useful for comparing emulator to model evaluated at points not used for training. For the full model, make a sub-directory within the analysis directory called {\tt fullmodeltestdata/}. Within that subdirectory, for each observable create a file called {\tt OBSNAME.txt}, where {\tt OBSNAME} is the name for each observable. Each file should have the format
 {\tt
 \begin{verbatim}
 X_1  X_2  ...  X_N  Y

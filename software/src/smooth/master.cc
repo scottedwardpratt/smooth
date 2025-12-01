@@ -64,9 +64,11 @@ void CSmoothMaster::TuneAllY(){
    WriteSigmaLambda();
 }
 
-void CSmoothMaster::TuneAllY(double LambdaSet){
+void CSmoothMaster::TuneAllYFixedLambda(){
+   double Lambda;
 	for(unsigned int iY=0;iY<observableinfo->NObservables;iY++){
-      emulator[iY]->Tune(LambdaSet);
+      Lambda=emulator[iY]->LAMBDA;
+      emulator[iY]->Tune(Lambda);
 	}
 }
 	

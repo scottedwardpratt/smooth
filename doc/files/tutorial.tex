@@ -4,7 +4,7 @@
 \section{Tutorial}\label{sec:tutorial}
 
 \subsection{Overview}
-Template project directories and files are provided with the intention that the User will copy them to their own space, then use this as a foundation from which to embark on their own analysis. This directory includes information files, describing the parameter priors and the observables, that correspond to an artificial model that is also provided as a template. Working through the steps in this section constitutes a tutorial, both for running {\it Simplex Sampler} and for running {\it Smooth Emulator}.
+A analysis directory template is provided with the intention that the User will copy the directory to their own space, then use this as a foundation from which to embark on their own analysis. This directory includes information files, describing the parameter priors and the observables, that correspond to an artificial model that is also provided as a template. Working through the steps in this section constitutes a tutorial, both for running {\it Simplex Sampler} and for running {\it Smooth Emulator}.
 
 This section describes the steps of how the User would
 \begin{enumerate}\itemsep=0pt
@@ -24,16 +24,16 @@ Installation and compilation is described in Sec. \ref{sec:installation}. As was
 \begin{tabular}{rl}\hline
 {\tt \$\{GITHOME\_BAND\_SMOOTH\}} & \parbox{5in}{~\\Location of Git Repository, e.g.\\{\tt /Users/CarlosSmith/bandframework/software/SmoothEmulator}\\}\\
 {\tt \$\{MY\_LOCAL\}} & \parbox{5in}{Can be placed anywhere. Executables are store in\\ {\tt \$\{MY\_LOCAL\}/bin} and main programs, and source codes for main\\ programs are found within {\tt \$\{MY\_LOCAL\}/software/main\_programs}\\}\\
-{\tt \$\{MY\_PROJECT\}} & \parbox{5in}{Can be placed anywhere. Work spaces where parameter files, data, results and figures are created and stored. User may have several different such directories\\}\\
+{\tt \$\{MY\_ANALYSIS\}} & \parbox{5in}{Can be placed anywhere. Work spaces where parameter files, data, results and figures are created and stored. User may have several different such directories\\}\\
  \hline
 \end{tabular}
 
-At this point, the user should have established a personalized project directory by copying the {\tt \$\{GITHOME\_BAND\_SMOOTH\}/templates/} directory to a convenient location. For example,
+At this point, the user should have established a personalized analysis directory by copying the {\tt \$\{GITHOME\_BAND\_SMOOTH\}/templates/} directory to a convenient location. For example,
 {\tt
 \begin{verbatim}
 	% cp -r ${GITHOME_BAND_SMOTH}/templates /Users/CarlosSmith/mysmoothy
 \end{verbatim}}
-In this case {\tt \$\{MY\_LOCAL\}} will now refer to {\tt Users/CarlosSmith/mysmoothy/mylocal} and {\tt \$\{MY\_PROJECT\}} will now refer to a specific project at {\tt Users/CarlosSmith/mysmoothy/myproject}.
+In this case {\tt \$\{MY\_LOCAL\}} will now refer to {\tt Users/CarlosSmith/mysmoothy/mylocal} and {\tt \$\{MY\_ANALYSIS\}} will now refer to a specific analysis directory, e.g.  {\tt Users/CarlosSmith/mysmoothy/myanalysis}.
 
 The User should have also compiled the main libraries
 {\tt
@@ -54,7 +54,7 @@ This will compile all the main source programs in {\tt \$\{MY\_LOCAL\}/software/
 Several executables should now appear in {\tt \$\{MY\_LOCAL\}/bin/}: {\tt simplex, smoothy\_tune, mcmc, smoothy\_testattrainingpts, smoothy\_testvsfullmodel, smoothy\_testvsfullmodelalt} and {\tt fakerhic}. The User might find it convenient to add {\tt \$\{MY\_LOCAL\}/bin} to their path. The reason these are compiled in the User's space, separate from the main libraries, is that the User may well wish to create their own main programs, and this arrangement allows the User to compile their own versions, while leaving the original programs from the templates directory and the lower-level source code unchanged. 
 
 \subsection{Creating Necessary Info Files}
-The User will run the software from the {\tt \$\{MY\_PROJECT\}/} directory. Before a User can run {\it Simplex Sampler} they must create information files that describe the model-parameter priors and list the observable names. Both files are need to be in the {\tt \$\{MY\_PROJECT\}} directory. The first file is {\tt smooth\_data/Info/modelpar\_info.txt}, which describes the model parameters and their priors. For the purposes of this tutorial, a file already exists,
+The User will run the software from the {\tt \$\{MY\_ANALYSIS\}/} directory. Before a User can run {\it Simplex Sampler} they must create information files that describe the model-parameter priors and list the observable names. Both files are need to be in the {\tt \$\{MY\_ANALYSIS\}} directory. The first file is {\tt smooth\_data/Info/modelpar\_info.txt}, which describes the model parameters and their priors. For the purposes of this tutorial, a file already exists,
 {\tt
 \begin{verbatim}
    compressibility         uniform  150   300
@@ -92,10 +92,10 @@ Both {\it Simplex Sampler} and {\it Smooth Emulator} have options. These are pro
 }
 Because the first line is commented, the output of {\it Simplex Sampler} will be to the screen. Otherwise it would go to the specified file. By setting {\tt Simplex\_TrainType=1}, the sampler will choose $n+1$ training points, where $n=6$ is the number of model parameters. Each point corresponds to the vertices of an $n+1$ dimensional simplex.  Finally, the parameter {\tt Simplex\_ModelRunDirName} is set to ``{\tt modelruns}''. This informs {\tt Simplex Sampler} to write the coordinates of each training point and the corresponding observables in the directory {\tt smooth\_data/modelruns/}. Here, {\tt Simplex\_TrainType=2}, which adds points half-way between each pair of simplex points. These additonal points are then moved outward and the original simplex points are brought inward. This method has precisely the number of training points as the number of coefficients necessary for a quadratic fit. 
 
-Now the user can run {\tt Simplex Sampler}, which must be run from the project directory. The only output is the number of training points.
+Now the user can run {\tt Simplex Sampler}, which must be run from the analysis directory. The only output is the number of training points.
  {\tt
 \begin{verbatim}
-   ${MY_PROJECT}/rhic% ${MY_LOCAL}/bin/simplex
+   ${MY_ANALYSIS}/rhic% ${MY_LOCAL}/bin/simplex
    NTrainingPts=28
 \end{verbatim}
 }
@@ -116,7 +116,7 @@ This describes the six model parameters, which will serve as the input for the f
 Once the training points have been generated, the user will run a full model based on the given structure, tailored to address their specific problem. For the tutorial, a fake full model is provided. It reads the model-parameter values in each {\tt smooth\_data/modelruns/runI/model\_parameters.txt} file and writes the corresponding observables in {\tt smooth\_data/modelruns/runI/obs.txt}. The output should be as follows:
 {\tt
 \begin{verbatim}
-   ${MY_PROJECT}/rhic% ${MY_LOCAL}/bin/fakerhic
+   ${MY_ANALYSIS}/rhic% ${MY_LOCAL}/bin/fakerhic
    NTraining Pts=28
    NPars=6
 \end{verbatim}
@@ -161,7 +161,7 @@ Now, running {\tt smoothy\_tune}, produces the following output,
 
 {\tt
 \begin{verbatim}
-${MY_PROJECT}/fakerhic% ${MY_LOCAL}/bin/smoothy_tune
+${MY_ANALYSIS}/fakerhic% ${MY_LOCAL}/bin/smoothy_tune
  ---- Tuning for meanpt_pion ----
  ---- Tuning for meanpt_kaon ----
  ---- Tuning for meanpt_proton ----
@@ -237,7 +237,7 @@ Finally, now that the emulator is tuned, one may wish to generate emulated value
 
 {\tt
 \begin{verbatim}
-${MY_PROJECT}/rhic% ${MY_LOCAL}/bin/smoothy_calcobs
+${MY_ANALYSIS}/rhic% ${MY_LOCAL}/bin/smoothy_calcobs
 Prior Info
 #         ParameterName Type   Xmin_or_Xbar  Xmax_or_SigmaX
  0:   compressibility   uniform        150        300
@@ -320,7 +320,7 @@ The above illustrated how one can write a code that
 
 \subsection{Exploring the Posterior via Markov-Chain Monte-Carlo}
 
-Given the experimental information, which is stored in project directory in {\tt smooth\_data/Info/experimental\_info.txt}, one can then use the tuned emulator to explore the posterior likelihood through MCMC, which works via a Metropolis algorithm. The file {\tt smooth\_data/Info/experimental\_info.txt} provided in the template is:
+Given the experimental information, which is stored in analysis directory in {\tt smooth\_data/Info/experimental\_info.txt}, one can then use the tuned emulator to explore the posterior likelihood through MCMC, which works via a Metropolis algorithm. The file {\tt smooth\_data/Info/experimental\_info.txt} provided in the template is:
 {\tt
 \begin{verbatim}
 meanpt_pion     481.179     20    0.0
@@ -358,7 +358,7 @@ The parameter {\tt MCMC\_NBURN} sets the number of Metropolis steps to be used i
 Running the MCMC program gives the following output:
 {\tt
 \begin{verbatim}
- ${MY_PROJECT}/rhic% ${MY_LOCAL}/bin/mcmc
+ ${MY_ANALYSIS}/rhic% ${MY_LOCAL}/bin/mcmc
 At beginning of Trace, LL=-68.728122
 At end of trace, best LL=1.223190
 Best Theta=
@@ -404,9 +404,9 @@ As described in Sec. \ref{sec:theory} the covariances in the posterior can also 
 This quantifies how the posterior value of $\theta_i$ changes as the experimental value changes if the experimental value, $Y_a^{\rm exp}$, changes an amount characteristic of the variance of $Y_a$ across the prior. Given that there may not be a set of training points calculated uniformly across the prior, the final factor is estimated as described in Sec. \ref{sec:theory}. Higher values of $\mathcal{R}_{ia}$ for different $a$ demonstrate the relative contributions of different observables $a$ to constrain a model parameter $i$. The resolving power matrix is written to {\tt mcmc\_trace/ResolvingPower.txt}.
 
 \subsection{Making Plots}
-Three python scripts (using MATPLOTLIB) are provided to provide graphical insight into the posterior likelihood, into the resolving power and for viewing how the emulator uncertainty compares to the discrepancies between full-model runs (not used for tuning) and emulated value. One can visit the {\tt \$\{MY\_PROJECT\}/figs/} directory and peruse the file {\tt directions.txt} for more detailed instructions of how to create the plots below. First, one must create two data files. These provide the names of observables and model parameters to be used by the plots.
+Three python scripts (using MATPLOTLIB) are provided to provide graphical insight into the posterior likelihood, into the resolving power and for viewing how the emulator uncertainty compares to the discrepancies between full-model runs (not used for tuning) and emulated value. One can visit the {\tt \$\{MY\_ANALYSIS\}/figs/} directory and peruse the file {\tt directions.txt} for more detailed instructions of how to create the plots below. First, one must create two data files. These provide the names of observables and model parameters to be used by the plots.
 
-The two files are given the same names as two files in {\tt smooth\_data/Info/}. The first is {\tt \$\{MY\_PROJECT\}/figs/modelpars\_info.txt}. It differs from the one in the {\tt smooth\_data/Info/} directory in that it has only three columns, though the first column is identical. The provided file is\\
+The two files are given the same names as two files in {\tt smooth\_data/Info/}. The first is {\tt \$\{MY\_ANALYSIS\}/figs/modelpars\_info.txt}. It differs from the one in the {\tt smooth\_data/Info/} directory in that it has only three columns, though the first column is identical. The provided file is\\
 {\tt\begin{verbatim}
 compressibility           uniform    $\kappa$
 etaovers                  uniform    $\eta/s$
@@ -417,7 +417,7 @@ initial_epsilon           uniform    $\epsilon_0$
 \end{verbatim}}
 As one can see, the last column is used by MATPLOTLIB to label axes. The middle column is not currently used, but that might come into play if one wanted to alter the python scripts to use a different scale for gaussian priors.
 
-The second required file is {\tt \$\{MY\_PROJECT\}/figs/observable\_info.txt}, and the provided version is\\
+The second required file is {\tt \$\{MY\_ANALYSIS\}/figs/observable\_info.txt}, and the provided version is\\
 {\tt
 \begin{verbatim}
 meanpt_pion          $\langle p_t\rangle_{\pi}$
@@ -432,8 +432,8 @@ Again, the first column is identical to that in {\tt smooth\_data/Info/} and the
 To graph the posterior likelihood, first be sure to run the {\tt mcmc} program, then change into the {\tt figs/posterior} directory and enter the command:
 {\tt
 \begin{verbatim}
-${MY_PROJECT}/figs/posterior% ln -s ../../smooth_data/mcmc_trace/trace.txt .
-${MY_PROJECT}/figs/posterior% python3 posterior.py
+${MY_ANALYSIS}/figs/posterior% ln -s ../../smooth_data/mcmc_trace/trace.txt .
+${MY_ANALYSIS}/figs/posterior% python3 posterior.py
 \end{verbatim}}
 One can replace ``{\tt ln -s}'' with ``cp'' or ``mv''. The script should create a file {\tt posterior.pdf}, which looks like:
 
@@ -455,8 +455,8 @@ RAA                  $R_{AA}$
 The first column should be exactly the same as the first line in the original file. After running the {\tt mcmc} program, the figure can be produced via the command
 {\tt
 \begin{verbatim}
-${MY_PROJECT}/figs/resolvingpower% ln -s ../../smooth_data/mcmc_trace/ResolvingPower.txt .
-${MY_PROJECT}/figs/resolving power% python3 RP.py
+${MY_ANALYSIS}/figs/resolvingpower% ln -s ../../smooth_data/mcmc_trace/ResolvingPower.txt .
+${MY_ANALYSIS}/figs/resolving power% python3 RP.py
 \end{verbatim}}
 The figure should look like:
 
@@ -466,7 +466,7 @@ The figure should look like:
 The third provided python script is in {\tt figs/YvsY/} and it compares full-model runs (not used for tuning) to the emulator. This is useful for seeing whether the emulator's error estimates are reasonable. First, one must run the program that writes out the emulator predictions for the full-model runs. This is accomplished by the command:
 {\tt
 \begin{verbatim}
-${MY_PROJECT}% smoothy_testvsfullmodelalt
+${MY_ANALYSIS}% smoothy_testvsfullmodelalt
 meanpt_pion: 27 out of 50 points within 1 sigma
 meanpt_kaon: 41 out of 50 points within 1 sigma
 meanpt_proton: 26 out of 50 points within 1 sigma
@@ -479,8 +479,8 @@ If the uncertainty were perfectly stated, 68\% of the points would be within one
 To make the plot, first change into the {\tt figs/YvsY/} directory, and enter
 {\tt
 \begin{verbatim}
-${MY_PROJECT}/figs/YvsY% ln -s ../../smooth_data/fullmodel_testdata .
-${MY_PROJECT}/figs/YvsY% python3 YvsY.py
+${MY_ANALYSIS}/figs/YvsY% ln -s ../../smooth_data/fullmodel_testdata .
+${MY_ANALYSIS}/figs/YvsY% python3 YvsY.py
  Observable names:
  ['meanpt_pion', 'meanpt_kaon', 'meanpt_proton', 'Rinv', 'v2', 'RAA']
  Enter iY: 4

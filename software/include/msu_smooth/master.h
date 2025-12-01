@@ -64,7 +64,7 @@ namespace NBandSmooth{
       void TuneAllY(); // tune all observables
       void TuneY(string obsname); // tune one observable
       void TuneY(unsigned int iY); // tune one observable
-      void TuneAllY(double LAMBDA); // tune all observables with fixed Lambda
+      void TuneAllYFixedLambda(); // tune all observables with fixed Lambda
       void TuneY(string obsname,double LAMBDA); // tune one observable with fixed Lambda
       void TuneY(unsigned int iY,double LAMBDA); // tune one observable with fixed Lambda
       

@@ -121,6 +121,7 @@ Here {\tt \$\{MY\_LOCAL\}/bin} is the path to where the User compiles the main p
 }
 At this point, it is up to the User to run their full model at each training point and create a file {\tt runI/obs.txt}, which stores values of the observables at those training points as calculated by the full model. 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Using Other Choices (other than from {\it Training Point Optimizer}) for Training Points}
 
 If the User desires to use their own procedure for training points, or if the User wishes to augment the {\it Training Point Optimizer} points with additional training points, the User can write their own files {\tt runI/model\_parameters.txt}. The emulator should work fine, though the User should remember that when training the emulator (see Sec. \ref{sec:emulator}) the emulator parameter describing with {\tt runI} directories to apply should be modified.
@@ -128,7 +129,8 @@ If the User desires to use their own procedure for training points, or if the Us
 There is one warning to be issued when choosing training points for tuning {\it Smooth Emulator}. When solving for the Taylor coefficients, the emulator uses the factor of those coefficients (products of $\theta_i$) in the linear algebra routine. However, if those coefficients are not linearly independent, the solution becomes undetermined. For example, if two of the training points were exactly the same, it would fail. 
 
 \section{Writing Programs Accessing the Training Point Optimization Software}
-{\it Smooth Emulator Software} is organized to accommodate the User building their own main programs that incorporate the functionality. For the training-point optimization software, the software's functionality is rather simple and the User can adjust the functionality through setting options as described above. The main programs and the executables are stored in the {\tt \${M{\tt \$\{MY\_LOCAL\}/main\_programs/} and {\tt \${M{\tt \$\{MY\_LOCAL\}/bin/} directories respectively. The provided main program's source code, {\tt trainingpoint\_optimizer\_main.cc}, aside from the headers, is:
+{\it Smooth Emulator Software} is organized to accommodate the User building their own main programs that incorporate the functionality. For the training-point optimization software, the software's functionality is rather simple and the User can adjust the functionality through setting options as described above. The main programs and the executables are stored in the {\tt \$\{MY\_LOCAL\}/main\_programs/} and {\tt \$\{MY\_LOCAL\}/bin/} directories respectively. The provided main program's source code, {\tt trainingpoint\_optimizer\_main.cc}, aside from the headers, is:
+
 {\tt\begin{verbatim}
    int main(){
    double LAMBDA=3.0; // Sets initial guess for Lambda
@@ -139,10 +141,11 @@ There is one warning to be issued when choosing training points for tuning {\it 
 }
 \end{verbatim}
 }
-Several additional methods can be seen by viewing the header file, {\tt \$\{{GITHOME\_BAND\_SMOOTH\}/software/include/msu\_smooth/trainingpoint\_optimizer.h}. However, the useful methods are all called by {\tt Optimize(double LAMBDA)} with the correct options listed.
+
+Several additional methods can be seen by viewing the header file, {\tt \$\{GITHOME\_BAND\_SMOOTH\}/software/include/msu\_smooth/trainingpoint\_optimizer.h}. However, the useful methods are all called by {\tt Optimize(double LAMBDA)} with the correct options listed.
 
 \subsection{The {\tt parameterMap} utility class}
-If the User wishes to write programs that change options during the running, they can use the parameterMap class, which has an object within the {\tt CTPO} class. This class is an extension of C++ maps. The header file for that class ({\tt \$\{{GITHOME\_BAND\_SMOOTH\}/software/include/msu\_smoothutils/parametermap.h}) is:
+If the User wishes to write programs that change options during the running, they can use the parameterMap class, which has an object within the {\tt CTPO} class. This class is an extension of C++ maps. The header file for that class ({\tt \$\{GITHOME\_BAND\_SMOOTH\}/software/include/msu\_smoothutils/parametermap.h}) is:
 {\tt\begin{verbatim}
 class CparameterMap : public map<string,string> {
 public:
@@ -172,6 +175,12 @@ public:
 };
 \end{verbatim}
 }
+
+
+
+
+
+
 For example, if the User wished to add a line which reset the option {\tt TPO\_NMC} set above to the value of 10000, they could add a line to the main program above:
 {\tt \begin{verbatim}
 	tpo->set("TPO_NMC",10000);

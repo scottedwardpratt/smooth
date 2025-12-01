@@ -102,7 +102,6 @@ void CMCMC::EvaluateTrace(){
 			CovThetaY(ipar,iobs)=CovThetaY(ipar,iobs)-thetabar[ipar]*Ybar[iobs];
 		}
 	}
-   Misc::Pause();
 	
 	for(iobs=0;iobs<NObs;iobs++){
 		for(jobs=0;jobs<NObs;jobs++){

@@ -46,7 +46,7 @@
 %top=0pt,
 %bottom=0pt,
 %colback=gray!25,
-%colframe=white,
+%colframe=white,w
 %width=\dimexpr\textwidth\relax,
 %enlarge left by=0mm,
 %boxsep=5pt,
@@ -165,13 +165,10 @@ The software performs three basic functions.
 \item If the User provides a list of experimentally measured observables and uncertainties, an MCMC program samples the prior and provides a sampling of points in the model-parameter space that are consistent with the measurement. An analysis program uses the list of representative points to calculate the mean and covariances of the posterior distribution. The program also provides the resolving power of specific observables in regards to constraining specific model parameters.
 \end{enumerate}
 
-The structure is designed so that the User stores all the information for a specific analysis in a specific analysis directory, e.g. {\tt my\_analysis/}. All programs are then run from that directory.  A subdirectory, {\tt my\_analysis/smooth\_data/Info}, contains simple text files edited by the User to describe the model-parameter priors, the observables to be emulated and evaluated, and the experimentally observed values. A second subdirectory, {\tt my\_analysis/smooth\_data/Options} contains text files defining options the User can set related to the {\it Smooth Emulator} software. The training point optimization software creates directories {\tt my\_analysis/FullModelRuns/runI} where each training point,\tt \hdots/runI}, refers to a single point in model-parameter space used for training. The training point optimizer program creates a test file listing the values of the model parameters. The User's job is then to create text files giving the values of the observables calculated by the full model for that point in model-parameter space. Once the User has performed this, one can run programs that build and tune emulators for each emulator, and if desired, run the MCMC program. The MCMC writes the MCMC trace information in {\tt my\_analysis/smooth\_data/mcmc\_trace/}. {\it Smooth Emulator} provides programs are provided that analyze the trace to provide covariances of the the posterior and measures of the resolving power. A {\tt my\_analysis/figs} directory includes several python scripts to plot results of these analyses based on Matplotlib. 
+The structure is designed so that the User stores all the information for a specific analysis in a specific analysis directory, e.g. {\tt  \$\{MY\_ANALYSIS\}/}. All programs are then run from that directory.  A subdirectory, {\tt  \$\{MY\_ANALYSIS\}/smooth\_data/Info}, contains simple text files edited by the User to describe the model-parameter priors, the observables to be emulated and evaluated, and the experimentally observed values. A second subdirectory, {\tt \$\{MY\_ANALYSIS\}/smooth\_data/Options} contains text files defining options the User can set related to the {\it Smooth Emulator} software. The training point optimization software creates directories {\tt  \$\{MY\_ANALYSIS\}/smooth\_data/FullModelRuns/runI} where each training point, {\tt $\hdots$/runI}, refers to a single point in model-parameter space used for training. The training point optimizer program creates a test file listing the values of the model parameters. The User's job is then to create text files giving the values of the observables calculated by the full model for that point in model-parameter space. Once the User has performed this, one can run programs that build and tune emulators for each emulator, and if desired, run the MCMC program. The MCMC writes the MCMC trace information in {\tt  \$\{MY\_ANALYSIS\}/smooth\_data/mcmc\_trace/}. {\it Smooth Emulator} provides programs are provided that analyze the trace to provide covariances of the the posterior and measures of the resolving power. A {\tt  \$\{MY\_ANALYSIS\}/figs} directory includes several python scripts to plot results of these analyses based on Matplotlib. 
 
 {\it Smooth Emulator} software is designed to be modular. Programs for each of the three functionalities listed above can be performed independently because files are all in simple text formats. For example, one can generate the training points, then use those training points emulators from other software packages. However, the User will likely have to spend more time translating text files to formats used by other programs. 
 
-
-
-\begin{comment}
 \newpage
 
 \subfile{installation.tex}
@@ -190,20 +187,15 @@ The structure is designed so that the User stores all the information for a spec
 
 \newpage
 
-%\subfile{pca.tex}
-
-%\newpage
-
 \subfile{mcmc.tex}
 
 \newpage
 
 \subfile{tutorial.tex}
 
-\newpage
+%\newpage
 
-\subfile{theory_short.tex}
-\end{comment}
+%\subfile{theory_short.tex}
 
 \end{document}
 
