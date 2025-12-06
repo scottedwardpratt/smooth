@@ -393,7 +393,7 @@ Reads Taylor coefficients for one observable referenced by observable name.
 \item {\tt void ReadCoefficients(unsigned int iY)}\\
 Reads Taylor coefficients for one observable referenced by observable index.
 \end{itemize}
-It would probably be useful to view the header file for the {\tt master} class, {\tt \${GITHOME\_BAND\_SMOOTH}/software/include/msu\_smooth/master.h}.
+It would probably be useful to view the header file for the {\tt master} class, {\tt \${SMOOTH\_HOME}/software/include/msu\_smooth/master.h}.
 
 \subsection{Other Potentially Useful {\it Smooth Emulator Objects}}
 
@@ -414,7 +414,7 @@ The argument can be either a C++ string or a character array. The CSmoothMaster 
 would retrieve the value of $\Lambda$, and if the map did not include {\tt SmoothEmulator\_LAMBDA}, it would return a default value of 2.0.
 
 \item {\tt CPriorInfo}\\
-This object stores information about the prior. The {\tt CSmoothMaster} object includes such an object, and automatically, during its construction, the {\tt CSmoothMaster} object reads in the {\tt smooth\_data/Info/modelpar\_info.txt} file and creates the object. The functionalities of potential interest might be addressed from a main program via:\\
+This object stores information about the prior. The {\tt CSmoothMaster} object includes such an object, and automatically, during its construction, the {\tt CSmoothMaster} object reads in the {\tt smooth\_data/Info/prior\_info.txt} file and creates the object. The functionalities of potential interest might be addressed from a main program via:\\
 {\tt
 \begin{verbatim}
  smoothmaster.priorinfo.PrintInfo();  // prints out the parameter priors

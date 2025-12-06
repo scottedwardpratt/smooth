@@ -24,6 +24,7 @@ CTPO::CTPO(){
 	NPars=priorinfo->NModelPars;
 	INCLUDE_LAMBDA_UNCERTAINTY=parmap.getB("TPO_Include_LAMBDA_Uncertainty",true);
 	CreateTrainingPts();
+   LAMBDA=parmap.getD("TPO_LAMBDA",2.5);
 }
 
 void CTPO::CreateTrainingPts(){
@@ -56,8 +57,7 @@ void CTPO::CreateTrainingPts(){
 	
 }
 
-void CTPO::Optimize(double LAMBDASet){
-	LAMBDA=LAMBDASet;
+void CTPO::Optimize(){
 	ALPHA=parmap.getD("TPO_ALPHA",0.01);
 	PLUS1=false;
    NMC=parmap.getI("TPO_NMC",0);
@@ -198,9 +198,13 @@ void CTPO::Optimize_MC(){
 				n+=1000;
 		}
 		if((100*(imc+1)%NMC)==0){
-			
 			successrate=double(nsuccess)/double(nsuccess+nfail);
-			CLog::Info("++++++ finished "+to_string(lrint(100.0*(imc+1.0)/double(NMC)))+"%,  bestSigma2="+to_string(bestSigma2)+", success %="+to_string(100.0*successrate)+", dtheta="+to_string(dtheta)+"\n");
+         stringstream fp,bs,sr,dt,sp;
+         fp << setprecision(3) << 100.0*(imc+1.0)/double(NMC);
+         bs << setprecision(5) << bestSigma2;
+         sp << setprecision(5) << 100.0*successrate;
+         dt << setprecision(5) << dtheta;
+			CLog::Info("+++ finished "+fp.str()+"%, expected accuracy="+bs.str()+", success %="+sp.str()+", step size="+dt.str()+"\n");
 			dtheta*=0.05+4.0*successrate;
 			nfail=nsuccess=0;
 		}
@@ -280,10 +284,12 @@ void CTPO::OptimizeSimplex_MC(){
 		else
 			nfail+=1;
 		if((100*(imc+1)%NMC)==0){
-			successrate=double(nsuccess)/double(nsuccess+nfail);
-			CLog::Info("+++++++++ finished "+to_string(100.0*(imc+1.0)/double(NMC))+" percent, bestSigma2="
-				+to_string(bestSigma2)+", success %%="+to_string(100.0*successrate)+
-					", dR="+to_string(dR)+"\n");
+         successrate=double(nsuccess)/double(nsuccess+nfail);
+         stringstream bs,sr,sp;
+         sp << setprecision(3) << 100.0*(imc+1.0)/double(NMC);
+         bs << setprecision(5) << bestSigma2;
+         sr << setprecision(5) << 100.0*successrate;
+         CLog::Info("+++ finished "+sp.str()+"%, expected accuracy="+bs.str()+", success %="+sr.str()+"\n");
 			dR*=0.05+4.0*successrate;
 			nfail=nsuccess=0;
 		}
@@ -355,8 +361,14 @@ void CTPO::OptimizeSphere_MC(){
 		else
 			nfail+=1;
 		if((100*(imc+1)%NMC)==0){
-			successrate=double(nsuccess)/double(nsuccess+nfail);
-			CLog::Info("++++++++ finished "+to_string(100.0*(imc+1.0)/double(NMC))+", bestSigma2="+to_string(bestSigma2)+", bestR="+to_string(fabs(besttheta[1][0]))+"\n success %%="+to_string(100.0*successrate)+", dtheta="+to_string(dtheta)+" +++++++++++\n");
+         successrate=double(nsuccess)/double(nsuccess+nfail);
+         stringstream fp,bs,dt,sp,br;
+         fp << setprecision(3) << 100.0*(imc+1.0)/double(NMC);
+         bs << setprecision(5) << bestSigma2;
+         sp << setprecision(5) << 100.0*successrate;
+         dt << setprecision(5) << dtheta;
+         br << setprecision(5) << fabs(besttheta[1][0]);
+			CLog::Info("+++ finished "+fp.str()+", expected accuracy="+bs.str()+", bestR="+br.str()+"\n success %%="+sp.str()+", step size="+dt.str()+"\n");
 			dtheta*=0.05+4.0*successrate;
 			nfail=nsuccess=0;
 		}

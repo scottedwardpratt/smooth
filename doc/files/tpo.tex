@@ -21,7 +21,7 @@ Before proceeding, the executable {\tt trainingpoint\_optimizer} requires inform
    par5 gaussian 0 100  0.5
 \end{verbatim}
 }
-The first column is the model-parameter name, and the last three parameters describe the range of the parameters, which is usually the prior, assuming the prior is uniform or Gaussian. The second entry for each parameter defines whether the range/prior is {\tt uniform} or {\tt gaussian}. If the prior is {\tt uniform}, the next two numbers specify the lower and upper ranges of the parameter. If the range/prior is {\tt gaussian}, the third entry describes the center of the Gaussian, $x_0$, and the fourth entry describes the Gaussian width, $\sigma_0$, where the prior distribution is $\propto \exp\{-(x-x_0)^2/2\sigma_0^2\}$. {\tt trainingpoint\_optimizer} will read the information to determine the number of parameters. It will then translate and scale the model parameters from $x_i$ to $\theta_i$ so that the $n$ values of $\theta$, $\theta_{1\cdots n}$ assuming each dimension of $\theta$ varies either from -1 to 1, for uniform distributions, or proportional to $e^{-3\theta^2/2}$ for Gaussian distributions. With this choice the individual priors all have the same r.m.s. values once converted to the parameters $\theta_i$.
+The first column is the model-parameter name, and the last three parameters describe the range of the parameters, which is usually the prior, assuming the prior is uniform or Gaussian. The second entry for each parameter defines whether the range/prior is {\tt uniform} or {\tt gaussian}. If the prior is {\tt uniform}, the next two numbers specify the lower and upper ranges of the parameter. If the range/prior is {\tt gaussian}, the third entry describes the center of the Gaussian, $x_0$, and the fourth entry describes the Gaussian width, $\sigma_0$, where the prior distribution is $\propto \exp\{-(x-x_0)^2/2\sigma_0^2\}$. {\tt trainingpoint\_optimizer} will read the information to determine the number of parameters. It will then translate and scale the model parameters from $x_i$ to $\theta_i$ so that the $n$ values of $\theta$, $\theta_{1\cdots n}$ assuming each dimension of $\theta$ varies either from -1 to 1, for uniform distributions, or proportional to $e^{-3\theta^2/2}$ for Gaussian distributions. With this choice for the scaling, the priors all have the same r.m.s. spreads once converted to the parameters $\theta_i$.
 
 {\tt training\_point\_optimizer} takes all this information into account when optimizing the selection of points. For example if the sensitivity scale for a given model parameter is small, points will be chose so better capture behavior along the other parameters. Section \ref{sec:theory} provides a brief description of the theoretical basis of the training-point selection and for more detailed description one can read \href{./smoothdraft.pdf}{{\tt smoothdraft.pdf}}.
 
@@ -66,6 +66,8 @@ For each line the first string is the option name and is followed by the value. 
 
 \subsubsection{{\tt LogFileName}}
 If this is left blank, {\it Training Point Optimizer} will write output to the screen. Otherwise it will write output to the named file. Given that {\it Training Point Optimizer} runs in a few seconds, the program is usually run interactively and output is sent to the screen.
+\subsubsection{{\tt TPO\_LAMBDA} (default is {\tt 2.5})}
+The locations of the training point depends on a guess for the convergence hyper-parameter $\Lambda$. Because emulator optimization cannot be performed before the model is run, the User must provide a guess at this point. The dependence of the locations on $\Lambda$ is somewhat weak, so there is little need to worry too much about this. However, the actual accuracy of the emulator depends strongly on $\Lambda$, so once the emulator is built the actual uncertainty of the emulator can significantly differ from the predictions provided by the training-point programs. 
 \subsubsection{{\tt TPO\_Method} (default is {\tt MC})}
 The option {\tt TPO\_Method} sets the training point method and can be set to the following values:
 \begin{itemize}\itemsep 0pt
@@ -80,8 +82,8 @@ The option {\tt TPO\_Method} sets the training point method and can be set to th
 \subsubsection{{\tt TPO\_NTraining\_Pts} (default 0)}
 For the {\tt MC} and {\tt MCSphere} methods this sets $N_{\rm train}$, the number of training points. Otherwise $N_{\rm train}$ is set to correspond to the method as described above.
 
-\subsubsection{{\tt TPO\_ALPHA} (default 0)}
-The value {\tt ALPHA} represents the point-to-point noise, which might vary from one observable to another. But the same training points are used for all observables. Thus, choosing {\tt AlPHA} can be not wholly consistent with those values defined for the observables. Fortunately, because the training points will be chosen far apart, this option has little impact and one can simply set it equal to zero with no significant change to the optimum placement.
+\subsubsection{{\tt TPO\_ALPHA} (default 0.01)}
+The value {\tt ALPHA} represents the point-to-point noise, which might vary from one observable to another. But the same training points are used for all observables. Thus, choosing {\tt AlPHA} can be not wholly consistent with those values defined for the observables. Fortunately, because the training points will be chosen far apart, this option has little impact and one can simply set it equal to zero with no significant change to the optimum placement. This does not need to equal the values used to train the emulator (which can vary from one observable to another).
 
 \subsubsection{{\tt TPO\_INCLUDE\_LAMBDA\_UNCERTAINTY} (default is {\tt true})}
 If set to {\tt true} the optimization accounts for the fact that $\Lambda$ is not known. The procedure will be faster if set to {\tt false}, but that can significantly change the answer in some cases. It is recommended to leave this as {\tt true}.
@@ -142,10 +144,10 @@ There is one warning to be issued when choosing training points for tuning {\it 
 \end{verbatim}
 }
 
-Several additional methods can be seen by viewing the header file, {\tt \$\{GITHOME\_BAND\_SMOOTH\}/software/include/msu\_smooth/trainingpoint\_optimizer.h}. However, the useful methods are all called by {\tt Optimize(double LAMBDA)} with the correct options listed.
+Several additional methods can be seen by viewing the header file, {\tt \$\{SMOOTH\_HOME\}/software/include/msu\_smooth/trainingpoint\_optimizer.h}. However, the useful methods are all called by {\tt Optimize(double LAMBDA)} with the correct options listed.
 
 \subsection{The {\tt parameterMap} utility class}
-If the User wishes to write programs that change options during the running, they can use the parameterMap class, which has an object within the {\tt CTPO} class. This class is an extension of C++ maps. The header file for that class ({\tt \$\{GITHOME\_BAND\_SMOOTH\}/software/include/msu\_smoothutils/parametermap.h}) is:
+If the User wishes to write programs that change options during the running, they can use the parameterMap class, which has an object within the {\tt CTPO} class. This class is an extension of C++ maps. The header file for that class ({\tt \$\{SMOOTH\_HOME\}/software/include/msu\_smoothutils/parametermap.h}) is:
 {\tt\begin{verbatim}
 class CparameterMap : public map<string,string> {
 public:
