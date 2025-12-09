@@ -52,9 +52,9 @@ void CSmoothMaster::TestVsFullModel(){
 	string filename;
 	fitpercentage=0.0;
    vector<int> nfit;
-   vector<double> averagesigma2;
+   vector<double> averagedeviation2;
    string(command);
-   double realY;
+   double realY,reldeviation;
    NYY=NObs;
    // YOu can't open too many file pointers!
    if(NYY>=100)
@@ -65,7 +65,7 @@ void CSmoothMaster::TestVsFullModel(){
    ReadTestingInfo();
    ntest=CSmoothEmulator::NTestingPts;
    nfit.resize(NObs,0);
-   averagesigma2.resize(NObs,0.0);
+   averagedeviation2.resize(NObs,0.0);
    Y.resize(NObs);
    SigmaY_emulator.resize(NObs);
    fptr_YvsY.resize(NObs);
@@ -74,6 +74,7 @@ void CSmoothMaster::TestVsFullModel(){
    for(iY=0;iY<NYY;iY++){
       filename="smooth_data/output_stuff/fullmodel_testdata/YvsY_"+observableinfo->observable_name[iY]+".txt";
       fptr_YvsY[iY]=fopen(filename.c_str(),"w");
+      averagedeviation2[iY]=0.0;
    }
    
    for(itest=0;itest<ntest;itest++){
@@ -82,7 +83,7 @@ void CSmoothMaster::TestVsFullModel(){
       char obsnameread[200];;
       fptr_in=fopen(filename.c_str(),"r");
       if(fptr_in==NULL)
-         printf("file not open?????\n");
+         CLog::Fatal("file not open in  CSmoothMaster::TestVsFullModel ?????\n");
       fscanf(fptr_in,"%s ",obsnameread);
       do{
          while(obsnameread[0]=='#'){
@@ -93,12 +94,11 @@ void CSmoothMaster::TestVsFullModel(){
             fscanf(fptr_in,"%lf",&realY);
             if(!feof(fptr_in)){
                iY=observableinfo->GetIPosition(obsnameread);
-               averagesigma2[iY]+=(realY-Y[iY])*(realY-Y[iY]);
-               if(iY>=0 && iY<NObs)
-                  fprintf(fptr_YvsY[iY],"%10.3e %10.3e %10.3e\n",realY,Y[iY],SigmaY_emulator[iY]);
-               if(iY<NYY){
-                  filename="smooth_data/outputstuff/fullmodel_testdata/YvsY_obs"+to_string(iY)+".txt";
-                  fprintf(fptr_YvsY[iY],"%10.3e %10.3e %10.3e\n",realY,Y[iY],SigmaY_emulator[iY]);
+               reldeviation=(realY-Y[iY])/SigmaY_emulator[iY];
+               averagedeviation2[iY]+=reldeviation*reldeviation;
+               if(iY>=0 && iY<NObs && iY<NYY){
+                  fprintf(fptr_YvsY[iY],"%10.3e %10.3e %10.3e %6.3f\n",
+                          realY,Y[iY],SigmaY_emulator[iY],reldeviation);
                }
                if(fabs(realY-Y[iY])<SigmaY_emulator[iY])
                   nfit[iY]+=1;
@@ -110,13 +110,14 @@ void CSmoothMaster::TestVsFullModel(){
       fclose(fptr_in);
       
    }
+   
    for(iY=0;iY<NObs;iY++){
       fclose(fptr_YvsY[iY]);
    }
    
    for(iY=0;iY<NObs;iY++){
-      averagesigma2[iY]=averagesigma2[iY]/double(ntest);
-      CLog::Info("iY="+to_string(iY)+": <(Y-Yreal)^2>/SigmaY^2_emulator="+to_string(averagesigma2[iY]/(SigmaY_emulator[iY]*SigmaY_emulator[iY]))+"\n");
+      averagedeviation2[iY]=averagedeviation2[iY]/double(ntest);
+      CLog::Info("iY="+to_string(iY)+": (<(Y-Yreal)^2>/SigmaY^2_emulator)^1/2="+to_string(sqrt(averagedeviation2[iY]))+"\n");
       fitpercentage=100.0*double(nfit[iY])/double(ntest);
       CLog::Info("percent < 1 sigma = "+to_string(fitpercentage)+"\n");
       ifit=floorl(fitpercentage);

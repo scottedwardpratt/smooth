@@ -4,7 +4,7 @@ using namespace std;
 using namespace NBandSmooth;
 using namespace NMSUUtils;
 
-void CSmoothEmulator::GetYAndUncertainty(vector<double> &theta,double &Y,double &uncertainty){
+void CSmoothEmulator::GetYAndUncertaintyFromTheta(vector<double> &theta,double &Y,double &uncertainty){
    double unc2,unc2_Lambda; // squared uncertainty
    unsigned int a,b;
    vector<double> S;

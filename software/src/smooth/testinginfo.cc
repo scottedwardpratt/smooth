@@ -82,8 +82,8 @@ void CTestingInfo::ReadTestingInfoSmoothFormat(){
 			}
 		}
 	}
-	NTestingPts = NTestingList.size();
-	
+	NTestingPts=NTestingList.size();
+   	
 	modelpars.resize(NTestingPts);
 	for(itest=0;itest<NTestingPts;itest++){
 		modelpars[itest]=new CModelParameters();

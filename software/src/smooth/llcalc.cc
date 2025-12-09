@@ -70,10 +70,10 @@ void CLLCalcSmooth::CalcLL(vector<double> &theta,double &LL){
 	}
 	if(insidebounds){
 		if(IGNORE_EMULATOR_ERROR){
-			master->GetAllYOnly(theta,Y);
+			master->GetAllYOnlyFromTheta(theta,Y);
 		}
 		else
-			master->GetAllY(theta,Y,SigmaY_emulator);
+			master->GetAllYFromTheta(theta,Y,SigmaY_emulator);
 		for(iy=0;iy<NObs;iy++){
 			sigma2=obsinfo->SigmaExp[iy]*obsinfo->SigmaExp[iy];
 			if(!IGNORE_EMULATOR_ERROR){

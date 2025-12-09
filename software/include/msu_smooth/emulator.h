@@ -54,7 +54,7 @@ namespace NBandSmooth{
 		void CalcLogP();
 		void CalcB();
 		
-		void GetYAndUncertainty(vector<double> &Theta,double &Y,double &uncertainty);
+		void GetYAndUncertaintyFromTheta(vector<double> &Theta,double &Y,double &uncertainty);
 		
 		static CSmoothMaster *smoothmaster;
 		static unsigned int NPars;

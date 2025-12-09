@@ -47,10 +47,10 @@ void CMCMC::EvaluateTrace(){
 	
 	for(itrace=0;itrace<ntrace;itrace++){
 		if(IGNORE_EMULATOR_ERROR){
-			master->GetAllYOnly(trace[itrace],Y);
+			master->GetAllYOnlyFromTheta(trace[itrace],Y);
 		}
 		else{
-			master->GetAllY(trace[itrace],Y,SigmaYEmulator);
+			master->GetAllYFromTheta(trace[itrace],Y,SigmaYEmulator);
 		}
 		for(ipar=0;ipar<NPars;ipar++){
 			thetabar[ipar]+=trace[itrace][ipar];

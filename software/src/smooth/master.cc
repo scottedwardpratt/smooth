@@ -48,6 +48,7 @@ CSmoothMaster::CSmoothMaster(){
       emulator[iy]=new CSmoothEmulator(observableinfo->observable_name[iy]);
    }
    ReadTrainingInfo();
+   modelpars=new CModelParameters();
    
 }
 
@@ -91,21 +92,32 @@ void CSmoothMaster::TuneY(unsigned int iY,double LambdaSet){
 }
 
 void CSmoothMaster::GetY(unsigned int iY,CModelParameters *modelpars,double &Y,double &SigmaY_emulator){
-	emulator[iY]->GetYAndUncertainty(modelpars->Theta,Y,SigmaY_emulator);
+	emulator[iY]->GetYAndUncertaintyFromTheta(modelpars->Theta,Y,SigmaY_emulator);
 }
 
-void CSmoothMaster::GetY(unsigned int iY,vector<double> &theta,double &Y,double &SigmaY_emulator){
-	emulator[iY]->GetYAndUncertainty(theta,Y,SigmaY_emulator);
+void CSmoothMaster::GetYFromTheta(unsigned int iY,vector<double> &theta,double &Y,double &SigmaY_emulator){
+	emulator[iY]->GetYAndUncertaintyFromTheta(theta,Y,SigmaY_emulator);
+}
+
+void CSmoothMaster::GetYFromX(unsigned int iY,vector<double> &X,double &Y,double &SigmaY_emulator){
+   modelpars->SetX(X);
+   emulator[iY]->GetYAndUncertaintyFromTheta(modelpars->Theta,Y,SigmaY_emulator);
 }
 
 void CSmoothMaster::GetY(string obsname,CModelParameters *modelpars,double &Y,double &SigmaY_emulator){
 	unsigned int iY=observableinfo->GetIPosition(obsname);
-	emulator[iY]->GetYAndUncertainty(modelpars->Theta,Y,SigmaY_emulator);
+	emulator[iY]->GetYAndUncertaintyFromTheta(modelpars->Theta,Y,SigmaY_emulator);
 }
 
-void CSmoothMaster::GetY(string obsname,vector<double> &theta,double &Y,double &SigmaY_emulator){
+void CSmoothMaster::GetYFromTheta(string obsname,vector<double> &theta,double &Y,double &SigmaY_emulator){
 	unsigned int iY=observableinfo->GetIPosition(obsname);
-	emulator[iY]->GetYAndUncertainty(theta,Y,SigmaY_emulator);
+	emulator[iY]->GetYAndUncertaintyFromTheta(theta,Y,SigmaY_emulator);
+}
+
+void CSmoothMaster::GetYFromX(string obsname,vector<double> &X,double &Y,double &SigmaY_emulator){
+   unsigned int iY=observableinfo->GetIPosition(obsname);
+   modelpars->SetX(X);
+   emulator[iY]->GetYAndUncertaintyFromTheta(modelpars->Theta,Y,SigmaY_emulator);
 }
 
 void CSmoothMaster::GetAllY(CModelParameters *modelpars,vector<double> &Y,vector<double> &SigmaY_emulator){
@@ -117,76 +129,129 @@ void CSmoothMaster::GetAllY(CModelParameters *modelpars,vector<double> &Y,vector
 	}
 }
 
-void CSmoothMaster::GetAllY(vector<double> &Theta,vector<double> &Y,vector<double> &SigmaY_emulator){
+void CSmoothMaster::GetAllYFromTheta(vector<double> &Theta,vector<double> &Y,vector<double> &SigmaY_emulator){
 	unsigned int NObservables=observableinfo->NObservables;
 	Y.resize(NObservables);
 	SigmaY_emulator.resize(NObservables);
 	for(unsigned int iY=0;iY<NObservables;iY++){
-		emulator[iY]->GetYAndUncertainty(Theta,Y[iY],SigmaY_emulator[iY]);
+		emulator[iY]->GetYAndUncertaintyFromTheta(Theta,Y[iY],SigmaY_emulator[iY]);
 	}
+}
+
+void CSmoothMaster::GetAllYFromX(vector<double> &X,vector<double> &Y,vector<double> &SigmaY_emulator){
+   unsigned int NObservables=observableinfo->NObservables;
+   modelpars->SetX(X);
+   Y.resize(NObservables);
+   SigmaY_emulator.resize(NObservables);
+   for(unsigned int iY=0;iY<NObservables;iY++){
+      emulator[iY]->GetYAndUncertaintyFromTheta(modelpars->Theta,Y[iY],SigmaY_emulator[iY]);
+   }
 }
 
 double CSmoothMaster::GetYOnly(string obsname,CModelParameters *modelpars){
 	unsigned int iY=observableinfo->GetIPosition(obsname);
 	double SigmaY_emulator,Y;
-	emulator[iY]->GetYAndUncertainty(modelpars->Theta,Y,SigmaY_emulator);
+	emulator[iY]->GetYAndUncertaintyFromTheta(modelpars->Theta,Y,SigmaY_emulator);
 	return Y;
 
 }
 
 double CSmoothMaster::GetYOnly(unsigned int iY,CModelParameters *modelpars){
 	double SigmaY_emulator,Y;
-	emulator[iY]->GetYAndUncertainty(modelpars->Theta,Y,SigmaY_emulator);
+	emulator[iY]->GetYAndUncertaintyFromTheta(modelpars->Theta,Y,SigmaY_emulator);
 	return Y;
 }
 
-double CSmoothMaster::GetYOnly(string obsname,vector<double> &Theta){
+double CSmoothMaster::GetYOnlyFromTheta(string obsname,vector<double> &Theta){
 	unsigned int iY=observableinfo->GetIPosition(obsname);
 	double SigmaY_emulator,Y;
-	emulator[iY]->GetYAndUncertainty(Theta,Y,SigmaY_emulator);
+	emulator[iY]->GetYAndUncertaintyFromTheta(Theta,Y,SigmaY_emulator);
 	return Y;
 }
 
-double CSmoothMaster::GetYOnly(unsigned int iY,vector<double> &Theta){
+double CSmoothMaster::GetYOnlyFromX(string obsname,vector<double> &X){
+   unsigned int iY=observableinfo->GetIPosition(obsname);
+   double SigmaY_emulator,Y;
+   modelpars->SetX(X);
+   emulator[iY]->GetYAndUncertaintyFromTheta(modelpars->Theta,Y,SigmaY_emulator);
+   return Y;
+}
+
+double CSmoothMaster::GetYOnlyFromTheta(unsigned int iY,vector<double> &Theta){
 	double SigmaY_emulator,Y;
-	emulator[iY]->GetYAndUncertainty(Theta,Y,SigmaY_emulator);
+	emulator[iY]->GetYAndUncertaintyFromTheta(Theta,Y,SigmaY_emulator);
 	return Y;
 }
 
-double CSmoothMaster::GetYOnly(int iY,vector<double> Theta){
+double CSmoothMaster::GetYOnlyFromX(unsigned int iY,vector<double> &X){
+   double SigmaY_emulator,Y;
+   modelpars->SetX(X);
+   emulator[iY]->GetYAndUncertaintyFromTheta(modelpars->Theta,Y,SigmaY_emulator);
+   return Y;
+}
+
+double CSmoothMaster::GetYOnlyFromTheta(int iY,vector<double> Theta){
 	double SigmaY_emulator,Y;
-	emulator[iY]->GetYAndUncertainty(Theta,Y,SigmaY_emulator);
+	emulator[iY]->GetYAndUncertaintyFromTheta(Theta,Y,SigmaY_emulator);
 	return Y;
 }
 
-double CSmoothMaster::GetYOnlyPython(int DiY,vector<double> Theta){
+double CSmoothMaster::GetYOnlyFromX(int iY,vector<double> X){
+   double SigmaY_emulator,Y;
+   modelpars->SetX(X);
+   emulator[iY]->GetYAndUncertaintyFromTheta(modelpars->Theta,Y,SigmaY_emulator);
+   return Y;
+}
+
+double CSmoothMaster::GetYOnlyFromThetaPython(int DiY,vector<double> Theta){
 	double SigmaY_emulator,Y;
 	unsigned int iY=DiY;
 	if(iY>=0 && iY<observableinfo->NObservables){
-		emulator[iY]->GetYAndUncertainty(Theta,Y,SigmaY_emulator);
+		emulator[iY]->GetYAndUncertaintyFromTheta(Theta,Y,SigmaY_emulator);
 		return Y;
 	}
 	else
 		return 0.0;
 }
 
-double CSmoothMaster::GetUncertainty(string obsname,vector<double> &Theta){
+double CSmoothMaster::GetYOnlyFromXPython(int DiY,vector<double> X){
+   double SigmaY_emulator,Y;
+   unsigned int iY=DiY;
+   modelpars->SetX(X);
+   if(iY>=0 && iY<observableinfo->NObservables){
+      emulator[iY]->GetYAndUncertaintyFromTheta(modelpars->Theta,Y,SigmaY_emulator);
+      return Y;
+   }
+   else
+      return 0.0;
+}
+
+double CSmoothMaster::GetUncertaintyFromTheta(string obsname,vector<double> &Theta){
 	double Y,Uncertainty;
 	unsigned int iY=observableinfo->GetIPosition(obsname);
-	emulator[iY]->GetYAndUncertainty(Theta,Y,Uncertainty);
+	emulator[iY]->GetYAndUncertaintyFromTheta(Theta,Y,Uncertainty);
 	return Uncertainty;
 }
 
-double CSmoothMaster::GetUncertainty(unsigned int iY,vector<double> &Theta){
+double CSmoothMaster::GetUncertaintyFromX(string obsname,vector<double> &X){
+   double Y,Uncertainty;
+   modelpars->SetX(X);
+   unsigned int iY=observableinfo->GetIPosition(obsname);
+   emulator[iY]->GetYAndUncertaintyFromTheta(modelpars->Theta,Y,Uncertainty);
+   return Uncertainty;
+}
+
+double CSmoothMaster::GetUncertaintyFromTheta(unsigned int iY,vector<double> &Theta){
 	double Y,Uncertainty;
-	emulator[iY]->GetYAndUncertainty(Theta,Y,Uncertainty);
+	emulator[iY]->GetYAndUncertaintyFromTheta(Theta,Y,Uncertainty);
 	return Uncertainty;
 }
 
-double CSmoothMaster::GetUncertainty(int iY,vector<double> Theta){
-	double Y,Uncertainty;
-	emulator[iY]->GetYAndUncertainty(Theta,Y,Uncertainty);
-	return Uncertainty;
+double CSmoothMaster::GetUncertaintyFromX(unsigned int iY,vector<double> &X){
+   double Y,Uncertainty;
+   modelpars->SetX(X);
+   emulator[iY]->GetYAndUncertaintyFromTheta(modelpars->Theta,Y,Uncertainty);
+   return Uncertainty;
 }
 
 void CSmoothMaster::GetAllYOnly(CModelParameters *modelpars,vector<double> &Yvec){
@@ -194,26 +259,37 @@ void CSmoothMaster::GetAllYOnly(CModelParameters *modelpars,vector<double> &Yvec
 	Yvec.resize(NObservables);
 	for(unsigned int iY=0;iY<NObservables;iY++){
 		double Y,Uncertainty;
-		emulator[iY]->GetYAndUncertainty(modelpars->Theta,Y,Uncertainty);
+		emulator[iY]->GetYAndUncertaintyFromTheta(modelpars->Theta,Y,Uncertainty);
 		Yvec[iY]=Y;
 	}
 }
 
-void CSmoothMaster::GetAllYOnly(vector<double> &Theta,vector<double> &Yvec){
+void CSmoothMaster::GetAllYOnlyFromTheta(vector<double> &Theta,vector<double> &Yvec){
 	unsigned int NObservables=observableinfo->NObservables;
 	Yvec.resize(NObservables);
 	for(unsigned int iY=0;iY<NObservables;iY++){
 		double Y,Uncertainty;
-		emulator[iY]->GetYAndUncertainty(Theta,Y,Uncertainty);
+		emulator[iY]->GetYAndUncertaintyFromTheta(Theta,Y,Uncertainty);
 		Yvec[iY]=Y;
 	}
 }
 
-vector<double> CSmoothMaster::GetYSigmaPython(int DiY,vector<double> theta){
+void CSmoothMaster::GetAllYOnlyFromX(vector<double> &X,vector<double> &Yvec){
+   unsigned int NObservables=observableinfo->NObservables;
+   Yvec.resize(NObservables);
+   modelpars->SetX(X);
+   for(unsigned int iY=0;iY<NObservables;iY++){
+      double Y,Uncertainty;
+      emulator[iY]->GetYAndUncertaintyFromTheta(modelpars->Theta,Y,Uncertainty);
+      Yvec[iY]=Y;
+   }
+}
+
+vector<double> CSmoothMaster::GetYSigmaFromThetaPython(int DiY,vector<double> theta){
 	unsigned int iY=DiY;
 	double Y,SigmaY_emulator;
 	if(iY>=0 && iY<observableinfo->NObservables)
-		emulator[iY]->GetYAndUncertainty(theta,Y,SigmaY_emulator);
+		emulator[iY]->GetYAndUncertaintyFromTheta(theta,Y,SigmaY_emulator);
 	else{
 		Y=SigmaY_emulator=0.0;
 	}
@@ -222,6 +298,22 @@ vector<double> CSmoothMaster::GetYSigmaPython(int DiY,vector<double> theta){
 	YSigma[0]=Y;
 	YSigma[1]=SigmaY_emulator;
 	return YSigma;		
+}
+
+vector<double> CSmoothMaster::GetYSigmaFromXPython(int DiY,vector<double> X){
+   unsigned int iY=DiY;
+   double Y,SigmaY_emulator;
+   modelpars->SetX(X);
+   if(iY>=0 && iY<observableinfo->NObservables)
+      emulator[iY]->GetYAndUncertaintyFromTheta(modelpars->Theta,Y,SigmaY_emulator);
+   else{
+      Y=SigmaY_emulator=0.0;
+   }
+   vector<double> YSigma;
+   YSigma.resize(2);
+   YSigma[0]=Y;
+   YSigma[1]=SigmaY_emulator;
+   return YSigma;
 }
 
 
