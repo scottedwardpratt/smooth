@@ -11,7 +11,8 @@ The program first reads a simple text file that provides the names of model para
 
 \subsection{Specifying Model Parameters and Priors}\label{subsec:priorinfo}
 Before proceeding, the executable {\tt trainingpoint\_optimizer} requires information about the parameters, specifically, their ranges. The User enters this information into the file {\tt smooth\_data/Info/prior\_info.txt}, as described in Sec. \ref{sec:installation}. An example of such a file might be
-{\tt\begin{verbatim}
+{\tt\vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
+\codebox{
 # par_name dist_type  xmin/centroid  xmax/Rgauss  SensitivityScale
    par0 gaussian 0 100  1.00000
    par1 gaussian 0 100  1.00000
@@ -19,7 +20,9 @@ Before proceeding, the executable {\tt trainingpoint\_optimizer} requires inform
    par3 gaussian 0 100  0.5
    par4 uniform  0 100  0.5
    par5 gaussian 0 100  0.5
-\end{verbatim}
+}
+\end{Verbatim}
+}\vspace*{-12pt}
 }
 The first column is the model-parameter name, and the last three parameters describe the range of the parameters, which is usually the prior, assuming the prior is uniform or Gaussian. The second entry for each parameter defines whether the range/prior is {\tt uniform} or {\tt gaussian}. If the prior is {\tt uniform}, the next two numbers specify the lower and upper ranges of the parameter. If the range/prior is {\tt gaussian}, the third entry describes the center of the Gaussian, $x_0$, and the fourth entry describes the Gaussian width, $\sigma_0$, where the prior distribution is $\propto \exp\{-(x-x_0)^2/2\sigma_0^2\}$. {\tt trainingpoint\_optimizer} will read the information to determine the number of parameters. It will then translate and scale the model parameters from $x_i$ to $\theta_i$ so that the $n$ values of $\theta$, $\theta_{1\cdots n}$ assuming each dimension of $\theta$ varies either from -1 to 1, for uniform distributions, or proportional to $e^{-3\theta^2/2}$ for Gaussian distributions. With this choice for the scaling, the priors all have the same r.m.s. spreads once converted to the parameters $\theta_i$.
 
@@ -30,26 +33,33 @@ There are two formats for storing full-model output. The first is the default, a
 \subsubsection{{\tt SMOOTH} format for Storing the Coordinates of the Training Points}
 The information for training is all stored in a directory. The default directory is {\tt smooth\_data/FullModelRuns/}, but that directory can be changed by setting options (see below). With that directory there are subdirectories {\tt run0/,run1,}$\cdots$. Each subdirectory contains the information relative to the full-model run at a specific point in model-parameter space. Within each run directory, there are two files, one describing the model-parameters, {\tt smooth\_data/FullModelRuns/runI/model\_parameters.txt}, and on describing the values of observables, {\tt smooth\_data/runI/obs.txt}, at that point in parameter space. The format for the {\tt model\_parameters.txt} files is:
 {\tt
-\begin{verbatim}
+\vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
+\codebox{
 parameter_name_1 x1  
 parameter_name_2 x2  
 .
-\end{verbatim}}
+}
+\end{Verbatim}
+}\vspace*{-12pt}}
 The model-parameter names must be identical to those listed in {\tt smooth\_data/Info/prior\_info.txt}, and the values of those parameters are {\tt x1}$\cdots$. The training-point optimization software does not require information about the observables.
 
 \subsubsection{{\tt SURMISE} format for Storing the Coordinates of the Training Points}
 In this format, all the training-point coordinates are stored in a single file, located at {\tt smooth\_data/FullModelRuns/model\_parameters\_surmise.txt}. The format for that file is:
 {\tt
-\begin{verbatim}
+\vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
+\codebox{
 x1_1	x1_2	x1_3	...
 x2_1	x2_2	x2_3	...
-\end{verbatim}}
+}
+\end{Verbatim}
+}\vspace*{-12pt}}
 Here, the coordinates of the $n^{\rm th}$ training point is {\tt xn\_1,xn\_2...}. The parameter names are not provided here, so the User must be careful to remember which column corresponds to which model parameter. Unlike the {\tt SMOOTH} format you cannot read in points from this format, and thus one must set the {\tt TPO\_ReadPoints} option below to {\tt all}. 
 
 \subsection{Training Point Optimizer (TPO) Options}
 These options are all set in the ascii file {\tt smooth\_data/Options/tpo\_options.txt}, where the path is relative to the analysis directory. An example of the file is:
 {\tt
-\begin{verbatim}
+\vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
+\codebox{
  #LogFileName               tpolog.txt  # comment out to direct output to screen
  TPO_Method  MCQuadratic  # can be "MC", "MCSphere", "MCSimplex", "MCSimplexPlus1", "MCQuadratic", "MCSphereQuadratic"
  TPO_NTrainingPts    0   # only relevant for OptimizeMethod="MCSphere" or "MC"
@@ -60,7 +70,9 @@ These options are all set in the ascii file {\tt smooth\_data/Options/tpo\_optio
  TPO_FullModelRunsDirName  smooth_data/FullModelRuns
  #TPO_ReadPoints 0,1,4-7,10,11-13,21
  #TPO_FreezePoints 0,1,4-7,10,11-13,21
-\end{verbatim}
+}
+\end{Verbatim}
+}\vspace*{-12pt}
 }
 For each line the first string is the option name and is followed by the value. Both are single strings (without spaces). The \# symbol is used for comments. Each parameter has a default value, which will be used if the parameter is not mentioned in the parameter file.  The paths are provided relative to the analysis directory, i.e. the directory from which you run the {\tt trainingpoint\_optimizer} command. The various options control the behavior as described below.
 
@@ -101,25 +113,34 @@ If set to {\tt NONE} all the training points are allowed to vary in the optimiza
 
 To run {\it Training Point Optimizer}, first make sure the program is compiled. To compile the programs, change into the {\tt \$\{MY\_LOCAL\}/main\_programs/} directory and enter the following command,
 
-\begin{verbatim}
-   ${MY_LOCAL}/software% cmake .
-   ${MY_LOCAL}/software% make trainingpoint_optimizer
-\end{verbatim}
+\vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
+\codebox{
+   $\{MY_LOCAL\}/software% \textcolor{darkred}{cmake .}
+   $\{MY_LOCAL\}/software% \textcolor{darkred}{make trainingpoint_optimizer}
+}
+\end{Verbatim}
+}\vspace*{-12pt}
 
 Next, change into your analysis directory and run the program.
 {\tt
-\begin{verbatim}
-   ${MY_ANALYIS}% ${MY_LOCAL}/bin/trainingpoint_optimizer 
-\end{verbatim}
+\vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
+\codebox{
+   $\{MY_ANALYIS\}% \textcolor{darkred}{$\{MY_LOCAL\}/bin/trainingpoint_optimizer}
+}
+\end{Verbatim}
+}\vspace*{-12pt}
 }
 Here {\tt \$\{MY\_LOCAL\}/bin} is the path to where the User compiles the main programs into executables. 
 
 {\tt trainingpoint\_optimizer} will read parameters from the {\tt smooth\_data/Options/tpo\_options.txt} file and from the {\tt smooth\_data/Info/prior\_info.txt} files. It will then write the information about the training points in the directory {\tt smooth\_data/FullModelRuns/}. Within the directory, a sub-directory will be created for each training point, named {\tt run0/, run1/, run2/}$\cdots$. Within each subdirectory, {\tt trainingpoint\_optimizer} creates a file {\tt runI/model\_parameters.txt} for the I$^{\rm th}$ training point. For example, the {\tt run0/model\_parameters.txt} file might be
-{\tt\begin{verbatim}
+{\tt\vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
+\codebox{
    NuclearCompressibility     229.08
    ScreeningMass              0.453
    Viscosity                  0.192
-\end{verbatim}
+}
+\end{Verbatim}
+}\vspace*{-12pt}
 }
 At this point, it is up to the User to run their full model at each training point and create a file {\tt runI/obs.txt}, which stores values of the observables at those training points as calculated by the full model. 
 
@@ -133,49 +154,55 @@ There is one warning to be issued when choosing training points for tuning {\it 
 \section{Writing Programs Accessing the Training Point Optimization Software}
 {\it Smooth Emulator Software} is organized to accommodate the User building their own main programs that incorporate the functionality. For the training-point optimization software, the software's functionality is rather simple and the User can adjust the functionality through setting options as described above. The main programs and the executables are stored in the {\tt \$\{MY\_LOCAL\}/main\_programs/} and {\tt \$\{MY\_LOCAL\}/bin/} directories respectively. The provided main program's source code, {\tt trainingpoint\_optimizer\_main.cc}, aside from the headers, is:
 
-{\tt\begin{verbatim}
-   int main(){
+{\tt\vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
+\codebox{
+int main()\{
    double LAMBDA=3.0; // Sets initial guess for Lambda
    NBandSmooth::CTPO *tpo=new NBandSmooth::CTPO();  // the constructor
    tpo->Optimize(LAMBDA);  // Find optimum model parameters assuming some value of LAMBDA
    tpo->WriteModelPars();  // Write the model parameters for each training point
    return 0;
+\}
 }
-\end{verbatim}
+\end{Verbatim}
+}\vspace*{-12pt}
 }
 
 Several additional methods can be seen by viewing the header file, {\tt \$\{SMOOTH\_HOME\}/software/include/msu\_smooth/trainingpoint\_optimizer.h}. However, the useful methods are all called by {\tt Optimize(double LAMBDA)} with the correct options listed.
 
 \subsection{The {\tt parameterMap} utility class}
 If the User wishes to write programs that change options during the running, they can use the parameterMap class, which has an object within the {\tt CTPO} class. This class is an extension of C++ maps. The header file for that class ({\tt \$\{SMOOTH\_HOME\}/software/include/msu\_smoothutils/parametermap.h}) is:
-{\tt\begin{verbatim}
-class CparameterMap : public map<string,string> {
+{\tt\vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
+\codebox{
+class CparameterMap : public map<string,string>\{
 public:
-	bool   getB(string ,bool);
-	int    getI(string ,int);
-	long long int getLongI(string ,long long int);
-	string getS(string ,string);
-	double getD(string ,double);
-	vector< double > getV(string, string);
-	vector< string > getVS(string, string);
-	vector< vector< double > > getM(string);
-	vector< vector< double > > getM(string, double);
-	void set(string, double);
-	void set(string, int);
-	void set(string, unsigned int);
-	void set(string, long long int);
-	void set(string, bool);
-	void set(string, string);
-	void set(string, char*);
-	void set(string, vector< double >);
-	void set(string, vector< string >);
-	void set(string, vector< vector< double > >);
-	void ReadParsFromFile(const char *filename);
-	void ReadParsFromFile(string filename);
-	void PrintPars();
-	char *message;
-};
-\end{verbatim}
+  bool getB(string ,bool);
+  int getI(string ,int);
+  long long int getLongI(string ,long long int);
+  string getS(string ,string);
+  double getD(string ,double);
+  vector< double > getV(string, string);
+  vector< string > getVS(string, string);
+  vector< vector< double > > getM(string);
+  vector< vector< double > > getM(string, double);
+  void set(string, double);
+  void set(string, int);
+  void set(string, unsigned int);
+  void set(string, long long int);
+  void set(string, bool);
+  void set(string, string);
+  void set(string, char*);
+  void set(string, vector< double >);
+  void set(string, vector< string >);
+  void set(string, vector< vector< double > >);
+  void ReadParsFromFile(const char *filename);
+  void ReadParsFromFile(string filename);
+  void PrintPars();
+  char *message;
+\}
+}
+\end{Verbatim}
+}\vspace*{-12pt}
 }
 
 
@@ -184,13 +211,19 @@ public:
 
 
 For example, if the User wished to add a line which reset the option {\tt TPO\_NMC} set above to the value of 10000, they could add a line to the main program above:
-{\tt \begin{verbatim}
-	tpo->set("TPO_NMC",10000);
-\end{verbatim}}
+{\tt \vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
+\codebox{
+tpo->set("TPO_NMC",10000);
+}
+\end{Verbatim}
+}\vspace*{-12pt}}
 If the User wanted to have the program find the value, they could add a line
-{\tt \begin{verbatim}
-	int NMC=tpo->getI("TPO_NMC",0);
-\end{verbatim}}
+{\tt \vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
+\codebox{
+int NMC=tpo->getI("TPO_NMC",0);
+}
+\end{Verbatim}
+}\vspace*{-12pt}}
 The first argument specifies the key in the map, and the second is the value returned should that key not exist in the map. The methods {\tt getB,~getI,~getLongI,~getS} and {\tt getD} return booleans, integers, strings or doubles. The software does have the capability to set and find vectors, but that shouldn't be necessary in this instance. All the options listed above can be reset through the {\tt set(key,value)} method.
 
 \end{document}
