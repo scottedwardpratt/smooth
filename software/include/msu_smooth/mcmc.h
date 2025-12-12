@@ -25,8 +25,7 @@ namespace NBandSmooth{
 
 	class CMCMC{
 	public:
-		bool langevin;
-		bool OPTIMIZESTEPS;
+		//bool OPTIMIZESTEPS;
 		bool IGNORE_EMULATOR_ERROR;
 		CparameterMap *parmap;
 		CSmoothMaster *master;
@@ -44,9 +43,7 @@ namespace NBandSmooth{
 		
 		void PerformTrace(unsigned int Ntrace,unsigned int Nskip);
 		void PerformMetropolisTrace(unsigned int Ntrace,unsigned int Nskip);
-		void PerformLangevinTrace(unsigned int Ntrace,unsigned int Nskip);
 		void WriteTrace();
-		void WriteXTrace();
 		void ReadTrace();
 		void EvaluateTrace();
 		

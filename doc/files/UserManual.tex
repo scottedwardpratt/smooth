@@ -15,7 +15,7 @@
 				breaklinks=true]{hyperref}
 %\usepackage[anythingbreaks,hyphenbreaks]{breakurl}
 \usepackage{xurl,hyperref}
-\usepackage{fancyvrb}
+\usepackage[utf8]{inputenc}
 \usepackage{comment}
 %\usepackage{pdfsync}
 \usepackage{amssymb}
@@ -55,12 +55,18 @@ boxsep=5pt,
 arc=0pt,outer arc=0pt,
 }
 
+\usepackage{xcolor}
 \definecolor{darkred}{rgb}{0.85,0.0,0.0}
+\definecolor{lightgray}{rgb}{0.85,0.85,0.85}
 
-\newcommand{\codebox}[1]{\begin{tcolorbox}[breakable,enhanced]
-{#1}
-\end{tcolorbox}
-}
+%\usepackage{fancyvrb}[commandchars=\\\{\}]
+\usepackage{fvextra}[commandchars=\\\{\}]
+%\DefineVerbatimEnvironment{Highlighting}{Verbatim}{
+%commandchars=\\\{\},
+%breaklines, breaknonspaceingroup, breakanywhere}
+\fvset{breaklines}
+\fvset{highlightlines=1-1000}
+\fvset{highlightcolor=lightgray}
 
 %\usepackage[most]{tcolorbox}
 %\tcbset{
@@ -99,6 +105,8 @@ arc=0pt,outer arc=0pt,
 \newcommand\eqnumber{\addtocounter{equation}{1}\tag{\theequation}}
 %\newcommand{\solution}[1]{ }
 \newcommand\identity{\mathds{1}}
+
+\setcounter{tocdepth}{2}
 
 \setlength{\headheight}{16pt}
 \parskip 6pt

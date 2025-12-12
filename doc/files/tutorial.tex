@@ -21,9 +21,7 @@ Working through the steps in this section constitutes a tutorial, consisting of 
 The source code for the main programs
 A analysis directory template is provided with the intention that the User will copy the directory to their own space, then use this as a foundation from which to embark on their own analysis. This template also provides the files for a tutorial. To copy the templates,
 \vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-\codebox{
  % \textcolor{darkred}{cp -r ${SMOOTH_HOME}/AnalysisTemplate /Users/CarlosSmith/MyAnalysis}
-}
 \end{Verbatim}
 }\vspace*{-12pt}
 Here, {\tt ../MyAnalysis} can be replaced by any directory name the User chooses.
@@ -33,8 +31,8 @@ Installation and compilation is described in Sec. \ref{sec:installation}. As was
 \vspace*{0.05in}
 
 \begin{tabular}{rl}\hline
-{\tt \$\{SMOOTH\_HOME\}} & \parbox{5in}{~\\Location of Git Repository, e.g.\\{\tt /Users/CarlosSmith/bandframework/software/SmoothEmulator}\\}\\
-{\tt \$\{MY\_LOCAL\}} & \parbox{5in}{Can be placed anywhere. Executables are store in\\ {\tt \$\{MY\_LOCAL\}/bin} and main programs, and source codes for main\\ programs are found within {\tt \$\{MY\_LOCAL\}/software/main\_programs}\\}\\
+{\tt \$\{SMOOTH\_HOME\}} & \parbox{5in}{~\\Location of Git Repository, e.g. \sloppypar{\tt /Users/CarlosSmith/bandframework/software/SmoothEmulator}\\}\\
+{\tt \$\{MY\_LOCAL\}} & \parbox{5in}{Can be placed anywhere. Executables are store in \sloppypar{\tt \$\{MY\_LOCAL\}/bin} and main programs, and source codes for main\\ programs are found within {\tt \$\{MY\_LOCAL\}/software/main\_programs}\\}\\
 {\tt \$\{MY\_ANALYSIS\}} & \parbox{5in}{Can be placed anywhere. Work spaces where parameter files, data, results and figures are created and stored. User may have several different such directories\\}\\
  \hline
 \end{tabular}
@@ -42,30 +40,25 @@ Installation and compilation is described in Sec. \ref{sec:installation}. As was
 The User should have also compile the main libraries, if not done already,
 
 \vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-\codebox{
    $\{SMOOTH_HOME\}/software% \textcolor{darkred}{cmake .}
    $\{SMOOTH_HOME\}/software% \textcolor{darkred}{make}
-}
 \end{Verbatim}
 }\vspace*{-12pt}
 
 and the main programs,
 \vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-\codebox{
    $\{MY_LOCAL\}/software% \textcolor{darkred}{cmake .}
    $\{MY_LOCAL\}/software% \textcolor{darkred}{make}
-}
 \end{Verbatim}
 }\vspace*{-12pt}
 
 This will compile all the main source programs in {\tt \$\{MY\_LOCAL\}/software/MainPrograms/} and two programs used to generate files for the tutorial in {\tt \$\{MY\_LOCAL\}/software/TutorialPrograms/}. The repository was organized to encourage Users to edit any files in {\tt \$\{MY\_LOCAL\}/}. If the User wishes to restore any original files, a copy can be found at {\tt \$\{SMOOTH\_HOME\}/}.
 
-Several executables should now appear in {\tt \$\{MY\_LOCAL\}/bin/}: {\tt trainingpoint\_optimizer, smoothy\_testattrainingpts,smoothy\_testvsfullmodel,smoothy\_calcobs,smoothy\_mcm}, which all involve the emulator. Tow other executables, {\tt fakefullmodel} and {\tt fakeinfo} are only used for the tutorial. The User might find it convenient to add {\tt \$\{MY\_LOCAL\}/bin} to their path. The reason these are compiled in the User's space, separate from the main libraries, is that the User may well wish to create their own main programs, and this arrangement allows the User to compile their own versions, while leaving the bulk of the source code unchanged. 
+Several executables should now appear in \sloppypar{\tt \$\{MY\_LOCAL\}/bin/}: \sloppypar{\tt trainingpoint\_optimizer, smoothy\_testattrainingpts, smoothy\_testvsfullmodel, smoothy\_calcobs, smoothy\_mcm}, which all involve the emulator. Tow other executables, {\tt fakefullmodel} and {\tt fakeinfo} are only used for the tutorial. The User might find it convenient to add \sloppypar{\tt \$\{MY\_LOCAL\}/bin} to their path. The reason these are compiled in the User's space, separate from the main libraries, is that the User may well wish to create their own main programs, and this arrangement allows the User to compile their own versions, while leaving the bulk of the source code unchanged. 
 
 \subsection{Creating the Necessary Info Files}
 The User will run the software from the {\tt \$\{MY\_ANALYSIS\}/} directory. Before a User can run the {\it Smooth Emulator} executables they must create text files that describe the model-parameter priors and list the observable names. These three files need to be in the {\tt \$\{MY\_ANALYSIS\}/smooth\_data/Info/} directory. The first file, {\tt smooth\_data/Info/prior\_info.txt}, describes the model parameters and their priors. This file is For the purposes of this tutorial, we consider a model with six model parameters:
 \vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-\codebox{
 # par_name dist_type  xmin/centroid xmax/width  SensitivityScale
    par0 gaussian 0 100    1.00000
    par1 uniform -100 100  1.00000
@@ -73,14 +66,12 @@ The User will run the software from the {\tt \$\{MY\_ANALYSIS\}/} directory. Bef
    par3 uniform -100 100  1.00000
    par4 gaussian 0 100    1.00000
    par5 uniform -100 100  1.00000
-}
 \end{Verbatim}
 }\vspace*{-12pt}
 Thus, the model has six parameters. The second entry in each line is either {\tt uniform} or {\tt gaussian}. If the entry is {\tt uniform}, the last two numbers represent the range of the uniform prior, $x_{\rm min}$ and $x_{\rm max}$. If the second entry is {\tt gaussian} the third entry represents the center of the Gaussian distribution and the fourth represents the width. The final column represents the sensitivity scale, which must be between zero and 1.0. For the most impactful parameters, this should be set to 1.0. If a parameter is expected to provide little variance compared to the most impactful parameters, this should be set to some fraction. Roughly, if a parameter is expected to provide half as much variance as the most important parameters, it should be set to 0.5. For a full model, the User would replace this file with one appropriate for their own model. This file is required for training-point optimization, for tuning, and for the MCMC programs.  
 
 The second file is {\tt smooth\_data/Info/observable\_info.txt}. This describes output values from the model. In the template, the file describes, in this case, ten observables:
 \vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-\codebox{
 # ObservableName   ALPHA
    obs0 0
    obs1 0
@@ -92,14 +83,12 @@ The second file is {\tt smooth\_data/Info/observable\_info.txt}. This describes 
    obs7 0
    obs8 0
    obs9 0
-}
 \end{Verbatim}
 }\vspace*{-12pt}
 The first entry in each line simply provides the names of the observable which will be processed in the Bayesian analysis.  The second entry describes the point-to-point noise is used by both the training-point optimizing programs and by the emulator tuning programs. Here, {\tt ALPHA} is the noise as a fraction of the characteristic variation of the observable, $\sigma_Y$. Noise refers to variations of the model that would occur if the model were rerun with the same model parameters, which is typically due to some finite sampling inherent to the model, e.g. if the particle is calculating the average energy of particles using a simulation, and if a finite number of simulations and particles are sampled, the observable might vary from run to another. If one expects that random uncertainty to be 5\% of the variation of the observable throughout the model parameter space, then {\tt ALPHA} would be 0.05. {\it Smooth Emulator} software assumes that this noise is the same for all the full calculations of the same observable. I.e., if 20 training runs were performed at different points in model-parameter space, the software assumes that the {\tt ALPHA} was not much different at one training point than at another. If {\tt ALPHA} is set to zero, the emulator will exactly reproduce the observables from the full model when evaluated at the training points. If one performed training runs with simulations using grossly different numbers of events at one training point vs another, then this shortcoming could potentially be an issue. This file is required by both the tuning and MCMC programs.
 
 The third, and final file, {\tt smooth\_data/Info/experimental\_info.txt}, describes the actual measurements and only comes into play at the time the MCMC is being performed. The file in the tutorial might look like this:
 \vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-\codebox{
 obs0  57.840878  10.0 0.0
 obs1  -85.613188  10.0 0.0
 obs2  43.335184  10.0 0.0
@@ -110,16 +99,13 @@ obs6  -195.300157  10.0 0.0
 obs7  99.587427  10.0 0.0
 obs8  7.963056  10.0 0.0
 obs9  68.844147  10.0 0.0 
-}
 \end{Verbatim}
 }\vspace*{-12pt}
 The names of the observables must match those listed in the {\tt observable\_info.txt} file. The second column is the value reported by the experiment and the third column is the reported uncertainty. The uncertainty cannot be set to zero. The last column represents the model's uncertainty due to missing physics, i.e. not the uncertainty due to noise in the calculation. The contribution from random noise is incorporated into the emulator uncertainty. The uncertainty due to missing physics can be thought of as the error, or deviation from a perfect measurement, one might expect if one used the precisely correct parameters. One can think of this as the systematic error of the theory on which the model is built. For the purpose of the MCMC, the three uncertainties, that of the emulator, that from the experiment, and the model's systematic theoretical error, are all added in quadrature to provide the uncertainty relevant for calculating the log-likelihood in the MCMC.
 
 The User needs to edit the three files above according to their project. For the purpose of this tutorial, the user should run the program {\tt fakeinfo}, which prompts the User for the number of model parameters and observables. 
 \vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-\codebox{
    $\{MY_ANALYSIS\}/software% \textcolor{darkred}{$\{MY_LOCAL\}/bin/fakeinfo}
-}
 \end{Verbatim}
 }\vspace*{-12pt}
 This program creates the {\tt Info} files for a model with 6 model parameters and 10 observables. The three info files should appear like those shown above.
@@ -128,7 +114,6 @@ This program creates the {\tt Info} files for a model with 6 model parameters an
 
 Before running {\tt trainingpoint\_optimizer} the User should inspect or edit the options file, {\tt smooth\_data/Options/tpo\_options.txt}. A template for this file is provided:
 \vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-\codebox{
 TPO_Method  MCQuadratic  # can be "MC", "MCSphere", "MCSimplex", "MCSimplexPlus1", "MCQuadratic", "MCSphereQuadratic"
 TPO_NTrainingPts    0   # only relevant for OptimizeMethod="MCSphere" or "MC"
 TPO_NMC  10000
@@ -137,14 +122,12 @@ TPO_Include_LAMBDA_Uncertainty true # dangerous to set this to false
 TPO_FullModelRunsDirName  smooth_data/FullModelRuns
 #TPO_ReadPoints 0,1,4-7,10,11-13,21
 #TPO_FreezePoints 0,1,4-7,10,11-13,21
-}
 \end{Verbatim}
 }\vspace*{-12pt}
 Options are described in detail in Sec. \ref{sec:tpo}.
 
 Now the user can run {\tt trainingpoint\_optimizer}, which is meant to be run interactively. This will generate a list of coordinates in model-parameter space for each of $N_{\rm train}$ training points. Simply run the program by calling the command. The output to the screen is:
 \vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-\codebox{
 ${MY_ANALYSIS}% \textcolor{darkred}{${MY_LOCAL}/bin/trainingpoint_optimizer}
 NTrainingpts=28, NMC=10000, LAMBDA=3.00, ALPHA=0.010
 Optimize_MC: at beginning: bestSigma2=0.014520
@@ -152,24 +135,20 @@ Optimize_MC: at beginning: bestSigma2=0.014520
 +++ finished 2%, expected accuracy=0.011875, success %=33, step size=0.015213
 +++ finished 3%, expected accuracy=0.01119, success %=20, step size=0.020842
  .
- .
 +++ finished 99%, expected accuracy=0.0072313, success %=14, step size=0.00043523
 +++ finished 100%, expected accuracy=0.0072312, success %=26, step size=0.00026549
-}
 \end{Verbatim}
 }\vspace*{-12pt}
 ?????? The output ----------------------
 
 The program writes information about the training points in the {\tt smooth\_data/FullModelRuns/} directory. Changing into that directory, there should now be 28 sub-directories, corresponding to the 28 training points: {\tt FullModelRuns/run0}, {\tt FullModelRuns/run1}, {\tt FullModelRuns/run2} $\cdots$. Each directory has one text file describing the training points. For example, the {\tt modelruns/run21/model\_parameters.txt} file might be 
 \vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-\codebox{
  par0 -145.307
  par1 -6.8244
  par2 -67.4252
  par3 62.3719
  par4 -85.451
  par5 -29.6548
-}
 \end{Verbatim}
 }\vspace*{-12pt}
 This describes the six model parameters, which will serve as the input for that model run.  The next step will be to run the full model for the parameters in each directory.
@@ -181,18 +160,15 @@ Once the training points have been generated, the User will run the full model a
 
 The User needs to run the program {\tt fakefullmodel}, which is interactive. Running the model, the User should see something like:
 \vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-\codebox{
    $\{MY_ANALYSIS\}% \textcolor{darkred}{$\{MY_LOCAL\}/bin/fakefullmodel}
    NPars=6, NObs=10
    Creating Fake Model Data for 28 Training Pts
-}
 \end{Verbatim}
 }\vspace*{-12pt}
 The output simply shows the number of model parameters, observables, and training points. The number of model parameters was found by reading {\tt smooth\_data/Info/prior\_info.tt} and the number of training points was determined by counting the number of files in {\tt smooth\_data/FullModelRuns}. The fake model is built on a Taylor expansion with random coefficients, chosen to be consistent with the form assumed by the emulator. This form is built on the choices of $\Lambda=3.0$ and $\Sigma_A=100$. 
 
 Inspecting one of the output files, {\tt smooth\_data/FullMode/run0/obs.txt},
 \vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-\codebox{
  obs0 77.444888
  obs1 -78.684124
  obs2 62.298517
@@ -203,7 +179,6 @@ Inspecting one of the output files, {\tt smooth\_data/FullMode/run0/obs.txt},
  obs7 9.158107
  obs8 -29.184781
  obs9 41.295872
-}
 \end{Verbatim}
 }\vspace*{-12pt}
 The second column provides the value of the specified observable for the full model at that specific training point. Additionally, {\tt fakefullmodel} created a directory {\tt smooth\_data/FullModelTestingRuns/} which stores information about full-model runs at randomly chosen points in the model-parameter space. These points and their corresponding data are not used for tuning. This data can be used later to test the emulator. The User need not create such files for their project, unless they wish to have some separate runs just for testing. 
@@ -211,7 +186,6 @@ The second column provides the value of the specified observable for the full mo
 \subsection{Running the Emulator}
 Before building and tuning the emulator, the User needs to edit one additional file, the parameter file that sets numerous options for {\it Smooth Emulator}. This file is {\tt smooth\_data/Options/emulator\_options.txt}. For the template used in this tutorial, the contents of that file appear as
 \vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-\codebox{
   # Location of output, comment out for interactive running
   # LogFileName smoothlog.txt
   SmoothEmulator_FixLambda false // If false will adjust optimize LAMBDA (false is default)
@@ -245,43 +219,38 @@ Before building and tuning the emulator, the User needs to edit one additional f
   #
   # When calculating uncertainty, include(or not) the contribution from Lambda varying
   SmoothEmulator_INCLUDE_LAMBDA_UNCERTAINTY true
-}
 \end{Verbatim}
 }\vspace*{-12pt}
 More options are described in detail in Sec. \ref{sec:emulator}. The tutorial will use the default format (not that of the SURMISE format) because the tutorial recorded the training-point information in the {\it Smooth Emulator} format.
 
 There are two pre-constructed main programs to demonstrate the tutorial: {\tt \$\{MY\_LOCAL\}/bin/smoothy\_testattrainingpts} and {\tt \$\{MY\_LOCAL\}/bin/smoothy\_testvsfullmodel}. The corresponding source code for the first is {\tt \$\{MY\_LOCAL\}/software/MainPrograms/smoothy\_testattrainingpts\_main.cc},
 \vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-\codebox{
 #include "msu_smoothutils/parametermap.h"
 #include "msu_smooth/master.h"
 #include "msu_smoothutils/log.h"
 
 using namespace std;
 int main()\{
-        NBandSmooth::CSmoothMaster master;
-        master.TuneAllY();
-        master.TestAtTrainingPts();
-        return 0;
+   NBandSmooth::CSmoothMaster master;
+   master.TuneAllY();
+   master.TestAtTrainingPts();
+   return 0;
 \}
-}
 \end{Verbatim}
 }\vspace*{-12pt}
 and the source code for the second is similarly simple,
 \vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-\codebox{
 #include "msu_smoothutils/parametermap.h"
 #include "msu_smooth/master.h"
 #include "msu_smoothutils/log.h"
 
 using namespace std;
 int main()\{
-        NBandSmooth::CSmoothMaster master;
-        master.TuneAllY();
-        master.TestVsFullModel();
-        return 0;
+   NBandSmooth::CSmoothMaster master;
+   master.TuneAllY();
+   master.TestVsFullModel();
+   return 0;
 \}
-}
 \end{Verbatim}
 }\vspace*{-12pt}
 As one would guess from the source code, the first program builds and tunes the emulator for all the observables through the call {\tt master.TuneAllY()}. The second line, {\tt master.TestAtTrainingPts()}, runs the emulator at each of the training points and compares to the training values. These are interactive programs and running {\tt smoothy\_testattrainingpts} should give an output like:
@@ -289,24 +258,21 @@ vIn the tuning of the emulator, the hyper-parameters $\Lambda$ and $\Sigma_A$ ar
 
 The second program, {\tt smoothy\_testvsfullmodel} also constructs and tunes the emulator. But in this case, the program compares the full model to the emulated values away from the training points. The data for the full model was created by the {\tt fakefullmodel} program, and is found in {smooth\_data/FullModelTestingRuns}. Testing data was created for 50 random points in model-parameter space. Again, the source code is rather simple.
 \vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-\codebox{
 #include "msu_smoothutils/parametermap.h"
 #include "msu_smooth/master.h"
 #include "msu_smoothutils/log.h"
 
 using namespace std;
 int main()\{
-        NBandSmooth::CSmoothMaster master;
-        master.TuneAllY();
-        master.TestVsFullModel();
-        return 0;
+   NBandSmooth::CSmoothMaster master;
+   master.TuneAllY();
+   master.TestVsFullModel();
+   return 0;
 \}
-}
 \end{Verbatim}
 }\vspace*{-12pt}
 To run the program,
 \vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-\codebox{
 $\{MY_ANALYSIS\}% \textcolor{darkred}{smoothy_testvsfullmodel}
 iY=0: (<(Y-Yreal)^2>/SigmaY^2_emulator)^1/2=1.857423
 percent < 1 sigma = 44.000000
@@ -328,7 +294,6 @@ iY=8: (<(Y-Yreal)^2>/SigmaY^2_emulator)^1/2=1.089194
 percent < 1 sigma = 63.000000
 iY=9: (<(Y-Yreal)^2>/SigmaY^2_emulator)^1/2=0.874994
 percent < 1 sigma = 80.000000
-}
 \end{Verbatim}
 }\vspace*{-12pt}
 
@@ -351,7 +316,6 @@ Hopefully, the User will find the source codes used in this tutorial to be fairl
 
 Given the experimental information, which is stored in analysis directory in {\tt smooth\_data/Info/experimental\_info.txt}, one can then use the tuned emulator to explore the posterior likelihood through MCMC, which works via a Metropolis algorithm. The file {\tt smooth\_data/Info/experimental\_info.txt} provided in the template is:
 \vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-\codebox{
 obs0  57.840878  10.0 0.0
 obs1  -85.613188  10.0 0.0
 obs2  43.335184  10.0 0.0
@@ -362,7 +326,6 @@ obs6  -195.300157  10.0 0.0
 obs7  99.587427  10.0 0.0
 obs8  7.963056  10.0 0.0
 obs9  68.844147  10.0 0.0
-}
 \end{Verbatim}
 }\vspace*{-12pt}
 The first column is the list of observable names, which should be identical to those listed in {\tt smooth\_data/Info/observable\_info.txt}. The second and third columns lists the experimental measurement, $Y_a$, and the experimental uncertainty, $\sigma_{a}^{\rm exp}$. The last column lists the additional uncertainty due to shortcomings of the model, $\sigma_a^{\rm theory}$, i.e. missing or not exactly represented physics. For the purposes of comparing theory to data, only the combination $(\sigma_a^{\rm exp})^2+(\sigma_a^{\rm theory})^2+(\sigma_a^{\rm emu})^2$ comes into play, because this combination appears in the likelihood for the posterior,
@@ -375,7 +338,6 @@ Whereas the emulator uncertainty, $\sigma_a^{\rm emu}$, depends on the location 
 
 There are options for the MCMC, which are stored in {\tt smooth\_data/Options/mcmc\_options.txt}. For the tutorial template, that file is
 \vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-\codebox{
  # This is for the MCMC search of parameter space
  # (not for the emulator tuning)
  #LogFileName smoothlog.txt # comment out for interactive running
@@ -388,7 +350,6 @@ There are options for the MCMC, which are stored in {\tt smooth\_data/Options/mc
  MCMC_NSKIP  5
  MCMC_IGNORE_EMULATOR_ERROR false
  RANDY_SEED  12345
-}
 \end{Verbatim}
 }\vspace*{-12pt}
 The first parameter, {\tt MCMC\_LANGEVIN} should be set to {\tt false}, as the Langevin MCMC (as opposed to the Metropolis version) is under development (also it might not be finished because it does not seem to significantly improve performance). The Metropolis step size should be adjusted so that the Metropolis success rate is approximately one half. The success rate prints out when the {\tt mcmc} code runs. If the success rate is anywhere between 20 and 80\%, this should be fine. But, if the rate is close to zero or close to 100\%, the efficiency of the procedure suffers. It is recommended to run the MCMC code with a modest number of steps, then adjust the step size accordingly. 
@@ -399,8 +360,7 @@ The parameter {\tt MCMC\_NBURN} sets the number of Metropolis steps to be used i
 
 Running the MCMC program gives the following output:
 \vspace*{-12pt}
-{\tt \begin{Verbatim}[commandchars=\\\{\}]
-\codebox{
+{\tt \begin{Verbatim}[commandchars=\\\{\}] 
 $\{MY_ANALYSIS\}/rhic% \textcolor{darkred}{\$\{MY_LOCAL\}/bin/mcmc}
 At beginning of Trace, LL=-36.833322
 At end of trace, best LL=-23.396510
@@ -425,7 +385,6 @@ Best Theta=
 Metropolis success percentage=90.633200
 writing Theta values, ntrace = 50001
 writing X values, ntrace = 50001
-}
 \end{Verbatim}
 }\vspace*{-12pt}
 Here {\tt best LL} refers to the log-likelihood and {\tt Best Theta} refers to the value of $\vec{\theta}$ that gave the maximum log-likelihood. Values of {\tt Best Theta} and {\tt best LL} are given after the burn-in and after the trace. The ``experimental'' values were generated by running the full model with all 6 values, $\theta_i$, set to 0.2, so the fact that the best value of $\vec{\theta}$ found was close to that point is a validation of the method.
@@ -434,11 +393,9 @@ One can read the source file, {\tt \$\{MY\_LOCAL\}/software/main\_programs/mcmc\
 
 The trace is written to {\tt smooth\_data/MCMC\_trace/trace.txt}. It lists the scaled model parameters,
 \vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-\codebox{
 theta_1 theta_2 theta_3 theta_4 ...
 theta_1 theta_2 theta_3 theta_4 ...
 theta_1 theta_2 theta_3 theta_4 ...
-}
 \end{Verbatim}
 }\vspace*{-12pt}
 \vspace*{-18pt}\hspace*{82pt}$\vdots$
@@ -458,38 +415,32 @@ Three python scripts (using MATPLOTLIB) are provided to provide graphical insigh
 
 The two files are given the same names as two files in {\tt smooth\_data/Info/}. The first is {\tt \$\{MY\_ANALYSIS\}/figs/modelpars\_info.txt}. It differs from the one in the {\tt smooth\_data/Info/} directory in that it has only three columns, though the first column is identical. The provided file is\\
 \vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-\codebox{
 compressibility           uniform    \$\\kappa\$
 etaovers                  uniform    \$\\eta/s\$
 initial_flow              uniform    Init.Flow
 initial_screening         uniform    Screening
 quenching_length          uniform    \$\\lambda_\{\rm quench\}\$
 initial_epsilon           uniform    \$\\epsilon_0\$
-}
 \end{Verbatim}
 }\vspace*{-12pt}
 As one can see, the last column is used by MATPLOTLIB to label axes. The middle column is not currently used, but that might come into play if one wanted to alter the python scripts to use a different scale for gaussian priors.
 
 The second required file is {\tt \$\{MY\_ANALYSIS\}/figs/observable\_info.txt}, and the provided version is\\
 \vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-\codebox{
 meanpt_pion          \$\\langle p_t\\rangle_\{\\pi\}\$
 meanpt_kaon          \$\\langle p_t\\rangle_\{K\}\$
 meanpt_proton        \$\\langle p_t\\rangle_{p}\$
 Rinv                 \$R_\{\rm inv\}\$
 v2                   \$v_2\$
 RAA                  \$R_\{AA\}\$
-}
 \end{Verbatim}
 }\vspace*{-12pt}
 Again, the first column is identical to that in {\tt smooth\_data/Info/} and the second is used for labeling.
 
 To graph the posterior likelihood, first be sure to run the {\tt mcmc} program, then change into the {\tt figs/posterior} directory and enter the command:
 \vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-\codebox{
 ${MY_ANALYSIS}/figs/posterior% \textcolor{darkred}{ln -s ../../smooth_data/mcmc_trace/trace.txt .}
 ${MY_ANALYSIS}/figs/posterior% \textcolor{darkred}{python3 posterior.py}
-}
 \end{Verbatim}
 }\vspace*{-12pt}
 One can replace ``{\tt ln -s}'' with ``cp'' or ``mv''. The script should create a file {\tt posterior.pdf}, which looks like:
@@ -501,22 +452,18 @@ The likelihood is projected for individual model parameters, or for pairs. The p
 
 Similarly, one can plot the resolving power. The User can visit the directory {\tt figs/resolvingpower/}. The User should copy the files {\tt mcmc\_trace/ResolvingPower.txt} and {\tt smooth\_data/Info/prior\_info.txt} to this directory, editing the {\tt smooth\_data/Info/prior\_info.txt} as was done for the posterior visualization figures described above. The User must also copy over the {\tt smooth\_data/Info/observable\_info.txt} file and edit it in a similar fashion. In the template file is
 \vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-\codebox{
 meanpt_pion          \$\\langle p_t\\rangle_\{\\pi\}\$
 meanpt_kaon          \$\\langle p_t\\rangle_\{K\}\$
 meanpt_proton        \$\\langle p_t\\rangle_\{p\}\$
 Rinv                 \$R_\{\rm inv\}\$
 v2                   \$v_2\$
 RAA                  \$R_\{AA\}\$
-}
 \end{Verbatim}
 }\vspace*{-12pt}
 The first column should be exactly the same as the first line in the original file. After running the {\tt mcmc} program, the figure can be produced via the command
 \vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-\codebox{
 ${MY_ANALYSIS}/figs/resolvingpower% \textcolor{darkred}{ln -s ../../smooth_data/mcmc_trace/ResolvingPower.txt .}
 ${MY_ANALYSIS}/figs/resolving power% \textcolor{darkred}{python3 RP.py}
-}
 \end{Verbatim}
 }\vspace*{-12pt}
 The figure should look like:
@@ -526,7 +473,6 @@ The figure should look like:
 
 The third provided python script is in {\tt figs/YvsY/} and it compares full-model runs (not used for tuning) to the emulator. This is useful for seeing whether the emulator's error estimates are reasonable. First, one must run the program that writes out the emulator predictions for the full-model runs. This is accomplished by the command:
 \vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-\codebox{
 ${MY_ANALYSIS}% \textcolor{darkred}{smoothy_testvsfullmodelalt}
 meanpt_pion: 27 out of 50 points within 1 sigma
 meanpt_kaon: 41 out of 50 points within 1 sigma
@@ -534,21 +480,18 @@ meanpt_proton: 26 out of 50 points within 1 sigma
 Rinv: 32 out of 50 points within 1 sigma
 v2: 39 out of 50 points within 1 sigma
 RAA: 29 out of 50 points within 1 sigma
-}
 \end{Verbatim}
 }\vspace*{-12pt}
 If the uncertainty were perfectly stated, 68\% of the points would be within one standard deviation. In this case the fraction was higher, which suggests that the uncertainty was somewhat overstated.
 
 To make the plot, first change into the {\tt figs/YvsY/} directory, and enter
 \vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-\codebox{
 ${MY_ANALYSIS}/figs/YvsY% \textcolor{darkred}{ln -s ../../smooth_data/fullmodel_testdata .}
 ${MY_ANALYSIS}/figs/YvsY% \textcolor{darkred}{python3 YvsY.py}
  Observable names:
  ['meanpt_pion', 'meanpt_kaon', 'meanpt_proton', 'Rinv', 'v2', 'RAA']
  Enter iY: 4
  39 of 49  points within 1 sigma
-}
 \end{Verbatim}
 }\vspace*{-12pt}
 The script will prompt the User for which observable to consider. In this case, choose 0-5 for the six possible observables. In this case '4' was entered and the chosen observable was the elliptic flow {\tt v2}. 
