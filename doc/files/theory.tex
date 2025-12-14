@@ -4,6 +4,8 @@
 
 \section{Underlying Theory of {\it Smooth Emulator}}\label{sec:theory}
 
+\subsection{Overview}
+
 A detailed explanation of the underlying theory used by {\it Smooth Emulator} and {\it Smooth Training Point Optimizer} is provided in the accompanying paper \href{./smoothdraft.pdf}{{\tt smoothdraft.pdf}}, which can be found in the same directory as this paper.
 
 The choice of model emulators, $E(\vec{\theta})$, depends on the prior understanding of the model being emulated, $M(\vec{\theta})$, which we refer to as the ``full model''. If one knows that  a function is linear, then a linear fit is clearly the best choice. Whereas to reproduce lumpy features with a single scale, where the lumps have a characteristic length scale, Gaussian process emulators are highly effective, but may require large training sets to resolve the peaks. The quality of an emulator can be assessed through the following criteria:

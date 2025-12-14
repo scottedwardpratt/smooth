@@ -3,7 +3,7 @@
 \setcounter{section}{4}
 \section{Tuning the Emulator}\label{sec:emulator}
 
-\subsection{Summary}
+\subsection{Overview}
 
 Smooth emulator finds an optimum set of Taylor expansion coefficients that reproduce a set of observables at a set of training points. The process of finding those coefficients is referred to as ``tuning''. For a given observable, a particular sample set of coefficients gives the following emulated function:
 \begin{align*}\eqnumber
@@ -45,7 +45,6 @@ Before training the emulator, one must first run the full model at a given set o
    observable_name_1   ALPHA_1
    observable_name_2   ALPHA_1
    .
-   .
    observable_name_n   ALPHA_N
 \end{Verbatim}
 }\vspace*{-12pt}
@@ -55,7 +54,6 @@ The observable names should be simple strings, without spaces. Here, the values 
 \vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
    parameter_name_1  prior_type_1 xmin_1/centroid_1  xmax_1/Rgauss_1  ss_1
    parameter_name_2  prior_type_2 xmin_2/centroid_2  xmin_2/Rgauss_2  ss_2
-   .
    .
    parameter_name_N  prior_type_N xmin_N/centroid_N  xmin_N/Rgauss_N  ss_N
 \end{Verbatim}
@@ -292,32 +290,7 @@ int main()\{
 Again, this source code illustrates how the User can access all the functionality of the emulator through member functions of the {\tt CSmoothMaster} class.
 
 \subsubsection{{\tt smoothy\_mcmc}}
-As the title suggests, this program runs the MCMC exploration of model-parameter space using the emulator. The source code for the included main program, {\tt \$\{MY\_LOCAL\}/software/main\_programs/smoothy\_mcmc\_main.cc} is
-\vspace*{-12pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-int main()\{
-   NBandSmooth::CSmoothMaster master;
-   master.TuneAllY();
-   //master.ReadTrainingInfo();
-   NMSUUtils::CparameterMap *parmap=master.parmap;
-   NBandSmooth::CMCMC mcmc(&master);
-   
-   unsigned int Nburn=parmap->getI("MCMC_NBURN",1000);  // Steps for burn in
-   unsigned int Ntrace=parmap->getI("MCMC_NTRACE",1000); // Record this many points
-   unsigned int Nskip=parmap->getI("MCMC_NSKIP",5); // Only record every Nskip^th point
-      
-   mcmc.PerformTrace(1,Nburn);   
-   CLog::Info("finished burn in\\n");
-   
-   mcmc.PruneTrace(); // Throws away all but last point
-   mcmc.PerformTrace(Ntrace,Nskip);
-   mcmc.WriteTrace(); // Writes trace in scaled coordinates theta
-   mcmc.EvaluateTrace();
-
-   return 0;
-\}
-\end{Verbatim}
-}\vspace*{-12pt}
-As one can see, this program first performs the tuning and builds the emulator. After {\tt Nburn} steps, the program records {\tt Ntrace} steps. For each recorded step, the MCMC procedure has taken {\tt Nskip} points. 
+As the title suggests, this program runs the MCMC exploration of model-parameter space using the emulator. The source code for the included main program, {\tt \$\{MY\_LOCAL\}/software/main\_programs/smoothy\_mcmc\_main.cc}, uses the functionality of the {\tt CSmoothMaster} class. The MCMC codes are discussed in detail in Sec. \ref{sec:mcmc}.
 
 \subsection{Functions and Methods of the {\tt CSmoothMaster} and Related Classes}
 {\it Smooth Emulator} was designed so that the User can write their own main programs and access the functionality mainly through references to the {\tt CSmoothMaster} object. Additionally, the User might find it useful to access the {\tt CModelParameters}, {\tt CparameterMap}, {\tt CPriorInfo}, and {\tt CObservableInfo} objects. Here is a compendium of calls to the {\tt CSmoothMaster}:

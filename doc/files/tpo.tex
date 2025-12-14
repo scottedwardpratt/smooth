@@ -4,7 +4,7 @@
 
 \section{Generating Training Points with {\it Smooth Emulator}'s training point optimizer}\label{sec:tpo}
 
-\subsection{Summary}
+\subsection{Overview}
 The executable {\tt trainingpoint\_optiizer}, found in {\tt \$\{MY\_LOCAL\}/bin/} produces a list of points in the $n-$dimensional model-parameter space to be used for training an emulator. The points are chosen to minimize the estimate of the expected emulator uncertainty integrated over the model-parameter prior. Because the full model values are not determined at the time the training points are chosen, the estimate is based on the User's best guess for the convergence hyper-parameter $\Lambda$. 
 
 The program first reads a simple text file that provides the names of model parameters, the range of their prior distribution and their expected relative sensitivities, {\tt smooth\_data/Info/prior\_info.txt}. Options for {\tt trainingpoint\_optimizer} are taken from a separate text file, \sloppypar{\tt smooth\_data/Options/tpo\_options.txt}. This enables the User to make choices, such as which algorithm to apply when generating the training points. For some algorithms, {\tt trainingpoint\_optimizer} chooses the number of training points, whereas for other options the User chooses the number. Before the emulator is built and tuned, the User is free to run the full model at additional points, or to use their own method to generate training points and forego {\tt trainingpoint\_optimizer} entirely.
