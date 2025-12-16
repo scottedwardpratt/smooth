@@ -1,79 +1,69 @@
 \documentclass[UserManual.tex]{subfiles}
 \begin{document}
-\setcounter{section}{6}
 \section{Markov-Chain Monte Carlo (MCMC) Generation of the Posterior}\label{sec:mcmc}
 
 \subsection{Overview}
-The \sloppypar{\tt \$\{MY\_LOCAL\}} directory contains the source code for one program that performs an MCMC analysis. Once compiled, this program will invoke the emulator in its exploration of the model-parameter space. It will write the trace to file and perform and record some analysis of the trace the User might find useful. Even if the User chooses a different MCMC approach then the one provided with the {\it Smooth Emulator} software, the codes might prove useful in demonstrating how to invoke the emulator from within a C++ code. 
+The {\tt \$\{MY\_LOCAL\}} directory contains the source code for a program that performs an MCMC analysis. This program will invoke the emulator in its exploration of the model-parameter space. It will write the trace to file and perform and record some analysis of the trace the User might find useful. Even if the User chooses a different MCMC approach then the one provided with the {\it Smooth Emulator} software, the codes might prove useful in demonstrating how to invoke the emulator from within a C++ code. 
 
-\subsection{Preparing for MCMC using {\it Smooth Emulator}}
-
-The final step in Bayesian analyses is to generate MCMC traces through the parameter space. {\it Smooth Emulator} software is designed for the MCMC programs to be run from within the \sloppypar{\tt \$\{MY\_ANALYSIS\}} directory. Once the emulator is tuned and before it is applied to a Markov Chain investigation of the likelihood, the software needs know the experimental measurement and uncertainty. That information must be entered in the {\tt smooth\_data/Info/experimental\_info.txt} file. The file should have the format:
-\vspace*{-12pt}{\tt
-\begin{Verbatim}
- obsname1  value1    unc_exp1   unc_theory1
- obsname2  value2    unc_exp2   unc_theory2
- obsname3  value3    unc_exp3   unc_theory3
- obsname4  value4    unc_exp4   unc_theory4
-  .
+\subsection{Experimental Measurement Information}
+Once the emulator is tuned and before it is applied to a Markov Chain investigation of the likelihood, the software needs to know the experimental measurement and uncertainty. That information must be entered in the {\tt smooth\_data/Info/experimental\_info.txt} file. The file should have the format:
+\vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
+ observable_name_1  value_1    exp_uncertainty_1   theory_uncertainty_1
+ observable_name_2  value_2    exp_uncertainty_2   theory_uncertainty_2
+ observable_name_3  value_3    exp_uncertainty_3   theory_uncertainty_3
+ observable_name_4  value_4    exp_uncertainty_4   theory_uncertainty_4
+ .
 \end{Verbatim}
-}\vspace*{-12pt}
-The first number is the measured value and the second is the experimentally reported uncertainty. The third number is the uncertainty inherent to the theory, due to missing physics. For example, even if a model has all the parameters set to the exact value, e.g. some parameter of the standard value, the full-model can't be expected to exactly reproduce a correct measurement given that some physics is likely missing from the full model. For the MCMC software, the relevant uncertainty incorporates both, and only the combination of both, added in quadrature, affects the outcome. We emphasize that this last file is not needed to train and tune the emulator. It is only needed once one performs the MCMC search of parameter space.
+}\vspace*{-8pt}
+The second column provides the measured value and the third gives the experimentally reported uncertainty. The fourth column lists the uncertainty inherent to the theory, due to missing physics. For example, even if a model has all the parameters set to the exact value, e.g. some parameter of the standard model, the full-model can't be expected to exactly reproduce a correct measurement given that some physics is likely missing from the full model. For the MCMC software, the relevant uncertainty incorporates both, and only the combination of both, added in quadrature, affects the outcome. We emphasize that this last file is not needed to train and tune the emulator. It is only needed once one performs the MCMC search of parameter space. 
+
+\subsection{Accounting for Uncertainties}
 
 The log-likelihood, $LL$, for the MCMC generation is assumed to be of a simple form. Summing over the observables $I$,
 \begin{eqnarray*}
 \sigma_{I,{\rm tot}}^{2}&=&\sigma_{I,{\rm exp}}^2+\sigma_{I,{\rm theory}}^2+\sigma_{I,{\rm emulator}}^2,\\
 LL&=&-\sum_{I}\frac{(Y_{I,{\rm exp}}-Y_{I,{\rm emu}})^{2}}{2\sigma_{I,{\rm tot}}^{2}}-\ln(\sigma_{I,{\rm tot}}).
 \end{eqnarray*}
-The likelihood behaves as $e^{LL}$. This form presumes that the uncertainties are Gaussian and that the uncertainties for the various observables are independent. The last term above derives from the normalization factor for the Gaussian.
+The likelihood behaves as $e^{LL}$. This form presumes that the uncertainties are Gaussian and that the uncertainties for the various observables are independent. The last term above derives from the normalization factor for the Gaussian. One can view \href{smoothdraft.pdf}{\tt smoothdraft.pdf} for more details.
 
 Correlated errors are not explicitly addressed in {\it Smooth Emulator} software. However, one can always add additional model parameters that describe contributions to multiple observables due to some unknown factors, such as an experimental efficiency or some neglected physics. This can be a convenient and sound perspective from which one can incorporate both experimental and theoretical systematic uncertainties. Sometimes such parameters are called ``nuisance'' parameters, because they usually describe effects that are not of direct interest to the reader, but do impact the degree to which one might constrain the parameters of greater interest. However, the moniker ``nuisance'' can be rather unfortunate  because although some parameter might be a nuisance to one scientist, e.g. the efficiency of the detector, that same parameter might represent the life's work on another scientist, who might find the constraint of such a parameter of great interest. Nuisance and non-nuisance parameters are treated on equal footings.
-
-The main program that runs the MCMC code is {\tt\$\{MY\_LOCAL\}/software/main\_programs/mcmc\_main.cc}. To compile the program:
-\vspace*{-12pt}{\tt
-\begin{Verbatim}[commandchars=\\\{\}]
- $\{MY_LOCAL\}/software% \textcolor{darkred}{make mcmc}
-\end{Verbatim}
-}\vspace*{-12pt}
-
-One usually chooses to tune the emulator before running {\tt mcmc}. This would involve running the emulator and saving some of the emulator hyper-parameters. Alternatively, can insert the tuning into the main source code for {\tt mcmc} mentioned above.
 
 \subsection{MCMC Options}
 
 Next, one needs to edit the options file 
-sloppypars{\tt\$\{MY\_ANALYSIS\}/smooth\_data/smooth\_parameters/mcmc\_parameters.txt}. An example file is:
-\vspace*{-12pt}{\tt
+\sloppypar{\tt\$\{MY\_ANALYSIS\}/smooth\_data/Options/mcmc\_options.txt}. An example file is:
+\vspace*{-8pt}{\tt
 \begin{Verbatim}
  # This is for the MCMC search of parameter space
  # (not for the emulator tuning)
  #LogFileName smoothlog.txt # comment out for interactive running
  # If success rate approaches zero, reduce MCMC_METROPOLIS_STEPSIZE, if it approaches 1.0, increase MCMC_METROPOLIS_STEPSIZE
- MCMC_METROPOLIS_STEPSIZE 0.05
+ MCMC_METROPOLIS_STEPSIZE 0.06
  MCMC_IGNORE_EMULATOR_ERROR false
  MCMC_NBURN  10000
  MCMC_NTRACE 100000
- MCMC_NSKIP  10
- MCMC_IGNORE_EMULATOR_ERROR true
+ MCMC_NSKIP  5
+ MCMC_IGNORE_EMULATOR_ERROR false
  RANDY_SEED  12345
 \end{Verbatim}
-}\vspace*{-12pt}
+}\vspace*{-8pt}
 As was the case with {\it Smooth Emulator}, each option has a default value. The values of {\tt MCMC\_NBURN}, {\tt MCMC\_NTRACE} and {\tt MCMC\_NSKIP} are stored by the {\tt CMCMC} objects, but are only set when the object calls the {\tt trace} function. Thus, values need not be set until a call is made to the {\tt PerformTrace} function.  See Sec. \ref{sec:mcmcsource} below for an example of how this is used.The options are described below.
 \subsubsection{{\tt LogFileName} (if commented out will write to screen)}
 To run interactively, leave this line commented out. Otherwise, output will be directed to the designated file.
 \subsubsection{{\tt MCMC\_METROPOLIS\_STEPSIZE (default 0.05)}}
 Metropolis algorithms require taking random steps in $\vec{\theta}$ space. If the steps are small, it takes longer to explore the space, but if the steps are very long, the success rate of the Metropolis steps becomes low. Maximum efficiency occurs when the Metropolis success rate, which is provided during running, is near 50\%. Rates of 20\% or 80\% are also fine, but if the rate is only a few percent, the User should reduce the parameter, and if the success rate becomes close to 100\%, the User should increase the parameter.
 \subsubsection{{\tt MCMC\_IGNORE\_EMULATOR\_ERROR}}
-If this flag is set to {\tt true} the emulator error will be ignored. This significantly increases the speed of the MCMC procedure, but should not be done if the emulator error is significant.
+If this flag is set to {\tt true} the emulator uncertainty will be ignored. This significantly increases the speed of the MCMC procedure, but should not be done if the emulator error is significant.
 \subsubsection{{\tt MCMC\_NBURN (default {\tt 10000})}}
 A certain number of Metropolis steps should be taken before the trace is recorded so that the trace is not biased by the starting value.
 \subsubsection{{\tt MCMC\_NTRACE (default 100000)}}
 This is the number of points in the trace that are recorded for subsequent analysis. More points provides a more accurate representation of the posterior.
 \subsubsection{{\tt MCMC\_NSKIP}}
-Because succesive points in the trace are correlated, it makes sense to skip several points before skipping. For example, in the Metropolis procedure if the success rate is 50\%, the neighboring points have a 50\% chance of being the same, so if all the points were recorded, many would be identical to the previously recorded point. Recording every fifth point or so is usually reasonable, hence the default value is {\tt 5}. 
+Because succesive points in the trace are correlated, it makes sense to skip several points before skipping. For example, if the success rate is 50\% in the Metropolis procedure, the neighboring points have a 50\% chance of being the same, so if all the points were recorded, many would be identical to the previously recorded point. Recording every fifth point or so is usually reasonable, hence the default value is {\tt 5}. If the success rate is higher, fewer steps might be appropriate, and if it is lower one might increase {\tt MCMC\_NSKIP}.
 
 \subsection{Running the MCMC Program}\label{subsec:mcmcrunning}
-To run the provided MCMC program, to the analysis directory, and run the program {\tt mcmc}. Output should look something like this:
-\vspace*{-12pt}{\tt
+To run the provided MCMC program, move to the analysis directory, and run the program {\tt mcmc}. Output should look something like this:
+\vspace*{-8pt}{\tt
 \begin{Verbatim}[commandchars=\\\{\}]
 $\{MY_ANALYSIS\}% \textcolor{darkred}{$\{MY_LOCAL\}/bin/mcmc}
 At beginning of Trace, LL=-68.764478
@@ -100,7 +90,7 @@ Metropolis success percentage=53.609600
 writing, ntrace = 100001
 writing, ntrace = 100001
 \end{Verbatim}
-}\vspace*{-12pt}
+}\vspace*{-8pt}
 For the sake of numerical efficiency {\tt ``Metropolis success percentage''} should be in the range of 50\%. If the efficiency is very near 100\%, it suggests the step sizes might be too small to best explore the entire model-parameter space. If the efficiency is near zero, the step size might be too large and too few successful Metropolis steps will be taken. This affects only the efficiency, not the validity, so any success percentage between 10\% and 90\% should suffice. In the output, {\tt ``LL''} refers to the log-likelihood. At the end of the burn-in, one hopes that best value of {\tt LL} is not much lower than the best value found from the entire trace. If not, one should probably increase the value of {\tt MCMC\_NBURN}. The values of {\tt ``Best Theta''} refer to the point in the trace with the highest {\tt LL}. 
 
 Information about the trace is found in the files located in the directory {\tt smooth\_data/mcmc\_trace/}:
@@ -153,41 +143,41 @@ If one has previously trained the emulator, one can use the known value of $\Lam
 In the main repository one can find a header file, {\tt \$\{SMOOTH\_HOME\}/software/inlude/msu\_smooth/mcmc.h}. Perusing this file is a good way to understand the provided functionality of the CMCMC class. 
 {\tt
 \begin{Verbatim}[commandchars=\\\{\}]
-class CMCMC{
-	public:
-		bool IGNORE_EMULATOR_ERROR;
-		CparameterMap *parmap;
-		CSmoothMaster *master;
-		Crandy *randy;
-		
-		CMCMC();
-		CMCMC(CSmoothMaster *master);
-		unsigned int NPars,NObs;
-		vector<vector<double>> trace;
-		string trace_filename,Xtrace_filename;
-		double stepsize;
-		
-		void ClearTrace(); // erases trace info so one can start over, resets at theta=0.
-		void PruneTrace(); // erases trace, except for last point
-		
-		void PerformTrace(unsigned int Ntrace,unsigned int Nskip);
-		void PerformMetropolisTrace(unsigned int Ntrace,unsigned int Nskip);
-		void WriteTrace();
-		void ReadTrace();
-		void EvaluateTrace();
-		
-		Eigen::VectorXcd stepvec,stepvecprime,dTdTEigenVals;
-		Eigen::MatrixXd dThetadTheta;
-		Eigen::MatrixXcd dTdTEigenVecs;
+class CMCMC\{
+   public:
+      bool IGNORE_EMULATOR_ERROR;
+      CparameterMap *parmap;
+      CSmoothMaster *master;
+      Crandy *randy;
+      
+      CMCMC();
+      CMCMC(CSmoothMaster *master);
+      unsigned int NPars,NObs;
+      vector<vector<double>> trace;
+      string trace_filename,Xtrace_filename;
+      double stepsize;
+      
+      void ClearTrace(); // erases trace info so one can start over, resets at theta=0.
+      void PruneTrace(); // erases trace, except for last point
+      
+      void PerformTrace(unsigned int Ntrace,unsigned int Nskip);
+      void PerformMetropolisTrace(unsigned int Ntrace,unsigned int Nskip);
+      void WriteTrace();
+      void ReadTrace();
+      void EvaluateTrace();
+      
+      Eigen::VectorXcd stepvec,stepvecprime,dTdTEigenVals;
+      Eigen::MatrixXd dThetadTheta;
+      Eigen::MatrixXcd dTdTEigenVecs;
 
-		void CalcLL(vector<double> &theta,double &LL);
-		CLLCalcSmooth *llcalc;
-		static CPriorInfo *priorinfo;
-	};
+      void CalcLL(vector<double> &theta,double &LL);
+      CLLCalcSmooth *llcalc;
+      static CPriorInfo *priorinfo;
+ \};
 \end{Verbatim}
 }
 The functionalities that are most likely to be incorporated are the functions {\tt ClearTrace(), PruneTrace(), PerformTrace(), WriteTrace(), EvaluateTrace()} and {\tt CalcLL()}. These functions are mostly self-explanatory. The function {\tt WriteTrace()} will write the two files with trace information described in Sec. \ref{subsec:mcmcrunning}. The function {\tt CalcLL(vector<double> \&theta,double \&LL)} calculates the posterior log-likelihood, {\tt LL}, for the point $\vec{\theta}$.
 
-The function {\tt EvaluateTrace()} considers the trace, assuming it has been calculated. After evaluating the trace it finds and writes the averages and covariances mentioned in Sec. \ref{subsec:mcmcrunning}. It also writes the file describing the resolving power for each observable w.r.t. the constraint of each observable. All the trace-evaluation output files are written to files in the director{\tt smooth\_data/MCMC/} directory.
+The function {\tt EvaluateTrace()} considers the trace, assuming it has been calculated. After evaluating the trace it finds and writes the averages and covariances mentioned in Sec. \ref{sec:mcmcrunning}. It also writes the file describing the resolving power for each observable w.r.t. the constraint of each observable. All the trace-evaluation output files are written to files in the director{\tt smooth\_data/MCMC/} directory.
 
 \end{document}

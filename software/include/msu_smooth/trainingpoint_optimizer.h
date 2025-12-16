@@ -24,7 +24,7 @@ namespace NBandSmooth{
 	class CTPO{
 	public:
 		bool PLUS1,INCLUDE_LAMBDA_UNCERTAINTY;
-		CparameterMap parmap;
+		CparameterMap *parmap;
 		unsigned int NPars,NTrainingPts,NMC;
 		string TPO_Method;
 		double LAMBDA,ALPHA; //only used for estimating overall uncertainty

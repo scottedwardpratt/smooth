@@ -35,7 +35,6 @@ namespace NBandSmooth{
 		vector<vector<double>> YTrain,SigmaYTrain;
 		vector<CModelParameters *> modelpars;
 		void ReadTrainingInfoSmoothFormat();
-		void ReadTrainingInfoSurmiseFormat();
 		static CSmoothMaster *smoothmaster;
 	};
 

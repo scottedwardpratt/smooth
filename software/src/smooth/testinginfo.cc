@@ -10,16 +10,7 @@ CTestingInfo::CTestingInfo(CObservableInfo *observableinfo_set,CPriorInfo *prior
 	priorinfo=priorinfo_set;
 	CModelParameters::priorinfo=priorinfo;
 	NObservables=observableinfo->NObservables;
-	if(smoothmaster->SmoothEmulator_TestingFormat == "SMOOTH"){
-		ReadTestingInfoSmoothFormat();
-	}
-	else if(smoothmaster->SmoothEmulator_TestingFormat == "SURMISE"){
-		string TestingInfoFileName=smoothmaster->parmap->getS("SmoothEmulator_TestingInfoFileName","testinginfo.txt");
-		ReadTestingInfoSurmiseFormat();
-	}
-	else{
-		CLog::Fatal("SmoothEmulator_TestingFormat not recognized,\n should be SMOOTH or SURMISE\n");
-	}
+   ReadTestingInfoSmoothFormat();
 	unsigned int iy,ntest;
 	YTest.resize(NObservables);
 	for(iy=0;iy<NObservables;iy++){
@@ -138,63 +129,4 @@ void CTestingInfo::ReadTestingInfoSmoothFormat(){
 		modelpars[itest]->TranslateX_to_Theta();
 	}
 
-}
-
-void CTestingInfo::ReadTestingInfoSurmiseFormat(){
-	if(smoothmaster->SmoothEmulator_TestingFormat != "SURMISE"){
-		CLog::Fatal("SmoothEmulator_TestingFormat should be set to SURMISE\n if ReadTestingInfoSurmiseFormat() is to be used\n");
-	}
-	unsigned int itest,ipar,iobs;
-	unsigned int NModelPars=CModelParameters::NModelPars;
-	unsigned int NObs=smoothmaster->observableinfo->NObservables;
-	char dummy[10000];
-	string obs_name,filename;
-	double y,x;
-	
-	filename=smoothmaster->SurmiseTestingParsFileName;
-	FILE *fptr=fopen(filename.c_str(),"r");
-	itest=0;
-	do{
-		for(ipar=0;ipar<NModelPars;ipar++){
-			fscanf(fptr,"%lf",&x);
-			if(!feof(fptr)){
-				if(ipar==0){
-					modelpars.push_back(NULL);
-					modelpars[itest]=new CModelParameters();
-				}
-				modelpars[itest]->X[ipar]=x;
-			}
-		}
-		fgets(dummy,10000,fptr);
-		if(!feof(fptr))
-			itest+=1;
-	}while(!feof(fptr));
-	fclose(fptr);
-	
-	NTestingPts=itest;
-	filename=smoothmaster->SurmiseTestingObsFileName;
-	fptr=fopen(filename.c_str(),"r");
-	
-	YTest.resize(NObs);
-	for(iobs=0;iobs<NObs;iobs++){
-		YTest[iobs].resize(NTestingPts);
-	}
-	
-	for(itest=0;itest<NTestingPts;itest++){
-		for(iobs=0;iobs<NObs;iobs++){
-			fscanf(fptr,"%lf",&y);
-			if(feof(fptr)){
-				CLog::Fatal("reading testing info: not enough lines in "+smoothmaster->SurmiseTestingObsFileName+"\n");
-			}
-			YTest[iobs][itest]=y;
-		}
-		fgets(dummy,10000,fptr);
-	}
-	
-	fclose(fptr);
-	
-	for(itest=0;itest<NTestingPts;itest++){
-		modelpars[itest]->TranslateX_to_Theta();
-	}
-	
 }

@@ -11,7 +11,6 @@
 #include "msu_smoothutils/parametermap.h"
 #include "msu_smoothutils/misc.h"
 #include "msu_smoothutils/randy.h"
-#include "msu_smooth/pca.h"
 #include "msu_smooth/emulator.h"
 #include "msu_smooth/modelparinfo.h"
 #include "msu_smooth/smooth.h"
@@ -45,8 +44,6 @@ namespace NBandSmooth{
       string FullModelRunsDirName,FullModelTestingRunsDirName;
       Crandy *randy;
       CSmooth *smooth;
-      string SurmiseTrainingParsFileName,SurmiseTrainingObsFileName;
-      string SurmiseTestingParsFileName,SurmiseTestingObsFileName;
       string SmoothEmulator_TrainingFormat,SmoothEmulator_TestingFormat;
       double fitpercentage;
       CModelParameters *modelpars;

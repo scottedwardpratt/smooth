@@ -11,26 +11,27 @@ using namespace NMSUUtils;
 CTPO::CTPO(){
 	randy=new Crandy(123);
 	FIRSTCALL=true;
-	parmap.ReadParsFromFile("smooth_data/Options/tpo_options.txt");
-	string logfilename=parmap.getS("TPO_LogFileName","Screen");
+   parmap=new CparameterMap();
+	parmap->ReadParsFromFile("smooth_data/Options/tpo_options.txt");
+	string logfilename=parmap->getS("TPO_LogFileName","Screen");
 	if(logfilename!="Screen"){
 		CLog::Init(logfilename);
 	}
-	TPO_Method=parmap.getS("TPO_Method","MC");
-   FullModelRunsDirName=parmap.getS("TPO_FullModelRunsDirName","smooth_data/FullModelRuns");
+	TPO_Method=parmap->getS("TPO_Method","MC");
+   FullModelRunsDirName=parmap->getS("TPO_FullModelRunsDirName","smooth_data/FullModelRuns");
 	string prior_info_filename="smooth_data/Info/prior_info.txt";
 	priorinfo=new CPriorInfo(prior_info_filename);
 	CModelParameters::priorinfo=priorinfo;
 	NPars=priorinfo->NModelPars;
-	INCLUDE_LAMBDA_UNCERTAINTY=parmap.getB("TPO_Include_LAMBDA_Uncertainty",true);
+	INCLUDE_LAMBDA_UNCERTAINTY=parmap->getB("TPO_Include_LAMBDA_Uncertainty",true);
 	CreateTrainingPts();
-   LAMBDA=parmap.getD("TPO_LAMBDA",2.5);
+   LAMBDA=parmap->getD("TPO_LAMBDA",2.5);
 }
 
 void CTPO::CreateTrainingPts(){
 	unsigned int itrain;
 	if(TPO_Method=="MC" || TPO_Method=="MCSphere"){
-		NTrainingPts=parmap.getI("TPO_NTrainingPts",0);
+		NTrainingPts=parmap->getI("TPO_NTrainingPts",0);
 		if(NTrainingPts==0){
 			CLog::Info("Enter NTrainingPts: ");
 			scanf("%u",&NTrainingPts);
@@ -58,9 +59,9 @@ void CTPO::CreateTrainingPts(){
 }
 
 void CTPO::Optimize(){
-	ALPHA=parmap.getD("TPO_ALPHA",0.01);
+	ALPHA=parmap->getD("TPO_ALPHA",0.01);
 	PLUS1=false;
-   NMC=parmap.getI("TPO_NMC",0);
+   NMC=parmap->getI("TPO_NMC",0);
 	if(NMC==0){
 		CLog::Info("Enter NMC: ");
 		scanf("%u",&NMC);

@@ -191,7 +191,7 @@ void CTPO::FreezeTrainingPts(){
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		TrainingPtsFreeze[itrain]=false;
 	}
-	string TPFreezeStr=parmap.getS("TPO_FreezePoints","None");
+	string TPFreezeStr=parmap->getS("TPO_FreezePoints","None");
 	
 	if(TPFreezeStr!="None" && TPFreezeStr!="NONE" && TPFreezeStr!="none"){
 		stringstream ss(TPFreezeStr);
@@ -226,12 +226,12 @@ void CTPO::ReadTrainingPts(){
 	bool exists;
 	FILE *fptr;
 	double x;
-	//string TPReadStr=parmap.getS("TrainingPointsRead","None");
+	//string TPReadStr=parmap->getS("TrainingPointsRead","None");
 	
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		TrainingPtsRead[itrain]=false;
 	}
-	string TPReadStr=parmap.getS("TPO_ReadPoints","None");
+	string TPReadStr=parmap->getS("TPO_ReadPoints","None");
 	
 	if(TPReadStr!="None" && TPReadStr!="NONE" && TPReadStr!="none"){
 		if(TPReadStr=="All" || TPReadStr=="ALL" || TPReadStr=="all"){
@@ -290,7 +290,7 @@ void CTPO::ReadTrainingPts(){
 void CTPO::SetTrainingPts(){
 	unsigned int itrain,ipar;
 	double thetamax,gausswidth;
-	string TPReadStr=parmap.getS("TPO_ReadPoints","None");
+	string TPReadStr=parmap->getS("TPO_ReadPoints","None");
 	if(TPReadStr=="None" || TPReadStr=="NONE" || TPReadStr=="none"){
 		SetThetaLatinHyperCube(ThetaTrain);
 	}

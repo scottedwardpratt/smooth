@@ -3,6 +3,7 @@
 \usepackage{subfiles}
 %\usepackage{indentfirst}
 \usepackage{graphicx}
+\usepackage{enumitem}
 \usepackage{float}
 \usepackage[
         pdfencoding=auto,%
@@ -59,6 +60,9 @@ arc=0pt,outer arc=0pt,
 \usepackage{xcolor}
 \definecolor{darkred}{rgb}{0.85,0.0,0.0}
 \definecolor{lightgray}{rgb}{0.85,0.85,0.85}
+\newenvironment{sloppypar*}
+ {\sloppy\ignorespaces}
+ {\par}
 
 %\usepackage{fancyvrb}[commandchars=\\\{\}]
 \usepackage{fvextra}[commandchars=\\\{\}]
@@ -194,14 +198,14 @@ arc=0pt,outer arc=0pt,
 
 The software performs three basic functions.
 \begin{enumerate}\itemsep=0pt
-\item Provide an optimum set of training points in model parameter space, at which full model runs will performed to then tune the emulator. The User must also provide a list of observables which are then to be emulated and a measure of the relative importance of each model parameter.
-\item After the User runs their full model at each of the training points and provides values and uncertainties for the observables at each training point, emulators are created for each observable. The emulator form is based on two hyper-parameters, an amplitude and a convergence length. The emulator is equivalent to a Gaussian process emulator with a quadratic kernel.
-\item If the User provides a list of experimentally measured observables and uncertainties, an MCMC program samples the prior and provides a sampling of points in the model-parameter space that are consistent with the measurement. An analysis program uses the list of representative points to calculate the mean and covariances of the posterior distribution. The program also provides the resolving power of specific observables in regards to constraining specific model parameters.
+\item Provide an optimum set of training points in model parameter space, at which full model runs will performed to then tune the emulator. The User must first provide a list of model parameters and their priors, along with a measure of the relative importance of each model parameter.
+\item After the User provides a list of observables, the User runs their full model at each of the training points and provides values and uncertainties for each observable at each training point. {\it Smooth Emulator} software then creates and tunes emulators for each observable. The emulator form is based on two hyper-parameters, an amplitude and a convergence length. Both hyper-parameters are found by the tuning procedure. The emulator is mathematically equivalent to a Gaussian process emulator with a quadratic kernel.
+\item Once the User provides a list of experimentally measured observables and uncertainties, an MCMC program samples the prior and provides a sampling of points in the model-parameter space that are consistent with the posterior likelihood. An analysis program uses the list of representative points to calculate the mean and covariances of the posterior distribution. The program also provides the resolving power of how each observable constrains each model parameter.
 \end{enumerate}
 
-The structure is designed so that the User stores all the information for a specific analysis in a specific analysis directory, e.g. {\tt  \$\{MY\_ANALYSIS\}/}. All programs are then run from that directory.  A subdirectory, {\tt  \$\{MY\_ANALYSIS\}/smooth\_data/Info}, contains simple text files edited by the User to describe the model-parameter priors, the observables to be emulated and evaluated, and the experimentally observed values. A second subdirectory, {\tt \$\{MY\_ANALYSIS\}/smooth\_data/Options} contains text files defining options the User can set related to the {\it Smooth Emulator} software. The training point optimization software creates directories {\tt  \$\{MY\_ANALYSIS\}/smooth\_data/FullModelRuns/runI} where each training point, {\tt $\hdots$/runI}, refers to a single point in model-parameter space used for training. The training point optimizer program creates a test file listing the values of the model parameters. The User's job is then to create text files giving the values of the observables calculated by the full model for that point in model-parameter space. Once the User has performed this, one can run programs that build and tune emulators for each emulator, and if desired, run the MCMC program. The MCMC writes the MCMC trace information in {\tt  \$\{MY\_ANALYSIS\}/smooth\_data/mcmc\_trace/}. {\it Smooth Emulator} provides programs are provided that analyze the trace to provide covariances of the the posterior and measures of the resolving power. A {\tt  \$\{MY\_ANALYSIS\}/figs} directory includes several python scripts to plot results of these analyses based on Matplotlib. 
+The structure is designed so that the User stores all the information for a specific analysis in a specific analysis directory, e.g. {\tt  \$\{MY\_ANALYSIS\}/}. All programs, aside from PYTHON scripts for plotting, are then run from that directory.  A subdirectory, {\tt  \$\{MY\_ANALYSIS\}/smooth\_data/Info}, contains simple text files edited by the User to describe the model-parameter priors, the observables to be emulated and evaluated, and the experimentally observed values. A second subdirectory, {\tt \$\{MY\_ANALYSIS\}/smooth\_data/Options} contains text files defining options the User can set related to the {\it Smooth Emulator} software. The training point optimization software creates directories {\tt  \$\{MY\_ANALYSIS\}/smooth\_data/FullModelRuns/runI} where each training point, {\tt $\hdots$/runI}, refers to a single point in model-parameter space used for training. The training point optimizer program creates a listing of a set of training points, where the values of the model parameters for each training point are written to files. The User's job is then to create text files giving the values of the observables calculated by the full model for each training point. These files are stored in the directory {\tt \$\{MY\_ANALYSIS\}/smooth\_data/FullModelRuns/}. The MCMC program writes the MCMC trace information to files in {\tt smooth\_data/MCMC/}. {\it Smooth Emulator} provides programs that analyze the trace to provide averages and covariances of the the posterior, as well as measures of the resolving power. Several PYTHON scripts are located in {\tt \$\{MY\_ANALYSIS\}/figs/}.  
 
-{\it Smooth Emulator} software is designed to be modular. Programs for each of the three functionalities listed above can be performed independently because files are all in simple text formats. For example, one can generate the training points, then use those training points emulators from other software packages. However, the User will likely have to spend more time translating text files to formats used by other programs. 
+{\it Smooth Emulator} software is designed to be modular. Programs for each of the three functionalities listed above can be performed independently because files are all in simple text formats. For example, one can generate the training points, then use those training points emulators from other software packages. However, the User will likely have to spend more time translating text files to formats used by other programs. Aside from the plotting scripts, {\tt Smooth Emulator} software is written in C++, the software, and this manual, were built on the assumption that the User has some familiarity with C++.
 
 \newpage
 
@@ -230,6 +234,10 @@ The structure is designed so that the User stores all the information for a spec
 \newpage
 
 \subfile{figs.tex}
+
+\newpage
+
+\subfile{parametermap.tex}
 
 \newpage
 

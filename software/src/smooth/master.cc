@@ -24,10 +24,6 @@ CSmoothMaster::CSmoothMaster(){
    
 	FullModelRunsDirName=parmap->getS("Smooth_FullModelRunsDirName","smooth_data/FullModelRuns");
    FullModelTestingRunsDirName=parmap->getS("Smooth_FullModelTestingRunsDirName","smooth_data/FullModelTestingRuns");
-   SurmiseTrainingParsFileName=parmap->getS("SmoothEmulator_FullModelTrainingParsFileName","smooth_data/FullModelRuns/modelpars_surmise.txt");
-   SurmiseTrainingObsFileName=parmap->getS("SmoothEmulator_FullModelTrainingObsFileName","smooth_data/FullModelRuns/obs_surmise.txt");
-   SurmiseTestingParsFileName=parmap->getS("SmoothEmulator_FullModelTestingParsFileName","smooth_data/FullModelTestingRuns/modelpars_surmise.txt");
-   SurmiseTestingObsFileName=parmap->getS("SmoothEmulator_FullModelTestingObsFileName","smooth_data/FullModelTestingRuns/obs_surmise.txt");
    
 	filename="smooth_data/Info/prior_info.txt";
 	priorinfo=new CPriorInfo(filename);

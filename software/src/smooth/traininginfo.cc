@@ -10,16 +10,7 @@ CTrainingInfo::CTrainingInfo(CObservableInfo *observableinfo_set,CPriorInfo *pri
 	priorinfo=priorinfo_set;
 	CModelParameters::priorinfo=priorinfo;
 	NObservables=observableinfo->NObservables;
-	if(smoothmaster->SmoothEmulator_TrainingFormat == "SMOOTH"){
-		ReadTrainingInfoSmoothFormat();
-	}
-	else if(smoothmaster->SmoothEmulator_TrainingFormat == "SURMISE"){
-		string TrainingInfoFileName=smoothmaster->parmap->getS("SmoothEmulator_FullModelTrainingParsFileName","smooth_data/FullModelRuns/modelpars_surmise.txt");
-		ReadTrainingInfoSurmiseFormat();
-	}
-	else{
-		CLog::Fatal("SmoothEmulator_TrainingFormat not recognized,\n should be SMOOTH or SURMISE\n");
-	}
+   ReadTrainingInfoSmoothFormat();
 	unsigned int iy,ntrain;
 	YTrain.resize(NObservables);
 	for(iy=0;iy<NObservables;iy++){
@@ -141,63 +132,3 @@ void CTrainingInfo::ReadTrainingInfoSmoothFormat(){
 	}
 
 }
-
-void CTrainingInfo::ReadTrainingInfoSurmiseFormat(){
-	if(smoothmaster->SmoothEmulator_TrainingFormat != "SURMISE"){
-		CLog::Fatal("SmoothEmulator_TrainingFormat should be set to SURMISE\n if ReadTrainingInfoSurmiseFormat() is to be used\n");
-	}
-	unsigned int itrain,ipar,iobs;
-	unsigned int NModelPars=CModelParameters::NModelPars;
-	unsigned int NObs=smoothmaster->observableinfo->NObservables;
-	char dummy[10000];
-	string obs_name,filename;
-	double y,x;
-	
-	filename=smoothmaster->SurmiseTrainingParsFileName;
-	FILE *fptr=fopen(filename.c_str(),"r");
-	itrain=0;
-	do{
-		for(ipar=0;ipar<NModelPars;ipar++){
-			fscanf(fptr,"%lf",&x);
-			if(!feof(fptr)){
-				if(ipar==0){
-					modelpars.push_back(NULL);
-					modelpars[itrain]=new CModelParameters();
-				}
-				modelpars[itrain]->X[ipar]=x;
-			}
-		}
-		fgets(dummy,10000,fptr);
-		if(!feof(fptr))
-			itrain+=1;
-	}while(!feof(fptr));
-	fclose(fptr);
-	
-	NTrainingPts=itrain;
-	filename=smoothmaster->SurmiseTrainingObsFileName;
-	fptr=fopen(filename.c_str(),"r");
-	
-	YTrain.resize(NObs);
-	for(iobs=0;iobs<NObs;iobs++){
-		YTrain[iobs].resize(NTrainingPts);
-	}
-	
-	for(itrain=0;itrain<NTrainingPts;itrain++){
-		for(iobs=0;iobs<NObs;iobs++){
-			fscanf(fptr,"%lf",&y);
-			if(feof(fptr)){
-				CLog::Fatal("reading training info: not enough lines in "+smoothmaster->SurmiseTrainingObsFileName+"\n");
-			}
-			YTrain[iobs][itrain]=y;
-		}
-		fgets(dummy,10000,fptr);
-	}
-	
-	fclose(fptr);
-	
-	for(itrain=0;itrain<NTrainingPts;itrain++){
-		modelpars[itrain]->TranslateX_to_Theta();
-	}
-	
-}
-
