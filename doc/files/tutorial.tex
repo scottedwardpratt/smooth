@@ -11,11 +11,8 @@ Working through this section constitutes a tutorial, consisting of the following
 \item Run {\tt trainingpoint\_optimizer} to generate the model-parameter values at which the full model will be trained.
 \item Run a fake (for the purposes of this tutorial) full model to generate the observables for each of the full-model runs. This includes files both for tuning the emulator and also for testing the emulator.
 \item Run a program {\tt smoothy\_testattrainingpts} which builds and trains an emulator and checks that it reproduces the training points.
-\item Run a program {\tt smooth\_testvsfullmodel} which creates data files comparing emulator predictions to full-model runs at random points not used to train the emulator.
-\item Run a Python plotting program that provides a visual comparison of the comparison in (6).
-\item Run an MCMC program that produces a trace through model-parameter space that consistently represents the posterior probability by comparing emulator predictions to fake experimental data.
-\item Run a Python plotting program that reads the MCMC trace and provides a visual representation of the model-parameter-space posterior.
-\item Run a Python plotting program that uses covariances from the MCMC trace to display the resolving power matrix representing the sensitivity of any observable with respect to the constraint of any model parameter.
+\item Run a program {\tt smooth\_testvsfullmodel} which creates data files comparing emulator predictions to full-model runs at random points not used to train the emulator. Create a plot illustrating the comparison.
+\item Run an MCMC program that produces a trace through model-parameter space that consistently represents the posterior probability by comparing emulator predictions to fake experimental data. Run Python plotting programs that read MCMC data and provide visual representations of the model-parameter-space posterior the observable-parameter resolving power.
 \end{enumerate}
 The text here includes a much-condensed version of what appears in previous sections of the manual.
 
@@ -42,7 +39,6 @@ Here, {\tt ../SmoothHome}, {\tt ../MyAnalysis} and {\tt ../MyLocal} can be repla
 {\tt \$\{MY\_ANALYSIS\}} & \parbox{5in}{Can be placed anywhere. Work spaces where parameter files, data, results and figures are created and stored. You may have several different such directories\\}\\
  \hline
 \end{tabular}
-
 
 You should be sure to have a C++ compiler that handles the C++-20 standard. You should also have cmake the Eigen linear algebra package installed. You should also need a Python distribution installed along with the matplotlib package. Next, to compile the programs
 \vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
@@ -132,7 +128,7 @@ The names of the observables must match those listed in the {\tt observable\_inf
 
 For a real project, you would need to edit the three files, probably typing the information all in by hand. 
 
-\subsection{Selecting the Training Points with {\tt trainingpoint\_optimizer}}
+\subsection{Selecting Training Points with {\tt trainingpoint\_optimizer}}
 
 Before running {\tt trainingpoint\_optimizer} you should inspect or edit the options file, {\tt smooth\_data/Options/tpo\_options.txt}. A template for this file is provided:
 \vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
@@ -203,7 +199,7 @@ Inspecting one of the output files, {\tt smooth\_data/FullMode/run0/obs.txt},
  obs9 41.295872
 \end{Verbatim}
 }\vspace*{-8pt}
-Again, your output will be different. The second column provides the value of the specified observable for the full model at that specific training point. Additionally, {\tt fakefullmodel} created a directory {\tt smooth\_data/FullModelTestingRuns/} which stores information about full-model runs at randomly chosen points in the model-parameter space. These points and their corresponding data are not used for tuning. This data can be used later to test the emulator. The User need not create such files for their project, unless they wish to have some separate runs just for testing. 
+Again, your output will be different. The second column provides the value of the specified observable for the full model at that specific training point. Additionally, {\tt fakefullmodel} created a directory {\tt smooth\_data/FullModelTestingRuns/} which stores information about full-model runs at randomly chosen points in the model-parameter space. These points and their corresponding data are not used for tuning. This data will be used below to test the emulator. The User need not create such files for their project, unless they wish to have some separate runs just for testing. 
 
 \subsection{Training and Emulator and Testing it at the Training Points}
 Before building and tuning the emulator, the User needs to edit one additional file, the text file that sets numerous options for {\it Smooth Emulator}. This file is {\tt smooth\_data/Options/emulator\_options.txt}. For the template used in this tutorial, the contents of that file appear as
@@ -302,25 +298,79 @@ iY=9: (<(Y-Yreal)^2>/SigmaY^2_emulator)^1/2=0.874994
 percent < 1 sigma = 80.000000
 \end{Verbatim}
 }\vspace*{-8pt}
-Your results should look similar in principle, but should vary in detail because different random points were chosen.
+Your results should look similar in principle, but will vary in detail because different random points were chosen. You can now peruse the files in {\tt smooth\_data/output\_stuff/fullmodel\_testdata/} and see the comparison of the 50 emulator values to the values calculated by {\tt fakefullmodel}. 
 
+You can view this comparison by applying a Python plotting program, {\tt \$\{MY\_ANALYSIS\}/figs/YvsY/YvsY.py}. This program uses the Python package Matplotlib. Before running the plotting program, one must first create two information files. The first is {\tt \$\{MY\_ANALYSIS\}/figs/figdata/prior\_info.txt}. It differs from the one in the {\tt smooth\_data/Info/} directory in that it has only three columns, though the first columns are identical. You should first copy the files {\tt \$\{MY\_ANALYSIS\}/smooth\_data/Info/prior\_info.txt} and {\tt \$\{MY\_ANALYSIS\}/smooth\_data/Info/observable\_info.txt} to {\tt \$\{MY\_ANALYSIS\}/figs/figdata/}. 
+\vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
+..% \textcolor{darkred}{cp $\{MY_ANALYSIS\}/smooth_data/Info/prior_info.txt $\{MY_ANALYSIS\}/figs/figdata/}
+..% \textcolor{darkred}{cp $\{MY_ANALYSIS\}/smooth_data/Info/observable_info.txt $\{MY_ANALYSIS\}/figs/figdata/}
+\end{Verbatim}
+}\vspace*{-8pt}
+Then edit the new {\tt prior\_info.txt} file. Keeping only the first two columns, add a third column which provides the \LaTeX-like strings that Matplotlib would use to label the axes. The format for these strings differs from \LaTeX strings in some ways. For example \Verb{\r} must be \Verb{\\r} so as not to conflict with the basic file parsing. The new file can read:
+\vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
+   par0 gaussian ${\textbackslash}theta_0$
+   par1 uniform  ${\textbackslash}theta_1$
+   par2 gaussian ${\textbackslash}theta_2$
+   par3 uniform  ${\textbackslash}theta_3$
+   par4 gaussian ${\textbackslash}theta_4$
+   par5 uniform  ${\textbackslash}theta_5$
+\end{Verbatim}
+}\vspace*{-8pt}
+Next, edit {\tt \$\{MY\_ANALYSIS\}/figs/figdata/observable\_info.txt}. In this case keep only the first column and list the \LaTeX-like strings into the second column to be used to label axes in the plot. The new file can read:
+\vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
+obs0  $Y_0$
+obs1  $Y_1$
+obs2  $Y_2$
+obs3  $Y_3$
+obs4  $Y_4$
+obs5  $Y_5$
+obs6  $Y_6$
+obs7  $Y_7$
+obs8  $Y_8$
+obs9  $Y_9$
+\end{Verbatim}
+}\vspace*{-8pt}
+The directory that stores the emulator-vs.-model comparison must be copied next. This directory contains information about the resulting observables for the full model evaluated at 100 randomly chosen points in model-parameter space, along with the emulator predictions. When {\tt fakefullmodel} was run it created data for the full-model calculations and stored them in {\tt smooth\_data/FullModelTestingRuns/}. When {\tt smooth\_testvsfullmodel} it read in the data for those points, then calculated the emulator predictions alongside the true full-model values. This comparison was written to separate files for each observable. These files are in the the directory {\tt smooth\_data/output\_stuff/fullmodel\_testdata/}.To copy the directory to a place where it can be read by the plotting program,
+\vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
+..% \textcolor{darkred}{cp -r $\{MY_ANALYSIS\}/smooth_data/output_stuff/fullmodel_testdata $\{MY_ANALYSIS\}/figs/figdata/}
+$\end{Verbatim}
+}\vspace*{-8pt}
+The plotting script is now ready to be executed.
+\vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
+..% \textcolor{darkred}{cd $\{MY_ANALYSIS\}/figs/YvsY}
+$\{MY_ANALYSIS\}% \textcolor{darkred}{python3 YvsY.py}
+--- Observables ---
+iY= 0   obs0
+iY= 1   obs1
+iY= 2   obs2
+iY= 3   obs3
+iY= 4   obs4
+iY= 5   obs5
+iY= 6   obs6
+iY= 7   obs7
+iY= 8   obs8
+iY= 9   obs9
+Enter iY to designate observable: \textcolor{darkred}{XXX}
+XXX of 100  points within 1 sigma
+$\end{Verbatim}
+}\vspace*{-8pt}
+The script prompts you to identify which observable you wish to consider. For the 10 observables, enter the corresponding value of {\tt iY}. The program will tell out of 100 points how many for how many the emulator prediction was within $\pm$ the stated uncertainty of the full-model value. If the uncertainty is accurately stated rougly 68\% of the emulator predictions should fall within this range. A plot, {\tt YvsY.pdf}, is created and presented in Fig. \ref{fig:YvsY_tutorial}
+\begin{figure}[hb]
+\centerline{\includegraphics[width=\textwidth]{figs/YvsY_tutorial.pdf}}
+\caption{\label{fig:YvsY_tutorial}
+Comparison of full-model values (black squares) to emulator values (red circles) for 100 points in model-parameter space. The uncertainties are solely those associated with the emulation. If the uncertainties were accurately expressed, 68\% of the points would lie within the uncertainty intervals, and in this case 65 emulator predictions were within the emulator's stated uncertainty. It is not unusual for the estimated uncertainty to be somewhat higher or lower what the User would find, even if the User were to evaluate a very large number of points.}
+\end{figure}
 
-One can now peruse the files in {\tt smooth\_data/output\_stuff/fullmodel\_testdata/} and see the comparison of the 50 emulator values to the values calculated by {\tt fakefullmodel}. 
-
-
-
-Given that the tuning is very fast, there is little need to write the coefficients as any subsequent use of the emulators can simply repeat the tuning, rather than reading in the coefficients. However, for large numbers of training points and model parameters, it might make sense to used stored values of the emulator's hyper-parameters to avoid recalculating them. Those parameters are stored in {\tt smooth\_data/output\_stuff/sigmalambda.txt}.
-
-Hopefully, the User will find the source codes used in this tutorial to be fairly self-explanatory. Nonetheless, detailed explanations can be found in Sec. \ref{sec:emulator}.
+The last two programs, {\tt smoothy\_testattrainingpts} and {\tt smoothy\_testvsfullmodel} both built and trained the emulator. If the emulator has already been built and trained from a previous run, one can save computational cost by using the hyper-parameters stored from a previous training. These are in {\tt smooth\_data/output\_stuff/sigmalambda.txt}. They can be read from the main programs by using one of the {\tt ReadSigmaLambda()} methods. One cana then tune by using the {\tt TuneAllYFixedLambda()} method.  Unless the model-parameter space is a high dimension, this is rarely worth the effort because tuning might take only a second or two. More detailed explanations can be found in Sec. \ref{sec:emulator}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Exploring the Posterior via Markov-Chain Monte-Carlo}
+\subsection{Exploring and Analyzing the Posterior via MCMC}
 
-Given the experimental information, which is stored in analysis directory in {\tt smooth\_data/Info/experimental\_info.txt}, one can then use the tuned emulator to explore the posterior likelihood through MCMC, which works via a Metropolis algorithm. The file {\tt smooth\_data/Info/experimental\_info.txt} provided in the template is:
+Given the experimental information, which is stored in {\tt smooth\_data/Info/experimental\_info.txt}, one can then use the tuned emulator to explore the posterior likelihood through MCMC, which works via a Metropolis algorithm. The file {\tt smooth\_data/Info/experimental\_info.txt} provided in the template is:
 \vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
 obs0  57.840878  10.0 0.0
 obs1  -85.613188  10.0 0.0
@@ -347,34 +397,55 @@ There are options for the MCMC, which are stored in {\tt smooth\_data/Options/mc
  # This is for the MCMC search of parameter space
  # (not for the emulator tuning)
  #LogFileName smoothlog.txt # comment out for interactive running
- MCMC_LANGEVIN false
- MCMC_METROPOLIS_STEPSIZE 0.01
- MCMC_LANGEVIN_STEPSIZE 0.5
+ MCMC_METROPOLIS_STEPSIZE 0.06
  MCMC_IGNORE_EMULATOR_ERROR false
- MCMC_NBURN  5000
- MCMC_NTRACE 50000
+ MCMC_NBURN  10000
+ MCMC_NTRACE 100000
  MCMC_NSKIP  5
  MCMC_IGNORE_EMULATOR_ERROR false
  RANDY_SEED  12345
 \end{Verbatim}
 }\vspace*{-8pt}
-The first parameter, {\tt MCMC\_LANGEVIN} should be set to {\tt false}, as the Langevin MCMC (as opposed to the Metropolis version) is under development (also it might not be finished because it does not seem to significantly improve performance). The Metropolis step size should be adjusted so that the Metropolis success rate is approximately one half. The success rate prints out when the {\tt mcmc} code runs. If the success rate is anywhere between 20 and 80\%, this should be fine. But, if the rate is close to zero or close to 100\%, the efficiency of the procedure suffers. It is recommended to run the MCMC code with a modest number of steps, then adjust the step size accordingly. 
+The Metropolis step size should be adjusted so that the Metropolis success rate is approximately one half. The success rate prints out when the {\tt mcmc} code runs. If the success rate is anywhere between 20 and 80\%, this should be fine. But, if the rate is close to zero or close to 100\%, the efficiency of the procedure suffers. It is recommended to run the MCMC code with a modest number of steps, then adjust the step size accordingly. The parameter {\tt MCMC\_NBURN} sets the number of Metropolis steps to be used in the ``burn-in'' stage, i.e. before one begins to store the trace. The number of elements to store in the trace in {\tt MCMC\_NTRACE}, and {\tt MCMC\_NSKIP} sets the number of steps to skip before storing a new point in the trace. Thus, if {\tt MCMC\_NTRACE} is one million and if {\tt MCMC\_NSKIP}=5, then the procedure will perform 5 million steps, and store every fifth one, leading to one million stored points in the trace. Finally, {\tt RANDY\_SEED} sets the random number seed. Options are explained in greater detail in Sec. \ref{sec:mcmc}.
 
-The parameter {\tt MCMC\_NBURN} sets the number of Metropolis steps to be used in the ``burn-in'' stage, i.e. before one begins to store the trace. The number of elements to store in the trace in {\tt MCMC\_NTRACE}, and {\tt MCMC\_NSKIP} sets the number of steps to skip before storing a new point in the trace. Thus, if {\tt MCMC\_NTRACE} is one million and if {\tt MCMC\_NSKIP}=5, then the procedure will perform 5 million steps, and store every fifth one, leading to one million stored points in the trace. Finally, {\tt RANDY\_SEED} sets the random number seed. Options are explained in greater detail in Sec. \ref{sec:mcmc}.
+The source code, {\tt \{MY\_LOCAL\}/bin/smoothy\_mcmc\_main.cc}, is rather simple.
+\vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
+int main()\{
+   NBandSmooth::CSmoothMaster master;
+   master.TuneAllY();
+   //Next two lines can take replace of TuneAllY() if you have previously tuned and wish to speed calculations
+   //master.ReadSigmaLambda(); //Next two lines can take place of TuneAllY() if you have previously tuned and wish to speed calculations
+   //master.TuneAllYFixedLambda();
+   NBandSmooth::CMCMC mcmc(&master);
+        
+   unsigned int Nburn=master.parmap->getI("MCMC_NBURN",1000);  // Steps for burn in
+   unsigned int Ntrace=master.parmap->getI("MCMC_NTRACE",1000); // Record this many points
+   unsigned int Nskip=master.parmap->getI("MCMC_NSKIP",5); // Only record every Nskip^th point
+                
+   mcmc.PerformTrace(1,Nburn);     
+   CLog::Info("finished burn in{\textbackslash}n");
+        
+   mcmc.PruneTrace(); // Throws away all but last point
+   mcmc.PerformTrace(Ntrace,Nskip);
+   mcmc.WriteTrace(); // Writes trace
+   mcmc.EvaluateTrace();
 
-\newpage
+return 0;
+\}
+\end{Verbatim}
+}\vspace*{-8pt}
+After tuning the emulator one creates an {\tt CMCMC} object. One then runs a trace for {\tt Nburn} steps. During the burn-in stage none of the points are stored. The trace is then pruned, keeping only the last point. Starting a new trace every {\tt Nskip}$^{\rm th}$ point is recorded, until the list of newly recorded points is {\tt Ntrace} long. The trace is then written to file. Finally, the method {\tt EvaluateTrace()} analyzes the trace and calculates several averages and covariances, which are then stored in the {\tt smooth\_data/MCMC/} directory in several files.
 
 Running the MCMC program gives the following output:
-\vspace*{-8pt}
-{\tt \begin{Verbatim}[commandchars=\\\{\}] 
-$\{MY_ANALYSIS\}/rhic% \textcolor{darkred}{\$\{MY_LOCAL\}/bin/mcmc}
-At beginning of Trace, LL=-36.833322
-At end of trace, best LL=-23.396510
+\vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}] 
+$\{MY_ANALYSIS\}/rhic% \textcolor{darkred}{\$\{MY_LOCAL\}/bin/smoothy_mcmc}
+At beginning of Trace, LL=-36.833553
+At end of trace, best LL=-23.300576
 Best Theta=
-0.167961  0.115342  0.264667  0.209205  0.131394  0.155084  
-Metropolis success percentage=90.640000
+0.179984  0.170064  0.240206  0.203989  0.176251  0.220042  
+Metropolis success percentage=48.760000
 finished burn in
-At beginning of Trace, LL=-26.849228
+At beginning of Trace, LL=-26.770854
 finished 10%
 finished 20%
 finished 30%
@@ -385,154 +456,84 @@ finished 70%
 finished 80%
 finished 90%
 finished 100%
-At end of trace, best LL=-23.262613
+At end of trace, best LL=-23.278385
 Best Theta=
-0.178828  0.179759  0.233728  0.181965  0.185326  0.197270  
-Metropolis success percentage=90.633200
-writing Theta values, ntrace = 50001
-writing X values, ntrace = 50001
+0.220576  0.180758  0.204556  0.182533  0.183560  0.183437  
+Metropolis success percentage=48.341200
+writing trace, ntrace = 100001
 \end{Verbatim}
 }\vspace*{-8pt}
 Here {\tt best LL} refers to the log-likelihood and {\tt Best Theta} refers to the value of $\vec{\theta}$ that gave the maximum log-likelihood. Values of {\tt Best Theta} and {\tt best LL} are given after the burn-in and after the trace. The ``experimental'' values were generated by running the full model with all 6 values, $\theta_i$, set to 0.2, so the fact that the best value of $\vec{\theta}$ found was close to that point is a validation of the method.
 
-One can read the source file, {\tt \$\{MY\_LOCAL\}/software/main\_programs/mcmc\_main.cc}.
-
-The trace is written to {\tt smooth\_data/MCMC\_trace/trace.txt}. It lists the scaled model parameters,
+The trace is written to {\tt smooth\_data/MCMC\_trace/trace\_theta.txt}. It lists the scaled model parameters,
 \vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
 theta_1 theta_2 theta_3 theta_4 ...
 theta_1 theta_2 theta_3 theta_4 ...
 theta_1 theta_2 theta_3 theta_4 ...
 \end{Verbatim}
 }\vspace*{-8pt}
-A similar file, {\tt smooth\_data/MCMC\_trace/Xtrace.txt}, shows the trace in terms of the unscaled model parameters. If {\tt MCMC\_NTRACE} is set to a million, there would be a million lines in each file. The program also calculates various covariances:
-$\langle\langle\delta\theta_i\delta\theta_j\rangle\rangle$,  $\langle\langle\delta\theta_i\delta Y_a\rangle\rangle$, and $\langle\langle\delta Y_a\delta Y_b\rangle\rangle$. The quantities $\langle\langle....\rangle\rangle$ refer to averages over the  posterior, i.e. averages over the trace. The eigenvalues and eigenvectors of $\langle\langle\delta\theta_i\delta\theta_j\rangle\rangle$ are also recorded. Hopefully, the User will find the file names in {\tt mcmc\_trace/} to be self-explanatory. The files describing the posterior-weighted average, $\langle\langle \vec{\theta}\rangle\rangle$, and the posterior covariances, $\langle\langle\delta\theta_i\delta\theta_j\rangle\rangle$, are also in the directory. Other file lists the eigenvectors and eigenvalues of the covariance matrix. 
+A similar file, {\tt smooth\_data/MCMC\_trace/trace\_X.txt}, shows the trace in terms of the unscaled model parameters. If {\tt MCMC\_NTRACE} is set to a million, there would be a million lines in each file.
 
-As described in Sec. \ref{sec:theory} the covariances in the posterior can also be used to quantify the resolving power of specific observables to constrain specific parameters. One such measure is
-\begin{align*}\eqnumber
-\mathcal{R}_{ia}&\equiv\frac{d\langle\langle\theta_i\rangle\rangle}{dY_a^{\rm exp}}\langle \delta Y_a^2\rangle^{1/2}.
-\end{align*}
-This quantifies how the posterior value of $\theta_i$ changes as the experimental value changes if the experimental value, $Y_a^{\rm exp}$, changes an amount characteristic of the variance of $Y_a$ across the prior. Given that there may not be a set of training points calculated uniformly across the prior, the final factor is estimated as described in Sec. \ref{sec:theory}. Higher values of $\mathcal{R}_{ia}$ for different $a$ demonstrate the relative contributions of different observables $a$ to constrain a model parameter $i$. The resolving power matrix is written to {\tt MCMC\_trace/ResolvingPower.txt}.
-
-Hopefully, the User will find the files in this directory to be fairly self-explanatory.
-
-\subsection{Making Plots}
-
-\subsubsection{Setting up the Data for Plotting}
-
-Three python scripts (using MATPLOTLIB) are provided to provide graphical insight into the posterior likelihood, into the resolving power and for viewing how the emulator uncertainty compares to the discrepancies between full-model runs (not used for tuning) and emulated values. One can visit the {\tt \$\{MY\_ANALYSIS\}/figs/} directory and peruse the file {\tt directions.pdf}, which is a copy of Sec. \ref{sec:figs} in this manual, for more detailed instructions of how to create the plots below.
-
-First, one must create two information files. The first is {\tt \$\{MY\_ANALYSIS\}/figs/figdata/prior\_info.txt}. It differs from the one in the {\tt smooth\_data/Info/} directory in that it has only three columns, though the first columns are identical. The provided file is\\
-\vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-   par0 gaussian ${\textbackslash}theta_0$
-   par1 uniform  ${\textbackslash}theta_1$
-   par2 gaussian ${\textbackslash}theta_2$
-   par3 uniform  ${\textbackslash}theta_3$
-   par4 gaussian ${\textbackslash}theta_4$
-   par5 uniform  ${\textbackslash}theta_5$
+To view the posterior likelihood, first move the trace information to a location where it can be read by the plotting program.
+\vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}] 
+$\{MY_ANALYSIS\}/rhic% \textcolor{darkred}{cp $\{MY_ANALYSIS\}/smooth_data/MCMC/trace_theta.txt $\{MY_ANALYSIS\}/figs/figdata/}
 \end{Verbatim}
 }\vspace*{-8pt}
-As one can see, the last column is used by MATPLOTLIB to label axes. MATPLOTLIB incorporates \LaTeX style strings, but there are some difference. For example \Verb{\r} must be \Verb{\\r} so as not to conflict with the basic file parsing. 
-
-The second required file is {\tt \$\{MY\_ANALYSIS\}/figs/figdata/observable\_info.txt}, and the provided version is\\
+Next, move into the {\tt figs/posterior/} directory and run the Python script:
 \vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-obs0  $Y_0$
-obs1  $Y_1$
-obs2  $Y_2$
-obs3  $Y_3$
-obs4  $Y_4$
-obs5  $Y_5$
-obs6  $Y_6$
-obs7  $Y_7$
-obs8  $Y_8$
-obs9  $Y_9$
-\end{Verbatim}
-}\vspace*{-8pt}
-Again, the first column is identical to that in {\tt smooth\_data/Info/} and the second is used for labeling axes.
-
-The two files above have already been created and placed in the {\tt figs/figdata/} directory. If the User changes the model parameters or observables, these files must both be edited to reflect the changes.
-
-The programs also use data files created by the {\tt smoothy\_testvsfullmodel} and {\tt smoothy\_mcmc} programs. These need to be copied to a location where they can be accessed by the plotting programs.
-\vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-$\{MY_ANALYSIS\}/rhic% \textcolor{darkred}{cp -r smooth\_data/output\_stuff/fullmodel\_testdata figs/figdata/}
-$\{MY_ANALYSIS\}/rhic% \textcolor{darkred}{cp -r smooth\_data/MCMC/trace_theta.txt figs/figdata/}
-$\{MY_ANALYSIS\}/rhic% \textcolor{darkred}{cp -r smooth\_data/MCMC/ResolvingPower.txt figs/figdata/}
-\end{Verbatim}
-}\vspace*{-8pt}
-
-\subsubsection{Comparing Emulator Predictions at Random Points}
-
-The first python script is in {\tt figs/YvsY/} and it compares full-model runs (not used for tuning) to the emulator. This is useful for seeing whether the emulator's error estimates are reasonable. This script plots the data written by {\tt smoothy\_testvsfullmodel}. That program created comparison files named {\tt smooth\_data/output\_stuff/fullmodel\_testdata/YvsY\_obs[0-9].txt}, which were moved to the {\tt figs/} directory with the commands above. For a specific observable, denoted by the name of the file, each of the 10 files gives a comparison of a  full-model calculation to the emulator for each of 100 randomly chosen points in model-parameter space. 
-
-To make the plot, first change into the {\tt figs/YvsY/} directory, and enter
-\vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-${MY_ANALYSIS}/figs/YvsY%  \textcolor{darkred}{python3 YvsY.py}
---- Observables ---
-iY= 0   obs0
-iY= 1   obs1
-iY= 2   obs2
-iY= 3   obs3
-iY= 4   obs4
-iY= 5   obs5
-iY= 6   obs6
-iY= 7   obs7
-iY= 8   obs8
-iY= 9   obs9
-Enter iY to designate observable: \textcolor{darkred}{3}
-65 of 100  points within 1 sigma
-\end{Verbatim}
-}\vspace*{-8pt}
-The script prompts the User for which observable to consider, in this case, the User chooses 0-9 for the 10 possible observables.  The User then enters the integer {\tt iY} that corresponds to the desired observable, which for the example above was {\tt iY=3}, which is the observable named {\tt obs3}.
-\begin{figure}
-\centerline{\includegraphics[width=\textwidth]{figs/YvsY_tutorial.pdf}}
-\caption{\label{fig:YvsY_tutorial}
-Comparison of full-model values (black squares) to emulator values (red circles) for 100 points in model-parameter space. The uncertainties are solely those associated with the emulation. If the uncertainties were accurately expressed, 68\% of the points would lie within the uncertainty intervals, and in this case 65 emulator predictions were within the emulator's stated uncertainty. It is not unusual for the estimated uncertainty to be somewhat higher or lower what the User would find, even if the User were to evaluate a very large number of points.}
-\end{figure}
-
-If the User has an Apple computer, or is running Linux with the PDF viewer, {\tt okular}, the User can edit the python script and uncomment the approriate line shown in red and comment the {\tt plt.show()} and {\tt plt.close()} files. Those lines are at the end of {\tt YvsY.py},
-\vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
- .
-plt.show()
-plt.close()
-# if you have Mac OS and want to see pdf file, comment out previous two lines and uncomment line below
-\textcolor{darkred}{#os.system("open -a Preview "+outputfilename);}
-# if you have Linux and want to see pdf file, comment out previous two lines and uncomment line below
-\textcolor{darkred}{#os.system("okular "+outputfilename+"&");}
- .
-\end{Verbatim}
-}\vspace*{-8pt}
-The User can then see the actual PDF file while the script is running. Similar changes can be made to all three PYTHON plotting scripts mentioned here.
-
-\subsubsection{Viewing the Posterior Likelihood}
-
-To graph the posterior likelihood, first be sure to run the {\tt mcmc} program, which creates the data file {\tt smooth\_data/MCMC/trace\_theta.txt}. After moving this to the {\tt figs/figdata/} directory, one moves into the {\tt figs/posterior/} directory and enters the command:
-\vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
+..% \textcolor{darkred}{cd $\{MY_ANALYSIS\}/figs/posterior}
 ${MY_ANALYSIS}/figs/posterior% \textcolor{darkred}{python3 posterior.py}
+${MY_ANALYSIS}/figs/posterior% Number of points in trace = 100001
 \end{Verbatim}
 }\vspace*{-8pt}
-The script should create a figure, {\tt posterior.pdf}:
+The script should create a figure, {\tt posterior.pdf}, shown in Fig. \ref{fig:posterior_tutorial}
 \begin{figure}
 \centerline{\includegraphics[width=4.5in]{figs/posterior_tutorial.pdf}}
 \caption{\label{fig:posterior_tutorial}
 Projections for the posterior likelihood from the MCMC trace. The contour lines represent $1-\sigma$, $2-\sigma$ and $3-\sigma$ likelihoods.}
 \end{figure}
-The likelihood is projected for individual model parameters (along the diagonal), or for pairs (off-diagonal). The plot is in terms of the scaled variables, $\theta_i$. To translate to the true model-parameter ranges, one can look at the {\tt smooth\_data/Info/modelpars\_info.txt} file, which gives the prior ranges of the model parameters before they are scaled to the -1 to 1 range. The file {\tt figs/directions.pdf} shows how the User can alter the plot. For example there is a line in the python script, {\tt ParsToPlot=[1,2,3,4,5,0]}, which the User can edit to change the ordering of the model-parameters, and to choose which model parameters are considered.
+The likelihood is projected for individual model parameters (along the diagonal), or for pairs (off-diagonal). The plot is in terms of the scaled variables, $\theta_i$. To translate to the true model-parameter ranges, one can look at the {\tt smooth\_data/Info/modelpars\_info.txt} file, which gives the prior ranges of the model parameters before they are scaled to the -1 to 1 range. The file {\tt figs/directions.pdf} shows how the User can alter the plot. For example there is a line in the python script, {\tt ParsToPlot=[1,2,3,4,5,0]}, which you can edit to change the ordering of the model-parameters, and to choose which model parameters are considered.
 
 \subsubsection{Viewing the Resolving Power}
 
-Similarly, one can plot the resolving power. The data for the resolving power was also created by running {\tt smoothy\_mcmc}. The User moves the data file {\tt smooth\_data/MCMC/ResolvingPower.txt} to {\tt figs/figdata/} as mentioned above. The User then runs the PYTHON script:
+The program also calculates various covariances:
+$\langle\langle\delta\theta_i\delta\theta_j\rangle\rangle$,  $\langle\langle\delta\theta_i\delta Y_a\rangle\rangle$, and $\langle\langle\delta Y_a\delta Y_b\rangle\rangle$. The quantities $\langle\langle....\rangle\rangle$ refer to averages over the  posterior, i.e. averages over the trace. The eigenvalues and eigenvectors of $\langle\langle\delta\theta_i\delta\theta_j\rangle\rangle$ are also recorded. Hopefully, the User will find the file names in {\tt smooth\_data/MCMC/} to be self-explanatory. The files describing the posterior-weighted average, $\langle\langle \vec{\theta}\rangle\rangle$, and the posterior covariances, $\langle\langle\delta\theta_i\delta\theta_j\rangle\rangle$, are also in the directory. Other file lists the eigenvectors and eigenvalues of the covariance matrix. 
+
+One measure of the resolving power is:
+\begin{align*}\eqnumber
+\mathcal{R}_{ia}&\equiv\frac{d\langle\langle\theta_i\rangle\rangle}{dY_a^{\rm exp}}\langle \delta Y_a^2\rangle^{1/2}.
+\end{align*}
+This quantifies how the posterior value of $\theta_i$ changes as the experimental value changes if the experimental value, $Y_a^{\rm exp}$, changes an amount characteristic of the variance of $Y_a$ across the prior. Higher values of $\mathcal{R}_{ia}$ for different $a$ demonstrate the relative contributions of different observables $a$ to constrain a model parameter $i$. The resolving power matrix is written to {\tt MCMC\_trace/ResolvingPower.txt}. The resolving power is a function of the covariances listed above (see \href{preprint.pdf}{\tt preprint.pdf}). The data for the resolving power was also created by running {\tt smoothy\_mcmc}. To plot the resolving power move the data file {\tt smooth\_data/MCMC/ResolvingPower.txt} to {\tt figs/figdata/}. You can then run the PYTHON script:
 \vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-${MY_ANALYSIS}/figs/resolvingpower% \textcolor{darkred}{python3 RP.py}
+..% \textcolor{darkred}{cp $\{MY_ANALYSIS\}/smooth\_data/MCMC/ResolvingPower.txt $\{MY_ANALYSIS\}/figs/figdata/}
+..% \textcolor{darkred}{cd $\{MY_ANALYSIS\}/figs/resolvingpower}
+$\{MY_ANALYSIS\}/figs/resolvingpower% \textcolor{darkred}{python3 RP.py}
+NPars= 6  NObs= 10
 \end{Verbatim}
 }\vspace*{-8pt}
-The resulting figure should look like:\\
-\begin{figure}
-\begin{minipage}{0.45\textwidth}
-\includegraphics[width=\textwidth]{figs/RP_rhic.pdf}
+The resulting figure, {\tt RP.pdf}, is shown if Fig. \ref{fig:RP_tutorial}
+\begin{figure}[hb]
+\begin{minipage}{0.4\textwidth}
+\includegraphics[width=0.9\textwidth]{figs/RP_tutorial.pdf}
 \end{minipage}
-\begin{minipage}{0.55\textwidth}
+\begin{minipage}{0.6\textwidth}
 \caption{%\label{fig:RP_tutorial}
 Resolving Power. Red bars represent positive correlations with $Y^{\rm exp}_a$ and $\theta_i$. Larger bars suggest that the particular observable contributes more to the constraint of the particular model parameter.}
 \end{minipage}
 \end{figure}
+
+If the User has an Apple computer, or is running Linux with the PDF viewer, {\tt okular}, the User can edit the python scripts mentioned above and uncomment the approriate line shown in green and comment out the {\tt plt.show()} and {\tt plt.close()} lines. The lines at the end of {\tt RP.py} are
+\vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
+ .
+plt.show()
+plt.close()
+# if you have Mac OS and want to see pdf file, comment out previous two lines and uncomment line below
+\textcolor{darkgreen}{#os.system("open -a Preview "+outputfilename);}
+# if you have Linux and want to see pdf file, comment out previous two lines and uncomment line below
+\textcolor{darkgreen}{#os.system("okular "+outputfilename+"&");}
+ .
+\end{Verbatim}
+}\vspace*{-8pt}
+The User can then see the actual PDF file while the script is running. Similar changes can be made to all three PYTHON plotting scripts mentioned here.
 
 \end{document}
