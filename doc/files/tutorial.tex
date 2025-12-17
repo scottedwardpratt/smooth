@@ -205,8 +205,8 @@ Inspecting one of the output files, {\tt smooth\_data/FullMode/run0/obs.txt},
 }\vspace*{-8pt}
 Again, your output will be different. The second column provides the value of the specified observable for the full model at that specific training point. Additionally, {\tt fakefullmodel} created a directory {\tt smooth\_data/FullModelTestingRuns/} which stores information about full-model runs at randomly chosen points in the model-parameter space. These points and their corresponding data are not used for tuning. This data can be used later to test the emulator. The User need not create such files for their project, unless they wish to have some separate runs just for testing. 
 
-\subsection{Running the Emulator}
-Before building and tuning the emulator, the User needs to edit one additional file, the parameter file that sets numerous options for {\it Smooth Emulator}. This file is {\tt smooth\_data/Options/emulator\_options.txt}. For the template used in this tutorial, the contents of that file appear as
+\subsection{Training and Emulator and Testing it at the Training Points}
+Before building and tuning the emulator, the User needs to edit one additional file, the text file that sets numerous options for {\it Smooth Emulator}. This file is {\tt smooth\_data/Options/emulator\_options.txt}. For the template used in this tutorial, the contents of that file appear as
 \vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
  # Location of output, comment out for interactive running
   # LogFileName smoothlog.txt
@@ -224,7 +224,7 @@ Before building and tuning the emulator, the User needs to edit one additional f
   # Default location of testing data is smooth_data/FullModelTestingRuns/
   SmoothEmulator_FullModelTestingRunsDirName smooth_data/FullModelTestingRuns
   #
-  # List of points to be used for testing, all is default, can list, e.g. 1-5,8-12,15,18
+  # List of points to be used for testing, all is default, can make list, e.g. 1-5,8-12,15,18
   SmoothEmulator_TestingPts all
   #
   # When calculating uncertainty, include(or not) the contribution from Lambda varying
@@ -232,15 +232,10 @@ Before building and tuning the emulator, the User needs to edit one additional f
   #
 \end{Verbatim}
 }\vspace*{-8pt}
-More options are described in detail in Sec. \ref{sec:emulator}.
+More options are described in detail in Sec. \ref{sec:emulator}.The options are mostly self-described by their names. To build an emulator the program needs to know the values of the observables as calculated by the full model at the training points. That is stored in the {\tt smooth\_data/FullModelRuns/} directory as described above. Files from a different directory can be used if the option {\tt SmoothEmulator\_FullModelRunsDirName} is set to something different. You can also choose which training points are used in the directory through the {\tt SmoothEmulator\_TrainingPts} option.
 
-There are two pre-constructed main programs to demonstrate the tutorial: {\tt \$\{MY\_LOCAL\}/bin/smoothy\_testattrainingpts} and {\tt \$\{MY\_LOCAL\}/bin/smoothy\_testvsfullmodel}. The corresponding source code for the first is {\tt \$\{MY\_LOCAL\}/software/MainPrograms/smoothy\_testattrainingpts\_main.cc},
+Here, you will run the program {\tt \$\{MY\_LOCAL\}/bin/smoothy\_testattrainingpts}. The corresponding source code for the first is {\tt \$\{MY\_LOCAL\}/software/MainPrograms/smoothy\_testattrainingpts\_main.cc},
 \vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-#include "msu_smoothutils/parametermap.h"
-#include "msu_smooth/master.h"
-#include "msu_smoothutils/log.h"
-
-using namespace std;
 int main()\{
    NBandSmooth::CSmoothMaster master;
    master.TuneAllY();
@@ -249,13 +244,31 @@ int main()\{
 \}
 \end{Verbatim}
 }\vspace*{-8pt}
-and the source code for the second is similarly simple,
-\vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-#include "msu_smoothutils/parametermap.h"
-#include "msu_smooth/master.h"
-#include "msu_smoothutils/log.h"
+The options are set and the training data is read in by calling the constructor. The {\tt master} object stores information for all the emulators, as there is one per each observable. As suggested by the name, {\tt TuneAllY()} builds and trains emulators for all the observables. The method {\tt TestAtTrainingPts()} prints out a comparison of the emulator values to those of the full model. Because the point-to-point noise ($\alpha$) was set to zero in {\tt smooth\_data/Info/observable\_info.txt}, the emulator should exactly reproduce the full-model calculations at each of the training points and for each of the observables. Further, the emulator uncertainty at the training points should be zero.
 
-using namespace std;
+Running this code:
+\vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
+$\{MY_ANALYSIS\}% \textcolor{darkred}{$\{MY_LOCAL\}/bin/smoothy_testattrainingpts}
+----------- obs0 -------------
+---- Lambda=2.907369, SigmaA=91.294879
+- itrain --- Y_full     Y_emulator    Sigma_emulator
+ 0 Y[0]= 2.925e+01 =?  2.925e+01  +/-  1.73835e-05
+ 1 Y[0]= 6.220e+01 =?  6.220e+01  +/-  8.01037e-06
+ 2 Y[0]= 1.213e+02 =?  1.213e+02  +/-  1.11063e-05
+  .
+ 27 Y[0]= 1.387e+02 =?  1.387e+02  +/-  1.33291e-05
+----------- obs1 -------------
+---- Lambda=2.396985, SigmaA=66.961947
+- itrain --- Y_full     Y_emulator    Sigma_emulator
+ 0 Y[1]=-9.653e+01 =? -9.653e+01  +/-  1.17626e-05
+  .
+\end{Verbatim}
+}\vspace*{-8pt}
+The second and third columns should be very close to one another, and the fourth column (the emulator uncertainty) should be close to zero. Indeed this is the case, though the numerical accuracy of the linear algebra routines does result in a small non-zero uncertainty. This thus represents a test of the procedure. Each emulator also optimizes a choice for the two hyper-parameters, $\Lambda$ and $\sigma_A$. Given that the full model was created by a random Taylor expansion consistent with $\Lambda=3$ and $\sigma_A=100$, one would expect the system to choose them. But, given the very finite number of training points, there can be significant differences. By reading \href{smoothdraft.pdf}{\tt smoothdraft.pdf} one can see that although there is often a significant deviation of a given observable's extracted hyper parameters, if one averages over many observables the expected value is rather well reproduced.
+
+\subsection{Testing the Emulator at Points Not Used for Training}
+In this case you will run the program {\tt \$\{MY\_LOCAL\}/software/bin/smoothy\_testvsfullmodel}. In addition to building and training the emulator, exactly as was done above, this program reads information about runs not used in the testing. This was set in the options file by the {\tt SmoothEmulator\_FullModelTestingRunsDirName} and {\tt SmoothEmulator\_TestingPts} options. The source code for the main program, {\tt \$\{MY\_LOCAL\}/software/MainPrograms/smoothy\_testvsfullmodel.cc}, is again rather simple. 
+\vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
 int main()\{
    NBandSmooth::CSmoothMaster master;
    master.TuneAllY();
@@ -264,25 +277,7 @@ int main()\{
 \}
 \end{Verbatim}
 }\vspace*{-8pt}
-As one would guess from the source code, the first program builds and tunes the emulator for all the observables through the call {\tt master.TuneAllY()}. The second line, {\tt master.TestAtTrainingPts()}, runs the emulator at each of the training points and compares to the training values. These are interactive programs and running {\tt smoothy\_testattrainingpts} should give an output like:
-vIn the tuning of the emulator, the hyper-parameters $\Lambda$ and $\Sigma_A$ are chosen. The program {\tt fakefullmodel} was built based on a randomized Taylor expansion consistent with $\Lambda=3.0$ and $\Sigma_A=100$. Due to the finite number of training points (in this case 28) the emulator's value differs from these values. The output would continue to compare the emulator to the training points at each point, and for each of the 10 observables. The last column of the output is the emulator's uncertainty. 
-
-The second program, {\tt smoothy\_testvsfullmodel} also constructs and tunes the emulator. But in this case, the program compares the full model to the emulated values away from the training points. The data for the full model was created by the {\tt fakefullmodel} program, and is found in {smooth\_data/FullModelTestingRuns}. Testing data was created for 50 random points in model-parameter space. Again, the source code is rather simple.
-\vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-#include "msu_smoothutils/parametermap.h"
-#include "msu_smooth/master.h"
-#include "msu_smoothutils/log.h"
-
-using namespace std;
-int main()\{
-   NBandSmooth::CSmoothMaster master;
-   master.TuneAllY();
-   master.TestVsFullModel();
-   return 0;
-\}
-\end{Verbatim}
-}\vspace*{-8pt}
-To run the program,
+The data for the full model was created by the {\tt fakefullmodel} program for 50 random points, and is found in {smooth\_data/FullModelTestingRuns}. Running the program,
 \vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
 $\{MY_ANALYSIS\}% \textcolor{darkred}{smoothy_testvsfullmodel}
 iY=0: (<(Y-Yreal)^2>/SigmaY^2_emulator)^1/2=1.857423
@@ -307,7 +302,7 @@ iY=9: (<(Y-Yreal)^2>/SigmaY^2_emulator)^1/2=0.874994
 percent < 1 sigma = 80.000000
 \end{Verbatim}
 }\vspace*{-8pt}
-
+Your results should look similar in principle, but should vary in detail because different random points were chosen.
 
 
 One can now peruse the files in {\tt smooth\_data/output\_stuff/fullmodel\_testdata/} and see the comparison of the 50 emulator values to the values calculated by {\tt fakefullmodel}. 
