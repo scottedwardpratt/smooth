@@ -367,8 +367,7 @@ vector<double> CSmoothMaster::GetThetaFromX(vector<double> X){
       else if(priorinfo->type[ipar]=="gaussian"){
          xbar=priorinfo->xmin[ipar];
          sigmax=priorinfo->xmax[ipar];
-         //Theta[ipar]=(X[ipar]-xbar)/(sigmax*CModelParameters::GSCALE);
-         Theta[ipar]=(X[ipar]-xbar)/(123.0);
+         Theta[ipar]=(X[ipar]-xbar)/(sigmax*CModelParameters::GSCALE);
       }
       else{
          CLog::Fatal("Cannot translate X to Theta because type = "+priorinfo->type[ipar]+" is not recognized\n");

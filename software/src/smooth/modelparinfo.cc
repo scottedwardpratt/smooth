@@ -1,6 +1,7 @@
 #include "msu_smooth/modelparinfo.h"
 NBandSmooth::CPriorInfo* NBandSmooth::CModelParameters::priorinfo=NULL;
 unsigned int NBandSmooth::CModelParameters::NModelPars=0;
+double NBandSmooth::CModelParameters::GSCALE=1.0;
 
 using namespace std;
 
