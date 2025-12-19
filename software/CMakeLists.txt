@@ -9,9 +9,9 @@ set(CMAKE_CXX_FLAGS "-W -Wall -march=native -std=c++20 -O3")
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 find_package(Eigen3 REQUIRED)
 
-message("eigen3_include_dir is ${EIGEN3_INCLUDE_DIR}")
+message("eigen3_include_dir is $ENV{EIGEN3_INCLUDE_DIR}")
 
-include_directories(SYSTEM include include ${EIGEN3_INCLUDE_DIR} $ENV{EIGEN3_INCLUDE_DIR} ${PYBIND11_INCLUDE_DIR} ${Python_INCLUDE_DIR})
+include_directories(SYSTEM include $ENV{EIGEN3_INCLUDE_DIR} ${PYBIND11_INCLUDE_DIR} ${Python_INCLUDE_DIR})
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "lib")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "lib")
