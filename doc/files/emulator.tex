@@ -20,10 +20,9 @@ As described in Sec. \ref{sec:theory}, the coefficients are chosen weighted by t
 P(\vec{A})=\prod_n\frac{1}{\sqrt{2\pi\sigma_A^2}}e^{-A_n^2/2\sigma_A^2},
 \end{eqnarray}
 where $\sigma_A$ is varied to maximize the overall probability given the constraint of reproducing the training points. Given training points {\it Smooth Emulator} finds optimum values of $\sigma_A$ and $\Lambda$. From \href{./smoothdraft.pdf}{{\tt smoothdraft.pdf}} one can see that the choice of the two hyper-parameters for very similar functions can vary substantially, because there is weak sensitivity to the ratio $\Lambda/\sigma_A$, and strong sensitivity to the product $\sigma_A\Lambda$. Nonetheless, the emulator does a good job in predicting its uncertainty. Due to the kernel trick {\it Smooth Emulator} needn't calculate all the coefficients, even though there are expressions for them. Instead the resulting form for the optimum emulation is
-\begin{eqnarray}\label{eq:Yemu}
+\begin{eqnarray}
 Y_{\rm opt}(\vec{\theta})&=&\sum_{ab}C_0(\vec{\theta},\vec{\theta}_a)B^{-1}_{ab}y_b,\\
 \nonumber
-\label{eq:Bdef}
 B_{ab}&=&C_0(\vec{\theta}_a,\vec{\theta}_b)+\alpha^2\delta_{ab},\\
 \nonumber
 C_0(\vec{\theta}_1,\vec{\theta}_2)&=&e^{-|\vec{\theta}_1-\vec{\theta}_2|^2/2\Lambda^2}.

@@ -178,6 +178,6 @@ class CMCMC\{
 }
 The functionalities that are most likely to be incorporated are the functions {\tt ClearTrace(), PruneTrace(), PerformTrace(), WriteTrace(), EvaluateTrace()} and {\tt CalcLL()}. These functions are mostly self-explanatory. The function {\tt WriteTrace()} will write the two files with trace information described in Sec. \ref{subsec:mcmcrunning}. The function {\tt CalcLL(vector<double> \&theta,double \&LL)} calculates the posterior log-likelihood, {\tt LL}, for the point $\vec{\theta}$.
 
-The function {\tt EvaluateTrace()} considers the trace, assuming it has been calculated. After evaluating the trace it finds and writes the averages and covariances mentioned in Sec. \ref{sec:mcmcrunning}. It also writes the file describing the resolving power for each observable w.r.t. the constraint of each observable. All the trace-evaluation output files are written to files in the director{\tt smooth\_data/MCMC/} directory.
+The function {\tt EvaluateTrace()} considers the trace, assuming it has been calculated. After evaluating the trace it finds and writes the averages and covariances mentioned in Sec. \ref{subsec:mcmcrunning}. It also writes the file describing the resolving power for each observable w.r.t. the constraint of each observable. All the trace-evaluation output files are written to files in the director{\tt smooth\_data/MCMC/} directory.
 
 \end{document}

@@ -13,6 +13,7 @@ This section describes how to download and install {\it Smooth Emulator} softwar
     \item CMake
     \item Eigen3 (Linear Algebra Package)
     \item Python/Matplotlib (for generating plots)
+    \item pybind11 (To call emulator from within Python script)
 \end{itemize}
 CMake is an open-source, cross-platform build system that helps automate the process of compiling and linking for software projects. Hopefully, CMake will perform the needed gymnastics to find the Eigen3 installation. To install CMake, either visit the CMake website (https://cmake.org/), or use the system's package manager for the specific system. For example, on Mac OS, if one uses {\it homebrew} as a package manager, the command is
 \vspace*{-8pt}{\tt
@@ -26,6 +27,17 @@ Eigen is a C++ template library for vector and matrix math, i.e. linear algebra.
 % \textcolor{darkred}{brew install eigen}
 \end{Verbatim}
 }\vspace*{-8pt}
+
+The providing plotting scripts are written in Python using Matplotlib. Most systems typically include Python, but Matplotlib often requires installation. On some systems Matplotlib can be added via the {\tt pip} Python package manager. In other cases it can be added via the system package manager directly. Some Users may wish to call {\it Smooth Emulator} functionality from within a Python script, most likely if they have their own MCMC software but want to call a function that returns a prediction and uncertainty for the observables as a function of the model parameters. The foundation for doing this is provided in the release, but requires installing pybind11. This can also be installed via {\tt pip}. It is crucial that pybind11 be installed consistently with the version of Python being used. On a Mac, one can consistently install all the required packages from the system package manager, {\it homebrew}.
+\vspace*{-8pt}{\tt
+\begin{Verbatim}[commandchars=\\\{\}]
+% \textcolor{darkred}{brew install python}
+% \textcolor{darkred}{brew install numpy}
+% \textcolor{darkred}{brew install python-matplotlib}
+% \textcolor{darkred}{brew install pybind11}
+\end{Verbatim}
+}\vspace*{-8pt}
+Because pybind11 installation is often fraught with compatibility problems, it is not recommended to bother with its installation unless the User wishes to call the emulator from within a Python script.
 
 \subsection{Downloading the Repository and Creating Working Directories}
 
@@ -45,10 +57,10 @@ The User may choose any other name besides {\tt MY\_ANALYSIS}. Hence forth, {\tt
 
 The User should create a second personal directory from which they will store their main programs and executables. A template should be copied from the repository as well.
 \vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-% \textcolor{darkred}{cp -r $\{SMOOTH_HOME\}/LocalTemplate /Users/CarlosSmith/SMOOTH_LOCAL}
+% \textcolor{darkred}{cp -r $\{SMOOTH_HOME\}/LocalTemplate /Users/CarlosSmith/mylocal}
 \end{Verbatim}
 }\vspace*{-8pt}
-The User may choose any other name besides {\tt SMOOTH\_LOCAL}, and henceforth, {\tt\$\{SMOOTH\_LOCAL\}} will refer to this directory, including its path. {\tt\$\{SMOOTH\_LOCAL\}/software/} contains the source code and CMake files for compiling the main programs. Executables will be stored in {\tt\$\{SMOOTH\_LOCAL\}/bin/}. Because the User might wish to edit the main programs, or to add similar programs, this provides the User a space to make such edits, all while leaving an original copy of the directory in the main repository. The User may find it convenient to add {\tt \$\{SMOOTH\_LOCAL\}/bin/} to their path.
+The User may choose any other name besides {\tt mylocal}, and henceforth, {\tt\$\{SMOOTH\_LOCAL\}} will refer to this directory, including its path. {\tt\$\{SMOOTH\_LOCAL\}/software/} contains the source code and CMake files for compiling the main programs. Executables will be stored in {\tt\$\{SMOOTH\_LOCAL\}/bin/}. Because the User might wish to edit the main programs, or to add similar programs, this provides the User a space to make such edits, all while leaving an original copy of the directory in the main repository. The User may find it convenient to add {\tt \$\{SMOOTH\_LOCAL\}/bin/} to their path.
 
 The main software source codes and libraries, i.e. all but the main programs, which tend to be quite short, remain in the main branch. If the User believes that they might be editing such files, they might want to copy the entire repository to a location without any fear of having a {\tt git pull} command overwriting their work. The philosophy behind this structure is that it allows the User to devise and build simple programs making calls to {\it Smooth Emulator} libraries without altering the source code and libraries which are kept in the {\tt \$\{SMOOTH\_HOME\}/} directory structure. If the User wished to make modifications to this code, it would make sense to copy the {\tt \$\{SMOOTH\_HOME\}/} directory to a new location. 
 
@@ -69,9 +81,9 @@ First, change into software directories, then create the makefiles with cmake, t
 % \textcolor{darkred}{${SMOOTH_HOME}/software% make}
 \end{Verbatim}
 }\vspace*{-8pt}
-There seems to be a common problem that {\tt cmake} misreports the path of the {\tt Eigen} installation. If the User should get an error stating that the Eigen header files cannot be found, the User can set the environmental variable,
+There seems to be a common problem that {\tt cmake} misreports the path of the {\tt Eigen} installation. If the User should get an error stating that the Eigen header files cannot be found, the User can set the environmental variable to point to the correct location, e.g.
 \vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-% \textcolor{darkred}{export EIGEN3_INCLUDE_DIR=/usr/local/include/eigen3}
+% \textcolor{darkred}{export EIGEN3_INCLUDE_DIR=/opt/homebrew/include/eigen3/}
 \end{Verbatim}
 }\vspace*{-8pt}
 The final arguments may need to be changed depending on the User's location of the packages. If the User wishes to choose a specific C++ compiler, the {\tt cmake} command should be replaced with {\tt cmake -D CMAKE\_CXX\_COMPILER=g++-11}, or whichever compiler is preferred. 
@@ -82,9 +94,14 @@ At this point all the libraries are built, but this does not include the main pr
 \end{Verbatim}
 }\vspace*{-8pt}
 The first part of the path needs to be replaced with the location of the {\tt bandframework} git repository. If one prefers not to set an environmental variable, one can instead edit\\
-{\tt \$\{SMOOTH\_LOCAL\}/software/CMakeLists.txt}, and replace the line where the variable {\tt \$\{SMOOTH\_HOME\}} is set to the shell's environmental variable with one where it is set explicitly.
+{\tt \$\{SMOOTH\_LOCAL\}/software/CMakeLists.txt}, and replace the line where the variable {\tt \$\{SMOOTH\_HOME\}} is set to the shell's environmental variable with one where it is set explicitly. Another environmental variable that will come into play if (and only if) the User compiles the Python binding software is
+\vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
+% \textcolor{darkred}{export SMOOTH_LOCAL=/Users/CarlosSmith/mylocal}
+\end{Verbatim}
+}\vspace*{-8pt}
+The definitions above will change depending on where the User placed the {\it Smooth Emulator} software.
 
-Below, this illustrates how to compile the programs used for generating training points with Simplex and for tuning the emulator with {\it Smooth Emulator}:
+Below, this illustrates how to compile the programs used for all the {\it Smooth Emulator} C++ programs:
 \vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
 % \textcolor{darkred}{cd $\{SMOOTH_LOCAL\}/software}
 % \textcolor{darkred}{$\{SMOOTH_LOCAL\}/software% cmake .}
