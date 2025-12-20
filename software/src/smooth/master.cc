@@ -284,8 +284,9 @@ void CSmoothMaster::GetAllYOnlyFromX(vector<double> &X,vector<double> &Yvec){
 vector<double> CSmoothMaster::GetYSigmaFromThetaPython(int DiY,vector<double> theta){
    unsigned int iY=DiY;
    double Y,SigmaY_emulator;
+   modelpars->SetTheta(theta);
    if(iY>=0 && iY<observableinfo->NObservables)
-      emulator[iY]->GetYAndUncertaintyFromTheta(theta,Y,SigmaY_emulator);
+      emulator[iY]->GetYAndUncertaintyFromTheta(modelpars->Theta,Y,SigmaY_emulator);
    else{
       Y=SigmaY_emulator=0.0;
    }
@@ -331,29 +332,27 @@ vector<double> CSmoothMaster::GetYSigmaPython(int DiY,vector<double> theta){
 
 
 vector<double> CSmoothMaster::GetXFromTheta(vector<double> Theta){
-   CModelParameters modpars;
    vector<double> X;
    if(Theta.size()!=CModelParameters::NModelPars){
       CLog::Fatal("In GetXFromTheta, mismatch in vector size, NModelPars="+to_string(CModelParameters::NModelPars)+", Theta.size="+to_string(Theta.size()));
    }
    X.resize(Theta.size());
-   modpars.SetTheta(Theta);
-   modpars.TranslateTheta_to_X();
-   X=modpars.X;
+   modelpars->SetTheta(Theta);
+   modelpars->TranslateTheta_to_X();
+   X=modelpars->X;
    return X;
 }
 
 
 vector<double> CSmoothMaster::GetThetaFromX(vector<double> X){
-   CModelParameters modpars;
    vector<double> Theta;
    if(X.size()!=CModelParameters::NModelPars){
       CLog::Fatal("In GetXFromTheta, mismatch in vector size, NModelPars="+to_string(CModelParameters::NModelPars)+", Theta.size="+to_string(X.size()));
    }
    Theta.resize(X.size());
-   modpars.SetX(X);
-   modpars.TranslateX_to_Theta();
-   Theta=modpars.Theta;
+   modelpars->SetX(X);
+   modelpars->TranslateX_to_Theta();
+   Theta=modelpars->Theta;
    return Theta;
    
 }
