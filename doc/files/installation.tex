@@ -45,20 +45,20 @@ The User may choose any other name besides {\tt MY\_ANALYSIS}. Hence forth, {\tt
 
 The User should create a second personal directory from which they will store their main programs and executables. A template should be copied from the repository as well.
 \vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-% \textcolor{darkred}{cp -r $\{SMOOTH_HOME\}/LocalTemplate /Users/CarlosSmith/MY_LOCAL}
+% \textcolor{darkred}{cp -r $\{SMOOTH_HOME\}/LocalTemplate /Users/CarlosSmith/SMOOTH_LOCAL}
 \end{Verbatim}
 }\vspace*{-8pt}
-The User may choose any other name besides {\tt MY\_LOCAL}, and henceforth, {\tt\$\{MY\_LOCAL\}} will refer to this directory, including its path. {\tt\$\{MY\_LOCAL\}/software/} contains the source code and CMake files for compiling the main programs. Executables will be stored in {\tt\$\{MY\_LOCAL\}/bin/}. Because the User might wish to edit the main programs, or to add similar programs, this provides the User a space to make such edits, all while leaving an original copy of the directory in the main repository. The User may find it convenient to add {\tt \$\{MY\_LOCAL\}/bin/} to their path.
+The User may choose any other name besides {\tt SMOOTH\_LOCAL}, and henceforth, {\tt\$\{SMOOTH\_LOCAL\}} will refer to this directory, including its path. {\tt\$\{SMOOTH\_LOCAL\}/software/} contains the source code and CMake files for compiling the main programs. Executables will be stored in {\tt\$\{SMOOTH\_LOCAL\}/bin/}. Because the User might wish to edit the main programs, or to add similar programs, this provides the User a space to make such edits, all while leaving an original copy of the directory in the main repository. The User may find it convenient to add {\tt \$\{SMOOTH\_LOCAL\}/bin/} to their path.
 
 The main software source codes and libraries, i.e. all but the main programs, which tend to be quite short, remain in the main branch. If the User believes that they might be editing such files, they might want to copy the entire repository to a location without any fear of having a {\tt git pull} command overwriting their work. The philosophy behind this structure is that it allows the User to devise and build simple programs making calls to {\it Smooth Emulator} libraries without altering the source code and libraries which are kept in the {\tt \$\{SMOOTH\_HOME\}/} directory structure. If the User wished to make modifications to this code, it would make sense to copy the {\tt \$\{SMOOTH\_HOME\}/} directory to a new location. 
 
 \begin{figure}[t]
 \centerline{\includegraphics[width = 0.65\textwidth]{figs/directorystructure}}
-\caption{\label{fig:directorystructure}{\bf Directory Structure}: The User clones the repository into some location, which will be referred to as {\tt \$\{\tt SMOOTH\_HOME\}}. The User copies the {\tt LocalTemplate} and {\tt AnalysisTemplate} directories to two new locations, {\tt \$\{MY\_LOCAL\}} and {\tt \$\{MY\_ANALYSIS\}}. The User will likely make multiple copies of the analysis directory for different projects or for different analyses with different options. The main source code and compiled libraries will be built and kept within the {\tt \$\{SMOOTH\_HOME\}/} tree. Source code for simple main programs can be found in {\tt \$\{MY\_LOCAL\}/software/} and executables are stored in {\tt \$\{MY\_LOCAL\}/bin/}. The software is designed to be run from the command line in the {\tt \$\{MY\_ANALYSIS\}} directory. Data used and created by {\it Smooth Emulator} software is stored in {\tt \$\{MY\_ANALYSIS\}/smooth\_data/}.
+\caption{\label{fig:directorystructure}{\bf Directory Structure}: The User clones the repository into some location, which will be referred to as {\tt \$\{\tt SMOOTH\_HOME\}}. The User copies the {\tt LocalTemplate} and {\tt AnalysisTemplate} directories to two new locations, {\tt \$\{SMOOTH\_LOCAL\}} and {\tt \$\{MY\_ANALYSIS\}}. The User will likely make multiple copies of the analysis directory for different projects or for different analyses with different options. The main source code and compiled libraries will be built and kept within the {\tt \$\{SMOOTH\_HOME\}/} tree. Source code for simple main programs can be found in {\tt \$\{SMOOTH\_LOCAL\}/software/} and executables are stored in {\tt \$\{SMOOTH\_LOCAL\}/bin/}. The software is designed to be run from the command line in the {\tt \$\{MY\_ANALYSIS\}} directory. Data used and created by {\it Smooth Emulator} software is stored in {\tt \$\{MY\_ANALYSIS\}/smooth\_data/}.
 }
 \end{figure}
 
-The directory structure is shown in Fig. \ref{fig:directorystructure}. As stated above, for the remainder of this manual, {\tt \$\{SMOOTH\_HOME\}/}, {\tt \$\{MY\_LOCAL\}/} and {\tt \$\{MY\_ANALYSIS\}/} will be used to denote the location of these directories. 
+The directory structure is shown in Fig. \ref{fig:directorystructure}. As stated above, for the remainder of this manual, {\tt \$\{SMOOTH\_HOME\}/}, {\tt \$\{SMOOTH\_LOCAL\}/} and {\tt \$\{MY\_ANALYSIS\}/} will be used to denote the location of these directories. 
 
 \subsection{Compiling the Software}
 
@@ -82,19 +82,19 @@ At this point all the libraries are built, but this does not include the main pr
 \end{Verbatim}
 }\vspace*{-8pt}
 The first part of the path needs to be replaced with the location of the {\tt bandframework} git repository. If one prefers not to set an environmental variable, one can instead edit\\
-{\tt \$\{MY\_LOCAL\}/software/CMakeLists.txt}, and replace the line where the variable {\tt \$\{SMOOTH\_HOME\}} is set to the shell's environmental variable with one where it is set explicitly.
+{\tt \$\{SMOOTH\_LOCAL\}/software/CMakeLists.txt}, and replace the line where the variable {\tt \$\{SMOOTH\_HOME\}} is set to the shell's environmental variable with one where it is set explicitly.
 
 Below, this illustrates how to compile the programs used for generating training points with Simplex and for tuning the emulator with {\it Smooth Emulator}:
 \vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-% \textcolor{darkred}{cd $\{MY_LOCAL\}/software}
-% \textcolor{darkred}{$\{MY_LOCAL\}/software% cmake .}
-% \textcolor{darkred}{$\{MY_LOCAL\}/software% make}
+% \textcolor{darkred}{cd $\{SMOOTH_LOCAL\}/software}
+% \textcolor{darkred}{$\{SMOOTH_LOCAL\}/software% cmake .}
+% \textcolor{darkred}{$\{SMOOTH_LOCAL\}/software% make}
     .
     .
 \end{Verbatim}
 }\vspace*{-8pt}
 The {\tt cmake} command will also recompile the main libraries in {\tt \$\{SMOOTH\_HOME\}/software/} if necessary. Several source codes for main programs can be found in\\
-{\tt \$\{MY\_LOCAL\}/software/MainPrograms/}. If you build your own main programs (probably using these as examples), you can edit the {\tt CMakeList.txt} file in {\tt \$\{MY\_LOCAL\}/software/MainPrograms/}, using the existing entries as an example. The executables should appear in {\tt \$\{MY\_LOCAL\}/bin/}. 
+{\tt \$\{SMOOTH\_LOCAL\}/software/MainPrograms/}. If you build your own main programs (probably using these as examples), you can edit the {\tt CMakeList.txt} file in {\tt \$\{SMOOTH\_LOCAL\}/software/MainPrograms/}, using the existing entries as an example. The executables should appear in {\tt \$\{SMOOTH\_LOCAL\}/bin/}. 
 
 \subsection{The {\tt \$\{MY\_ANALYSIS\}/smooth\_data} Directory}
 

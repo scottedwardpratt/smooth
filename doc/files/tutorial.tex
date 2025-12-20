@@ -35,7 +35,7 @@ An analysis directory template is provided with the intention that the User will
 Here, {\tt ../SmoothHome}, {\tt ../MyAnalysis} and {\tt ../MyLocal} can be replaced by any directory name the User chooses. For the rest of the tutorial the following shorthand will be applied\\
 \begin{tabular}{rl}\hline
 {\tt \$\{SMOOTH\_HOME\}} & \parbox{5in}{~\\Location of Git Repository, e.g. \sloppypar{\tt /Users/CarlosSmith/bandframework/software/SmoothEmulator}\\}\\
-{\tt \$\{MY\_LOCAL\}} & \parbox{5in}{Can be placed anywhere. Executables are store in \sloppypar{\tt \$\{MY\_LOCAL\}/bin} and main programs, and source codes for main\\ programs are found within {\tt \$\{MY\_LOCAL\}/software/main\_programs}\\}\\
+{\tt \$\{SMOOTH\_LOCAL\}} & \parbox{5in}{Can be placed anywhere. Executables are store in \sloppypar{\tt \$\{SMOOTH\_LOCAL\}/bin} and main programs, and source codes for main\\ programs are found within {\tt \$\{SMOOTH\_LOCAL\}/software/main\_programs}\\}\\
 {\tt \$\{MY\_ANALYSIS\}} & \parbox{5in}{Can be placed anywhere. Work spaces where parameter files, data, results and figures are created and stored. You may have several different such directories\\}\\
  \hline
 \end{tabular}
@@ -45,9 +45,9 @@ You should be sure to have a C++ compiler that handles the C++-20 standard. You 
 ..% cd $\{SMOOTH_HOME\}/software
 $\{SMOOTH_HOME\}/software% cmake .
 $\{SMOOTH_HOME\}/software% make
-$\{SMOOTH_HOME\}/software% cd $\{MY_LOCAL\}/software
-$\{MY_LOCAL\}/software% cmake .
-$\{MY_LOCAL\}/software% make
+$\{SMOOTH_HOME\}/software% cd $\{SMOOTH_LOCAL\}/software
+$\{SMOOTH_LOCAL\}/software% cmake .
+$\{SMOOTH_LOCAL\}/software% make
 \end{Verbatim}
 }\vspace*{0.05in}
 
@@ -61,22 +61,22 @@ You can now compile the main libraries
 
 and the main programs,
 \vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-   ..% \textcolor{darkred}{cd $\{MY_LOCAL\}/software}
-   $\{MY_LOCAL\}/software% \textcolor{darkred}{cmake .}
-   $\{MY_LOCAL\}/software% \textcolor{darkred}{make}
+   ..% \textcolor{darkred}{cd $\{SMOOTH_LOCAL\}/software}
+   $\{SMOOTH_LOCAL\}/software% \textcolor{darkred}{cmake .}
+   $\{SMOOTH_LOCAL\}/software% \textcolor{darkred}{make}
 \end{Verbatim}
 }\vspace*{-8pt}
 
-This will compile all the main source programs in {\tt \$\{MY\_LOCAL\}/software/MainPrograms/} and two programs used to generate files for the tutorial in {\tt \$\{MY\_LOCAL\}/software/TutorialPrograms/}. The repository was organized to encourage Users to edit any files in {\tt \$\{MY\_LOCAL\}/}. If the User wishes to restore any original files, a copy can be found at {\tt \$\{SMOOTH\_HOME\}/}.
+This will compile all the main source programs in {\tt \$\{SMOOTH\_LOCAL\}/software/MainPrograms/} and two programs used to generate files for the tutorial in {\tt \$\{SMOOTH\_LOCAL\}/software/TutorialPrograms/}. The repository was organized to encourage Users to edit any files in {\tt \$\{SMOOTH\_LOCAL\}/}. If the User wishes to restore any original files, a copy can be found at {\tt \$\{SMOOTH\_HOME\}/}.
 
-Several executables should now appear in {\tt \$\{MY\_LOCAL\}/bin/}: \sloppypar{\tt trainingpoint\_optimizer, smoothy\_testattrainingpts, smoothy\_testvsfullmodel, smoothy\_calcobs, smoothy\_mcm}, which all involve the emulator. Two other executables, {\tt fakefullmodel} and {\tt fakeinfo} are only used for the tutorial. You might find it convenient to add \sloppypar{\tt \$\{MY\_LOCAL\}/bin} to their path. The reason these are compiled in a space separate from the main libraries, is that you may well wish to create your own main programs. This arrangement allows you to compile your own versions, while leaving the bulk of the source code unchanged. 
+Several executables should now appear in {\tt \$\{SMOOTH\_LOCAL\}/bin/}: \sloppypar{\tt trainingpoint\_optimizer, smoothy\_testattrainingpts, smoothy\_testvsfullmodel, smoothy\_calcobs, smoothy\_mcm}, which all involve the emulator. Two other executables, {\tt fakefullmodel} and {\tt fakeinfo} are only used for the tutorial. You might find it convenient to add \sloppypar{\tt \$\{SMOOTH\_LOCAL\}/bin} to their path. The reason these are compiled in a space separate from the main libraries, is that you may well wish to create your own main programs. This arrangement allows you to compile your own versions, while leaving the bulk of the source code unchanged. 
 
 \subsection{Creating the Necessary Info Files}
 You will run software from the {\tt \$\{MY\_ANALYSIS\}/} directory. Before a User can run the {\it Smooth Emulator} executables they must create text files that describe the model-parameter priors and list the observable names. These three files need to be in the {\tt \$\{MY\_ANALYSIS\}/smooth\_data/Info/} directory. For your own project, you would likely create these files by hand, but, for the purpose of this tutorial you can create all three files by running the program,
 
 \vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
    ..% \textcolor{darkred}{cd $\{MY_ANALYSIS\}}
-   $\{MY_ANALYSIS\}% \textcolor{darkred}{$\{MY_LOCAL\}/bin/fakeinfo}
+   $\{MY_ANALYSIS\}% \textcolor{darkred}{$\{SMOOTH_LOCAL\}/bin/fakeinfo}
    \end{Verbatim}
 }\vspace*{-8pt}
 
@@ -148,7 +148,7 @@ If you had some existing training points and wanted to keep those, while choosin
 
 Now you can run {\tt trainingpoint\_optimizer}, which is meant to be run interactively. This will generate a list of coordinates in model-parameter space for each of $N_{\rm train}$ training points. Simply run the program by calling the command. 
 \vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-${MY_ANALYSIS}% \textcolor{darkred}{${MY_LOCAL}/bin/trainingpoint_optimizer}
+${MY_ANALYSIS}% \textcolor{darkred}{${SMOOTH_LOCAL}/bin/trainingpoint_optimizer}
 NTrainingpts=28, NMC=100000, LAMBDA=2.500000, ALPHA=0.010000
 Optimize_MC: at beginning: bestSigma2=0.016793
 +++ finished 1%, expected accuracy=0.0084093, success %=35.6, step size=0.0094491
@@ -178,7 +178,7 @@ Once the training points have been generated, you will need to run the full mode
 
 You need to run the program {\tt fakefullmodel}, which is meant to be run interactively. Running the model, 
 \vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-   $\{MY_ANALYSIS\}% \textcolor{darkred}{$\{MY_LOCAL\}/bin/fakefullmodel}
+   $\{MY_ANALYSIS\}% \textcolor{darkred}{$\{SMOOTH_LOCAL\}/bin/fakefullmodel}
    NPars=6, NObs=10
    Creating Fake Model Data for 28 Training Pts
 \end{Verbatim}
@@ -230,7 +230,7 @@ Before building and tuning the emulator, the User needs to edit one additional f
 }\vspace*{-8pt}
 More options are described in detail in Sec. \ref{sec:emulator}.The options are mostly self-described by their names. To build an emulator the program needs to know the values of the observables as calculated by the full model at the training points. That is stored in the {\tt smooth\_data/FullModelRuns/} directory as described above. Files from a different directory can be used if the option {\tt SmoothEmulator\_FullModelRunsDirName} is set to something different. You can also choose which training points are used in the directory through the {\tt SmoothEmulator\_TrainingPts} option.
 
-Here, you will run the program {\tt \$\{MY\_LOCAL\}/bin/smoothy\_testattrainingpts}. The corresponding source code for the first is {\tt \$\{MY\_LOCAL\}/software/MainPrograms/smoothy\_testattrainingpts\_main.cc},
+Here, you will run the program {\tt \$\{SMOOTH\_LOCAL\}/bin/smoothy\_testattrainingpts}. The corresponding source code for the first is {\tt \$\{SMOOTH\_LOCAL\}/software/MainPrograms/smoothy\_testattrainingpts\_main.cc},
 \vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
 int main()\{
    NBandSmooth::CSmoothMaster master;
@@ -244,7 +244,7 @@ The options are set and the training data is read in by calling the constructor.
 
 Running this code:
 \vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
-$\{MY_ANALYSIS\}% \textcolor{darkred}{$\{MY_LOCAL\}/bin/smoothy_testattrainingpts}
+$\{MY_ANALYSIS\}% \textcolor{darkred}{$\{SMOOTH_LOCAL\}/bin/smoothy_testattrainingpts}
 ----------- obs0 -------------
 ---- Lambda=2.907369, SigmaA=91.294879
 - itrain --- Y_full     Y_emulator    Sigma_emulator
@@ -263,7 +263,7 @@ $\{MY_ANALYSIS\}% \textcolor{darkred}{$\{MY_LOCAL\}/bin/smoothy_testattrainingpt
 The second and third columns should be very close to one another, and the fourth column (the emulator uncertainty) should be close to zero. Indeed this is the case, though the numerical accuracy of the linear algebra routines does result in a small non-zero uncertainty. This thus represents a test of the procedure. Each emulator also optimizes a choice for the two hyper-parameters, $\Lambda$ and $\sigma_A$. Given that the full model was created by a random Taylor expansion consistent with $\Lambda=3$ and $\sigma_A=100$, one would expect the system to choose them. But, given the very finite number of training points, there can be significant differences. By reading \href{smoothdraft.pdf}{\tt smoothdraft.pdf} one can see that although there is often a significant deviation of a given observable's extracted hyper parameters, if one averages over many observables the expected value is rather well reproduced.
 
 \subsection{Testing the Emulator at Points Not Used for Training}
-In this case you will run the program {\tt \$\{MY\_LOCAL\}/software/bin/smoothy\_testvsfullmodel}. In addition to building and training the emulator, exactly as was done above, this program reads information about runs not used in the testing. This was set in the options file by the {\tt SmoothEmulator\_FullModelTestingRunsDirName} and {\tt SmoothEmulator\_TestingPts} options. The source code for the main program, {\tt \$\{MY\_LOCAL\}/software/MainPrograms/smoothy\_testvsfullmodel.cc}, is again rather simple. 
+In this case you will run the program {\tt \$\{SMOOTH\_LOCAL\}/software/bin/smoothy\_testvsfullmodel}. In addition to building and training the emulator, exactly as was done above, this program reads information about runs not used in the testing. This was set in the options file by the {\tt SmoothEmulator\_FullModelTestingRunsDirName} and {\tt SmoothEmulator\_TestingPts} options. The source code for the main program, {\tt \$\{SMOOTH\_LOCAL\}/software/MainPrograms/smoothy\_testvsfullmodel.cc}, is again rather simple. 
 \vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
 int main()\{
    NBandSmooth::CSmoothMaster master;
@@ -408,7 +408,7 @@ There are options for the MCMC, which are stored in {\tt smooth\_data/Options/mc
 }\vspace*{-8pt}
 The Metropolis step size should be adjusted so that the Metropolis success rate is approximately one half. The success rate prints out when the {\tt mcmc} code runs. If the success rate is anywhere between 20 and 80\%, this should be fine. But, if the rate is close to zero or close to 100\%, the efficiency of the procedure suffers. It is recommended to run the MCMC code with a modest number of steps, then adjust the step size accordingly. The parameter {\tt MCMC\_NBURN} sets the number of Metropolis steps to be used in the ``burn-in'' stage, i.e. before one begins to store the trace. The number of elements to store in the trace in {\tt MCMC\_NTRACE}, and {\tt MCMC\_NSKIP} sets the number of steps to skip before storing a new point in the trace. Thus, if {\tt MCMC\_NTRACE} is one million and if {\tt MCMC\_NSKIP}=5, then the procedure will perform 5 million steps, and store every fifth one, leading to one million stored points in the trace. Finally, {\tt RANDY\_SEED} sets the random number seed. Options are explained in greater detail in Sec. \ref{sec:mcmc}.
 
-The source code, {\tt \{MY\_LOCAL\}/bin/smoothy\_mcmc\_main.cc}, is rather simple.
+The source code, {\tt \{SMOOTH\_LOCAL\}/bin/smoothy\_mcmc\_main.cc}, is rather simple.
 \vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
 int main()\{
    NBandSmooth::CSmoothMaster master;
@@ -438,7 +438,7 @@ After tuning the emulator one creates an {\tt CMCMC} object. One then runs a tra
 
 Running the MCMC program gives the following output:
 \vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}] 
-$\{MY_ANALYSIS\}/rhic% \textcolor{darkred}{\$\{MY_LOCAL\}/bin/smoothy_mcmc}
+$\{MY_ANALYSIS\}/rhic% \textcolor{darkred}{\$\{SMOOTH_LOCAL\}/bin/smoothy_mcmc}
 At beginning of Trace, LL=-36.833553
 At end of trace, best LL=-23.300576
 Best Theta=
