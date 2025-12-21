@@ -32,7 +32,6 @@ namespace NBandSmooth{
    
    class CSmoothMaster{
    public:
-      bool UsePCA;
       CSmoothMaster();
       CparameterMap *parmap;
       unsigned int NPars;
@@ -43,7 +42,6 @@ namespace NBandSmooth{
       CPriorInfo *priorinfo;
       string FullModelRunsDirName,FullModelTestingRunsDirName;
       Crandy *randy;
-      CSmooth *smooth;
       string SmoothEmulator_TrainingFormat,SmoothEmulator_TestingFormat;
       double fitpercentage;
       CModelParameters *modelpars;
@@ -116,7 +114,5 @@ namespace NBandSmooth{
    };
    
 };
-
-//#include "msu_smooth/smoothbind.h"
 
 #endif

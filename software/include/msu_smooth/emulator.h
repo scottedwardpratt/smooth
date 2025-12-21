@@ -27,6 +27,9 @@ namespace NBandSmooth{
 
 	class CSmoothEmulator{
 	public:
+      CSmoothEmulator(string observable_name_set);
+      friend class CSmoothMaster;
+   private:
       bool INCLUDE_LAMBDA_UNCERTAINTY,FIXLAMBDA;
 		unsigned int iY; // labels observable from observable info
 		string observable_name;
@@ -38,13 +41,10 @@ namespace NBandSmooth{
 		Eigen::MatrixXd Bprime,Bprimeprime;
 		Eigen::VectorXd chi,chiprime;
 		Eigen::Matrix2d W,Winv;
-
-		CSmoothEmulator(string observable_name_set);
       void Init();
 		double GetCorrelation(vector<double> &theta1,vector<double> &theta2);
 		void CalcWBprimeChi();
 		double GetSigma2_Lambda(vector<double> &theta);
-
 		void SetThetaTrain();
 		void Tune();
 		void Tune(double LambdaSet); // fix Lambda
@@ -53,13 +53,11 @@ namespace NBandSmooth{
 		void CalcLambdaVariance();
 		void CalcLogP();
 		void CalcB();
-		
 		void GetYAndUncertaintyFromTheta(vector<double> &Theta,double &Y,double &uncertainty);
-		
 		static CSmoothMaster *smoothmaster;
 		static unsigned int NPars;
 		static CparameterMap *parmap;
-		static Crandy *randy;
+   public:
 		static unsigned int NTrainingPts,NTestingPts;
 
 	};

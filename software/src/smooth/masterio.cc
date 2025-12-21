@@ -3,11 +3,11 @@ using namespace std;
 using namespace NBandSmooth;
 
 void CSmoothMaster::ReadTrainingInfo(){
-   traininginfo->ReadTrainingInfoSmoothFormat();
+   traininginfo->ReadTrainingInfo();
 }
 
 void CSmoothMaster::ReadTestingInfo(){
-   testinginfo->ReadTestingInfoSmoothFormat();
+   testinginfo->ReadTestingInfo();
 }
 
 void CSmoothMaster::WriteSigmaLambda(string filename){

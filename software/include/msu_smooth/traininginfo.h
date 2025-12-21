@@ -27,14 +27,17 @@ namespace NBandSmooth{
 
 	class CTrainingInfo{
 	public:
-		CObservableInfo *observableinfo;
+      CTrainingInfo(CObservableInfo *observableinfo,CPriorInfo *priorinfo);
+      friend class CSmoothMaster;
+      friend class CSmoothEmulator;
+   private:
 		CPriorInfo *priorinfo;
-		CTrainingInfo(CObservableInfo *observableinfo,CPriorInfo *priorinfo);
+      CObservableInfo *observableinfo;
 		unsigned int NTrainingPts,NObservables;
 		vector<unsigned int> NTrainingList;
 		vector<vector<double>> YTrain,SigmaYTrain;
 		vector<CModelParameters *> modelpars;
-		void ReadTrainingInfoSmoothFormat();
+		void ReadTrainingInfo();
 		static CSmoothMaster *smoothmaster;
 	};
 

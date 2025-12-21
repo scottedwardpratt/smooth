@@ -13,10 +13,7 @@ CSmoothMaster::CSmoothMaster(){
    if(logfilename!="Screen"){
       CLog::Init(logfilename);
    }
-   SmoothEmulator_TrainingFormat=parmap->getS("SmoothEmulator_TrainingFormat","SMOOTH");
-   SmoothEmulator_TestingFormat=parmap->getS("SmoothEmulator_TestingFormat","SMOOTH");
    string filename;
-   
    filename="smooth_data/Info/observable_info.txt";
    
    observableinfo=new CObservableInfo(filename);
@@ -37,7 +34,6 @@ CSmoothMaster::CSmoothMaster(){
    CSmoothEmulator::NPars=NPars;
    CSmoothEmulator::smoothmaster=this;
    CSmoothEmulator::parmap=parmap;
-   CSmoothEmulator::randy=randy;
    emulator.resize(NObs);
    
    for(unsigned int iy=0;iy<NObs;iy++){

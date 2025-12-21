@@ -10,7 +10,7 @@ CTestingInfo::CTestingInfo(CObservableInfo *observableinfo_set,CPriorInfo *prior
 	priorinfo=priorinfo_set;
 	CModelParameters::priorinfo=priorinfo;
 	NObservables=observableinfo->NObservables;
-   ReadTestingInfoSmoothFormat();
+   ReadTestingInfo();
 	unsigned int iy,ntest;
 	YTest.resize(NObservables);
 	for(iy=0;iy<NObservables;iy++){
@@ -23,15 +23,13 @@ CTestingInfo::CTestingInfo(CObservableInfo *observableinfo_set,CPriorInfo *prior
 
 }
 
-void CTestingInfo::ReadTestingInfoSmoothFormat(){
+void CTestingInfo::ReadTestingInfo(){
 	unsigned int itest,ilist,ifile,iy,nsuccess=0,ipar,nread;
 	unsigned int NObs=smoothmaster->observableinfo->NObservables;
 	char filename[300],obs_charname[300],mod_par_name[300];
 	string obs_name;
 	double y,x;
-	FILE *fptr;	if(smoothmaster->SmoothEmulator_TestingFormat != "SMOOTH"){
-		CLog::Fatal("SmoothEmulator_TestingFormat should be set to SMOOTH\n if ReadTestingInfo() is to be used\n");
-	}
+	FILE *fptr;
 	//
 	string NTestingStr = smoothmaster->parmap->getS("SmoothEmulator_TestingPts","all");
 	vector<unsigned int> NTestingList;

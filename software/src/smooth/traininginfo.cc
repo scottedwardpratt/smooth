@@ -10,7 +10,7 @@ CTrainingInfo::CTrainingInfo(CObservableInfo *observableinfo_set,CPriorInfo *pri
 	priorinfo=priorinfo_set;
 	CModelParameters::priorinfo=priorinfo;
 	NObservables=observableinfo->NObservables;
-   ReadTrainingInfoSmoothFormat();
+   ReadTrainingInfo();
 	unsigned int iy,ntrain;
 	YTrain.resize(NObservables);
 	for(iy=0;iy<NObservables;iy++){
@@ -23,7 +23,7 @@ CTrainingInfo::CTrainingInfo(CObservableInfo *observableinfo_set,CPriorInfo *pri
 
 }
 
-void CTrainingInfo::ReadTrainingInfoSmoothFormat(){
+void CTrainingInfo::ReadTrainingInfo(){
 	unsigned int itrain,ilist,ifile,iy,nsuccess=0,ipar,nread;
 	unsigned int NObs=smoothmaster->observableinfo->NObservables;
 	char filename[300],obs_charname[300],mod_par_name[300];
@@ -31,9 +31,6 @@ void CTrainingInfo::ReadTrainingInfoSmoothFormat(){
 	double y,x;
 	FILE *fptr;
 	
-	if(smoothmaster->SmoothEmulator_TrainingFormat != "SMOOTH"){
-		CLog::Fatal("SmoothEmulator_TrainingFormat should be set to SMOOTH\n if ReadTrainingInfo() is to be used\n");
-	}
 	//
 	string NTrainingStr = smoothmaster->parmap->getS("SmoothEmulator_TrainingPts","1");
 	vector<unsigned int> NTrainingList;

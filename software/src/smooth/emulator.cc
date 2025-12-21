@@ -7,7 +7,6 @@ using namespace NMSUUtils;
 unsigned int CSmoothEmulator::NPars=0;
 CSmoothMaster *CSmoothEmulator::smoothmaster=NULL;
 CparameterMap *CSmoothEmulator::parmap=NULL;
-Crandy *CSmoothEmulator::randy=NULL;
 unsigned int CSmoothEmulator::NTrainingPts=0;
 unsigned int CSmoothEmulator::NTestingPts=0;
 
