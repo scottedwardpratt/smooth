@@ -10,7 +10,7 @@ double PI=4.0*atan(1.0);
 
 void CTPO::CalcIJK(double Lambda,vector<double> &ThetaPrior){
 	unsigned int a,b,ipar;
-	double Ii,Jafact,Jbfact,Kabfact;
+	double Ii=0,Jafact=0,Jbfact=0,Kabfact=0;
 	double Jasum,Jbsum,Kabsum;
 	for(a=0;a<NTrainingPts;a++){
 		for(b=0;b<NTrainingPts;b++){

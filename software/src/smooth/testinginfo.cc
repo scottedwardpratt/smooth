@@ -24,7 +24,7 @@ CTestingInfo::CTestingInfo(CObservableInfo *observableinfo_set,CPriorInfo *prior
 }
 
 void CTestingInfo::ReadTestingInfo(){
-	unsigned int itest,ilist,ifile,iy,nsuccess=0,ipar,nread;
+	unsigned int itest,ilist,ifile,iy,nsuccess=0,ipar,nread=0;
 	unsigned int NObs=smoothmaster->observableinfo->NObservables;
 	char filename[300],obs_charname[300],mod_par_name[300];
 	string obs_name;

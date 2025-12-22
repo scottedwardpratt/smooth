@@ -198,7 +198,7 @@ double CSmoothMaster::GetYOnlyFromX(int iY,vector<double> X){
 double CSmoothMaster::GetYOnlyFromThetaPython(int DiY,vector<double> Theta){
    double SigmaY_emulator,Y;
    unsigned int iY=DiY;
-   if(iY>=0 && iY<observableinfo->NObservables){
+   if(iY<observableinfo->NObservables){
       emulator[iY]->GetYAndUncertaintyFromTheta(Theta,Y,SigmaY_emulator);
       return Y;
    }
@@ -210,7 +210,7 @@ double CSmoothMaster::GetYOnlyFromXPython(int DiY,vector<double> X){
    double SigmaY_emulator,Y;
    unsigned int iY=DiY;
    modelpars->SetX(X);
-   if(iY>=0 && iY<observableinfo->NObservables){
+   if(iY<observableinfo->NObservables){
       emulator[iY]->GetYAndUncertaintyFromTheta(modelpars->Theta,Y,SigmaY_emulator);
       return Y;
    }
@@ -281,7 +281,7 @@ vector<double> CSmoothMaster::GetYSigmaFromThetaPython(int DiY,vector<double> th
    unsigned int iY=DiY;
    double Y,SigmaY_emulator;
    modelpars->SetTheta(theta);
-   if(iY>=0 && iY<observableinfo->NObservables)
+   if(iY<observableinfo->NObservables)
       emulator[iY]->GetYAndUncertaintyFromTheta(modelpars->Theta,Y,SigmaY_emulator);
    else{
       Y=SigmaY_emulator=0.0;
@@ -297,7 +297,7 @@ vector<double> CSmoothMaster::GetYSigmaFromXPython(int DiY,vector<double> X){
    unsigned int iY=DiY;
    double Y,SigmaY_emulator;
    modelpars->SetX(X);
-   if(iY>=0 && iY<observableinfo->NObservables)
+   if(iY<observableinfo->NObservables)
       emulator[iY]->GetYAndUncertaintyFromTheta(modelpars->Theta,Y,SigmaY_emulator);
    else{
       Y=SigmaY_emulator=0.0;

@@ -53,7 +53,7 @@ void CSmoothMaster::TestVsFullModel(){
 	fitpercentage=0.0;
    vector<int> nfit;
    vector<double> averagedeviation2;
-   string(command);
+   string command;
    double realY,reldeviation;
    NYY=NObs;
    // YOu can't open too many file pointers!
@@ -96,7 +96,7 @@ void CSmoothMaster::TestVsFullModel(){
                iY=observableinfo->GetIPosition(obsnameread);
                reldeviation=(realY-Y[iY])/SigmaY_emulator[iY];
                averagedeviation2[iY]+=reldeviation*reldeviation;
-               if(iY>=0 && iY<NObs && iY<NYY){
+               if(iY<NObs && iY<NYY){
                   fprintf(fptr_YvsY[iY],"%10.3e %10.3e %10.3e %6.3f\n",
                           realY,Y[iY],SigmaY_emulator[iY],reldeviation);
                }

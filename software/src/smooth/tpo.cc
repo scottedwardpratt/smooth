@@ -9,10 +9,10 @@ using namespace NBandSmooth;
 using namespace NMSUUtils;
 
 CTPO::CTPO(){
-	randy=new Crandy(123);
 	FIRSTCALL=true;
    parmap=new CparameterMap();
 	parmap->ReadParsFromFile("smooth_data/Options/tpo_options.txt");
+   randy=new Crandy(parmap->getD("TPO_RANSEED",12345));
 	string logfilename=parmap->getS("TPO_LogFileName","Screen");
 	if(logfilename!="Screen"){
 		CLog::Init(logfilename);
@@ -142,7 +142,6 @@ void CTPO::Optimize_MC(){
 	unsigned int imc,itrain,ipar,nfail=0,nsuccess=0;
    string command;
 	FILE *fptr,*fptr_vsNMC;
-	Crandy randy(time(NULL));
 	vector<vector<double>> besttheta;
 	
 	CLog::Info("NTrainingpts="+to_string(NTrainingPts)+", NMC="+to_string(NMC)+", LAMBDA="+to_string(LAMBDA)+", ALPHA="+to_string(ALPHA)+"\n");
@@ -177,7 +176,7 @@ void CTPO::Optimize_MC(){
 	for(imc=0;imc<NMC;imc++){
 		for(itrain=0;itrain<NTrainingPts;itrain++){
 			for(ipar=0;ipar<NPars;ipar++){
-				ThetaTrain[itrain][ipar]=besttheta[itrain][ipar]+dtheta*randy.ran_gauss();
+				ThetaTrain[itrain][ipar]=besttheta[itrain][ipar]+dtheta*randy->ran_gauss();
 			}
 		}
 		Sigma2Bar=GetSigma2Bar(LAMBDA,ALPHA,W11);
@@ -253,7 +252,6 @@ void CTPO::OptimizeSimplex_MC(){
 	double R=1.2,bestSigma2,Sigma2bar,dR=0.1,W11,bestR,successrate;
 	unsigned int imc,nsuccess,nfail,itrain;
 	vector<vector<double>> besttheta;
-	Crandy randy(time(NULL));
 	bestSigma2=1.0E99;
 	bestR=R;
 	dR=0.2/sqrt(double(NTrainingPts));
@@ -269,7 +267,7 @@ void CTPO::OptimizeSimplex_MC(){
 	
 	nsuccess=nfail=0;
 	for(imc=0;imc<NMC;imc++){
-		R=bestR+dR*randy.ran_gauss();
+		R=bestR+dR*randy->ran_gauss();
 		if(PLUS1)
 			SetThetaSimplexPlus1(R);
 		else
@@ -306,13 +304,12 @@ void CTPO::OptimizeSimplex_MC(){
 void CTPO::OptimizeSphere_MC(){
 	double Sigma2Bar,bestSigma2=1.0E99,dtheta,W11,r,R0=1.0,successrate;
 	unsigned int imc,itrain,ipar,nfail=0,nsuccess=0;
-	Crandy randy(time(NULL));
 	vector<vector<double>> besttheta;
 
 	dtheta=0.2/sqrt(double(NTrainingPts));
 	for(itrain=0;itrain<NTrainingPts;itrain++){
 		for(ipar=0;ipar<NPars;ipar++){
-			besttheta[itrain][ipar]=R0*randy.ran_gauss();
+			besttheta[itrain][ipar]=R0*randy->ran_gauss();
 			if(itrain==0)
 				besttheta[itrain][ipar]=0.0;
 			if(itrain==1 && ipar!=0){
@@ -339,7 +336,7 @@ void CTPO::OptimizeSphere_MC(){
 		for(itrain=1;itrain<NTrainingPts;itrain++){
 			r=0.0;
 			for(ipar=0;ipar<NPars;ipar++){
-				ThetaTrain[itrain][ipar]=besttheta[itrain][ipar]+dtheta*randy.ran_gauss();
+				ThetaTrain[itrain][ipar]=besttheta[itrain][ipar]+dtheta*randy->ran_gauss();
 				if(itrain==1 && ipar!=0){
 					ThetaTrain[itrain][ipar]=0.0;
 				}

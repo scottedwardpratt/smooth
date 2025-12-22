@@ -6,6 +6,7 @@
 #include <vector>
 #include <array>
 #include <fstream>
+#include <iomanip>
 #include <filesystem>
 
 #include "msu_smoothutils/parametermap.h"
