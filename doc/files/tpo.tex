@@ -1,15 +1,17 @@
 \documentclass[UserManual.tex]{subfiles}
 \begin{document}
 
+\begin{sloppypar}
+
 \section{Generating Training Points}\label{sec:tpo}
 
 \subsection{Overview}
 The executable {\tt trainingpoint\_optiizer}, found in {\tt \$\{SMOOTH\_LOCAL\}/bin/} produces a list of points in the $n-$dimensional model-parameter space to be used for training an emulator. The points are chosen to minimize the estimate of the expected emulator uncertainty integrated over the model-parameter prior. Because the full model values are not determined at the time the training points are chosen, the estimate is based on the User's best guess for the convergence hyper-parameter $\Lambda$. 
 
-The program first reads a simple text file that provides the names of model parameters, the range of their prior distribution and their expected relative sensitivities, {\tt smooth\_data/Info/prior\_info.txt}. Options for {\tt trainingpoint\_optimizer} are taken from a separate text file, \sloppypar{\tt smooth\_data/Options/tpo\_options.txt}. This enables the User to make choices, such as which algorithm to apply when generating the training points. For some algorithms, {\tt trainingpoint\_optimizer} chooses the number of training points, whereas for other options the User chooses the number. Before the emulator is built and tuned, the User is free to run the full model at additional points, or to use their own method to generate training points and forego {\tt trainingpoint\_optimizer} entirely.
+The program first reads a simple text file that provides the names of model parameters, the range of their prior distribution and their expected relative sensitivities, {\tt smooth\_data/Info/prior\_info.txt}. Options for {\tt trainingpoint\_optimizer} are taken from a separate text file, {\tt smooth\_data/Options/tpo\_options.txt}. This enables the User to make choices, such as which algorithm to apply when generating the training points. For some algorithms, {\tt trainingpoint\_optimizer} chooses the number of training points, whereas for other options the User chooses the number. Before the emulator is built and tuned, the User is free to run the full model at additional points, or to use their own method to generate training points and forego {\tt trainingpoint\_optimizer} entirely.
 
 \subsection{Specifying Model Parameters and Priors}\label{subsec:priorinfo}
-Before proceeding, the executable {\tt trainingpoint\_optimizer} requires information about the parameters, specifically, their ranges. The User enters this information into the file \sloppypar{\tt smooth\_data/Info/prior\_info.txt}, as described in Sec. \ref{sec:installation}. An example of such a file might be
+Before proceeding, the executable {\tt trainingpoint\_optimizer} requires information about the parameters, specifically, their ranges. The User enters this information into the file {\tt smooth\_data/Info/prior\_info.txt}, as described in Sec. \ref{sec:installation}. An example of such a file might be
 {\tt\vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
 # par_name dist_type  xmin/centroid  xmax/Rgauss  SensitivityScale
    parameter_name_0 prior_type_0 xmin_0/centroid_0 xmax_0/width_0 s_0
@@ -20,12 +22,12 @@ Before proceeding, the executable {\tt trainingpoint\_optimizer} requires inform
 \end{Verbatim}
 }\vspace*{-8pt}
 }
-The first column is the model-parameter name, and the last three parameters describe the range of the parameters in the prior, assuming the prior is uniform or Gaussian. The second entry for each parameter defines whether the range/prior is {\tt uniform} or {\tt gaussian}. If the prior is {\tt uniform}, the next two numbers specify the lower and upper ranges of the parameter. If the range/prior is {\tt gaussian}, the third entry describes the center of the Gaussian, $x_0$, and the fourth entry describes the Gaussian width, $\sigma_0$, where the prior distribution is $\propto \exp\{-(x-x_0)^2/2\sigma_0^2\}$. {\tt trainingpoint\_optimizer} will read the information to determine the number of parameters. It will then translate and scale the model parameters from $x_i$ to $\theta_i$ so that the $n$ values of $\theta$, $\theta_{1\cdots n}$, have their priors centered at the origin with variances of $\pm s_i^2$. 
+The first column is the model-parameter name, and the last three parameters describe the range of the parameters in the prior, assuming the prior is uniform or Gaussian. The second entry for each parameter defines whether the prior range is {\tt uniform} or {\tt gaussian}. If the prior is {\tt uniform}, the next two numbers specify the lower and upper ranges of the parameter. If the prior range is {\tt gaussian}, the third entry describes the center of the Gaussian, $x_0$, and the fourth entry describes the Gaussian width, $\sigma_0$, where the prior distribution is $\propto \exp\{-(x-x_0)^2/2\sigma_0^2\}$. {\tt trainingpoint\_optimizer} will read the information to determine the number of parameters. It will then translate and scale the model parameters from $x_i$ to $\theta_i$ so that the $n$ values of $\theta$, $\theta_{1\cdots n}$, have their priors centered at the origin with variances of $s_i^2/3$. 
 
-{\tt training\_point\_optimizer} takes all this information into account when optimizing the selection of points. For example if the sensitivity scale for a given model parameter is small, points will be chose so better capture behavior along the other parameters. Section \ref{sec:theory} provides a brief description of the theoretical basis of the training-point selection and for more detailed description one can read \href{./smoothdraft.pdf}{{\tt smoothdraft.pdf}}.
+{\tt training\_point\_optimizer} takes all this information into account when optimizing the selection of points. For example if the sensitivity scale for a given model parameter is small, points will be chose so better capture behavior along the other parameters. Section \ref{sec:theory} provides a brief description of the theoretical basis of the training-point selection and for a more detailed description one can read \href{./smoothdraft.pdf}{{\tt smoothdraft.pdf}}.
 
 \subsubsection{Format for Storing the Coordinates of the Training Points}
-The information for training is all stored in a directory. The default directory is \sloppypar{{\tt smooth\_data/FullModelRuns/}}, but that directory can be changed by setting options (see below). With that directory there are subdirectories {\tt run0/,run1,}$\cdots$. Each subdirectory contains the information relative to the full-model run at a specific point in model-parameter space. Within each run directory, there are two files, one describing the model-parameters, {\tt smooth\_data/FullModelRuns/runI/model\_parameters.txt}, and on describing the values of observables, {\tt smooth\_data/runI/obs.txt}, at that point in parameter space. The format for the {\tt model\_parameters.txt} files is:
+The information for training is all stored in a directory. The default directory is {{\tt smooth\_data/FullModelRuns/}}, but that directory can be changed by setting options (see below). With that directory there are subdirectories {\tt run0/,run1,}$\cdots$. Each subdirectory contains the information relative to the full-model run at a specific point in model-parameter space. Within each run directory, there are two files, one describing the model-parameters, {\tt smooth\_data/FullModelRuns/runI/model\_parameters.txt}, and a second text file describing the values of the observables, {\tt smooth\_data/runI/obs.txt}, at that point in parameter space. The format for the {\tt model\_parameters.txt} files is:
 {\tt
 \vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
 parameter_name_1 x1  
@@ -72,19 +74,16 @@ The option {\tt TPO\_Method} sets the training point method and can be set to th
 \end{itemize}
 
 \subsubsection{{\tt TPO\_NTraining\_Pts} (default 0)}
-For the {\tt MC} and {\tt MCSphere} methods this sets $N_{\rm train}$, the number of training points. Otherwise $N_{\rm train}$ is set to correspond to the method as described above.
+For the {\tt MC} and {\tt MCSphere} methods the program chooses $N_{\rm train}$, the number of training points. Otherwise $N_{\rm train}$ is set to correspond to the method as described above.
 
 \subsubsection{{\tt TPO\_ALPHA} (default 0.01)}
-The value {\tt ALPHA} represents the point-to-point noise, which might vary from one observable to another. But the same training points are used for all observables. Thus, choosing {\tt AlPHA} can be not wholly consistent with those values defined for the observables. Fortunately, because the training points will be chosen far apart, this option has little impact. But, in choosing the points making this non-zero helps protect against extreme configurations with points close together. The value of 0.01 works well. This value does not need to equal the values used to train the emulator (which can vary from one observable to another).
-
-\subsubsection{{\tt TPO\_INCLUDE\_LAMBDA\_UNCERTAINTY} (default {\tt true})}
-If set to {\tt true} the optimization accounts for the fact that $\Lambda$ is not known. The procedure will be faster if set to {\tt false}, but that can significantly change the answer in some cases. It is recommended to leave this as {\tt true}.
+The value {\tt ALPHA} represents the point-to-point noise, which might vary from one observable to another. But the same training points are used for all observables. Thus, choosing {\tt ALPHA} can be not wholly consistent with those values defined for the observables. Fortunately, because the training points will be chosen far apart, this option has little impact. But, in choosing the points making this non-zero helps protect against extreme configurations with points close together. The value of 0.01 works well. This value does not need to equal the values used to train the emulator (which can vary from one observable to another).
 
 \subsubsection{{\tt TPO\_FullModelRunsDirName} (default {\tt smooth\_data/FullModelRuns})}
 This sets the directory into which the full model output for the training points will be stored. A similar parameter is used by the emulator and is set in {\tt smooth\_data/Options/emulator\_options.txt}, so the User should be careful that if the output from the optimizer is changed in a different location that the emulator also knows where to find it.
 
 \subsubsection{{\tt TPO\_ReadPoints} (default {\tt NONE})}
-If set to {\tt NONE}, the MC procedure will be initialized according to latin hyper-cube sampling. If set to {\tt ALL}, the procedure initialize the search using the training point locations described in the {\tt smooth\_data/FullModelRuns/runI/model\_parameters.txt} files. This is useful if one has a better idea of how to initialize the points, or if the point is to be frozen at a specific location as defined by the next option below. If the User wishes to read in a subset of points, the string can list those points which will be read in, while the others will be initialized randomly. An example of the string is {\tt 0-2,5,21-23}.
+If set to {\tt NONE}, the MC procedure will be initialized according to latin hyper-cube sampling. If set to {\tt ALL}, the procedure initializes the search using the training point locations described in the {\tt smooth\_data/FullModelRuns/runI/model\_parameters.txt} files. This is useful if one has a better idea of how to initialize the points, or if the point is to be frozen at a specific location as defined by the next option below. If the User wishes to read in a subset of points, the string can list those points which will be read in, while the others will be initialized randomly. An example of the string is {\tt 0-2,5,21-23}.
 
 \subsubsection{{\tt TPO\_FreezePoints} (default {\tt NONE})}
 If set to {\tt NONE} all the training points are allowed to vary in the optimization procedure. If set to a string, e.g {\tt 0-2,5,21-23}, the procedure will freeze those points denoted in the string. These points should be a subset of the those points that are read in as described above.
@@ -121,9 +120,9 @@ At this point, it is up to the User to run their full model at each training poi
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Using Other Choices (other than from {\it Training Point Optimizer}) for Training Points}
 
-If the User desires to use their own procedure for training points, or if the User wishes to augment the {\it Training Point Optimizer} points with additional training points, the User can write their own files {\tt runI/model\_parameters.txt}. The emulator should work fine, though the User should remember that when training the emulator (see Sec. \ref{sec:emulator}) the emulator parameter describing with {\tt runI} directories to apply should be modified.
+If the User desires to use their own procedure for training points, or if the User wishes to augment the {\it Training Point Optimizer} points with additional training points, the User can write their own files {\tt runI/model\_parameters.txt}. The emulator should work fine, though the User should remember that when training the emulator (see Sec. \ref{sec:emulator}) the emulator parameter describing which {\tt runI} directories to apply should be modified.
 
-There is one warning to be issued when choosing training points for tuning {\it Smooth Emulator}. When solving for the Taylor coefficients, the emulator uses the factor of those coefficients (products of $\theta_i$) in the linear algebra routine. However, if those coefficients are not linearly independent, the solution becomes undetermined. For example, if two of the training points were exactly the same, it would fail. 
+There is one warning to be issued when choosing training points for tuning {\it Smooth Emulator}. You can get an error if some training point does not provide independent information from the other points, which then leads to singularities in the matrix algebra.  For example, if two of the training points were exactly the same, it would fail. In a sense, the {\tt trainingpoint\_optimizer} program chooses training points to stay as far away from this possibility as possible.
 
 \subsection{Writing Programs Accessing the Training Point Optimization Software}
 {\it Smooth Emulator Software} is organized to accommodate the User building their own main programs that incorporate the functionality. For the training-point optimization software, the software's functionality is rather simple and the User can adjust the functionality through setting options as described above. The main programs and the executables are stored in the {\tt \$\{SMOOTH\_LOCAL\}/main\_programs/} and {\tt \$\{SMOOTH\_LOCAL\}/bin/} directories respectively. The provided main program's source code, {\tt trainingpoint\_optimizer\_main.cc}, aside from the headers, is:
@@ -137,7 +136,7 @@ int main()\{
 \end{Verbatim}
 }\vspace*{-8pt}
 }
-Several additional methods can be seen by viewing the header file, {\tt \$\{SMOOTH\_HOME\}/software/include/msu\_smooth/trainingpoint\_optimizer.h}. However, the methods typically called are {\tt Optimize()}, {\tt WriteModelPars} with the correct options listed.
+Several additional methods can be seen by viewing the header file, {\tt \$\{SMOOTH\_HOME\}/software/include/msu\_smooth/trainingpoint\_optimizer.h}. However, the methods typically called are {\tt Optimize()} and {\tt WriteModelPars} with the needed flexibility provided by choosing the appropriate options.
 
 \subsubsection{The {\tt parameterMap} utility class}
 If the User wishes to write programs that change options during the running, they can use the parameterMap class, which has an object within the {\tt CTPO} class, {\tt tpo->parmap}. For example, the User could set {\tt LAMBDA=3.0} by adding the following line to the main program:
@@ -148,7 +147,7 @@ If the User wishes to write programs that change options during the running, the
 \end{Verbatim}
 }\vspace*{-8pt}
 
-If the User wanted to have the program find the value, they could add a line
+If the User wanted to have the program find the value, they could add a line, for example,
 \vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
     .
    int NMC=tpo->parmap.getI("TPO_NMC",0);
@@ -156,5 +155,7 @@ If the User wanted to have the program find the value, they could add a line
 \end{Verbatim}
 }\vspace*{-8pt}
 Further description of the {\tt parameterMap} class is provided in Sec. \ref{sec:parametermap}.
+
+\end{sloppypar}
 
 \end{document}

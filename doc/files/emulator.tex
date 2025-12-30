@@ -1,25 +1,32 @@
 \documentclass[UserManual.tex]{subfiles}
 \begin{document}
+
+\begin{sloppypar}
 \section{Tuning the Emulator}\label{sec:emulator}
 
 \subsection{Overview}
 
-Smooth emulator finds an optimum set of Taylor expansion coefficients that reproduce a set of observables at a set of training points. The process of finding those coefficients is referred to as ``tuning''. For a given observable, a particular sample set of coefficients gives the following emulated function:
+{\it Smooth Emulator} effectively finds an optimum set of polynomial (or Taylor) expansion coefficients, that reproduce a set of observables at a set of training points. The process of finding those coefficients, given the training data, is referred to as ``tuning''. For a given observable, a particular sample set of coefficients assumes the following functional form for the emulator:
 \begin{align*}\eqnumber
-Y(\vec{\theta})&=\sum_{\vec{n}}d(\vec{n})A_{\vec{n}}
+Y(\vec{\theta})&=\sum_{\vec{n}}f(|\vec{\theta}|)d(\vec{n})A_{\vec{n}}
 \left(\frac{\theta_1}{\Lambda}\right)^{n_1}
 \left(\frac{\theta_2}{\Lambda}\right)^{n_2}
 \cdots.
 \end{align*}
-Here, $\theta_1\theta_2\cdots$ represent the original model parameters, $\vec{X}$, but are scaled. If their initial prior is uniform, they are scaled so that their priors range from -1 to +1, and if they have  Gaussian priors, they are scaled so that their variance is one third. The degeneracy factor, $d(\vec{n})$ is the number of different ways to sum the powers $n_i$ to a given rank,
-\begin{align*}\eqnumber
-d(\vec{n})=\sqrt{\frac{(n_1+n_2+\cdots)!}{n_1!n_2!\cdots}}.
-\end{align*}
-As described in Sec. \ref{sec:theory}, the coefficients are chosen weighted by the distribution,
+Here, $\theta_1\theta_2\cdots$ represent the original model parameters, $\vec{X}$, but are scaled. If their initial prior is uniform, they are scaled so that their priors range from -1 to +1, and if they have  Gaussian priors, they are scaled so that their variance is one third to match that of the flat prior. The coefficients are assumed to all follow a Gaussian distribution,
 \begin{eqnarray}\label{eq:EmuWeight}
-P(\vec{A})=\prod_n\frac{1}{\sqrt{2\pi\sigma_A^2}}e^{-A_n^2/2\sigma_A^2},
+P(\vec{A})=\prod_n\frac{1}{\sqrt{2\pi\sigma_A^2}}e^{-A_n^2/2\sigma_A^2}.
 \end{eqnarray}
-where $\sigma_A$ is varied to maximize the overall probability given the constraint of reproducing the training points. Given training points {\it Smooth Emulator} finds optimum values of $\sigma_A$ and $\Lambda$. From \href{./smoothdraft.pdf}{{\tt smoothdraft.pdf}} one can see that the choice of the two hyper-parameters for very similar functions can vary substantially, because there is weak sensitivity to the ratio $\Lambda/\sigma_A$, and strong sensitivity to the product $\sigma_A\Lambda$. Nonetheless, the emulator does a good job in predicting its uncertainty. Due to the kernel trick {\it Smooth Emulator} needn't calculate all the coefficients, even though there are expressions for them. Instead the resulting form for the optimum emulation is
+The hyper-parameter $\Lambda$ is the ``convergence'' parameter because it sets the relative strength of terms of different order. Higher values of $\Lambda$ lead to expansions that converge more quickly. The second hyper-parameter, $\sigma_A$, simply sets the overall strength, and variance, of the observable throughout the prior.
+
+{\it Smooth Emulator} chooses the envelope function, $f(|\vec{\theta}|)$, and the degeneracy factor,  $d(\vec{n})$, so that the variance of the non-trained emulator is independent of $\vec{\theta}$, and so that correlations depend only on relative $\vec{\theta}$. With these choices
+\begin{align*}\eqnumber
+d(\vec{n})&=\sqrt{\frac{(n_1+n_2+\cdots)!}{n_1!n_2!\cdots}},\\
+f(|\vec{\theta}|)&=e^{-|\vec{\theta}|^2/2\Lambda^2}.
+\end{align*}
+For more details the User can look at Sec. \ref{sec:theory}, or at the included draft, \href{./smoothdraft.pdf}{{\tt smoothdraft.pdf}}. 
+
+Due to the kernel trick {\it Smooth Emulator} needn't calculate all the coefficients, even though there are expressions for them. Instead the resulting form for the optimum emulation is
 \begin{eqnarray}
 Y_{\rm opt}(\vec{\theta})&=&\sum_{ab}C_0(\vec{\theta},\vec{\theta}_a)B^{-1}_{ab}y_b,\\
 \nonumber
@@ -27,7 +34,9 @@ B_{ab}&=&C_0(\vec{\theta}_a,\vec{\theta}_b)+\alpha^2\delta_{ab},\\
 \nonumber
 C_0(\vec{\theta}_1,\vec{\theta}_2)&=&e^{-|\vec{\theta}_1-\vec{\theta}_2|^2/2\Lambda^2}.
 \end{eqnarray}
-Closed form for the uncertainties, as provided in \href{./smoothdraft.pdf}{{\tt smoothdraft.pdf}}, are also calculated by {\it Smooth Emulator} software. Here $\alpha$ represents an estimate of the point-by-point uncertainty as a fraction of $\alpha$. If one thinks the model calculations have an uncertainty that due to sampling or noise varies by an amount $\sigma_{\rm noise}$, and if one believes the characteristic strength of $Y$ is $\sigma_A$, one chooses $\alpha=\sigma_{\rm noise}/\sigma_A$. For example, if the full-model uses some sampling algorithm that has a 1\% uncertainty, one would choose $\alpha=0.01$. More discussion is provided in Sec. \ref{sec:theory}.   
+Closed form for the uncertainties, as provided in \href{./smoothdraft.pdf}{{\tt smoothdraft.pdf}}, are also calculated by {\it Smooth Emulator} software. Here $\alpha$ represents an estimate of the point-by-point uncertainty as a fraction of $\alpha$. If one thinks the model calculations have an uncertainty that due to sampling or noise varies by an amount $\sigma_{\rm noise}$, and if one believes the characteristic strength of $Y$ is $\sigma_A$, one chooses $\alpha=\sigma_{\rm noise}/\sigma_A$. For example, if the full-model uses some sampling algorithm that has a 1\% uncertainty, one would choose $\alpha=0.01$. More discussion is provided in Sec. \ref{sec:theory}. Remarkably, this form exactly reproduces that of a GP emulator, if the GP emulator chooses a kernel with a Gaussian form. This equivalence follows from the fact that, due to the kernel trick, the emulator's predictions depend only on $C_0(\vec{\theta}_1,\vec{\theta}_2)$ and $\alpha$.
+
+Given the training data, {\it Smooth Emulator} finds a best estimate of the two hyper-parameters. From \href{./smoothdraft.pdf}{{\tt smoothdraft.pdf}} one can see that the choice of the two hyper-parameters for very similar functions can vary substantially, because there is weak sensitivity to the ratio $\Lambda/\sigma_A$, and strong sensitivity to the product $\sigma_A\Lambda$. Nonetheless, the emulator does a good job in predicting its uncertainty.
 
 The executables based on {\it Smooth Emulator} are located in the User's {\tt \$\{SMOOTH\_LOCAL\}/bin} directory. Examples of such executables are {\tt smoothy\_tune} or {\tt smoothy\_calcobs}. These functions must be executed from within the User's analysis directory. In the following subsections, we first review the format for each of the required input files, then describe how to run {\it Smooth Emulator}, how its output is stored.
 
@@ -46,9 +55,9 @@ Before training the emulator, one must first run the full model at a given set o
    observable_name_n   ALPHA_N
 \end{Verbatim}
 }\vspace*{-8pt}
-The observable names should be simple strings, without spaces. Here, the values of {\tt ALPHA\_i} represent the point-by-point uncertainties inherent to the full-model calculations. If there is no such uncertainty, i.e. if you reran the full model with the same model parameters, you would always get the exact same value, then the values for {\tt ALPHA\_i} should be zero.
+The observable names should be simple strings, without spaces. Here, the values of {\tt ALPHA\_i} represent the point-by-point uncertainties inherent to the full-model calculations. If there is no such uncertainty, i.e. if you reran the full model with the same model parameters, you would always get the exact same value, then the values for {\tt ALPHA\_i} should be zero. If you think the point-by-point uncertainty is $\sigma_{pp}$, and given that the typical strength of the function is $\sigma_A$, one would set {\tt ALPHA\_i} to $\sigma_{pp}/\sigma_A$.
 
-\item A file listing the names of the model parameters and their priors. This file is \sloppypar{\tt smooth\_data/Info/prior\_info.txt}. The file format is:\\
+\item A file listing the names of the model parameters and their priors. This file is {\tt smooth\_data/Info/prior\_info.txt}. The file format is:\\
 \vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
    parameter_name_1  prior_type_1 xmin_1/centroid_1  xmax_1/Rgauss_1  ss_1
    parameter_name_2  prior_type_2 xmin_2/centroid_2  xmin_2/Rgauss_2  ss_2
@@ -56,9 +65,9 @@ The observable names should be simple strings, without spaces. Here, the values 
    parameter_name_N  prior_type_N xmin_N/centroid_N  xmin_N/Rgauss_N  ss_N
 \end{Verbatim}
 }\vspace*{-8pt}
-Again, the parameter names should be simple strings without spaces. The {\tt prior\_type\_I} entries are character strings, either {\tt uniform} or {\tt gaussian}. If the prior type is {\tt uniform}, {\tt xmin\_I} and {\tt xmax\_I} represent the endpoints of the uniform prior. If the prior type is {\tt gaussian}, the prior is assumed to have a Gaussian form, the two values set the centroid and widths of the Gaussian priors. The last column is the sensitivity scale. If all model parameters are expected to provide equal variance, all the {\tt ss\_I} variables should unity. If some model parameters are expected to cause less variance, then they should be set to some fraction of unity. In practice, this lowers the relative expectation of how higher order terms in the Taylor contribute relative to lower-order terms for these model parameters.
+Again, the parameter names should be simple strings without spaces. The {\tt prior\_type\_I} entries are character strings, either {\tt uniform} or {\tt gaussian}. If the prior type is {\tt uniform}, {\tt xmin\_I} and {\tt xmax\_I} represent the endpoints of the uniform prior. If the prior type is {\tt gaussian}, the prior is assumed to have a Gaussian form, the two values set the centroid and widths of the Gaussian priors. The last column is the sensitivity scale. If all model parameters are expected to contribute equally to the overall variance throughout the prior, all the {\tt ss\_I} variables should be set to unity. If some model parameters are expected to cause less variance, then they should be set to some fraction of unity. 
 
-\item At each training point the User must provide a list of the model-parameter values, $\vec{x}$ and the values of each observable as calculated by the full model at $\vec{x}$. The values of $\vec{x}$ at each point can be generated by {\tt trainingpoint\_optimizer}, as described in Sec. \ref{sec:tpo}, or they can be entered by hand. It is up to the User to run the full model at each training point to generate the observables.
+\item At each training point the User must provide a list of the model-parameter values, $\vec{x}$, and the values of each observable as calculated by the full model at $\vec{x}$. The values of $\vec{x}$ at each point can be generated by {\tt trainingpoint\_optimizer}, as described in Sec. \ref{sec:tpo}, or they can be entered by hand. It is up to the User to run the full model at each training point to generate the observables.
 
 The default location for files containing this information is the directory {\tt smooth\_data/FullModelRuns}, though that location can be changed in the options file described below. For each training point, the training-point and observable information is stored in a separate directory. If there are 100 training points, the directories would be {\tt smooth\_data/FullModelRuns/run0/}, {\tt smooth\_data/FullModelRuns/run0/}, $\cdots$, {\tt smooth\_data/FullModelRuns/run99/}.
 
@@ -83,8 +92,7 @@ observable_name_1 y2
 
 \subsection{{\it Smooth Emulator} Options}
 
-{\it Smooth Emulator} requires a file describing the options,
-\sloppypar{\tt \$\{MY\_ANALYSIS\}/smooth\_data/Options/emulator\_options.txt}. The ascii file is simply a list of option names followed by values. Here is an example of such a file.
+{\it Smooth Emulator} requires a file describing the options,\\ {\tt \$\{MY\_ANALYSIS\}/smooth\_data/Options/emulator\_options.txt}. The ascii file is simply a list of option names followed by values. Here is an example of such a file.
 \vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
 # Location of output, comment out for interactive running
   # LogFileName smoothlog.txt
@@ -166,7 +174,7 @@ This program builds and tunes the emulator, then compares the emulator predictio
 
 The first column denotes the specific training point, the second and third columns represents the observable as calculated by the full model and emulator, with the emulator's uncertainty provided in the last column. After printing the information for the first observable, the program then provides the comparison for the subsequent observables.
 
-The main program, {\tt \$\{SMOOTH\_LOCAL\}/software/main\_programs/smoothy\_testattrainingpts\_main.cc}, for this executable is rather short and simple:
+The main program,\\{\tt \$\{SMOOTH\_LOCAL\}/software/main\_programs/smoothy\_testattrainingpts\_main.cc}, for this executable is rather short and simple:
 \vspace*{-8pt}{\tt \begin{Verbatim}[commandchars=\\\{\}]
 int main()\{
    NBandSmooth::CSmoothMaster master;
@@ -384,5 +392,5 @@ There is such an object in the {\tt CSmoothMaster} class. For example, to print 
 }\vspace*{-8pt}
 
 \end{itemize}
-
+\end{sloppypar}
 \end{document}
