@@ -10,7 +10,6 @@ using namespace NBandSmooth;
 using namespace NMSUUtils;
 
 void CTPO::SetThetaLatinHyperCube(vector<vector<double>> &theta){
-	Crandy randy(time(NULL));
 	double thetamax,dtheta,root2=sqrt(2.0);
 	unsigned int ipar,itrain,is;
 	theta.resize(NTrainingPts);
@@ -23,17 +22,17 @@ void CTPO::SetThetaLatinHyperCube(vector<vector<double>> &theta){
 	}
 	
 	for(ipar=0;ipar<NPars;ipar++){
-		std::shuffle(std::begin(ishuffle), std::end(ishuffle), randy.mt);
+		std::shuffle(std::begin(ishuffle), std::end(ishuffle), randy->mt);
 		thetamax=priorinfo->ThetaPrior[ipar];
 		dtheta=2.0*thetamax/double(NTrainingPts);
 		for(itrain=0;itrain<NTrainingPts;itrain++){
 			is=ishuffle[itrain];
 			if(priorinfo->type[ipar]=="uniform"){
-				theta[itrain][ipar]=-thetamax+dtheta*(is+randy.ran());
+				theta[itrain][ipar]=-thetamax+dtheta*(is+randy->ran());
 			}
 			else if(priorinfo->type[ipar]=="gaussian"){
 				dtheta=2.0/double(NTrainingPts);
-				theta[itrain][ipar]=-1.0+dtheta*(is+randy.ran());
+				theta[itrain][ipar]=-1.0+dtheta*(is+randy->ran());
 				theta[itrain][ipar]=my_erfinv(theta[itrain][ipar]);
 				theta[itrain][ipar]*=thetamax*root2;
 			}

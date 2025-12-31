@@ -6,8 +6,6 @@ CSmoothMaster::CSmoothMaster(){
    unsigned int NObs;
    parmap=new CparameterMap;
    parmap->ReadParsFromFile("smooth_data/Options/emulator_options.txt");
-   int ranseed=parmap->getI("RANDY_SEED",time(NULL));
-   randy=new Crandy(ranseed);
    
    string logfilename=parmap->getS("SmoothEmulator_LogFileName","Screen");
    if(logfilename!="Screen"){

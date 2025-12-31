@@ -1,9 +1,9 @@
 \documentclass[UserManual.tex]{subfiles}
 \begin{document}
-\section{Markov-Chain Monte Carlo (MCMC) Generation of the Posterior}\label{sec:mcmc}
+\section{Markov-Chain Monte Carlo Generation of the Posterior}\label{sec:mcmc}
 
 \subsection{Overview}
-The {\tt \$\{SMOOTH\_LOCAL\}} directory contains the source code for a program that performs an MCMC analysis. This program will invoke the emulator in its exploration of the model-parameter space. It will write the trace to file and perform and record some analysis of the trace the User might find useful. Even if the User chooses a different MCMC approach then the one provided with the {\it Smooth Emulator} software, the codes might prove useful in demonstrating how to invoke the emulator from within a C++ code. 
+The {\tt \$\{SMOOTH\_LOCAL\}/software/MainPrograms/} directory contains the source code for the main program, {\tt smoothy\_mcmc\_main.cc}. When compiled it creates an executable, {\tt \$\{SMOOTH\_LOCAL\}/software/bin/smoothy\_mcmc}, which then performs an MCMC analysis. This program will invoke the emulator in its exploration of the model-parameter space. It will write the trace to file and perform and record some analysis of the trace the User might find useful. Even if the User chooses a different MCMC approach then the one provided with the {\it Smooth Emulator} software, viewing the source code might prove useful in demonstrating how to invoke the emulator from within a C++ code. 
 
 \subsection{Experimental Measurement Information}
 Once the emulator is tuned and before it is applied to a Markov Chain investigation of the likelihood, the software needs to know the experimental measurement and uncertainty. That information must be entered in the {\tt smooth\_data/Info/experimental\_info.txt} file. The file should have the format:
@@ -15,7 +15,7 @@ Once the emulator is tuned and before it is applied to a Markov Chain investigat
  .
 \end{Verbatim}
 }\vspace*{-8pt}
-The second column provides the measured value and the third gives the experimentally reported uncertainty. The fourth column lists the uncertainty inherent to the theory, due to missing physics. For example, even if a model has all the parameters set to the exact value, e.g. some parameter of the standard model, the full-model can't be expected to exactly reproduce a correct measurement given that some physics is likely missing from the full model. For the MCMC software, the relevant uncertainty incorporates both, and only the combination of both, added in quadrature, affects the outcome. We emphasize that this last file is not needed to train and tune the emulator. It is only needed once one performs the MCMC search of parameter space. 
+The second column provides the measured value and the third gives the experimentally reported uncertainty. The fourth column lists the uncertainty inherent to the theory, due to missing physics or to some shortcoming of the model. For example, even if a model has all the parameters set to the exact value, e.g. some parameter of the standard model, the full-model can't be expected to exactly reproduce a correct measurement given that some physics is likely missing from the full model. This should not include any random point-by-point uncertainty of the theory -- that is already included through the {\tt ALPHA} option in the emulator uncertainty. For the MCMC software, the relevant uncertainty incorporates both of these, plus the emulator uncertainty. Only the combination of all three, added in quadrature, affects the outcome. We emphasize that this last file is not needed to train and tune the emulator. It is only needed once one performs the MCMC search of parameter space. 
 
 \subsection{Accounting for Uncertainties}
 
@@ -37,29 +37,28 @@ Next, one needs to edit the options file
  # This is for the MCMC search of parameter space
  # (not for the emulator tuning)
  #LogFileName smoothlog.txt # comment out for interactive running
- # If success rate approaches zero, reduce MCMC_METROPOLIS_STEPSIZE, if it approaches 1.0, increase MCMC_METROPOLIS_STEPSIZE
+ # If success rate approaches zero, reduce MCMC_METROPOLIS_STEPSIZE, if it approaches 1.0, increase it
  MCMC_METROPOLIS_STEPSIZE 0.06
  MCMC_IGNORE_EMULATOR_ERROR false
- MCMC_NBURN  10000
+ MCMC_RANSEED  12345
+ MCMC_NBURN 5
+ MCMC_NSKIP 10000
  MCMC_NTRACE 100000
- MCMC_NSKIP  5
- MCMC_IGNORE_EMULATOR_ERROR false
- RANDY_SEED  12345
 \end{Verbatim}
 }\vspace*{-8pt}
-As was the case with {\it Smooth Emulator}, each option has a default value. The values of {\tt MCMC\_NBURN}, {\tt MCMC\_NTRACE} and {\tt MCMC\_NSKIP} are stored by the {\tt CMCMC} objects, but are only set when the object calls the {\tt trace} function. Thus, values need not be set until a call is made to the {\tt PerformTrace} function.  See Sec. \ref{sec:mcmcsource} below for an example of how this is used.The options are described below.
-\subsubsection{{\tt LogFileName} (if commented out will write to screen)}
+As was the case with {\it Smooth Emulator}, each option has a default value. The {\tt CMCMC} class has a parameter map object. This map stores the options, and uses them to set the corresponding data in the {\tt CMCMC} object. The values of {\tt MCMC\_NBURN}, {\tt MCMC\_NTRACE} and {\tt MCMC\_NSKIP} are stored by the {\tt CMCMC} parameter map, but do not correspond to any members of the class. When the User wishes to set the number of trace points in the main program, they do so by changing the arguments to the {\tt PerformTrace(..)} function. The User can set these arguments through the parameter map functionality, which can provide a convenient way to set the arguments through the Options file. See Sec. \ref{sec:mcmcsource} below for an example of how this is used.The options are described below.
+\subsubsection{{\tt LogFileName (if commented out will write to screen)}}
 To run interactively, leave this line commented out. Otherwise, output will be directed to the designated file.
 \subsubsection{{\tt MCMC\_METROPOLIS\_STEPSIZE (default 0.05)}}
 Metropolis algorithms require taking random steps in $\vec{\theta}$ space. If the steps are small, it takes longer to explore the space, but if the steps are very long, the success rate of the Metropolis steps becomes low. Maximum efficiency occurs when the Metropolis success rate, which is provided during running, is near 50\%. Rates of 20\% or 80\% are also fine, but if the rate is only a few percent, the User should reduce the parameter, and if the success rate becomes close to 100\%, the User should increase the parameter.
-\subsubsection{{\tt MCMC\_IGNORE\_EMULATOR\_ERROR}}
+\subsubsection{{\tt MCMC\_IGNORE\_EMULATOR\_ERROR (default false)}}
 If this flag is set to {\tt true} the emulator uncertainty will be ignored. This significantly increases the speed of the MCMC procedure, but should not be done if the emulator error is significant.
-\subsubsection{{\tt MCMC\_NBURN (default {\tt 10000})}}
-A certain number of Metropolis steps should be taken before the trace is recorded so that the trace is not biased by the starting value.
-\subsubsection{{\tt MCMC\_NTRACE (default 100000)}}
-This is the number of points in the trace that are recorded for subsequent analysis. More points provides a more accurate representation of the posterior.
-\subsubsection{{\tt MCMC\_NSKIP}}
-Because succesive points in the trace are correlated, it makes sense to skip several points before skipping. For example, if the success rate is 50\% in the Metropolis procedure, the neighboring points have a 50\% chance of being the same, so if all the points were recorded, many would be identical to the previously recorded point. Recording every fifth point or so is usually reasonable, hence the default value is {\tt 5}. If the success rate is higher, fewer steps might be appropriate, and if it is lower one might increase {\tt MCMC\_NSKIP}.
+\subsubsection{{\tt MCMC\_RANSEED (default 12345)}}
+Sets seed for random number generator.
+\subsubsection{{\tt MCMC\_NBURN, MCMC\_NTRACE, MCMC\_NSKIP (no defaults)}}
+These are different than the other options in that they do correspond to any member of the {\tt CMCMC} class. Instead, they are simply stored by {\tt CparameterMap} object of the {\tt CMCMC} class for convenience. The variables describe the number of random steps to be taken during the burn-in stage (where the trace is not being recorded), the number of steps in the trace to be recorded once the burn-in stage has ended, and the number of steps between recorded steps. Because successive steps are highly correlated it makes sense to not record every step. For example, if the Metropolis success rate is 50\%, then half the points are identical to the previous point.
+
+The relevant variables are set when the CMCMC object calls the function {\tt PerformTrace(int Ntrace,int Nskip)} in the main program. When writing a main program, the User can set {\tt Ntrace} or {\tt Nskip} through the parameter map, which is a member of the {\tt CMCMC class}. This is illustrated below in Sec. \ref{sec:mcmcsource}, where the source code for the main MCMC program is described. The User can always simply call the {\tt PerformTrace} function with whatever arguments they wish and never use the options stored in the parameter map. The parameter map functionality is described in Sec. \ref{sec:parametermap}.
 
 \subsection{Running the MCMC Program}\label{subsec:mcmcrunning}
 To run the provided MCMC program, move to the analysis directory, and run the program {\tt mcmc}. Output should look something like this:
@@ -91,7 +90,7 @@ writing, ntrace = 100001
 writing, ntrace = 100001
 \end{Verbatim}
 }\vspace*{-8pt}
-For the sake of numerical efficiency {\tt ``Metropolis success percentage''} should be in the range of 50\%. If the efficiency is very near 100\%, it suggests the step sizes might be too small to best explore the entire model-parameter space. If the efficiency is near zero, the step size might be too large and too few successful Metropolis steps will be taken. This affects only the efficiency, not the validity, so any success percentage between 10\% and 90\% should suffice. In the output, {\tt ``LL''} refers to the log-likelihood. At the end of the burn-in, one hopes that best value of {\tt LL} is not much lower than the best value found from the entire trace. If not, one should probably increase the value of {\tt MCMC\_NBURN}. The values of {\tt ``Best Theta''} refer to the point in the trace with the highest {\tt LL}. 
+For the sake of numerical efficiency {\tt ``Metropolis success percentage''} should be in the range of 50\%. If the efficiency is very near 100\%, it suggests the step sizes might be too small to most efficiently explore the entire model-parameter space. If the efficiency is near zero, the step size might be too large and too few successful Metropolis steps will be successful. This affects only the efficiency, not the validity, so any success percentage between 10\% and 90\% should suffice. In the output, {\tt ``LL''} refers to the log-likelihood. At the end of the burn-in, one hopes that best value of {\tt LL} is not much lower than the best value found from the entire trace. If not, one should probably increase the value of {\tt MCMC\_NBURN}. The values of {\tt ``Best Theta''} refer to the point in the trace with the highest {\tt LL}. 
 
 Information about the trace is found in the files located in the directory {\tt smooth\_data/mcmc\_trace/}:
 \begin{itemize}
@@ -112,12 +111,10 @@ Finally, we review the source code in {\tt \$\{SMOOTH\_LOCAL\}/software/main\_pr
 int main()\{
    NBandSmooth::CSmoothMaster master;
    master.TuneAllY();
-   NMSUUtils::CparameterMap *parmap=master.parmap;
    NBandSmooth::CMCMC mcmc(&master);
-   
-   unsigned int Nburn=parmap->getI("MCMC_NBURN",1000);  // Steps for burn in
-   unsigned int Ntrace=parmap->getI("MCMC_NTRACE",1000); // Record this many points
-   unsigned int Nskip=parmap->getI("MCMC_NSKIP",5); // Only record every Nskip^th point
+   unsigned int Nburn=mcmc.parmap->getI("MCMC_NBURN",1000);  // Steps for burn in
+   unsigned int Ntrace=mcmc.parmap->getI("MCMC_NTRACE",1000); // Record this many points
+   unsigned int Nskip=mcmc.parmap->getI("MCMC_NSKIP",5); // Only record every Nskip^th point
       
    mcmc.PerformTrace(1,Nburn);   
    CLog::Info("finished burn in{\textbackslash}n");

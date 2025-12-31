@@ -49,6 +49,7 @@ TPO_ALPHA 0.01
 TPO_LAMBDA 2.5
 TPO_Include_LAMBDA_Uncertainty true
 TPO_FullModelRunsDirName  smooth_data/FullModelRuns
+TPO_RANSEED 12345
 #TPO_ReadPoints 0,1,4-7,10,11-13,21
 #TPO_FreezePoints 0,1,4-7,10,11-13,21
 \end{Verbatim}
@@ -73,22 +74,25 @@ The option {\tt TPO\_Method} sets the training point method and can be set to th
 \item {\tt MCSphereQuadratic}: This is the same as {\tt MCSphere}, except that the number of training points is set to $N_{\rm train}=(N_{\rm par}+1)(N_{\rm par}+2)/2$.
 \end{itemize}
 
-\subsubsection{{\tt TPO\_NTraining\_Pts} (default 0)}
+\subsubsection{{\tt TPO\_NTraining\_Pts (default 0)}}
 For the {\tt MC} and {\tt MCSphere} methods the program chooses $N_{\rm train}$, the number of training points. Otherwise $N_{\rm train}$ is set to correspond to the method as described above.
 
-\subsubsection{{\tt TPO\_ALPHA} (default 0.01)}
+\subsubsection{{\tt TPO\_ALPHA (default 0.01)}}
 The value {\tt ALPHA} represents the point-to-point noise, which might vary from one observable to another. But the same training points are used for all observables. Thus, choosing {\tt ALPHA} can be not wholly consistent with those values defined for the observables. Fortunately, because the training points will be chosen far apart, this option has little impact. But, in choosing the points making this non-zero helps protect against extreme configurations with points close together. The value of 0.01 works well. This value does not need to equal the values used to train the emulator (which can vary from one observable to another).
 
-\subsubsection{{\tt TPO\_FullModelRunsDirName} (default {\tt smooth\_data/FullModelRuns})}
+\subsubsection{{\tt TPO\_FullModelRunsDirName (default smooth\_data/FullModelRuns)}}
 This sets the directory into which the full model output for the training points will be stored. A similar parameter is used by the emulator and is set in {\tt smooth\_data/Options/emulator\_options.txt}, so the User should be careful that if the output from the optimizer is changed in a different location that the emulator also knows where to find it.
 
-\subsubsection{{\tt TPO\_ReadPoints} (default {\tt NONE})}
+\subsubsection{{\tt TPO\_RANSEED (default 12345)}}
+Sets seed for random number generator.
+
+\subsubsection{{\tt TPO\_ReadPoints (default NONE)}}
 If set to {\tt NONE}, the MC procedure will be initialized according to latin hyper-cube sampling. If set to {\tt ALL}, the procedure initializes the search using the training point locations described in the {\tt smooth\_data/FullModelRuns/runI/model\_parameters.txt} files. This is useful if one has a better idea of how to initialize the points, or if the point is to be frozen at a specific location as defined by the next option below. If the User wishes to read in a subset of points, the string can list those points which will be read in, while the others will be initialized randomly. An example of the string is {\tt 0-2,5,21-23}.
 
-\subsubsection{{\tt TPO\_FreezePoints} (default {\tt NONE})}
+\subsubsection{{\tt TPO\_FreezePoint (default NONE)}}
 If set to {\tt NONE} all the training points are allowed to vary in the optimization procedure. If set to a string, e.g {\tt 0-2,5,21-23}, the procedure will freeze those points denoted in the string. These points should be a subset of the those points that are read in as described above.
  
-\subsection{Running {\tt trainingpoint\_optimizer} to Generate Training Points}
+\subsection{Running {\tt trainingpoint\_optimizer to Generate Training Points}}
 
 To run {\it Training Point Optimizer}, first make sure the program is compiled. To compile the programs, change into the {\tt \$\{SMOOTH\_LOCAL\}/main\_programs/} directory and enter the following command,
 

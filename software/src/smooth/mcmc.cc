@@ -22,7 +22,8 @@ CMCMC::CMCMC(CSmoothMaster *master_set){
    if(logfilename!="Screen"){
       CLog::Init(logfilename);
    }
-   randy=master->randy;
+   int ranseed=parmap->getI("MCMC_RANSEED",12345);
+   randy=new Crandy(ranseed);
    NPars=master->NPars;
    string command="mkdir -p smooth_data/MCMC";
    system(command.c_str());
