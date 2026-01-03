@@ -62,8 +62,9 @@ double CSmoothEmulator::GetCorrelation(vector<double> &Theta1,vector<double> &Th
 void CSmoothEmulator::Tune(){
    if(FIXLAMBDA)
       Tune(LAMBDA);
-   else
+   else{
       CalcSigmaALambda();
+   }
 }
 
 void CSmoothEmulator::Tune(double LambdaSet){

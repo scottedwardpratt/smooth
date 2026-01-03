@@ -167,6 +167,7 @@ void CSmoothEmulator::CalcSigmaALambda(){
 			-3.0*pow(LAMBDA,-4)*(Binv*Bprime).trace();
 	}
 
+
 }
 
 void CSmoothEmulator::CalcWBprimeChi(){

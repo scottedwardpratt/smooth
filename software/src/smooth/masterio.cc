@@ -11,6 +11,8 @@ void CSmoothMaster::ReadTestingInfo(){
 }
 
 void CSmoothMaster::WriteSigmaLambda(string filename){
+   string command="mkdir -p smooth_data/output_stuff";
+   system(command.c_str());
    FILE *fptr=fopen(filename.c_str(),"w");
    for(unsigned int iY=0;iY<observableinfo->NObservables;iY++){
       fprintf(fptr,"%24s %10.3f %10.5f\n",
